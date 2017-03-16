@@ -1,8 +1,8 @@
 ---
 - hosts: appleaderservers appfollowerservers
-  # Run from hhs_ansible folder
+  # Vars file is relative to playbook folder
   vars_files:
-    - ./vars/playbook/vars.yml
+    - ../vars/playbook/vars.yml
   remote_user: "{{ remote_user_account }}"
   become: yes
   become_user: root
