@@ -48,7 +48,7 @@
     virtualenv: "{{ venv }}"
 
   # - name: make sure apache server is running
-  service: name=httpd state=started enabled=yes
+  # service: name=httpd state=started enabled=yes
  
   # - name: Restart Apache
   action: shell /bin/echo $HOSTNAME
