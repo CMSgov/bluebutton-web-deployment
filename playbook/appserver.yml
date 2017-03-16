@@ -39,13 +39,13 @@
     django_manage:
       command=collectstatic
       app_path="{{ install_root }}/{{ project_name }}/"
-      virtualenv: {{ venv }}
+      virtualenv="{{ venv }}"
 
   - name: Django migrate
     django_manage:
       - command=migrate
       - app_path="{{ install_root }}/{{ project_name }}/"
-      - virtualenv: {{ venv }}
+      - virtualenv="{{ venv }}"
 
   - name: make sure apache server is running
     service: name=httpd state=started enabled=yes
