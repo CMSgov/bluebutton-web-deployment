@@ -35,7 +35,7 @@
       state: touch
       mode: "u+rwx,g+rwx,o-rwx"
 
-  - name: Django collectstatic
+  # - name: Django collectstatic
     django_manage:
       command=collectstatic
       app_path="{{ install_root }}/{{ project_name }}/"
