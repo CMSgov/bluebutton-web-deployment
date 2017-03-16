@@ -2,7 +2,7 @@
 - hosts: appleaderservers appfollowerservers
   vars_files:
     - ../../vars/playbook/vars.yml
-  remote_user: {{ remote_user_account }}
+  remote_user: "{{ remote_user_account }}"
   become: yes
   become_user: root
   
