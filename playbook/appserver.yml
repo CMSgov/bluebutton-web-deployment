@@ -36,24 +36,24 @@
       mode: "u+rwx,g+rwx,o-rwx"
 
   # - name: Django collectstatic
-  django_manage:
-    command: collectstatic
-    app_path: "{{ install_root }}/{{ project_name }}/"
-    virtualenv: "{{ venv }}"
+  - django_manage:
+      command: collectstatic
+      app_path: "{{ install_root }}/{{ project_name }}/"
+      virtualenv: "{{ venv }}"
 
   # - name: Django migrate
-  django_manage:
-    command: migrate
-    app_path: "{{ install_root }}/{{ project_name }}/"
-    virtualenv: "{{ venv }}"
+  - django_manage:
+      command: migrate
+      app_path: "{{ install_root }}/{{ project_name }}/"
+      virtualenv: "{{ venv }}"
 
-  # - name: make sure apache server is running
-  # service: name=httpd state=started enabled=yes
+  - name: make sure apache server is running
+    service: name=httpd state=started enabled=yes
  
-  # - name: Restart Apache
-  action: shell /bin/echo $HOSTNAME
-  notify:
-    - restart apache
+  - name: Restart Apache
+    action: shell /bin/echo $HOSTNAME
+    notify:
+      - restart apache
  
   handlers: 
     - name: restart apache
