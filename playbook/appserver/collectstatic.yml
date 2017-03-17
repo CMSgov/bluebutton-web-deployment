@@ -40,18 +40,19 @@
       state: touch
       mode: "u+rwx,g+rwx,o-rwx"
 
-  # - name: Django migrate
-  - django_manage:
+  - name: Django migrate
+    django_manage:
       command: migrate
       app_path: "{{ install_root }}/{{ project_name }}/"
       virtualenv: "{{ venv }}"
+    when: '{{ ansible_eth0["ipv4"]["address"] }} in appprimeserver'
 
   - name: Django collectstatic
     django_manage:
       command: collectstatic
       app_path: "{{ install_root }}/{{ project_name }}/"
       virtualenv: "{{ venv }}"
-    when: inventory_hostname = appprimeserver[0]
+    when: '{{ ansible_eth0["ipv4"]["address"] }} in appprimeserver'
 
   - name: make sure apache server is running
     service: name=httpd state=started enabled=yes
