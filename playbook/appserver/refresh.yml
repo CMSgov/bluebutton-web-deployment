@@ -1,5 +1,28 @@
 ---
-- hosts: appleaderservers appfollowerservers
+# Playbook to update django app servers for the hhs_oauth_server environment
+# # /etc/ansible/hosts defines the following servers:
+# [loadbalancers]
+
+# # Define one prime app server
+# # This is used to perform the collectstatic command
+# # to copy data to S3
+# [appprimeserver]
+
+# # If multiple availability zones are in use there will be a leader in each zone
+# # but only one leader across all availability zones can be the prime
+# [appleaderservers]
+
+# # We currently configure one follower for each leader but there could be more
+# [appfollowerservers]
+
+# # Database Servers
+# [dbservers]
+
+# # Ansible Management Servers
+# [mgmtservers]
+
+# Apply only to prime app server
+- hosts: appprimeserver
   # Vars file is relative to playbook folder
   vars_files:
     - ../vars/playbook/vars.yml
@@ -17,34 +40,9 @@
   - name: switch to app folder
     action: "shell cd {{ install_root }}/{{ project_name }}/"
 
-  - git:
-      repo: "{{ project_repo }}"
-      dest: "{{ install_root }}/{{ project_name }}"
-      force: yes
-      version: develop
-
-  # change ownership of files
-  - file:
-      path: "{{ install_root }}/{{ project_name }}/"
-      recurse: yes
-      owner: pyapps
-      group: apache
-
-  # make manage.py executable
-  - file:
-      path: "{{ install_root }}/{{ project_name }}/manage.py"
-      state: touch
-      mode: "u+rwx,g+rwx,o-rwx"
-
   # - name: Django collectstatic
   - django_manage:
       command: collectstatic
-      app_path: "{{ install_root }}/{{ project_name }}/"
-      virtualenv: "{{ venv }}"
-
-  # - name: Django migrate
-  - django_manage:
-      command: migrate
       app_path: "{{ install_root }}/{{ project_name }}/"
       virtualenv: "{{ venv }}"
 
@@ -60,4 +58,4 @@
     - name: restart apache
       service: name=httpd state=restarted  
 
-# vim:ft=ansible
+# vim:ff=unix ts=2 sw=2 ai expandtab ft=ansible
