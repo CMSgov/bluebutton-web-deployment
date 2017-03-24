@@ -1,0 +1,59 @@
+#!/bin/bash
+# postgres
+
+export DJANGO_APP_ROOT={{ install_root }}/{{ project_name }}
+export PATH="$PATH:$DJANGO_APP_ROOT"
+
+# http://www.miniwebtool.com/django-secret-key-generator/
+export DJANGO_SECRET_KEY='{{ django_secret_key }}'
+export DJANGO_SETTINGS_MODULE='{{ django_settings_module }}'
+export DJANGO_ASSETS_ROOT="{{ install_root }}/{{ project_name }}"
+export THS_FHIR_SERVER='{{ ths_fhir_server }}'
+export THS_FHIR_PATH='{{ ths_fhir_path }}'
+export THS_FHIR_RELEASE='{{ ths_fhir_release }}'
+export THS_FHIR_REWRITE_FROM='["{{ ths_fhir_server }}{{ ths_fhir_path }}{{ ths_fhir_release }}",]'
+export THS_FHIR_REWRITE_TO='{{ ths_fhir_rewrite_to }}'
+export DJANGO_SLS_USER='ben'
+export DJANGO_SLS_PASSWORD='pbkdf2_sha256$24000$V6XjGqYYNGY7$13tFC13aaTohxBgP2W3glTBz6PSbQN4l6HmUtxQrUys='
+export DJANGO_SLS_FIRST_NAME='Ben'
+export DJANGO_SLS_LAST_NAME='Barker'
+export DJANGO_SLS_EMAIL='ben@example.com'
+export HOSTNAME_URL='{{ host_url }}'
+# email backend options are:
+# 'django.core.mail.backends.smtp.EmailBackend'
+# 'django.core.mail.backends.filebased.EmailBackend'
+# 'django.core.mail.backends.locmem.EmailBackend'
+# 'django.core.mail.backends.dummy.EmailBackend'
+# 'django_ses.SESBackend'
+# Set REPLACE setting to one of the options listed above
+export DJANGO_EMAIL_BACKEND='{{ django_email_backend }}'
+export DJANGO_REGION_SES_NAME='{{ django_email_region }}'
+export DJANGO_REGION_SES_ENDPOINT='{{ django_email_ses_endpoint }}'
+export DJANGO_FROM_EMAIL='{{ django_from_email }}'
+
+# AWS SETTINGS - account: {{ s3_bucket_account }}
+export AWS_ACCESS_KEY_ID='{{ aws_access_id }}'
+export AWS_SECRET_ACCESS_KEY='{{ aws_secret_key }}'
+export AWS_STORAGE_BUCKET_NAME='{{ s3_storage_bucket_name }}'
+
+# Organization and Application Info
+export DJANGO_ORGANIZATION_NAME='{{ django_org_name }}'
+export DJANGO_APPLICATION_TITLE='{{ django_app_title }}'
+
+# Database Settings - PostgreSQL - Start
+export RDS_DB_PLATFORM='{{ db_platform_type }}'
+export RDS_DB_ENGINE='{{ db_engine_driver }}'
+export RDS_DB_NAME='{{ db_name }}'
+export RDS_USERNAME='{{ db_user_name }}'
+export RDS_PASSWORD='{{ db_user_pw }}'
+export RDS_HOSTNAME='{{ db_host_address }}'
+export RDS_PORT='{{ db_host_port }}'
+# postgres://USER:PASSWORD@HOST:PORT/NAME
+export DEFAULT_DB_SET="$RDS_DB_PLATFORM://$RDS_USERNAME:$RDS_PASSWORD@$RDS_HOSTNAME:$RDS_PORT/$RDS_DB_NAME"
+
+# Using dj_database_url in settings
+export DATABASES_CUSTOM="$DEFAULT_DB_SET"
+
+echo "Django Settings are set for $DJANGO_SETTINGS_MODULE"
+echo "DATABASES_CUSTOM=$DATABASES_CUSTOM"
+echo "based on DEFAULT_DB_SET=$DEFAULT_DB_SET"
