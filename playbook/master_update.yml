@@ -1,7 +1,0 @@
----
-# # Master playbook
-# # Used to sequence sub-playbooks
-- include: appserver/refresh.yml
-- include: appserver/collectstatic.yml
-
-# vim:ff=unix ts=2 sw=2 ai expandtab ft=ansible
