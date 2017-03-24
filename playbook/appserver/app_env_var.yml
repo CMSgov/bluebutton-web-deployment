@@ -33,7 +33,7 @@
       msg: "{{ c_e_data.stdout }}"
 
   - template:
-      src: ../../templates/appserver/custom-envvars.js
+      src: ../../templates/appserver/custom-envvars.j2
       dest: /var/pyapps/hhs_o_server/new_custom-envvars.py
       owner: pyapps
       group: apache
@@ -47,7 +47,7 @@
       msg: "{{ c_e_new_data.stdout }}"
 
   - template:
-      src: ../../templates/appserver/django_settings.js
+      src: ../../templates/appserver/django_settings.j2
       dest: /var/pyapps/hhs_o_server/new_django_settings.sh
       owner: pyapps
       group: apache
