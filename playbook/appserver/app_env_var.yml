@@ -1,0 +1,60 @@
+---
+# File: app_env_var.yml 
+# Created: 3/17/17
+# Scope: Django AppServers
+# Purpose: Environment Variables for the Appservers are set in
+# a bash script and python script in the parent folder of the
+# application.
+#
+# This playbook will use templates to update the files:
+# - django_settings.sh
+# - custom-envvars.py
+#
+#
+# Apply to all app servers (prime, leader, follower)
+- hosts: appprimeserver appleaderservers appfollowerservers
+  # Vars file is relative to playbook file
+  vars_files:
+    - ../../vars/playbook/vars.yml
+    - ../../vars/
+  remote_user: "{{ remote_user_account }}"
+  become: yes
+  become_user: root
+
+- name: Get custom-envar content.
+  shell: cat /var/pyapps/hhs_o_server/custom-envvars.py
+  register: c_e_data
+
+- debug:
+    msg: "{{ c_e_data.stdout }}"
+
+- template:
+    src: ../../templates/appserver/custom-envvars.js
+    dest: /var/pyapps/hhs_o_server/new_custom-envvars.py
+    owner: pyapps
+    group: apache
+    mode: 0644
+
+- name: Get new custom-envar content.
+  shell: cat /var/pyapps/hhs_o_server/new_custom-envvars.py
+  register: c_e_new_data
+
+- debug:
+    msg: "{{ c_e_new_data.stdout }}"
+
+- template:
+    src: ../../templates/appserver/django_settings.js
+    dest: /var/pyapps/hhs_o_server/new_django_settings.sh
+    owner: pyapps
+    group: apache
+    mode: 0644
+
+- name: Get new django_settings content.
+  shell: cat /var/pyapps/hhs_o_server/new_django_settings.sh
+  register: d_j_new_data
+
+- debug:
+    msg: "{{ d_j_new_data.stdout }}"
+
+
+
