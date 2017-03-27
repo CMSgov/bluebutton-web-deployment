@@ -34,6 +34,7 @@
       recurse: yes
       owner: pyapps
       group: apache
+      mode:  "u+rw,g+rw,o-rwx"
 
   # make manage.py executable
   - file:
@@ -63,9 +64,9 @@
     notify:
       - restart apache
  
-  handlers: 
+  handlers:
     - name: restart apache
-      service: name=httpd state=restarted  
+      service: name=httpd state=restarted
 
 
 # vim:ff=unix ts=2 sw=2 ai expandtab ft=ansible
