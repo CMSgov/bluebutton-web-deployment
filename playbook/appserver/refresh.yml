@@ -17,7 +17,7 @@
     become: yes
     become_method: sudo
     become_user: root
-    action: shell source /var/virtualenv/hhs_o_server/bin/activate
+    action: "shell source {{ venv }}/bin/activate"
 
   - name: switch to app folder
     action: "shell cd {{ install_root }}/{{ project_name }}/"
@@ -26,11 +26,24 @@
       repo: "{{ project_repo }}"
       dest: "{{ install_root }}/{{ project_name }}"
       force: yes
-      version: develop
+      version: "{{ git_branch }}"
 
   # change ownership of files
   - file:
       path: "{{ install_root }}/{{ project_name }}/"
+      recurse: yes
+      owner: pyapps
+      group: apache
+      mode:  "u+rw,g+rw,o-rwx"
+
+  # install dependencies with pip in virtualenv
+  - pip:
+      requirements: "{{ install_root }}/{{ project_name }}/requirements/requirements.txt"
+      virtualenv: "{{ venv }}"
+
+  # Change ownership for libraries
+  - file:
+      path: "{{ venv }}"
       recurse: yes
       owner: pyapps
       group: apache
