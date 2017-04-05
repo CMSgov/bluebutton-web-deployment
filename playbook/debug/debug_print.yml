@@ -14,6 +14,8 @@
   - debug:
       msg: "Have we got variables: {{ venv }} / {{ common_project_dir }}"
 
+  - shell: "echo hello world"
+
   - debug:
       var: common_project_dir
 #  - debug:
