@@ -8,7 +8,7 @@
 
   - name: get variables
     include_vars:
-    - "../../vars/all_var.yml"
+      file: "../../vars/all_var.yml"
 
   tasks:
     - name: Dump all vars
