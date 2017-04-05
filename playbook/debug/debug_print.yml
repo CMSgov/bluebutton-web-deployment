@@ -7,7 +7,7 @@
   # Vars file is relative to playbook file
 
   vars_files:
-    - include: "{{ lookup('env', 'ANSIBLE_ROOT') }}/vars/all_var.yml"
+    - include: "../../vars/all_var.yml"
 
   tasks:
     - name: Dump all vars
