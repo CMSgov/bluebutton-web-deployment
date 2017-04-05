@@ -11,14 +11,13 @@
     include_vars:
       file: "../../vars/all_var.yml"
 
-  - debug: msg="Have we got variables: {{ venv }} / {{ common_project_dir }}"
+  - debug: msg="Have we got variables {{ venv }} / {{ common_project_dir }}"
 
   - shell: "echo hello world"
 
   - debug:
       var: common_project_dir
-#  - debug:
-#      msg: "Vault remote user::{{ vault_env_remote_user_account }}"
+#  - debug: msg="Vault remote user- {{ vault_env_remote_user_account }}"
 
   - name: Dump all vars
     template:
