@@ -12,7 +12,7 @@
       file: "../../vars/all_var.yml"
 
   - debug:
-      msg: "Have we got variables: {{ venv }}"
+      msg: "Have we got variables: {{ venv }} / {{ common_project_dir }}"
 
   - debug:
       var: common_project_dir
