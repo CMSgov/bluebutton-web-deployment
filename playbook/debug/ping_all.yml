@@ -1,0 +1,21 @@
+---
+# File: ping_all.yml 
+# Created: 4/5/17
+# Ping all servers
+# A basic script to check things are working.
+
+- hosts: all_zones
+  vars:
+    env: "dev"
+  # Vars file is relative to playbook file
+  vars_files:
+    - "./../../vars/common.yml"
+    - "./../../vars/env/{{ env }}/env.yml"
+    - "./../../vars/all_var.yml"
+
+  user: "{{ remote_user_account }}"
+  gather_facts: no
+  tasks:
+  - name: ping all hosts
+    ping:
+
