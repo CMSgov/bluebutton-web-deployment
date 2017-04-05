@@ -6,10 +6,11 @@
 - hosts: all
   # Vars file is relative to playbook file
 
-- name: get variables
-  include_vars:
-    file: "../../vars/all_var.yml"
-
   tasks:
-    - name: Dump all vars
-      action: template src=../../templates/debug/dumpall.j2 dest=/tmp/ansible.all
+  - name: get variables
+    include_vars:
+      file: "../../vars/all_var.yml"
+
+
+  - name: Dump all vars
+    action: template src=../../templates/debug/dumpall.j2 dest=/tmp/ansible.all
