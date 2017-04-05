@@ -10,8 +10,8 @@
 # - vault_env_ = stored in encrypted vault in ../vault/env/{{ env }}/env.yml
 # - vault_ = stored in encrypted vault in ../vault/common.yml
 
-- include: "./common.yml"
-- include: "./env/{{ env }}/env.yml"
+#- include: "./common.yml"
+#- include: "./env/{{ env }}/env.yml"
 
   ### VPC Info:
   vpc_env_lower: "{{ env_vpc_lower }}"
