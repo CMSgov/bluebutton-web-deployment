@@ -13,6 +13,6 @@
 
 
   - name: Dump all vars
-    action: template
-      src: "../../templates/debug/dumpall.j2"
-      dest: "/tmp/ansible.all"
+    template:
+      src="../../templates/debug/dumpall.j2"
+      dest="/tmp/ansible.all"
