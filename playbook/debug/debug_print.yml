@@ -13,8 +13,9 @@
 
   - debug:
       msg: "Have we got variables: {{ venv }}"
-#  - debug:
-#      msg: "Project Dir: {{ common_project_dir }}"
+
+  - debug:
+      var: common_project_dir
 #  - debug:
 #      msg: "Vault remote user::{{ vault_env_remote_user_account }}"
 
