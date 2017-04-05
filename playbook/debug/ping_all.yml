@@ -13,11 +13,11 @@
     - "./../../vars/env/{{ env }}/env.yml"
     - "./../../vars/all_var.yml"
 
-  user: "{{ remote_user_account }}"
+  user: "ec2-user"
   gather_facts: no
   tasks:
   - name: ping all hosts
     ping:
 
   - name: A quick shell echo
-    action: "shell /bin/echo $HOSTNAME in {{ env }}"
+    action: "shell /bin/echo $HOSTNAME in {{ env }} via {{ remote_user_account }}"
