@@ -1,0 +1,117 @@
+---
+# File: all_var.yml 
+# Created: 4/4/17
+#
+# Incorporates encrypted vars/common.yml and vars/{{ env }}/env.yml
+# Include all environment variables here.
+# reference source variables from appropriate file:
+# - env_ = environment specific vairables from .env{{ env }}/env.yml
+# - common_ = stored in ./common.yml
+# - vault_env_ = stored in encrypted vault in ../vault/env/{{ env }}/env.yml
+# - vault_ = stored in encrypted vault in ../vault/common.yml
+
+- include: "./common.yml"
+- include: "./env/{{ env }}/env.yml"
+
+  ### VPC Info:
+  vpc_env_lower: "{{ env_vpc_lower }}"
+  vpc_env_upper: "{{ env_vpc_upper }}"
+
+  # Remote user access account
+  remote_user_account: "{{ vault_env_remote_user_account }}"
+
+  # Project directory for virtualenv and git clone
+  project_dir: "{{ common_project_dir }}"
+
+  # a unix path-friendly name (IE, no spaces or special characters)
+  project_name: "{{ common_project_name }}"
+
+  # Virtual Environment location
+  venv: "{{ env_venv }}{{ common_project_dir }}"
+
+  # git branch to deploy
+  git_branch: "{{ env_git_branch }}"
+
+  # Project Parent Dir
+  # the base path to install to. You should not need to change this.
+  # git installs the repo in a folder beneath this path
+  project_parent: "{{ env_project_parent }}"
+
+  # the base path to install to. You should not need to change this.
+  # git installs the repo in a folder beneath this path
+  # files and folders excluded from the repository can be installed here
+  # in files and folders alongside the repo.
+  install_root: "{{ env_project_parent }}{{ common_project_dir }}"
+
+  # the git repository URL for the project
+  # project_repo: git@github.com:transparenthealth/hhs_oauth_server.git
+  project_repo: "{{ env_project_repo }}"
+
+  # The value of your django project's STATIC_ROOT settings.
+  # This will be the directory that django's `collectstatic` management command
+  # copies static files to, and it must be an absolute path. The default value
+  # here assumes that STATIC_ROOT is set in your settings.py like so:
+  # STATIC_ROOT = os.path.abspath(os.path.join(BASE_DIR, 'static'))
+  static_root: "{{ install_root }}/{{ project_name }}/{{ env_static_root_dir }}"
+
+  ### External Internet Domain Name for the platform
+  external_dns_name: "{{ env_external_dns_name }}"
+
+  # settings module
+  django_settings_module: "{{ env_django_settings_module }}"
+
+  ### TransparentHealthServer default settings:
+  ths_fhir_server: "{{ env_ths_fhir_server }}"
+  ths_fhir_path: "{{ env_ths_fhir_path }}"
+  ths_fhir_rel: "{{ env_ths_fhir_rel }}"
+  ths_fhir_rewrite_to: "{{ env_ths_fhir_rewrite_to }}"
+  ths_fhir_rewrite_from: "{{ env_ths_fhir_rewrite_from }}"
+
+  ### HOSTNAME_URL:
+  env_host_url: "{{ env_external_dns_name }}"
+
+  ### Email configuration - AWS SES
+  # email backend options are:
+  # django_email_backend:  'django.core.mail.backends.smtp.EmailBackend'
+  # django_email_backend:  'django.core.mail.backends.filebased.EmailBackend'
+  # django_email_backend:  'django.core.mail.backends.locmem.EmailBackend'
+  # django_email_backend:  'django.core.mail.backends.dummy.EmailBackend'
+  # django_email_backend:  'django_ses.SESBackend'
+
+  django_email_backend: "{{ env_django_email_backend }}"
+
+  django_email_region: "{{ env_django_email_region }}"
+  django_email_ses_endpoint: "{{ env_django_email_ses_endpoint }}"
+  django_from_email: "{{ env_django_from_email }}"
+
+  ### S3 Bucket Settings:
+  s3_bucket_account: "{{ env_s3_bucket_account }}"
+  aws_access_id: "{{ env_aws_access_id }}"
+  aws_secret_key: "{{ env_aws_secret_key }}"
+  s3_storage_bucket_name: "{{ env_s3_storage_bucket_name }}"
+
+  ### Django Settings:
+  ##  DJANGO_ORGANIZATION_NAME='{{ django_org_name }}'
+  ##  DJANGO_APPLICATION_TITLE='{{ django_app_title }}'
+  django_org_name: "{{ env_django_org_name }}"
+  django_app_title: "{{ env_django_app_title }}"
+
+  ### Database Settings:
+  ## Postgresql 9.6
+  ## export RDS_DB_PLATFORM='postgres'
+  ## export RDS_DB_ENGINE='django.db.backends.postgresql_psycopg2'
+  ## export RDS_DB_NAME='something_secret'
+  ## export RDS_USERNAME='some_user'
+  ## export RDS_PASSWORD='super_secret_password'
+  ## export RDS_HOSTNAME='some.ip.or.dns.name'
+  ## export RDS_PORT='5432'
+  ### Database Access String Construction: postgres://USER:PASSWORD@HOST:PORT/NAME
+  ## export DEFAULT_DB_SET="$RDS_DB_PLATFORM://$RDS_USERNAME:$RDS_PASSWORD@$RDS_HOSTNAME:$RDS_PORT/$RDS_DB_NAME"
+  db_platform_type: "{{ env_db_platform_type }}"
+  db_engine_driver: "{{ env_db_engine_driver }}"
+  db_name: "{{ env_db_name }}"
+  db_user_name: "{{ env_db_user_name }}"
+  db_user_pw: "{{ env_db_user_pw }}"
+  db_host_address: "{{ env_db_host_address }}"
+  db_host_port: "{{ env_db_host_port }}"
+
