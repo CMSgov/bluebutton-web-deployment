@@ -7,7 +7,7 @@
   # Vars file is relative to playbook file
 
   vars_files:
-    ansible_root: lookup(env, 'ANSIBLE_ROOT')
+    ansible_root: "{{ lookup(env, 'ANSIBLE_ROOT') }}"
     - include: "{{ ansible_root }}/vars/all_var.yml"
 
   tasks:
