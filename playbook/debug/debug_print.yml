@@ -13,7 +13,7 @@
 
   - debug: msg="Have we got variables {{ venv }} / {{ common_project_dir }}"
 
-  - shell: "echo hello world"
+  - shell: "/bin/echo hello world {{ item }}"
 
   - debug:
       var: common_project_dir
