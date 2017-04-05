@@ -6,9 +6,9 @@
 - hosts: all
   # Vars file is relative to playbook file
 
-  - name: get variables
-    include_vars:
-      file: "../../vars/all_var.yml"
+- name: get variables
+  include_vars:
+    file: "../../vars/all_var.yml"
 
   tasks:
     - name: Dump all vars
