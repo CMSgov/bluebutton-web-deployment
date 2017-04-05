@@ -19,3 +19,5 @@
   - name: ping all hosts
     ping:
 
+  - name: A quick shell echo
+    action: "shell /bin/echo $HOSTNAME for {{ remote_user_account }}"
