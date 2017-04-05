@@ -1,0 +1,15 @@
+---
+# File: debug_print.yml 
+# Created: 4/4/17
+
+
+- hosts: all
+  # Vars file is relative to playbook file
+
+  vars_files:
+    ansible_root: lookup(env, 'ANSIBLE_ROOT')
+    - include: "{{ ansible_root }}/vars/all_var.yml"
+
+  tasks:
+    - name: Dump all vars
+      action: template src=../../templates/debug/dumpall.j2 dest=/tmp/ansible.all

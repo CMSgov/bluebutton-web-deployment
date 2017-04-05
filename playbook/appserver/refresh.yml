@@ -6,7 +6,7 @@
 - hosts: appprimeserver appleaderservers appfollowerservers
   # Vars file is relative to playbook file
   vars_files:
-    - ../../vars/playbook/vars.yml
+    - ../../vars/all_var.yml
 
   remote_user: "{{ remote_user_account }}"
   become: yes
