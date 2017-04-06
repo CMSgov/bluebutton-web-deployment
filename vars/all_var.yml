@@ -23,6 +23,16 @@
   # Remote user access account
   remote_user_account: "{{ env_remote_user_account }}"
 
+  ### DJANGO_SECRET_KEY:
+  # 8 Character Prefix and Suffix
+  # Relate Suffix to Deployment Environment
+  secret_pfx: "{{ env_secret_pfx }}"
+  secret_sfx: "{{ env_secret_sfx }}"
+  # 50 character Random Key
+  # http://www.miniwebtool.com/django-secret-key-generator/
+  rand_secret: "{{ env_rand_secret }}"
+  django_secret_key: "{{ env_django_secret_key }}"
+
   # Project directory for virtualenv and git clone
   project_dir: "{{ common_project_dir }}"
 
