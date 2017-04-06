@@ -9,10 +9,12 @@
 # - common_ = stored in ./common.yml
 # - vault_env_ = stored in encrypted vault in ../vault/env/{{ env }}/env.yml
 # - vault_ = stored in encrypted vault in ../vault/common.yml
-  var_files:
-  - include: "./common.yml"
-  - include: "./env/{{ env }}/env.yml"
-  - include: "../vault/env/{{ env }}/vault.yml"
+# VARS Files can't be loaded inside vars files.
+# So the following files need to be included in each playbook
+#  var_files:
+#  - include: "./common.yml"
+#  - include: "./env/{{ env }}/env.yml"
+#  - include: "../vault/env/{{ env }}/vault.yml"
 
   ### VPC Info:
   vpc_env_lower: "{{ env_vpc_lower }}"
