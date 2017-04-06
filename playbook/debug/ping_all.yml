@@ -4,7 +4,7 @@
 # Ping all servers
 # A basic script to check things are working.
 
-- hosts: dmz_zone web_zone app_zone data_zone mgmt_zone
+- hosts: dmz_zone,web_zone,app_zone,data_zone,mgmt_zone
   vars:
     env: "dev"
   # Vars file is relative to playbook file
