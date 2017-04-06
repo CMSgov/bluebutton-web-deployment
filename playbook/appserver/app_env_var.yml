@@ -87,7 +87,7 @@
   - file:
     path: /var/pyapps/hhs_o_server/django_settings.sh
     owner: "{{ app_owner }}"
-      group: "{{ app_group }}"
+    group: "{{ app_group }}"
     mode: 0644
 
   - name: make sure apache server is running
