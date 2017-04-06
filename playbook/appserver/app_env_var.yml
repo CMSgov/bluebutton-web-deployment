@@ -84,11 +84,11 @@
 #  - debug:
 #      msg: "{{ d_j_new_data.stdout }}"
 
-  - file:
-    path: /var/pyapps/hhs_o_server/django_settings.sh
-    owner: pyapps
-    group: apache
-    mode: 0644
+#  - file:
+#    path: /var/pyapps/hhs_o_server/django_settings.sh
+#    owner: pyapps
+#    group: apache
+#    mode: 0644
 
   - name: make sure apache server is running
     service: name=httpd state=started enabled=yes
