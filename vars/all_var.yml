@@ -9,16 +9,17 @@
 # - common_ = stored in ./common.yml
 # - vault_env_ = stored in encrypted vault in ../vault/env/{{ env }}/env.yml
 # - vault_ = stored in encrypted vault in ../vault/common.yml
-
-#- include: "./common.yml"
-#- include: "./env/{{ env }}/env.yml"
+  var_files:
+  - include: "./common.yml"
+  - include: "./env/{{ env }}/env.yml"
+  - include: "../vault/env/{{ env }}/vault.yml"
 
   ### VPC Info:
   vpc_env_lower: "{{ env_vpc_lower }}"
   vpc_env_upper: "{{ env_vpc_upper }}"
 
   # Remote user access account
-  remote_user_account: "{{ vault_env_remote_user_account }}"
+  remote_user_account: "{{ env_remote_user_account }}"
 
   # Project directory for virtualenv and git clone
   project_dir: "{{ common_project_dir }}"
