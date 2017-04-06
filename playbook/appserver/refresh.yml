@@ -4,6 +4,9 @@
 
 # Apply to all app servers (prime, leader, follower)
 - hosts: app_prime_server,app_lead_server,app_follow_server
+  vars:
+    env: "dev"
+
   # Vars file is relative to playbook file
   # vars_files:
   # Vars file is relative to playbook file
