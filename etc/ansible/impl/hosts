@@ -1,0 +1,74 @@
+# This is the default ansible 'hosts' file.
+#
+# It should live in /etc/ansible/hosts
+#
+#   - Comments begin with the '#' character
+#   - Blank lines are ignored
+#   - Groups of hosts are delimited by [header] elements
+#   - You can enter hostnames or ip addresses
+#   - A hostname/ip can be a member of multiple groups
+
+######
+## Environment: IMPL
+##
+#####
+
+all_zones]
+10.246.44.[0:254]
+
+[dmz_zone]
+10.246.44.[144:191]
+
+[web_zone]
+10.246.44.[0:47]
+
+[app_zone]
+10.246.44.[48:95]
+
+[data_zone]
+10.246.44.[96:143]
+
+[mgmt_zone]
+10.246.44.[192:239]
+
+[az-east-1]
+10.246.44.[0:15]
+10.246.44.[48:63]
+10.246.44.[96:111]
+10.246.44.[144:159]
+10.246.44.[192:207]
+
+[az-east-2]
+10.246.44.[16:31]
+10.246.44.[64:79]
+10.246.44.[112:127]
+10.246.44.[160:175]
+10.246.44.[208:223]
+
+[az-east-3]
+10.246.44.[32:47]
+10.246.44.[80:95]
+10.246.44.[128:143]
+10.246.44.[176:191]
+10.246.44.[224:239]
+
+[mgmt_server]
+
+
+[dmz_server]
+
+
+[app_prime_server]
+
+
+[app_lead_server]
+
+
+[app_follow_server]
+
+
+[data_server]
+
+
+
+###########################################################
