@@ -86,7 +86,7 @@
   ths_fhir_rewrite_from: "{{ env_ths_fhir_rewrite_from }}"
 
   ### HOSTNAME_URL:
-  env_host_url: "{{ env_external_dns_name }}"
+  host_url: "{{ env_external_dns_name }}"
 
   ### Email configuration - AWS SES
   # email backend options are:
