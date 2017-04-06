@@ -8,10 +8,19 @@
   vars:
     env: "dev"
   # Vars file is relative to playbook file
+  # Sequence: 1. Common variables
+  # 2. encrypted vault file
+  # 3. environment specific variables
+  # 4. all_vars which reference the preceding three files.
+  # common_ prefixes common variables
+  # vault_env_ prefixes encrypted variables
+  # env_ prefixes environment specific variables
+  # all_var incorporates preceding variables and defines variables without prefixes.
+  # use all_var variables in scripts.
   vars_files:
-    # - "./../../vault/env/{{ env }}/vault.yml"
     - "./../../vars/common.yml"
-    # - "./../../vars/env/{{ env }}/env.yml"
+    - "./../../vault/env/{{ env }}/vault.yml"
+    - "./../../vars/env/{{ env }}/env.yml"
     - "./../../vars/all_var.yml"
 
   user: "{{ remote_user_account }}"
