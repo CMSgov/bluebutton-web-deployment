@@ -9,10 +9,11 @@
     env: "dev"
   # Vars file is relative to playbook file
   vars_files:
+    - "./../../vault/env/{{ env }}/vault.yml"
     - "./../../vars/common.yml"
     - "./../../vars/env/{{ env }}/env.yml"
     - "./../../vars/all_var.yml"
-
+    
   user: "ec2-user"
   gather_facts: no
   tasks:
