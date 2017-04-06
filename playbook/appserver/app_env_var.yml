@@ -53,10 +53,10 @@
 
   - template:
       src: ../../templates/appserver/custom-envvars.j2
-      dest: /var/pyapps/hhs_o_server/custom-envvars.py
+      dest: "{{ install_root }}/custom-envvars.py"
       backup: yes
-      owner: pyapps
-      group: apache
+      owner: "{{ app_owner }}"
+      group: "{{ app_group }}"
       mode: 0644
 
 #  - name: Get new custom-envar content.
@@ -68,10 +68,10 @@
 
   - template:
       src: ../../templates/appserver/django_settings.j2
-      dest: /var/pyapps/hhs_o_server/django_settings.sh
+      dest: "{{ install_root }}/django_settings.sh"
       backup: yes
-      owner: pyapps
-      group: apache
+      owner: "{{ app_owner }}"
+      group: "{{ app_group }}"
       mode: 0644
 
 #  - name: Get new django_settings content.
@@ -84,11 +84,11 @@
 #  - debug:
 #      msg: "{{ d_j_new_data.stdout }}"
 
-#  - file:
-#    path: /var/pyapps/hhs_o_server/django_settings.sh
-#    owner: pyapps
-#    group: apache
-#    mode: 0644
+  - file:
+    path: /var/pyapps/hhs_o_server/django_settings.sh
+    owner: "{{ app_owner }}"
+      group: "{{ app_group }}"
+    mode: 0644
 
   - name: make sure apache server is running
     service: name=httpd state=started enabled=yes

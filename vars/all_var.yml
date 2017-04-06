@@ -57,6 +57,11 @@
   # STATIC_ROOT = os.path.abspath(os.path.join(BASE_DIR, 'static'))
   static_root: "{{ install_root }}/{{ project_name }}/{{ env_static_root_dir }}"
 
+  # application owner: pyapps
+  app_owner: "pyapps"
+  # application group: apache
+  app_group: "apache"
+
   ### External Internet Domain Name for the platform
   external_dns_name: "{{ env_external_dns_name }}"
 
