@@ -14,6 +14,9 @@
 #
 # Apply to all app servers (prime, leader, follower)
 - hosts: app_prime_server,app_lead_server,app_follow_server
+  vars:
+    env: "dev"
+
   # Vars file is relative to playbook file
   # Sequence:
   # 1. Common variables
