@@ -93,7 +93,7 @@
   - name: make sure apache server is running
     service: name=httpd state=started enabled=yes
 
-  - name: Restart Apache
+  - name: "Restart Apache on {{ env_env }}"
     action: shell /bin/echo $HOSTNAME
     notify:
       - restart apache
