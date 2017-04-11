@@ -5,22 +5,43 @@ Ansible is used as a management server to enable automated updates to the
 machines deployed in the CMS Blue Button on FHIR API front-end platform.
 
 ## Keeping variables safe
-Configuration variables and sensitive values are not stored in this repository.
+Configuration variables and sensitive values are now stored in this repository
+using ansible-vault. hhs_Ansible uses a cascading set of variable files:
 
-These can either be supplied to Ansible at runtime or referenced from 
-a vars.yml file that is **outside** this repository.
+- ./vars/envs/common.yaml: For frequently used variables across all environments.
+- ./vars/all-var.yml: All variables used across any platform. Environment specific 
+variables are embedded inside the variable defined in this file. Environment specific
+variables are prefixed with "env_".
+- ./vars/env/{environment_name}/env.yml: Non-sensitive environment specific variables are 
+stored in this file. Sensitive environment variables are embedded within env_{variable_name} variables
+and are prefixed with "vault_".
 
-It is recommended that the vars.yml files are stored in a *vars* folder 
-structure that is located in an adjacent folder from the head of this 
-repository.
+Variable files can't embed other variable files as includes. Therefore the 
+playbook must load the variables files as includes. A typical include section 
+in a playbook would be:
 
-ie. if this repository is in:
+Where the playbook is found in: ./playbook/{role}/playbook.yml
 
-~/my_ansible_repo/hhs_ansible
+      ```
+  vars_files:
+    - "./../../vars/common.yml"
+    - "./../../vault/env/{{ env }}/vault.yml"
+    - "./../../vars/env/{{ env }}/env.yml"
+    - "./../../vars/all_var.yml"
+      
+      ```  
+{env} is a variable passed at run time to the playbook.
 
-then the vars should be stored in:
+for example:
+In all_var.yml:
+aws_secret_key: "{{ env_aws_secret_key }}"
 
-~/my_ansible_repo/vars
+In ./vars/env/{{ env }}/env.yml:
+env_aws_secret_key: "{{ vault_env_aws_secret_key }}"
+
+In ./vault/env/{{ env }}/vault.yml:
+vault_env_aws_secret_key: "what_ever_the_secret_should_be"
+
 
 ## Status
 This is an early development version of an Ansible deployment. The initial 
