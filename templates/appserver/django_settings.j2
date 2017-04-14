@@ -19,6 +19,23 @@ export DJANGO_SLS_FIRST_NAME='Ben'
 export DJANGO_SLS_LAST_NAME='Barker'
 export DJANGO_SLS_EMAIL='ben@example.com'
 export HOSTNAME_URL='{{ host_url }}'
+
+# Full set of EMAIL Variables
+# DJANGO_EMAIL_BACKEND
+# DJANGO_EMAIL_HOST: 'email-smtp.us-east-1.amazonaws.com'
+## SES PORT options: 25, 465, 587, 2465 or 2587.#}
+## Port 25 is throttled#}
+## Use port 587 or 2587 for TLS connections#}
+## Use port 465 or 2465 for Native SSL support#}
+# DJANGO_EMAIL_PORT: 587
+# DJANGO_EMAIL_USE_TLS: True
+# DJANGO_EMAIL_USE_SSL: False
+# DJANGO_EMAIL_TIMEOUT: None
+# DJANGO_EMAIL_HOST_USER
+# DJANGO_EMAIL_HOST_PASSWORD
+# DJANGO_EMAIL_SSL_KEYFILE: None
+# DJANGO_EMAIL_SSL_CERTFILE: None
+
 # email backend options are:
 # 'django.core.mail.backends.smtp.EmailBackend'
 # 'django.core.mail.backends.filebased.EmailBackend'
@@ -55,5 +72,6 @@ export DEFAULT_DB_SET="$RDS_DB_PLATFORM://$RDS_USERNAME:$RDS_PASSWORD@$RDS_HOSTN
 export DATABASES_CUSTOM="$DEFAULT_DB_SET"
 
 echo "Django Settings are set for $DJANGO_SETTINGS_MODULE"
+echo "Django Email Settings are set for $DJANGO_EMAIL_BACKEND"
 echo "DATABASES_CUSTOM=$DATABASES_CUSTOM"
 echo "based on DEFAULT_DB_SET=$DEFAULT_DB_SET"
