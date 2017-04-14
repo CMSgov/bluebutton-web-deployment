@@ -90,6 +90,12 @@
     group: "{{ app_group }}"
     mode: 0644
 
+  - name: display custom_env_vars.py
+    action: "shell /bin/cat {{ install_root }}/custom-envvars.py"
+
+  - name: display django_settings.sh
+    action: "shell /bin/cat {{ install_root }}/django_settings.sh"
+
   - name: make sure apache server is running
     service: name=httpd state=started enabled=yes
 
