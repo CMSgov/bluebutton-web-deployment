@@ -30,7 +30,8 @@ Where the playbook is found in: ./playbook/{role}/playbook.yml
     - "./../../vars/all_var.yml"
       
       ```  
-{env} is a variable passed at run time to the playbook.
+{env} is a variable passed at run time to the playbook using 
+--extra-vars env=dev | test | impl | prod
 
 for example:
 In all_var.yml:
@@ -52,6 +53,10 @@ repository.
 The AWS CloudFormation Scripts are found in:
 
 hhs_oauth_server/examples/devops/cloudformation/in_prod folder.
+
+The release of hhs_ansible is starting the migration of CloudFormation 
+scripts to Ansible. playbook/dataserver/create_database.yml is the first
+script to launch a server in ec2.
 
 ## Installation
 
@@ -118,3 +123,5 @@ This file is used to store sensitive configuration information.
     static_root: "{{ install_root }}/{{ project_name }}/static"    
     
 ---
+
+more information about hhs_ansible is here: [./documentation.md]
