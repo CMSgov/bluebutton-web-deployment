@@ -17,3 +17,16 @@ supplies variables from:
 	* vars/env/{{ env }}/env.yml using sensitive settings from...
 	* vault/env/{{ env }}/vault.yml
 
+### Update App Servers
+Runs Ansible script to get latest git branch (defined in {{ env }}/env.yml.
+Performs: 
+	* manage.py migrate
+	* manage.py collect static
+	* restart apache server
+
+### Update App Servers Configuration Scripts
+Runs Ansible script to apply:
+	* templates/appserver/*.j2
+Restarts Apache Server to load configuration settings.
+
+	
