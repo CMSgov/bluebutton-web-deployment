@@ -9,3 +9,7 @@ common_project_name: "hhs_oauth_server"
 
 # Project directory for virtualenv and git clone
 common_project_dir: "hhs_o_server"
+
+common_cf_tags_business: "OEDA"
+common_cf_tags_application: "BlueButton"
+
