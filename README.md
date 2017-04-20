@@ -60,12 +60,20 @@ script to launch a server in ec2.
 
 ## Installation
 
-cd /
-git clone https://github.com/TransparentHealth/hhs_ansible.git
+To enable ec2 support you must install python-boto:
+   
+    sudo yum install python-boto 
 
-Create the /hhs_ansible/vars/playbook/vars.yml
+Install hhs_ansible:
 
-Add your hosts to /etc/ansible/hosts
+    mkdir /hhs_ansible
+    cd /hhs_ansible
+    git clone https://github.com/TransparentHealth/hhs_ansible.git
+
+Add your hosts to 
+    
+    /etc/ansible/hosts
+
 
 ## Host Configuration
 
