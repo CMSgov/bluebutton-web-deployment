@@ -40,7 +40,7 @@
       state: "present"
       region: "us-east-1"
       disable_rollback: true
-      template: "../../templates/dataserver/vpc-pickenv-fe-fips-db-3.json"
+      template: "../../templates/dataserver/vpc-pickenv-fe-fips-db-4.json"
       template_parameters:
         AZone: "{{ cf_data_azone }}"
         BuildImageId: "{{ cf_data_build_image_id }}"
@@ -57,10 +57,11 @@
         pyappsemail: "{{ cf_data_pyapps_email }}"
         PgsqlPassword: "{{ cf_data_pgsql_password }}"
         VpcId: "{{ cf_data_vpc_id }}"
+        DbEc2SecurityGrp: "{{ cf_data_sg_data_zone_id }}"
       tags:
         Stack: "BB-{{ env }}-{{ cf_data_azone }}-{{ env_cf_data_tag_key_layer }}-ansible-cloudformation"
         Business: "{{ cf_tags_business }}"
         Application: "{{ cf_tags_application }}"
         Environment: "{{ env }}"
         Function: "{{ cf_data_tag_key_layer }}-{{ cf_data_database_type }}"
-
+    register: data_vpc_output
