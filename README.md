@@ -30,7 +30,8 @@ Where the playbook is found in: ./playbook/{role}/playbook.yml
     - "./../../vars/all_var.yml"
       
       ```  
-{env} is a variable passed at run time to the playbook.
+{env} is a variable passed at run time to the playbook using 
+--extra-vars env=dev | test | impl | prod
 
 for example:
 In all_var.yml:
@@ -52,6 +53,10 @@ repository.
 The AWS CloudFormation Scripts are found in:
 
 hhs_oauth_server/examples/devops/cloudformation/in_prod folder.
+
+The release of hhs_ansible is starting the migration of CloudFormation 
+scripts to Ansible. playbook/dataserver/create_database.yml is the first
+script to launch a server in ec2.
 
 ## Installation
 
@@ -77,44 +82,6 @@ installed place one of the LEADER servers into the _appprimeserver_ group, the
 other LEADERs go in the _appleadservers_ group. All FOLLOWers go in the
 _appfollowerservers_ group.
 
-## var.yml 
-
-The var.yml file stores settings and is not included in this repository.
-This file is used to store sensitive configuration information.
 
 
-    # # Remote user access account
-    # ## AWS RHEL: ec2-user
-    # ## Ubuntu: ubuntu
-    remote_user_account: ec2-user                           
-    
-    # Project directory for virtualenv and git clone
-    project_dir: hhs_o_server 
-    
-    # a unix path-friendly name (IE, no spaces or special characters)
-    project_name: hhs_oauth_server
-
-    # Virtual Environment location
-    venv: "/var/virtualenv/{{ project_dir }}"
-
-    # git branch to deploy
-    git_branch: develop
-    
-    # the base path to install to. You should not need to change this.
-    # git installs the repo in a folder beneath this path
-    # files and folders excluded from the repository can be installed here
-    # in files and folders alongside the repo.
-    install_root: "/parent/folder/{{ project_dir }}"
-    
-    # the git repository URL for the project
-    # project_repo: git@github.com:transparenthealth/hhs_oauth_server.git
-    project_repo: https://github.com/transparenthealth/hhs_oauth_server.git
-    
-    # The value of your django project's STATIC_ROOT settings.
-    # This will be the directory that django's `collectstatic` management command
-    # copies static files to, and it must be an absolute path. The default value 
-    # here assumes that STATIC_ROOT is set in your settings.py like so:
-    # STATIC_ROOT = os.path.abspath(os.path.join(BASE_DIR, 'static'))
-    static_root: "{{ install_root }}/{{ project_name }}/static"    
-    
----
+more information about hhs_ansible is here: [./documentation.md]
