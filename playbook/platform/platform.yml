@@ -2,7 +2,20 @@
 # File: platform.yml
 # Created: 4/21/17
 
-- include: "../dataserver/create_database.yml"
+- name: Provision Database and App Server
+  hosts: localhost
+  connection: local
+  gather_facts: False
+  vars:
+    env: "dev"
+  vars_files:
+    - "./../../vars/common.yml"
+    - "./../../vault/env/{{ env }}/vault.yml"
+    - "./../../vars/env/{{ env }}/env.yml"
+    - "./../../vars/all_var.yml"
 
-- include: "../appserver/create_appserver.yml"
+
+  include: "../dataserver/create_database.yml"
+
+  include: "../appserver/create_appserver.yml"
 
