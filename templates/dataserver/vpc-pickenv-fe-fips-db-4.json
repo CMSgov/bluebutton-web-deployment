@@ -569,7 +569,6 @@
            ]
          }
     },
-
     "myENI" : {
          "Type" : "AWS::EC2::NetworkInterface",
          "Properties" : {
