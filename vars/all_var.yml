@@ -170,7 +170,7 @@
   cf_app_pyapp_home: "{{ env_cf_app_pyapp_home }}"
   cf_app_pyapp_settings: "{{ env_cf_app_pyapp_settings }}"
   cf_app_repo_branch: "{{ env_cf_app_repo_branch }}"
-  cf_app_pyapps_user: "{{ env_Cf_pyapps_user }}"
+  cf_app_pyapps_user: "{{ env_cf_pyapps_user }}"
   cf_app_db_user: "{{ env_cf_app_db_user }}"
   cf_app_db_pwd: "{{ env_cf_app_db_pwd }}"
   cf_app_pyapps_email: "{{ env_cf_app_pyapps_email }}"
@@ -182,5 +182,4 @@
   cf_app_aws_content_key_id: "{{ env_cf_app_aws_content_key_id }}"
   cf_app_aws_content_access_key: "{{ env_cf_app_aws_content_access_key }}"
   cf_app_target_vpc_id: "{{ cf_vpc_id }}"
-  cf_app_sg_app_zone_id: "{{ env_cf_app_sg_app_zone_id }}"
 
