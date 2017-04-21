@@ -3,7 +3,7 @@
 # Created: 4/21/17
 
 - name: Provision Database Server
-  hosts: localhost
+  # hosts: localhost
   connection: local
   # gather_facts: False
   vars:
