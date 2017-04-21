@@ -1,5 +1,5 @@
 ---
-# File: plaform.yml
+# File: platform.yml
 # Created: 4/21/17
 
 - include "../dataserver/create_database.yml"
