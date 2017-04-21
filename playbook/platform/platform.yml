@@ -15,7 +15,7 @@
     - "./../../vars/all_var.yml"
 
 
-  include: "../dataserver/create_database.yml"
-
-  include: "../appserver/create_appserver.yml"
+  include:
+    - "../dataserver/create_database.yml"
+    - "../appserver/create_appserver.yml"
 
