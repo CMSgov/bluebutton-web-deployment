@@ -182,5 +182,4 @@
   cf_app_aws_content_key_id: "{{ env_cf_app_aws_content_key_id }}"
   cf_app_aws_content_access_key: "{{ env_cf_app_aws_content_access_key }}"
   cf_app_target_vpc_id: "{{ cf_vpc_id }}"
-  cf_app_sg_app_zone_id: "{{ env_cf_app_sg_app_zone_id }}"
-
+  
