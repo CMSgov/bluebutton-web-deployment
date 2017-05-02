@@ -183,3 +183,6 @@
   cf_app_aws_content_access_key: "{{ env_cf_app_aws_content_access_key }}"
   cf_app_target_vpc_id: "{{ cf_vpc_id }}"
 
+  mon_nessus_user: "{{ env_mon_nessus_user }}"
+  mon_nessus_pwd: "{{ env_mon_nessus_pwd }}"
+
