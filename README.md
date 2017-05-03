@@ -58,11 +58,13 @@ The release of hhs_ansible is starting the migration of CloudFormation
 scripts to Ansible. playbook/dataserver/create_database.yml is the first
 script to launch a server in ec2.
 
-## Installation
+## Installation (Redhat / Centos / Fedora)
 
 To enable ec2 support you must install python-boto:
    
-    sudo yum install python-boto 
+    sudo yum -y install git
+    sudo yum -y install ansible
+    sudo yum -y install python-boto 
 
 Install hhs_ansible:
 
