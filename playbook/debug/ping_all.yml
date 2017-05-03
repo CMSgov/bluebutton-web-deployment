@@ -31,3 +31,4 @@
 
   - name: "A quick shell echo {{ env }} / {{ vault_env_s3_bucket_account }} / {{ env_db_name }}"
     action: "shell /bin/echo $HOSTNAME in {{ env }} via {{ remote_user_account }}"
+

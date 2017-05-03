@@ -39,8 +39,15 @@
   become_user: root
 
   tasks:
-  - name: "change {{ mon_nessus_user }}"
+  - name: "change {{ mon_nessus_user }} password"
     user: "name={{ mon_nessus_user }} update_password=always password={{ mon_nessus_pwd }}"
 
-
+  - name: "update PasswordAuthentication block in /etc/ssh/sshd_config"
+    blockinfile:
+      path: /etc/ssh/sshd_config
+      block: |
+        Match address 10.128.11.0/24
+          PasswordAuthentication yes
+        Match address 10.128.111.0/24
+          PasswordAuthentication yes
 
