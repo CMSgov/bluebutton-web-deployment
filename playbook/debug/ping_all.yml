@@ -4,8 +4,8 @@
 # Ping all servers
 # A basic script to check things are working.
 
-- hosts: dmz_server,web_server,app_lead_Server,app_follow_server,data_server,mgmt_server
-  vars:
+- hosts: all
+  vars::
     env: "dev"
   # Vars file is relative to playbook file
   # Sequence: 1. Common variables
