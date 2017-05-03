@@ -22,14 +22,14 @@ in a playbook would be:
 
 Where the playbook is found in: ./playbook/{role}/playbook.yml
 
-      ```
-  vars_files:
-    - "./../../vars/common.yml"
-    - "./../../vault/env/{{ env }}/vault.yml"
-    - "./../../vars/env/{{ env }}/env.yml"
-    - "./../../vars/all_var.yml"
+    ```
+    vars_files:
+      - "./../../vars/common.yml"
+      - "./../../vault/env/{{ env }}/vault.yml"
+      - "./../../vars/env/{{ env }}/env.yml"
+      - "./../../vars/all_var.yml"
       
-      ```  
+    ```  
 {env} is a variable passed at run time to the playbook using 
 --extra-vars env=dev | test | impl | prod
 
@@ -75,7 +75,15 @@ Install hhs_ansible:
 Add your hosts to 
     
     /etc/ansible/hosts
+    
+Edit the config file:
 
+    /etc/ansible/ansible.cfg
+
+As a minimum, if you are using AWS you will probably want to change:
+    ' #remote_user = root'
+    
+to the remote user account used to connect to a server.
 
 ## Host Configuration
 
