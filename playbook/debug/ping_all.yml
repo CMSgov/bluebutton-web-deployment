@@ -5,7 +5,7 @@
 # A basic script to check things are working.
 
 - hosts: all
-  vars::
+  vars:
     env: "dev"
   # Vars file is relative to playbook file
   # Sequence: 1. Common variables
