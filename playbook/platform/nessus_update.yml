@@ -33,6 +33,11 @@
     - "./../../vars/all_var.yml"
     # - ../vars/all_vars.yml
     # - ../../vars/playbook/template_envvars.yml
+
+  remote_user: "{{ remote_user_account }}"
+  become: yes
+  become_user: root
+
   tasks:
   - name: "change {{ mon_nessus_user }}"
     user: "name={{ mon_nessus_user }} update_password=always password={{ mon_nessus_pwd }}"
