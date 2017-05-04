@@ -19,7 +19,32 @@
     - "./../../vars/env/{{ env }}/env.yml"
     - "./../../vars/all_var.yml"
 
-  roles:
-    - ../../roles/base_patch
-    - ../../roles/splunk
+#  roles:
+#    - ../../roles/base_patch
+#    - ../../roles/splunk
 
+  tasks:
+    - name: "upgrade all packages"
+      yum:
+        name: "*"
+        state: latest
+
+    - name: Check for reboot hint.
+      shell: LAST_KERNEL=$(rpm -q --last kernel | perl -pe 's/^kernel-(\S+).*/$1/' | head -1); CURRENT_KERNEL=$(uname -r); if [ $LAST_KERNEL != $CURRENT_KERNEL ]; then echo 'reboot'; else echo 'no'; fi
+      ignore_errors: true
+      register: reboot_hint
+
+    - name: Check result
+      debug:
+    - name: "Rebooting ..."
+      command: shutdown -r now "Reboot required for updated kernel"
+      async: 0
+      poll: 0
+      become_user: root
+      ignore_errors: true
+      when: reboot_hint.stdout.find("reboot") != -1
+      register: rebooting
+
+    - name: "Wait for thing to reboot..."
+      pause: seconds=45
+      when: rebooting|changed
