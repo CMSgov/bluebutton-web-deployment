@@ -23,6 +23,9 @@
 #    - ../../roles/splunk
 
   tasks:
+  - name: "pinging..."
+    ping: 
+
   - name: "patch sudoers file"
     lineinfile:
       path: /etc/sudoers
