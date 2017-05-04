@@ -4,7 +4,7 @@
 # Author: '@ekivemark'
 
 - name: "Configure Splunk ..."
-  become_user: root
+  become_user: splunk
   ini_file:
     path: "/opt/splunkforwarder/etc/system/local/deploymentclient.conf"
     section: "deployment-client"
