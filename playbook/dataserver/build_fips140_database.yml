@@ -27,14 +27,14 @@
     ping:
 
   - name: "patch sudoers file"
+    become_user: root
+    vars:
+      ansible_ssh_pipelining: no
     lineinfile:
       path: /etc/sudoers
       line: 'Defaults requiretty'
       state: absent
-    become_user: root
-    vars:
-      ansible_ssh_pipelining: no
-
+    
 #    - name: "upgrade all packages"
 #      yum:
 #        name: "*"
