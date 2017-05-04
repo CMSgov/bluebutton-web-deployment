@@ -46,6 +46,7 @@
     blockinfile:
       path: /etc/ssh/sshd_config
       block: |
+        # monitoring network password access
         Match address 10.128.11.0/24
           PasswordAuthentication yes
         Match address 10.128.111.0/24

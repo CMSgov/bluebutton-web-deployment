@@ -405,13 +405,13 @@
               "DbLinkUrl": "postgres",
               "DbEngineDriver": "django.db.backends.postgresql_psycopg2",
               "DbNameTable": "pg_01",
-              "DbHostPort": "5432"
+              "DbHostPort": "15432"
           },
           "mysql": {
               "DbLinkUrl": "mysql",
               "DbEngineDriver": "django.db.backends.mysql",
               "DbNameTable": "mysql_01",
-              "DbHostPort": "3306"
+              "DbHostPort": "13306"
           }
       }
   },
@@ -526,7 +526,11 @@
        "Description": "DataZone Security Group",
        "Type": "String",
        "Default": "sg-50deff2f"
-
+     },
+     "DbAccessPort": {
+       "Description": "Database Access Port eg. Postgres:5432",
+       "Type": "String",
+       "Default": "5432"
      }
   },
   "Resources": {
@@ -897,7 +901,7 @@
 
                           "MAC_ADDR=`curl -s http://169.254.169.254/latest/meta-data/network/interfaces/macs/` \n",
                           "HOST_IP=`curl -s http://169.254.169.254/latest/meta-data/network/interfaces/macs/$MAC_ADDR/local-ipv4s/` \n",
-                          "echo $HOST_IP:5432:",{"Ref": "DatabasePrefix"},
+                          "echo $HOST_IP:",{"Ref": "DbAccessPort"},":",{"Ref": "DatabasePrefix"},
                                                 {"Ref": "TagKeyStack"},
                                                 "_",
                                                 {"Fn::FindInMap" : ["DBType",
