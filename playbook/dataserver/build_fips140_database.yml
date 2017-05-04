@@ -1,0 +1,27 @@
+---
+# File: build_fips140_database.yml
+# Created: 5/4/17
+# Author: @ekivemark
+
+- name: Provision Database Server
+  hosts: dbservers
+  # connection: local
+  # gather_facts: False
+  vars:
+    env: "dev"
+    env_az: "{{ env }}-az1"
+
+  vars_files:
+    - "./../../vars/common.yml"
+    - "./../../vault/env/{{ env }}/vault.yml"
+    - "./../../vars/env/{{ env }}/env.yml"
+    - "./../../vars/all_var.yml"
+
+  roles:
+    - role: base
+
+  tasks:
+    vars:
+      splunk_client_name: "BB-{{ env }}-{{ cf_data_azone }}-{{ env_cf_data_tag_key_layer }}"
+    - include: roles/base/tasks/configure_splunk.yml
+
