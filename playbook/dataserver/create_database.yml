@@ -58,6 +58,7 @@
         PgsqlPassword: "{{ cf_data_pgsql_password }}"
         VpcId: "{{ cf_data_vpc_id }}"
         DbEc2SecurityGrp: "{{ cf_data_sg_data_zone_id }}"
+        DbAccessPort: "{{ db_host_port }}"
       tags:
         Stack: "BB-{{ env }}-{{ cf_data_azone }}-{{ env_cf_data_tag_key_layer }}-ansible-cloudformation"
         Business: "{{ cf_tags_business }}"
