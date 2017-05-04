@@ -102,7 +102,7 @@
   # gather_facts: False
   vars:
     env: "dev"
-    # env_az: "{{ env }}-az1"
+    env_az: "{{ env }}-az1"
 
   vars_files:
     - "./../../vars/common.yml"
