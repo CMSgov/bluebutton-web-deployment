@@ -20,6 +20,6 @@
     - "./../../vars/all_var.yml"
 
   roles:
-    - base_patch
-    - splunk
+    - ../../roles/base_patch
+    - ../../roles/splunk
 
