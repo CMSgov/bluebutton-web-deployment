@@ -102,8 +102,8 @@
   # gather_facts: False
   vars:
     env: "dev"
-    env_az: "{{ env }}-az1"
-    env_zone: "data"
+    # env_az: "{{ env }}-az1"
+
   vars_files:
     - "./../../vars/common.yml"
     - "./../../vault/env/{{ env }}/vault.yml"
@@ -132,12 +132,13 @@
       # tenancy must be "dedicated"
       tenancy: "dedicated"
       # DEV AZ1 DATA
-      vpc_subnet_id: "{{ common_cf_subnet[env_az][env_zone] }}"  # "subnet-8cecfba6"
+      vpc_subnet_id: "{{ common_cf_subnet[env_az][env_cf_data_tag_key_layer] }}"  # "subnet-8cecfba6"
       count: 1
       state: absent
       termination_protection: yes
       # tags to instance_tags
       instance_tags:
+        Name: "bb-{{ env }}-{{ cf_data_azone }}-{{ env_cf_data_tag_key_layer }}-00"
         Stack: "BB-{{ env }}-{{ cf_data_azone }}-{{ env_cf_data_tag_key_layer }}-ansible"
         Business: "{{ cf_tags_business }}"
         Application: "{{ cf_tags_application }}"
