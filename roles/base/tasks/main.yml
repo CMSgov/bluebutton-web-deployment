@@ -4,7 +4,7 @@
 # Author: @ekivemark
 # Source: http://blog.programster.org/ansible-update-and-reboot-if-required-amazon-linux-servers/
 
-- name: upgrade all packages
+- name: "upgrade all packages"
   yum: name=* state=latest
 
 - name: Check for reboot hint.
@@ -12,7 +12,7 @@
   ignore_errors: true
   register: reboot_hint
 
-- name: Rebooting ...
+- name: "Rebooting ..."
   command: shutdown -r now "Reboot required for updated kernel"
   async: 0
   poll: 0
@@ -21,6 +21,6 @@
   when: reboot_hint.stdout.find("reboot") != -1
   register: rebooting
 
-- name: Wait for thing to reboot...
+- name: "Wait for thing to reboot..."
   pause: seconds=45
   when: rebooting|changed
