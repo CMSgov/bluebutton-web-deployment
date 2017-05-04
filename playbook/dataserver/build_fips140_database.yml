@@ -7,7 +7,7 @@
   hosts: dbservers
   connection: smart
   gather_facts: False
-  user: ec2-user
+  # user: ec2-user
   become_user: root
   # become: yes
   # become_method: sudo
