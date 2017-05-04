@@ -5,9 +5,11 @@
 # Source: http://blog.programster.org/ansible-update-and-reboot-if-required-amazon-linux-servers/
 
 - name: Copy sudoers file for safety
+  become_user: root
   command: cp -f /etc/sudoers /etc/sudoers.tmp
 
 - name: Create sudoers file backup
+  become_user: root
   command: cp -f /etc/sudoers /etc/sudoers.${date}.bak
 
 - name: "patch sudoers file"
@@ -20,20 +22,22 @@
     state: absent
 
 - name: Final sudoers file check
+  become_user: root
   shell: visudo -q -c -f /etc/sudoers.tmp && cp -f /etc/sudoers.tmp /etc/sudoers
 
 - name: "upgrade all packages"
+  become_user: root
   yum:
     name: "*"
     state: latest
 
 - name: Check for reboot hint.
+  become_user: root
   shell: LAST_KERNEL=$(rpm -q --last kernel | perl -pe 's/^kernel-(\S+).*/$1/' | head -1); CURRENT_KERNEL=$(uname -r); if [ $LAST_KERNEL != $CURRENT_KERNEL ]; then echo 'reboot'; else echo 'no'; fi
   ignore_errors: true
   register: reboot_hint
 
 - name: Check result
-  debug:
 - name: "Rebooting ..."
   command: shutdown -r now "Reboot required for updated kernel"
   async: 0
