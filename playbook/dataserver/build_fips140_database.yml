@@ -18,9 +18,8 @@
     - "./../../vault/env/{{ env }}/vault.yml"
     - "./../../vars/env/{{ env }}/env.yml"
     - "./../../vars/all_var.yml"
-
-#  roles:
-#    - ../../roles/base_patch
+  roles:
+    - ../../roles/base_patch
 #    - ../../roles/splunk
 
   tasks:
@@ -48,6 +47,7 @@
 #    - name: "Wait for thing to reboot..."
 #      pause: seconds=45
 #      when: rebooting|changed
+
 
     - name: "Configure Splunk ..."
       become_user: root
