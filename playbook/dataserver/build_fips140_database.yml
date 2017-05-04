@@ -32,9 +32,9 @@
       ansible_ssh_pipelining: no
     lineinfile:
       path: /etc/sudoers
-      line: 'Defaults requiretty'
+      line: 'Defaults   requiretty'
       state: absent
-    
+
 #    - name: "upgrade all packages"
 #      yum:
 #        name: "*"
