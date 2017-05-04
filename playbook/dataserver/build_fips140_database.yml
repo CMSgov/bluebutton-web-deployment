@@ -10,7 +10,7 @@
   user: ec2-user
   become_user: root
   become: yes
-  become_method: sudo
+  # become_method: sudo
   vars:
     env: "dev"
     env_az: "{{ env }}-az1"
