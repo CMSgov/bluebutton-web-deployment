@@ -110,7 +110,6 @@
 
   tasks:
   - name: "launch base server for database"
-    hosts: local
     connection: local
     gather_facts: False
     tags: provisioning
