@@ -1,0 +1,13 @@
+---
+# File: configure_splunk.yml 
+# Created: 5/4/17
+# Author: '@ekivemark'
+
+- name: Configure Splunk
+  ini_file:
+    path: /opt/splunkforwarder/etc/system/local/deploymentclient.conf
+    section: "deployment-client"
+    option: clientName
+    value: "{{ splunk_client_name }}"
+    backup: yes
+
