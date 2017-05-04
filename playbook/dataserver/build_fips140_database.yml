@@ -18,9 +18,9 @@
     - "./../../vars/env/{{ env }}/env.yml"
     - "./../../vars/all_var.yml"
 
-  roles:
-    - role: base
+#  roles:
+#    - role: base
 
   tasks:
-    - include: roles/base/tasks/configure_splunk.yml
-
+    - include: ../../roles/base/tasks/configure_splunk.yml
+    - include: ../../roles/base/tasks/main.yml
