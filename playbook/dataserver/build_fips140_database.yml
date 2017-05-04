@@ -24,7 +24,8 @@
 
   tasks:
   - name: "pinging..."
-    ping: 
+    gather_facts: no
+    ping:
 
   - name: "patch sudoers file"
     lineinfile:
