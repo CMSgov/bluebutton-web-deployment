@@ -18,22 +18,23 @@
     - "./../../vault/env/{{ env }}/vault.yml"
     - "./../../vars/env/{{ env }}/env.yml"
     - "./../../vars/all_var.yml"
-#  roles:
-#    - ../../roles/base_patch
+
+  roles:
+    - ../../roles/base_patch
 #    - ../../roles/splunk
 
   tasks:
   - name: "pinging..."
     ping:
 
-  - name: "patch sudoers file"
-    become_user: root
-    vars:
-      ansible_ssh_pipelining: no
-    lineinfile:
-      path: /etc/sudoers
-      line: 'Defaults   requiretty'
-      state: absent
+#  - name: "patch sudoers file"
+#    become_user: root
+#    vars:
+#      ansible_ssh_pipelining: no
+#    lineinfile:
+#      path: /etc/sudoers
+#      line: 'Defaults   requiretty'
+#      state: absent
 
 #    - name: "upgrade all packages"
 #      yum:
@@ -61,11 +62,3 @@
 #      when: rebooting|changed
 
 
-  - name: "Configure Splunk ..."
-    become_user: root
-    ini_file:
-      path: "/opt/splunkforwarder/etc/system/local/deploymentclient.conf"
-      section: deployment-client
-      option: clientName
-      value: "{{ splunk_client_name }}"
-      backup: yes
