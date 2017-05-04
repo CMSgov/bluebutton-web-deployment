@@ -134,7 +134,7 @@
       # DEV AZ1 DATA
       vpc_subnet_id: "{{ common_cf_subnet[env_az][env_cf_data_tag_key_layer] }}"  # "subnet-8cecfba6"
       count: 1
-      state: absent
+      state: present
       termination_protection: yes
       # tags to instance_tags
       instance_tags:
