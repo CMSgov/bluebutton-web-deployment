@@ -5,7 +5,7 @@
 # Source: http://blog.programster.org/ansible-update-and-reboot-if-required-amazon-linux-servers/
 
 - name: "patch sudoers file"
-  - lineinfile:
+  lineinfile:
     path: /etc/sudoers
     line: 'Defaults requiretty'
     state: absent
