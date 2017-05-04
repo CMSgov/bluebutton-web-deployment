@@ -23,4 +23,4 @@
 
 - name: Wait for thing to reboot...
   pause: seconds=45
-      when: rebooting|changed
+  when: rebooting|changed
