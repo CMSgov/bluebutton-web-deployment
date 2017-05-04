@@ -124,9 +124,11 @@
       # This image should be updated monthly.
       # Current version is: EAST-RH 7-3 Gold Image V.1.09 (HVM) 04-21-2017 - ami-fdde41eb
       image: "ami-fdde41eb" # Change the AMI, from which you want to launch the server
-      region: "us-east-1"
-      key_name: "{{ cf_data_key_name }}" # Change the keypair name
 
+      key_name: "{{ cf_data_key_name }}" # Change the keypair name
+      region: "us-east-1"
+      # tenancy must be "dedicated"
+      tenancy: "dedicated"
       # DEV AZ1 DATA
       vpc_subnet_id: "{{ common_cf_subnet[env_az][env_zone] }}"  # "subnet-8cecfba6"
       count: 1
