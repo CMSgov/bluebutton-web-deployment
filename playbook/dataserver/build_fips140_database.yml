@@ -5,8 +5,7 @@
 
 - name: Provision Database Server
   hosts: dbservers
-  # connection: local
-  # gather_facts: False
+  connection: local
   gather_facts: False
   user: ec2-user
   vars:
