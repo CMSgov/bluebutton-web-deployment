@@ -110,25 +110,26 @@
 
   tasks:
   - name: "launch base server for database"
-    connection: local
-    gather_facts: False
-    tags: provisioning
-    # Necessary Variables for creating/provisioning the EC2 Instance
-    vars:
-      instance_type: "{{ cf_data_instance_type }}"
-      security_group: "BB-SG-DEV-DATA-ALLZONE" # Change the security group name here
-      image: "ami-fdde41eb" # Change the AMI, from which you want to launch the server
-      region: "us-east-1" # Change the Region
-      keypair: "{{ cf_data_key_name }}" # Change the keypair name
-      # DEV AZ1 DATA
-      vpc_subnet_id: "subnet-8cecfba6"
-      count: 1
+    ec2:
+      connection: local
+      gather_facts: False
+      tags: provisioning
+      # Necessary Variables for creating/provisioning the EC2 Instance
+      vars:
+        instance_type: "{{ cf_data_instance_type }}"
+        security_group: "BB-SG-DEV-DATA-ALLZONE" # Change the security group name here
+        image: "ami-fdde41eb" # Change the AMI, from which you want to launch the server
+        region: "us-east-1" # Change the Region
+        keypair: "{{ cf_data_key_name }}" # Change the keypair name
+        # DEV AZ1 DATA
+        vpc_subnet_id: "subnet-8cecfba6"
+        count: 1
 
 
-      tags:
-        Stack: "BB-{{ env }}-{{ cf_data_azone }}-{{ env_cf_data_tag_key_layer }}-ansible"
-        Business: "{{ cf_tags_business }}"
-        Application: "{{ cf_tags_application }}"
-        Environment: "{{ env }}"
-        Function: "{{ cf_data_tag_key_layer }}-{{ cf_data_database_type }}"
-    register: data_fips_output
+        tags:
+          Stack: "BB-{{ env }}-{{ cf_data_azone }}-{{ env_cf_data_tag_key_layer }}-ansible"
+          Business: "{{ cf_tags_business }}"
+          Application: "{{ cf_tags_application }}"
+          Environment: "{{ env }}"
+          Function: "{{ cf_data_tag_key_layer }}-{{ cf_data_database_type }}"
+      register: data_fips_output
