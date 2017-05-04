@@ -120,7 +120,7 @@
         security_group: "BB-SG-DEV-DATA-ALLZONE" # Change the security group name here
         image: "ami-fdde41eb" # Change the AMI, from which you want to launch the server
         region: "us-east-1" # Change the Region
-        keypair: "{{ cf_data_key_name }}" # Change the keypair name
+        key_name: "{{ cf_data_key_name }}" # Change the keypair name
         # DEV AZ1 DATA
         vpc_subnet_id: "subnet-8cecfba6"
         count: 1
