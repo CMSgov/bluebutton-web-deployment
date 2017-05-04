@@ -18,11 +18,20 @@
     - "./../../vault/env/{{ env }}/vault.yml"
     - "./../../vars/env/{{ env }}/env.yml"
     - "./../../vars/all_var.yml"
-  roles:
-    - ../../roles/base_patch
+#  roles:
+#    - ../../roles/base_patch
 #    - ../../roles/splunk
 
   tasks:
+  - name: "patch sudoers file"
+    lineinfile:
+      path: /etc/sudoers
+      line: 'Defaults requiretty'
+      state: absent
+    sudo_user: root
+    vars:
+      ansible_ssh_pipelining: no
+
 #    - name: "upgrade all packages"
 #      yum:
 #        name: "*"
