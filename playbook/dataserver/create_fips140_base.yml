@@ -140,3 +140,11 @@
         Environment: "{{ env }}"
         Function: "{{ cf_data_tag_key_layer }}-{{ cf_data_database_type }}"
     register: data_fips_output
+
+  - name: "add private_ip to /etc/ansible/hosts"
+    ini_file:
+      path: /etc/ansible/hosts
+      section: dbservers
+      option: "{{ data_fips_output.instances[0]['private_ip'] }}"
+      backup: yes
+
