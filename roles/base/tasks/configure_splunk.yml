@@ -4,10 +4,10 @@
 # Author: '@ekivemark'
 
 - name: "Configure Splunk ..."
+  become_user: root
   ini_file:
-    dest: /opt/splunkforwarder/etc/system/local/deploymentclient.conf
+    path: /opt/splunkforwarder/etc/system/local/deploymentclient.conf
     section: "deployment-client"
     option: clientName
     value: "{{ splunk_client_name }}"
     backup: yes
-
