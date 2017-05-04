@@ -119,7 +119,8 @@
       # Necessary Variables for creating/provisioning the EC2 Instance
       #vars:
       instance_type: "{{ cf_data_instance_type }}"
-      security_group: "BB-SG-DEV-DATA-ALLZONE" # Change the security group name here
+      # security_group:
+      group: "BB-SG-DEV-DATA-ALLZONE" # Change the security group name here
       # This image should be updated monthly.
       # Current version is: EAST-RH 7-3 Gold Image V.1.09 (HVM) 04-21-2017 - ami-fdde41eb
       image: "ami-fdde41eb" # Change the AMI, from which you want to launch the server
@@ -129,8 +130,8 @@
       # DEV AZ1 DATA
       vpc_subnet_id: "{{ common_cf_subnet[env_az][env_zone] }}"  # "subnet-8cecfba6"
       count: 1
-
-      tags:
+      # tags to instance_tags
+      instance_tags:
         Stack: "BB-{{ env }}-{{ cf_data_azone }}-{{ env_cf_data_tag_key_layer }}-ansible"
         Business: "{{ cf_tags_business }}"
         Application: "{{ cf_tags_application }}"
