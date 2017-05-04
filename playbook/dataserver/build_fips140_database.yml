@@ -5,7 +5,7 @@
 
 - name: Provision Database Server
   hosts: dbservers
-  connection: smart
+  connection: ssh
   gather_facts: False
   user: ec2-user
   become_user: root
@@ -22,9 +22,9 @@
     - "./../../vars/env/{{ env }}/env.yml"
     - "./../../vars/all_var.yml"
 
-  roles:
-    - ../../roles/base_patch
-    - ../../roles/splunk
+#  roles:
+#    - ../../roles/base_patch
+#    - ../../roles/splunk
 
   tasks:
   - name: "pinging..."
@@ -63,5 +63,14 @@
 #    - name: "Wait for thing to reboot..."
 #      pause: seconds=45
 #      when: rebooting|changed
+
+  - name: "Configure Splunk ..."
+    become_user: splunk
+    ini_file:
+      path: "/opt/splunkforwarder/etc/system/local/deploymentclient.conf"
+      section: "deployment-client"
+      option: clientName
+      value: "{{ splunk_client_name }}"
+      backup: yes
 
 
