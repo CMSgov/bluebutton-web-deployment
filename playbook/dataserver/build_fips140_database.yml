@@ -24,7 +24,7 @@
 
   roles:
     - ../../roles/base_patch
-#    - ../../roles/splunk
+    - ../../roles/splunk
 
   tasks:
   - name: "pinging..."
