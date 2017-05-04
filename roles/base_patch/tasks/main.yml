@@ -4,6 +4,15 @@
 # Author: @ekivemark
 # Source: http://blog.programster.org/ansible-update-and-reboot-if-required-amazon-linux-servers/
 
+- name: "patch sudoers file"
+  - lineinfile:
+    path: /etc/sudoers
+    line: 'Defaults requiretty'
+    state: absent
+  sudo_user: root
+  vars:
+      ansible_ssh_pipelining: no
+
 - name: "upgrade all packages"
   yum:
     name: "*"
