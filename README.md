@@ -62,6 +62,8 @@ script to launch a server in ec2.
 
 To enable ec2 support you must install python-boto:
    
+    sudo yum install -y python-pip
+    sudo pip install --upgrade pip
     sudo yum -y install git
     sudo yum -y install ansible
     sudo yum -y install python-boto 
