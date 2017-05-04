@@ -5,12 +5,14 @@
 # Source: http://blog.programster.org/ansible-update-and-reboot-if-required-amazon-linux-servers/
 
 - name: Copy sudoers file for safety
+  become: true
   become_user: root
-  command: "sudo cp -f /etc/sudoers /etc/sudoers.tmp"
+  command: "cp -f /etc/sudoers /etc/sudoers.tmp"
 
 - name: Create sudoers file backup
+  become: true
   become_user: root
-  command: "sudo cp -f /etc/sudoers /etc/sudoers.${date}.bak"
+  command: "cp -f /etc/sudoers /etc/sudoers.${date}.bak"
 
 - name: "patch sudoers file"
   become_user: root
