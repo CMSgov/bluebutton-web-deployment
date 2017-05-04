@@ -8,6 +8,7 @@
   connection: smart
   gather_facts: False
   user: ec2-user
+  become_user: root
   vars:
     env: "dev"
     env_az: "{{ env }}-az1"
