@@ -119,6 +119,8 @@
       # Necessary Variables for creating/provisioning the EC2 Instance
       #vars:
       instance_type: "{{ cf_data_instance_type }}"
+      # Adding instance_id list to see if only one server is created.
+      instance_ids: ["i-028b8fcc6eaf54779"]
       # security_group:
       group: "BB-SG-DEV-DATA-ALLZONE" # Change the security group name here
       # This image should be updated monthly.
