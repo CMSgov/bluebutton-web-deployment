@@ -5,7 +5,7 @@
 
 - name: Provision Database Server
   hosts: dbservers
-  connection: ssh
+  connection: smart
   gather_facts: False
   user: ec2-user
   become_user: root
