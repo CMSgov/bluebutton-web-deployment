@@ -3,7 +3,7 @@
 # Created: 5/4/17
 # Author: @ekivemark
 
-- name: Provision Database Server
+- name: Provision FIPS 140.2 Server
   hosts: dbservers
   # connection: smart
   gather_facts: False
@@ -24,9 +24,7 @@
 
   roles:
     - ../../roles/base_patch
-    - ../../roles/splunk
-    - ../../roles/postgres
-
+    - ../../roles/fips140
   tasks:
   - name: "pinging..."
     become_user: root
