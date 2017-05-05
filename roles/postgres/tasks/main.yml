@@ -86,9 +86,11 @@
   become_user: root
   shell: "cat fips_140_2_update.log"
   register: fips_log
+
+- name: "Show FIPS 140.2 log"
   debug:
     msg: "FIPS_140_2_update.log:\n{{ fips_log }}"
-  
+
 - name: "Is FIPS installed?"
   debug:
     msg: "Is FIPS active? {{ fips_installed }}"
