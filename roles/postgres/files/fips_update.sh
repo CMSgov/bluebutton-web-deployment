@@ -66,8 +66,8 @@ if [ $1 -eq 2 ]
   mv -v /boot/initramfs-$(uname -r).img{,.bak} >> $LOG_FILE 2>&1
   echo "" >> $LOG_FILE
   echo "Run dracut to rebuild initramfs" >> $LOG_FILE
-  echo "dracut -f " >> $LOG_FILE
-  dracut >> $LOG_FILE 2>&1
+  echo "dracut --force " >> $LOG_FILE
+  dracut --force >> $LOG_FILE 2>&1
   echo "" >> $LOG_FILE
   echo "Edit kernel command-line to include the fips=1 argument" >> $LOG_FILE
   echo "grubby --update-kernel=$(grubby --default-kernel) --args=fips=1" >> $LOG_FILE
