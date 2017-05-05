@@ -78,8 +78,8 @@
     ec2_vol:
        instance: "{{ item.id }}"
        volume_size: "{{ cf_data_vol_size }}"
-       id: "{{ cf_data_vol_id }}"
-       device_name: /dev/xvdb
+       # id: "{{ cf_data_vol_id }}"
+       # device_name: "/dev/xvdb"
        encrypted: yes
        region: "{{ cf_region }}"
     with_items: "{{ data_fips_output.instances }}"
