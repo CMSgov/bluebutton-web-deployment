@@ -36,8 +36,8 @@
 
 - name: "Rebooting after step 1/4 ..."
   command: shutdown -r now "Reboot required after FIPS Step 1 install"
-  async: 0
-  poll: 0
+  # async: 0
+  # poll: 0
   become_user: root
   ignore_errors: true
   when: reboot_hint.stdout.find("reboot") != -1
