@@ -65,6 +65,8 @@
       # state: present
       termination_protection: yes
       # tags to instance_tags
+      # Wait for desired state - so we can attach a volume
+      wait: yes
       instance_tags:
         Name: "bb-{{ env }}-{{ cf_data_azone }}-{{ env_cf_data_tag_key_layer }}-{{ env_cf_data_version }}"
         Stack: "BB-{{ env }}-{{ cf_data_azone }}-{{ env_cf_data_tag_key_layer }}-ansible"
@@ -79,7 +81,7 @@
        instance: "{{ item.id }}"
        volume_size: "{{ cf_data_vol_size }}"
        # id: "{{ cf_data_vol_id }}"
-       # device_name: "/dev/xvdb"
+       device_name: "/dev/xvdb"
        encrypted: yes
        region: "{{ cf_region }}"
     with_items: "{{ data_fips_output.instances }}"
