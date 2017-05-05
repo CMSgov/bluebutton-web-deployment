@@ -2,3 +2,50 @@
 # File: main 
 # Created: 5/4/17
 # Author: @ekivemark
+
+- name: "install FIPS 140 script..."
+  copy:
+    mode: "u+x"
+    owner: root
+    group: root
+    src: "{{ role_path }}/files/fips_update.sh"
+    dest: "/root/fips140/fips_update.sh"
+
+- name: "FIPS setup step 1/4..."
+  become_user: root
+  shell: "/root/fips140/fips_update.sh 1"
+  register: rebooting_1
+
+- name: "Wait for thing to reboot..."
+  pause: seconds=45
+  when: rebooting_1|changed
+
+- name: "FIPS setup step 2/4..."
+  become_user: root
+  shell: "/root/fips140/fips_update.sh 2"
+  register: rebooting_2
+
+- name: "Wait for thing to reboot..."
+  pause: seconds=45
+  when: rebooting_2|changed
+
+- name: "FIPS setup step 3/4..."
+  become_user: root
+  shell: "/root/fips140/fips_update.sh 3"
+  register: rebooting_3
+
+- name: "Wait for thing to reboot..."
+  pause: seconds=45
+  when: rebooting_3|changed
+
+- name: "FIPS setup step 4/4..."
+  become_user: root
+  shell: "/root/fips140/fips_update.sh 3"
+  register: rebooting_4
+
+- name: "Wait for thing to reboot..."
+  pause: seconds=45
+  when: rebooting_4|changed
+
+
+
