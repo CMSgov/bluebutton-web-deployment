@@ -84,7 +84,7 @@
 
 - name: "FIPS 140.2 install Log"
   become_user: root
-  shell: "cat \root\fips_140_2_update.log"
+  shell: "cat /root/fips_140_2_update.log"
   register: fips_log
 
 - name: "Show FIPS 140.2 log"
