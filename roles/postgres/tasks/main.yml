@@ -21,7 +21,7 @@
 # yum update run in base_patch
 # install fips modules
 - name: "FIPS 140.2 install step 2"
-    yum: pkg={{item}} state=installed
+  yum: pkg={{item}} state=installed
     with_items:
      - dracut-fips
      - dracut-fips-aesni
