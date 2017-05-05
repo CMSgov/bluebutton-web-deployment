@@ -65,9 +65,9 @@
 #      when: rebooting|changed
 
   - name: "Configure Splunk ..."
-    become_user: splunk
+    become_user: root
     ini_file:
-      path: /opt/splunkforwarder/etc/system/local/deploymentclient.conf
+      dest: /opt/splunkforwarder/etc/system/local/deploymentclient.conf
       section: "deployment-client"
       option: clientName
       value: "{{ splunk_client_name }}"
