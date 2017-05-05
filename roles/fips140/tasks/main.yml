@@ -1,0 +1,101 @@
+---
+# File: main 
+# Created: 5/4/17
+# Author: @ekivemark
+
+- name: "Create FIPS140 directory"
+  file:
+    path: /root/fips140
+    state: directory
+    owner: root
+    group: root
+
+- name: "install FIPS 140 script..."
+  copy:
+    mode: "u+x"
+    owner: root
+    group: root
+    src: "{{ role_path }}/files/fips_update.sh"
+    dest: "/root/fips140/fips_update.sh"
+
+# yum update run in base_patch
+# install fips modules
+- name: "FIPS 140.2 install step 2"
+  yum:
+    pkg: "{{item}}"
+    state: installed
+  with_items:
+   - dracut-fips
+   - dracut-fips-aesni
+
+- name: "Initialize FIPS 140.2 Log"
+  become_user: root
+  shell: "/root/fips140/fips_update.sh 0"
+
+- name: "FIPS 140.2 Update boot images"
+  become_user: root
+  shell: "/root/fips140/fips_update.sh 2"
+
+  #- name: "Backup initramfs"
+  #  become_user: root
+  #  shell: "mv -v /boot/initramfs-$(uname -r).img{,.bak}"
+  #
+  #- name: "run dracut to rebuild initramfs"
+  #  become_user: root
+  #  shell: "dracut --force "
+  #
+  #- name: "change boot loader to apply FIPS"
+  #  become_user: root
+  #  shell: "grubby --update-kernel=$(grubby --default-kernel) --args=fips=1"
+
+- name: "Rebooting after dracut update ..."
+  command: shutdown -r now "Reboot required after initramfs and grubby changes"
+  # async: 0
+  # poll: 0
+  become_user: root
+  ignore_errors: true
+  when: reboot_hint.stdout.find("reboot") != -1
+  register: rebooting_1
+
+- name: "Wait for server to reboot..."
+  pause: seconds=45
+  when: rebooting_1|changed
+
+
+- name: "FIPS setup step 3/4..."
+  become_user: root
+  shell: "/root/fips140/fips_update.sh 3"
+
+- name: "Rebooting after step 3/4 ..."
+  command: shutdown -r now "Reboot required after FIPS Step 3 install"
+  async: 0
+  poll: 0
+  become_user: root
+  ignore_errors: true
+  when: reboot_hint.stdout.find("reboot") != -1
+  register: rebooting_3
+
+- name: "Wait for thing to reboot..."
+  pause: seconds=45
+  when: rebooting_3|changed
+
+- name: "FIPS setup step 4/4..."
+  become_user: root
+  shell: "sysctl crypto.fips_enabled"
+  register: fips_installed
+
+- name: "FIPS 140.2 install Log"
+  become_user: root
+  shell: "cat /root/fips_140_2_update.log"
+  register: fips_log
+
+- name: "Show FIPS 140.2 log"
+  debug:
+    msg: "FIPS_140_2_update.log:\n{{ fips_log }}"
+
+- name: "Is FIPS installed?"
+  debug:
+    msg: "Is FIPS active? {{ fips_installed }}"
+
+
+

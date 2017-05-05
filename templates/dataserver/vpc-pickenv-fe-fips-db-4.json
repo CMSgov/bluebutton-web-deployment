@@ -530,7 +530,7 @@
      "DbAccessPort": {
        "Description": "Database Access Port eg. Postgres:5432",
        "Type": "String",
-       "Default": "5432"
+       "Default": "15432"
      }
   },
   "Resources": {
@@ -729,6 +729,7 @@
                           "yum install -y  https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-6-x86_64/pgdg-redhat96-9.6-3.noarch.rpm \n",
                           "yum install -y postgresql96-server \n",
                           "# yum install -y  https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-6-x86_64/postgresql96-contrib-9.6.1-1PGDG.rhel6.x86_64.rpm \n",
+
                           "export PGDATA=/data/pgsql/9.6/data \n",
 
                           "echo '# Prepare the external drive' >>$BUILD_LOG \n",

@@ -155,6 +155,8 @@
   cf_data_pyapps_email: "{{ env_cf_data_pyapps_email }}"
   cf_data_pgsql_password: "{{ env_cf_data_pgsql_password }}"
   cf_data_vpc_id: "{{ cf_vpc_id }}"
+  cf_data_vol_size: "{{ env_cf_data_vol_size }}"
+  cf_data_vol_id: "{{ env_cf_data_vol_id }}"
 
   cf_app_sg_app_zone_id: "{{ env_cf_app_sg_app_zone_id }}"
   cf_app_azone: "{{env_cf_app_azone }}"
