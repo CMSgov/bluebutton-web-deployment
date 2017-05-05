@@ -28,7 +28,7 @@
   vars:
     env: "dev"
     env_az: "{{ env }}-az1"
-    env_cf_data_version: "04"
+    env_cf_data_version: "05"
 
   vars_files:
     - "./../../vars/common.yml"
@@ -75,7 +75,7 @@
 
   - name: "add private_ip to /etc/ansible/hosts"
     lineinfile:
-      path: /etc/ansible/hosts
+      dest: "/etc/ansible/hosts"
       regexp: "[dbservers]"
       line: "[dbservers]\n{{ data_fips_output.instances[0]['private_ip'] }}"
       backup: yes
