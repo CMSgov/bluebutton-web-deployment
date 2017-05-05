@@ -137,6 +137,7 @@
   db_host_address: "{{ env_db_host_address }}"
   db_host_port: "{{ env_db_host_port }}"
 
+  cf_region: "us-east-1"
   cf_vpc_id: "{{ env_cf_vpc_id }}"
   cf_platform_version: "{{ env_cf_platform_version }}"
   cf_data_sg_data_zone_id: "{{ env_cf_data_sg_data_zone_id }}"
