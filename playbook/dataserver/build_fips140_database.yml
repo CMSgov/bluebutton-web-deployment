@@ -9,7 +9,7 @@
   gather_facts: False
   user: ec2-user
   become_user: root
-  # become: yes
+  become: yes
   # become_method: sudo
   vars:
     env: "dev"
