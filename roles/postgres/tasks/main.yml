@@ -26,17 +26,21 @@
    - dracut-fips
    - dracut-fips-aesni
 
-- name: "Backup initramfs"
+- name: "FIPS 140.2 Update boot images"
   become_user: root
-  shell: "mv -v /boot/initramfs-$(uname -r).img{,.bak}"
+  shell: "/root/fips140/fips_update.sh 2"
 
-- name: "run dracut to rebuild initramfs"
-  become_user: root
-  shell: "dracut -f "
-
-- name: "change boot loader to apply FIPS"
-  become_user: root
-  shell: "grubby --update-kernel=$(grubby --default-kernel) --args=fips=1"
+  #- name: "Backup initramfs"
+  #  become_user: root
+  #  shell: "mv -v /boot/initramfs-$(uname -r).img{,.bak}"
+  #
+  #- name: "run dracut to rebuild initramfs"
+  #  become_user: root
+  #  shell: "dracut --force "
+  #
+  #- name: "change boot loader to apply FIPS"
+  #  become_user: root
+  #  shell: "grubby --update-kernel=$(grubby --default-kernel) --args=fips=1"
 
 - name: "Rebooting after dracut update ..."
   command: shutdown -r now "Reboot required after initramfs and grubby changes"
