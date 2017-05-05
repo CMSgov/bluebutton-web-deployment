@@ -29,7 +29,7 @@
   tasks:
   - name: "pinging..."
     become_user: root
-    ping::
+    ping:
 
 #  - name: "patch sudoers file"
 #    become_user: root
