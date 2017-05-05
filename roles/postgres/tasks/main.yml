@@ -22,37 +22,28 @@
   become_user: root
   shell: "/root/fips140/fips_update.sh 1"
   register: rebooting_1
-
-- name: "Wait for thing to reboot..."
-  pause: seconds=45
-  when: rebooting_1|changed
+  notify:
+   - Wait for server to restart
 
 - name: "FIPS setup step 2/4..."
   become_user: root
   shell: "/root/fips140/fips_update.sh 2"
   register: rebooting_2
-
-- name: "Wait for thing to reboot..."
-  pause: seconds=45
-  when: rebooting_2|changed
+  notify:
+   - Wait for server to restart
 
 - name: "FIPS setup step 3/4..."
   become_user: root
   shell: "/root/fips140/fips_update.sh 3"
   register: rebooting_3
-
-- name: "Wait for thing to reboot..."
-  pause: seconds=45
-  when: rebooting_3|changed
+  notify:
+   - Wait for server to restart
 
 - name: "FIPS setup step 4/4..."
   become_user: root
   shell: "/root/fips140/fips_update.sh 3"
   register: rebooting_4
 
-- name: "Wait for thing to reboot..."
-  pause: seconds=45
-  when: rebooting_4|changed
 
 
 
