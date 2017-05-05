@@ -13,7 +13,7 @@
 - name: Wait for server to restart
   local_action:
     module: wait_for
-      host: {{ inventory_hostname }}
+      host: "{{ inventory_hostname }}"
       port: 22
       delay: 1
       timeout: 300
