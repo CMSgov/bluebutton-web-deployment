@@ -65,20 +65,21 @@
 #      when: rebooting|changed
 
   - name: "Configure Splunk ..."
+    become_user: root
 #    become_user: root
-#    ini_file:
-#      dest: /opt/splunkforwarder/etc/system/local/deploymentclient.conf
-#      owner: splunk
-#      group: splunk
-#      mode: u+rwx
-#      section: "deployment-client"
-#      option: clientName
-#      value: "{{ splunk_client_name }}"
-#      # backup: yes
-    replace:
+    ini_file:
+      dest: /opt/splunkforwarder/etc/system/local/deploymentclient.conf
       owner: splunk
       group: splunk
-      name: "/opt/splunkforwarder/etc/system/local/deploymentclient.conf"
-      regexp: 'REPLACE-WITH-APP-NAME'
-      replace: "{{ splunk_client_name }}"
+      mode: u+rwx
+      section: "deployment-client"
+      option: clientName
+      value: "{{ splunk_client_name }}"
       # backup: yes
+#    replace:
+#      owner: splunk
+#      group: splunk
+#      name: "/opt/splunkforwarder/etc/system/local/deploymentclient.conf"
+#      regexp: 'REPLACE-WITH-APP-NAME'
+#      replace: "{{ splunk_client_name }}"
+#      # backup: yes
