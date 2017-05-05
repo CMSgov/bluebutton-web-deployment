@@ -14,7 +14,7 @@
   vars:
     env: "dev"
     env_az: "{{ env }}-az1"
-    splunk_client_name: "BB-{{ env }}-DATA"
+    splunk_client_name: "BBAPI-{{ env }}-DATA"
 
   vars_files:
     - "./../../vars/common.yml"
@@ -65,7 +65,7 @@
 #      when: rebooting|changed
 
   - name: "Configure Splunk ..."
-    become_user: root
+#    become_user: root
 #    ini_file:
 #      dest: /opt/splunkforwarder/etc/system/local/deploymentclient.conf
 #      owner: splunk
@@ -75,7 +75,6 @@
 #      option: clientName
 #      value: "{{ splunk_client_name }}"
 #      # backup: yes
-
     replace:
       owner: splunk
       group: splunk
