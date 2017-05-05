@@ -17,7 +17,7 @@
   vars:
     ansible_ssh_pipelining: no
   lineinfile:
-    path: /etc/sudoers.tmp
+    dest: /etc/sudoers.tmp
     line: 'Defaults   requiretty'
     state: absent
 
@@ -28,7 +28,7 @@
 - name: "clean up /root for dataservers"
   become_user: root
   file:
-    path: /root/fips_140_2_update.log.*
+    dest: /root/fips_140_2_update.log.*
     state: absent
 
 - name: "upgrade all packages"
