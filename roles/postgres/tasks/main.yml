@@ -28,14 +28,18 @@
 
 - name: "Backup initramfs"
   become_user: root
-  shell: "mv -v /boot/initramfs-$(uname -r).img{,.bak} >> $LOG_FILE 2>&1"
+  shell: "mv -v /boot/initramfs-$(uname -r).img{,.bak}"
 
 - name: "run dracut to rebuild initramfs"
   become_user: root
   shell: "dracut -f "
 
-- name: "Rebooting after step 1/4 ..."
-  command: shutdown -r now "Reboot required after FIPS Step 1 install"
+- name: "change boot loader to apply FIPS"
+  become_user: root
+  shell: "grubby --update-kernel=$(grubby --default-kernel) --args=fips=1"
+
+- name: "Rebooting after dracut update ..."
+  command: shutdown -r now "Reboot required after initramfs and grubby changes"
   # async: 0
   # poll: 0
   become_user: root
@@ -43,27 +47,10 @@
   when: reboot_hint.stdout.find("reboot") != -1
   register: rebooting_1
 
-- name: "Wait for thing to reboot..."
+- name: "Wait for server to reboot..."
   pause: seconds=45
   when: rebooting_1|changed
 
-
-- name: "FIPS setup step 2/4..."
-  become_user: root
-  shell: "/root/fips140/fips_update.sh 2"
-
-- name: "Rebooting after step 2/4 ..."
-  command: shutdown -r now "Reboot required after FIPS Step 2 install"
-  async: 0
-  poll: 0
-  become_user: root
-  ignore_errors: true
-  when: reboot_hint.stdout.find("reboot") != -1
-  register: rebooting_2
-
-- name: "Wait for thing to reboot..."
-  pause: seconds=45
-  when: rebooting_2|changed
 
 - name: "FIPS setup step 3/4..."
   become_user: root
@@ -84,8 +71,12 @@
 
 - name: "FIPS setup step 4/4..."
   become_user: root
-  shell: "/root/fips140/fips_update.sh 4"
-  register: rebooting_4
+  shell: "sysctl crypto.fips_enabled"
+  register: fips_installed
+
+- name: "Is FIPS installed?"
+  debug:
+    msg: "Is FIPS active? {{ fips_installed }}"
 
 
 
