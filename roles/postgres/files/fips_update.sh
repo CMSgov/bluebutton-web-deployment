@@ -35,7 +35,8 @@ if [ $1 -eq 1 ]
   yum -y update >> $LOG_FILE 2>&1
   echo "Rebooting now" >> $LOG_FILE
   echo "" >> $LOG_FILE
-  shutdown -r now
+  # shutdown -r now
+  echo "step 1 completed" >>1_done_$LOG_FILE
   exit 0
   fi
 
@@ -74,7 +75,8 @@ if [ $1 -eq 2 ]
   echo "" >> $LOG_FILE
   echo "Rebooting now" >> $LOG_FILE
   echo "" >> $LOG_FILE
-  shutdown -r now
+  # shutdown -r now
+  echo "step 2 completed" >>2_done_$LOG_FILE
   exit 0
   fi
 
@@ -91,7 +93,8 @@ if [ $1 -eq 3 ]
   echo "" >> $LOG_FILE
   echo "Rebooting now" >> $LOG_FILE
   echo "" >> $LOG_FILE
-  shutdown -r now
+  # shutdown -r now
+  echo "step 3 completed" >>3_done_$LOG_FILE
   exit 0
   fi
 
@@ -119,5 +122,6 @@ if [ $1 -eq 4 ]
   echo "" >> $LOG_FILE
   echo "Verification completed" >> $LOG_FILE
   date >> $LOG_FILE
+  echo "step 4 completed" >>4_done_$LOG_FILE
   fi
 exit 0
