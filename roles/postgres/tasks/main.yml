@@ -21,15 +21,32 @@
 - name: "FIPS setup step 1/4..."
   become_user: root
   shell: "/root/fips140/fips_update.sh 1"
+
+- name: "Rebooting after step 1/4 ..."
+  command: shutdown -r now "Reboot required after FIPS Step 1 install"
+  async: 0
+  poll: 0
+  become_user: root
+  ignore_errors: true
+  when: reboot_hint.stdout.find("reboot") != -1
   register: rebooting_1
 
 - name: "Wait for thing to reboot..."
   pause: seconds=45
   when: rebooting_1|changed
 
+
 - name: "FIPS setup step 2/4..."
   become_user: root
   shell: "/root/fips140/fips_update.sh 2"
+
+- name: "Rebooting after step 2/4 ..."
+  command: shutdown -r now "Reboot required after FIPS Step 2 install"
+  async: 0
+  poll: 0
+  become_user: root
+  ignore_errors: true
+  when: reboot_hint.stdout.find("reboot") != -1
   register: rebooting_2
 
 - name: "Wait for thing to reboot..."
@@ -39,6 +56,14 @@
 - name: "FIPS setup step 3/4..."
   become_user: root
   shell: "/root/fips140/fips_update.sh 3"
+
+- name: "Rebooting after step 3/4 ..."
+  command: shutdown -r now "Reboot required after FIPS Step 3 install"
+  async: 0
+  poll: 0
+  become_user: root
+  ignore_errors: true
+  when: reboot_hint.stdout.find("reboot") != -1
   register: rebooting_3
 
 - name: "Wait for thing to reboot..."
