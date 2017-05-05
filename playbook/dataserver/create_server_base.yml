@@ -56,7 +56,7 @@
       image: "ami-f070abe6" # Change the AMI, from which you want to launch the server
 
       key_name: "{{ cf_data_key_name }}" # Change the keypair name
-      region: "us-east-1"
+      region: "{{ cf_region }}"
       # tenancy must be "dedicated"
       tenancy: "dedicated"
       # DEV AZ1 DATA
@@ -81,6 +81,7 @@
        id: "{{ cf_data_vol_id }}"
        device_name: /dev/xvdb
        encrypted: yes
+       region: "{{ cf_region }}"
     with_items: "{{ data_fips_output.instances }}"
     register: ec2_vol
 
