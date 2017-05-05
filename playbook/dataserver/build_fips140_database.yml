@@ -76,8 +76,8 @@
 #      value: "{{ splunk_client_name }}"
 #      # backup: yes
 
-  - replace:
-    dest: /opt/splunkforwarder/etc/system/local/deploymentclient.conf
-    regexp: 'REPLACE-WITH-APP-NAME'
-    replace: "{{ splunk_client_name }}"
-    backup: yes
+    replace:
+      dest: /opt/splunkforwarder/etc/system/local/deploymentclient.conf
+      regexp: 'REPLACE-WITH-APP-NAME'
+      replace: "{{ splunk_client_name }}"
+      backup: yes
