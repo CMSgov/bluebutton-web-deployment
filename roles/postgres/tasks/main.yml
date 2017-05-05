@@ -22,9 +22,9 @@
 # install fips modules
 - name: "FIPS 140.2 install step 2"
   yum: pkg={{item}} state=installed
-    with_items:
-     - dracut-fips
-     - dracut-fips-aesni
+  with_items:
+   - dracut-fips
+   - dracut-fips-aesni
 
 - name: "Backup initramfs"
   become_user: root
