@@ -33,4 +33,4 @@
     ping:
 
   handlers:
-    - ../../roles/postgres/handlers/main.yml
+    - include: "../../roles/postgres/handlers/main.yml"
