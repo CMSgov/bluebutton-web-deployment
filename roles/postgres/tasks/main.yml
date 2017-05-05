@@ -72,7 +72,7 @@
 
 - name: "FIPS setup step 4/4..."
   become_user: root
-  shell: "/root/fips140/fips_update.sh 3"
+  shell: "/root/fips140/fips_update.sh 4"
   register: rebooting_4
 
 

@@ -36,7 +36,7 @@ if [ $1 -eq 1 ]
   echo "Rebooting now" >> $LOG_FILE
   echo "" >> $LOG_FILE
   # shutdown -r now
-  echo "step 1 completed" >>1_done_$LOG_FILE
+  echo "step 1 completed" >>$LOG_FILE.1done
   exit 0
   fi
 
@@ -76,7 +76,7 @@ if [ $1 -eq 2 ]
   echo "Rebooting now" >> $LOG_FILE
   echo "" >> $LOG_FILE
   # shutdown -r now
-  echo "step 2 completed" >>2_done_$LOG_FILE
+  echo "step 2 completed" >>$LOG_FILE.2done
   exit 0
   fi
 
@@ -94,7 +94,7 @@ if [ $1 -eq 3 ]
   echo "Rebooting now" >> $LOG_FILE
   echo "" >> $LOG_FILE
   # shutdown -r now
-  echo "step 3 completed" >>3_done_$LOG_FILE
+  echo "step 3 completed" >>$LOG_FILE.3done
   exit 0
   fi
 
@@ -122,6 +122,6 @@ if [ $1 -eq 4 ]
   echo "" >> $LOG_FILE
   echo "Verification completed" >> $LOG_FILE
   date >> $LOG_FILE
-  echo "step 4 completed" >>4_done_$LOG_FILE
+  echo "step 4 completed" >>$LOG_FILE.4done
   fi
 exit 0
