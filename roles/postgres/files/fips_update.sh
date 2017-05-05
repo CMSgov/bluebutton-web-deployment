@@ -26,6 +26,14 @@ if [ $# -ne 1 ]
   exit 1
   fi
 
+if [ $1 -eq 0 ]
+  then
+  echo "Initializing LogFile: $LOGFILE" > $LOG_FILE
+  date >> $LOG_FILE
+  echo "" >> $LOG_FILE
+  exit 0
+fi
+
 if [ $1 -eq 1 ]
   then
   echo "Starting Pass 1" > $LOG_FILE
@@ -62,7 +70,7 @@ if [ $1 -eq 2 ]
   rpm -q prelink >> $LOG_FILE 2>&1
   echo "" >> $LOG_FILE
   echo "Backing up existing initramfs" >> $LOG_FILE
-  echo 'mv -v /boot/initramfs-$(uname -r).img{,.bak}' >> $LOG_FILE
+  echo 'mv -vf /boot/initramfs-$(uname -r).img{,.bak}' >> $LOG_FILE
   mv -v /boot/initramfs-$(uname -r).img{,.bak} >> $LOG_FILE 2>&1
   echo "" >> $LOG_FILE
   echo "Run dracut to rebuild initramfs" >> $LOG_FILE
