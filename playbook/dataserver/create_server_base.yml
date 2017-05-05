@@ -76,7 +76,7 @@
 
   - name: "Attach data volume:{{ cf_data_vol_id }}"
     ec2_vol:
-       instance: "{{ item.id }} "
+       instance: "{{ item.id }}"
        volume_size: "{{ cf_data_vol_size }}"
        id: "{{ cf_data_vol_id }}"
        device_name: /dev/xvdb
