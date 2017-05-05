@@ -52,7 +52,7 @@
       # This image should be updated monthly.
       # Current version is: EAST-RH 7-3 Gold Image V.1.09 (HVM) 04-21-2017 - ami-fdde41eb
       # EAST-RH 6-9 Gold Image V.1.01 (PV) 04-21-17 - ami-3dda452b
-      image: "ami-fdde41eb" # Change the AMI, from which you want to launch the server
+      image: "ami-3dda452b" # Change the AMI, from which you want to launch the server
 
       key_name: "{{ cf_data_key_name }}" # Change the keypair name
       region: "us-east-1"
