@@ -74,6 +74,6 @@
       section: "deployment-client"
       option: clientName
       value: "{{ splunk_client_name }}"
-      backup: yes
+      # backup: yes
 
 
