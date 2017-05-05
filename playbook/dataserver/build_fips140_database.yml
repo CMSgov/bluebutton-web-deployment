@@ -22,9 +22,9 @@
     - "./../../vars/env/{{ env }}/env.yml"
     - "./../../vars/all_var.yml"
 
-#  roles:
-#    - ../../roles/base_patch
-#    - ../../roles/splunk
+  roles:
+    - ../../roles/base_patch
+    - ../../roles/splunk
 
   tasks:
   - name: "pinging..."
@@ -65,18 +65,6 @@
 #      pause: seconds=45
 #      when: rebooting|changed
 
-  - name: "Configure Splunk ..."
-    become_user: root
-#    become_user: root
-    ini_file:
-      dest: /opt/splunkforwarder/etc/system/local/deploymentclient.conf
-      owner: splunk
-      group: splunk
-      mode: u+rwx
-      section: "deployment-client"
-      option: clientName
-      value: "{{ splunk_client_name }}"
-      # backup: yes
 #    replace:
 #      owner: splunk
 #      group: splunk
