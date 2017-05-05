@@ -26,6 +26,10 @@
    - dracut-fips
    - dracut-fips-aesni
 
+- name: "Initialize FIPS 140.2 Log"
+  become_user: root
+  shell: "/root/fips140/fips_update.sh 0"
+
 - name: "FIPS 140.2 Update boot images"
   become_user: root
   shell: "/root/fips140/fips_update.sh 2"
@@ -78,6 +82,13 @@
   shell: "sysctl crypto.fips_enabled"
   register: fips_installed
 
+- name: "FIPS 140.2 install Log"
+  become_user: root
+  shell: "cat fips_140_2_update.log"
+  register: fips_log
+  debug:
+    msg: "FIPS_140_2_update.log:\n{{ fips_log }}"
+  
 - name: "Is FIPS installed?"
   debug:
     msg: "Is FIPS active? {{ fips_installed }}"
