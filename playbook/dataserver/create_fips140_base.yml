@@ -28,6 +28,7 @@
   vars:
     env: "dev"
     env_az: "{{ env }}-az1"
+    env_cf_data_version: "04"
 
   vars_files:
     - "./../../vars/common.yml"
@@ -51,7 +52,7 @@
       # This image should be updated monthly.
       # Current version is: EAST-RH 7-3 Gold Image V.1.09 (HVM) 04-21-2017 - ami-fdde41eb
       # EAST-RH 6-9 Gold Image V.1.01 (PV) 04-21-17 - ami-3dda452b
-      image: "ami-3dda452b" # Change the AMI, from which you want to launch the server
+      image: "ami-fdde41eb" # Change the AMI, from which you want to launch the server
 
       key_name: "{{ cf_data_key_name }}" # Change the keypair name
       region: "us-east-1"
@@ -64,7 +65,7 @@
       termination_protection: yes
       # tags to instance_tags
       instance_tags:
-        Name: "bb-{{ env }}-{{ cf_data_azone }}-{{ env_cf_data_tag_key_layer }}-00"
+        Name: "bb-{{ env }}-{{ cf_data_azone }}-{{ env_cf_data_tag_key_layer }}-{{ env_cf_data_version }}"
         Stack: "BB-{{ env }}-{{ cf_data_azone }}-{{ env_cf_data_tag_key_layer }}-ansible"
         Business: "{{ cf_tags_business }}"
         Application: "{{ cf_tags_application }}"

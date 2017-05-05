@@ -18,9 +18,21 @@
     src: "{{ role_path }}/files/fips_update.sh"
     dest: "/root/fips140/fips_update.sh"
 
-- name: "FIPS setup step 1/4..."
+# yum update run in base_patch
+# install fips modules
+- name: "FIPS 140.2 install step 2"
+    yum: pkg={{item}} state=installed
+    with_items:
+     - dracut-fips
+     - dracut-fips-aesni
+
+- name: "Backup initramfs"
   become_user: root
-  shell: "/root/fips140/fips_update.sh 1"
+  shell: "mv -v /boot/initramfs-$(uname -r).img{,.bak} >> $LOG_FILE 2>&1"
+
+- name: "run dracut to rebuild initramfs"
+  become_user: root
+  shell: "dracut -f "
 
 - name: "Rebooting after step 1/4 ..."
   command: shutdown -r now "Reboot required after FIPS Step 1 install"
