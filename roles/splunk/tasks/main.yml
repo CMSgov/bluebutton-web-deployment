@@ -4,7 +4,7 @@
 # Author: '@ekivemark'
 
 - name: "Configure Splunk ..."
-  become_user: splunk
+  become_user: root
   become: yes
   lineinfile:
     dest: "/opt/splunkforwarder/etc/system/local/deploymentclient.conf"
@@ -15,9 +15,9 @@
     line: "clientName = {{ splunk_client_name }}"
     # backup: yes
 
-- name: "Restart Splunk with {{ splunk_client_name }}"
+- name: "Restart Splunk "
   become_user: root
-  shell: "/opt/splunkforwarder/bin/splunk restart'"
+  command: "/opt/splunkforwarder/bin/splunk restart'"
   register: splunk_status
 
 
