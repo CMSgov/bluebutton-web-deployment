@@ -1,0 +1,28 @@
+---
+# File: attach_data_volume.yml 
+# Created: 5/8/17
+# Author: '@ekivemark'
+
+- name: Attach Data Volume to Database Server
+  hosts: dbservers
+  connection: local
+  gather_facts: True
+  vars:
+    env: "dev"
+    splunk_client_name: "BBAPI-{{ env }}-DATA"
+  vars_files:
+    - "./../../vars/common.yml"
+    - "./../../vault/env/{{ env }}/vault.yml"
+    - "./../../vars/env/{{ env }}/env.yml"
+    - "./../../vars/all_var.yml"
+
+  tasks:
+  - name: "Attach ec2_vol to /data"
+    mount:
+      name: /data
+      src: "/dev/{{ cf_data_device }}"
+      fstype: ext4
+      state: mounted
+      fstab: /etc/fstab
+      opts: "defaults nofail 0 2"
+

@@ -24,7 +24,7 @@
 - name: Provision Database
   hosts: dbservers
   connection: local
-  # gather_facts: False
+  gather_facts: True
   vars:
     env: "dev"
     splunk_client_name: "BBAPI-{{ env }}-DATA"
