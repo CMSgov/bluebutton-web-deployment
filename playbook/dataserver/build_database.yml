@@ -35,6 +35,7 @@
     - "./../../vars/all_var.yml"
 
   roles:
+    - ../../roles/add_external_vol
     - ../../roles/splunk
     - ../../roles/postgres
 
