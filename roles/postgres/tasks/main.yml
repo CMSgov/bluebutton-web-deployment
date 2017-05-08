@@ -81,13 +81,15 @@
   register: external_drive_setup
 
 - name: "Create Postgres data directory"
-  file: "{{ role_db_data_dir }}"
+  file:
+    dest: "{{ role_db_data_dir }}"
     owner: "{{ role_db_user }}"
     group: "{{ role_db_user }}"
     recurse: yes
 
 - name: "Create Postgres temp directory"
-  file: "{{ role_db_temp_dir }}"
+  file:
+    dest: "{{ role_db_temp_dir }}"
     owner: "{{ role_db_user }}"
     group: "{{ role_db_user }}"
     recurse: yes
@@ -112,12 +114,6 @@
     regex: "^port = 5432"
     line: "port = {{ common_db_type[cf_data_database_type]['DbHostPort'] }}"
     backup: yes
-
-
-
-
-
-
 
 - name: "Initialize Database Service"
   become_user: root
