@@ -9,7 +9,7 @@
   gather_facts: True
   vars:
     env: "dev"
-    splunk_client_name: "BBAPI-{{ env }}-DATA"
+    # splunk_client_name: "BBAPI-{{ env }}-DATA"
   vars_files:
     - "./../../vars/common.yml"
     - "./../../vault/env/{{ env }}/vault.yml"
@@ -17,12 +17,16 @@
     - "./../../vars/all_var.yml"
 
   tasks:
-  - name: "Attach ec2_vol to /data"
-    mount:
-      name: /data
-      src: "/dev/{{ cf_data_device }}"
-      fstype: ext4
-      state: mounted
-      fstab: /etc/fstab
-      opts: "defaults nofail 0 2"
+
+  - include: ../../roles/add_external_vol/tasks/shell_attach_vol.yml
+
+#  - name: "Attach ec2_vol to /data"
+#    mount:
+#      name: /data
+#      src: "/dev/{{ cf_data_device }}"
+#      fstype: ext4
+#      state: mounted
+#      fstab: /etc/fstab
+#      opts: "defaults nofail 0 2"
+#
 

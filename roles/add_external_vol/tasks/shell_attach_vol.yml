@@ -1,0 +1,27 @@
+---
+# File: shell_attach_vol.yml 
+# Created: 5/8/17
+# Author: '@ekivemark'
+
+- name: "Create a script directory for root account"
+  become_user: root
+  file:
+    dest: /root/script
+    state: directory
+    owner: root
+    group: root
+
+- name: "Create External Drive script"
+  become_user: root
+  template:
+    src: "../templates/setup_ext_drive.j2"
+    dest: "/root/script/setup_ext_drive.sh"
+    backup: yes
+    owner: "root"
+    group: "root"
+    mode: "u+rwx"
+
+- name: "Execute External Drive Script"
+  become_user: root
+  shell: "/root/script/setup_ext_drive.sh"
+  register: external_drive_setup
