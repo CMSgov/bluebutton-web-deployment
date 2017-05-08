@@ -12,6 +12,7 @@ common_project_dir: "hhs_o_server"
 
 common_cf_tags_business: "OEDA"
 common_cf_tags_application: "BlueButton"
+common_remote_user: "ec2-user"
 
 # Environment VPC Subnets
 

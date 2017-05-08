@@ -5,6 +5,7 @@
 
 - name: Attach Data Volume to Database Server
   hosts: dbservers
+  remote_user: "{{ common_remote_user }}"
   # connection: local
   gather_facts: True
   vars:
