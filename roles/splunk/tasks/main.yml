@@ -18,7 +18,7 @@
 
 - name: "Restart Splunk with {{ splunk_client_name }}"
   become_user: root
-  shell: "su - splunk -c '/opt/splunkforwarder/bin/splunk restart'"
+  shell: "splunk -c '/opt/splunkforwarder/bin/splunk restart'"
   register: splunk_status
 
 
