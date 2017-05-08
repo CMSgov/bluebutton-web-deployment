@@ -17,7 +17,7 @@
     # backup: yes
 
 - name: "Restart Splunk with {{ splunk_client_name }}"
-  become user: root
+  become_user: root
   shell: "su - splunk -c '/opt/splunkforwarder/bin/splunk restart'"
   register: splunk_status
 
