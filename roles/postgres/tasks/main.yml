@@ -100,9 +100,9 @@
    - http://mirror.centos.org/centos/6/os/x86_64/Packages/libffi-devel-3.0.5-3.2.el6.x86_64.rpm
    - libxml2-devel
    - libxslt-devel
-   - gcc
-   - gcc-c++
-   - git
+   # - gcc
+   # - gcc-c++
+   # - git
    - httpd-devel
    - zlib-devel
    - bzip2-devel
