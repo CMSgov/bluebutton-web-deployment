@@ -4,22 +4,16 @@
 # Author: '@ekivemark'
 
 - name: "Create a script directory for root account"
-  become_user: root
   file:
     dest: "/home/ec2-user/script"
     state: directory
-    owner: root
-    group: root
     mode: 0755
 
 - name: "Create External Drive script"
-  become_user: root
   template:
     src: "../templates/setup_ext_drive.j2"
     dest: "/home/ec2-user/script/setup_ext_drive.sh"
     backup: yes
-    owner: "root"
-    group: "root"
     mode: "u+rwx"
 
 
