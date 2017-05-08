@@ -113,7 +113,7 @@
    - tk-devel
    - gdbm-devel
    - db4-devel
-   - libpcap-devel
+   # - libpcap-devel
    - xz-devel
    - python-devel
    - postgresql-devel
