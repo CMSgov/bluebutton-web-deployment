@@ -3,6 +3,11 @@
 # Created: 5/8/17
 # Author: '@ekivemark'
 
+- name: "Create a script directory for root account"
+  file:
+    dest: /root/script
+    state: directory
+
 - name: "Create External Drive script"
   template:
     src: "../templates/setup_ext_drive.j2"
