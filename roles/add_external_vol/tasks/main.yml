@@ -6,7 +6,7 @@
 # Use ansible commands to attach volume to /data
 - name: "Attach ec2_vol to /data"
   mount:
-    dest: /data
+    path: /data
     src: /dev/xvdb
     fstype: ext4
     state: present
