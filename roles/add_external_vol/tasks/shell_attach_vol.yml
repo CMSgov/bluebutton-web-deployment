@@ -6,7 +6,7 @@
 - name: "Create a script directory for root account"
   become_user: root
   file:
-    dest: "/root/script"
+    dest: "/home/ec2-user/script"
     state: directory
     owner: root
     group: root
@@ -16,14 +16,14 @@
   become_user: root
   template:
     src: "../templates/setup_ext_drive.j2"
-    dest: "/root/setup_ext_drive.sh"
+    dest: "/home/ec2-user/script/setup_ext_drive.sh"
     backup: yes
     owner: "root"
     group: "root"
     mode: "u+rwx"
-    
+
 
 - name: "Execute External Drive Script"
   become_user: root
-  shell: "/root/setup_ext_drive.sh"
+  shell: "/home/ec2-user/script/setup_ext_drive.sh"
   register: external_drive_setup
