@@ -3,9 +3,6 @@
 # Created: 5/4/17
 # Author: @ekivemark
 
-vars_files:
-  - ../vars/main.yml
-
 - name: "Create pyapps user"
   become_user: root
   become: yes
