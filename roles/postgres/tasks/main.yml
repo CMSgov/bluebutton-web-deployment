@@ -141,7 +141,7 @@
     line: "\n#-------------------------------\n# LISTEN ON EXTERNAL PORTS\n#-------------------------------\n"
 
 - name: "Update pg_hba.conf with this subnet address"
-  beome_user: root
+  become_user: root
   lineinfile:
     owner: "{{ role_db_user }}"
     group: "{{ role_db_user }}"
