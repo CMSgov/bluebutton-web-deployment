@@ -6,10 +6,11 @@
 - name: "Create a script directory for root account"
   become_user: root
   file:
-    dest: /root/script
+    dest: "/root/script"
     state: directory
     owner: root
     group: root
+    mode: 0755
 
 - name: "Create External Drive script"
   become_user: root
