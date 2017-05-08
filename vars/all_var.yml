@@ -160,8 +160,8 @@
   cf_data_vol_id: "{{ env_cf_data_vol_id }}"
   cf_data_device: "/dev/xvdb"
 
-  cf_data_db_backup_key_id: {{ env_cf_data_db_backup_key_id }}
-  cf_data_db_backup_secret_key: {{ env_cf_data_db_backup_secret_key }}
+  cf_data_db_backup_key_id: "{{ env_cf_data_db_backup_key_id }}"
+  cf_data_db_backup_secret_key: "{{ env_cf_data_db_backup_secret_key }}"
 
   cf_app_sg_app_zone_id: "{{ env_cf_app_sg_app_zone_id }}"
   cf_app_azone: "{{env_cf_app_azone }}"

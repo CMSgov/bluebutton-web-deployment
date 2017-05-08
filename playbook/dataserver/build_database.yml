@@ -46,7 +46,7 @@
   - include: ../../roles/postgres/tasks/pgpass.yml
 
   - include: ../../roles/postgres/tasks/backup.yml
-   
+
 
 
 #  - name: "launch database server in CloudFormation"
