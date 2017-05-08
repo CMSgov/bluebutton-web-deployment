@@ -23,7 +23,7 @@
 
 - name: Provision Database
   hosts: dbservers
-  connection: local
+  # connection: local
   gather_facts: True
   vars:
     env: "dev"
@@ -49,36 +49,3 @@
   - include: ../../roles/postgres/tasks/backup.yml
 
 
-
-#  - name: "launch database server in CloudFormation"
-#    cloudformation:
-#      stack_name: "bb-{{ env }}-data-01"
-#      state: "present"
-#      region: "us-east-1"
-#      disable_rollback: true
-#      template: "../../templates/dataserver/vpc-pickenv-fe-fips-db-4.json"
-#      template_parameters:
-#        AZone: "{{ cf_data_azone }}"
-#        BuildImageId: "{{ cf_data_build_image_id }}"
-#        InstanceName: "{{ cf_data_instance_name }}"
-#        DatabaseType: "{{ cf_data_database_type }}"
-#        DatabasePrefix: "{{ cf_data_database_prefix }}"
-#        TagKeyStack: "{{ cf_data_tag_key_stack }}"
-#        TagKeyLayer: "{{ cf_data_tag_key_layer }}"
-#        KeyName: "{{ cf_data_key_name }}"
-#        InstanceType: "{{ cf_data_instance_type }}"
-#        PgsqlServerName: "{{ cf_data_pgsql_server_name }}"
-#        PyAppHome: "{{ cf_data_pyapps_home }}"
-#        PgsqlMaster: "{{ cf_data_pgsql_master }}"
-#        pyappsemail: "{{ cf_data_pyapps_email }}"
-#        PgsqlPassword: "{{ cf_data_pgsql_password }}"
-#        VpcId: "{{ cf_data_vpc_id }}"
-#        DbEc2SecurityGrp: "{{ cf_data_sg_data_zone_id }}"
-#        DbAccessPort: "{{ db_host_port }}"
-#      tags:
-#        Stack: "BB-{{ env }}-{{ cf_data_azone }}-{{ env_cf_data_tag_key_layer }}-ansible-cloudformation"
-#        Business: "{{ cf_tags_business }}"
-#        Application: "{{ cf_tags_application }}"
-#        Environment: "{{ env }}"
-#        Function: "{{ cf_data_tag_key_layer }}-{{ cf_data_database_type }}"
-#    register: data_vpc_output
