@@ -1,0 +1,12 @@
+---
+# File: main.yml 
+# Created: 5/6/17
+# Author: '@ekivemark'
+
+
+vars:
+  role_db_user: "postgres"
+  role_db_data_dir: "/data/pgsql/9.6/data"
+  role_db_temp_dir: "/data/pgbackup"
+  role_db_table_name: "{{ cf_data_database_prefix }}{{ cf_data_tag_key_stack }}_{{ common_db_type[cf_data_database_type]['DbNameTable'] }}"
+  role_db_backup_pub_key: "backup_key.pem.pub"

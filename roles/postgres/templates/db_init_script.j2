@@ -1,0 +1,10 @@
+CREATE DATABASE {{ role_db_table_name }} ;
+
+CREATE USER {{ cf_data_pgsql_master }} WITH PASSWORD '{{ cf_data_pgsql_password }}' ;
+
+ALTER ROLE {{ cf_data_pgsql_master }} SET client_encoding TO 'utf8@' ;
+ALTER ROLE {{ cf_data_pgsql_master }} SET default_transaction_isolation TO 'read committed' ;
+ALTER ROLE {{ cf_data_pgsql_master }} SET timezone to UTC ;'
+
+GRANT ALL PRIVILEGES ON DATABASE {{ role_db_table_name }} to {{ cf_data_pgsql_master }};
+
