@@ -170,7 +170,7 @@
     mode: "u+rwx"
 
 - name: "Run db init sql script"
-  become user: "{{ role_db_user}}"
+  become_user: "{{ role_db_user}}"
   shell: "psql -f {{ role_db_data_dir }}/django_init.sql"
   register: django_db_init
 
