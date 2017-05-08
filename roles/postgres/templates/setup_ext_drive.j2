@@ -3,15 +3,15 @@
 # Prepare the external drive
 
 # EXT_AWS_BLK={{ cf_data_device }}
-mkfs -t ext4 {{ cf_data_device }}
+mkfs -t ext4 /dev/{{ cf_data_device }}
 mkdir -p /data
-mount {{ cf_data_device }} /data
+mount /dev/{{ cf_data_device }} /data
 rm -f /etc/fstab.orig
 cp /etc/fstab /etc/fstab.orig
-file -s {{ cf_data_device }}
+file -s /dev/{{ cf_data_device }}
 # Replace uuid with correct value
 # Mount the data block device
-export EXT_AWS_UUID=$(ls -al /dev/disk/by-uuid/ | grep xvdb | awk -F: '$0=$2'| cut -d\" \" -f2)
+export EXT_AWS_UUID=$(ls -al /dev/disk/by-uuid/ | grep {{ cf_data_device }} | awk -F: '$0=$2'| cut -d\" \" -f2)
 echo EBS: Using {{ cf_data_device }} with UUID: $EXT_AWS_UUID
 echo $EXT_AWS_UUID   /data  ext4 defaults,nofail    0  2 >>/etc/fstab
 

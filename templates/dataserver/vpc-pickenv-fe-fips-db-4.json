@@ -736,7 +736,7 @@
                           "export EXT_AWS_BLK=xvdb \n",
                           "mkfs -t ext4 /dev/$EXT_AWS_BLK \n",
                           "mkdir -p /data \n",
-                          "mount /dev/$EXT_AWS_BLK /data \n",ca
+                          "mount /dev/$EXT_AWS_BLK /data \n",
                           "rm -f /etc/fstab.orig \n",
                           "cp /etc/fstab /etc/fstab.orig \n",
                           "file -s /dev/$EXT_AWS_BLK \n",

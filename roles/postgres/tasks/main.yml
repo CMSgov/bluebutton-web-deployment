@@ -48,6 +48,7 @@
     pkg: "{{item}}"
     state: installed
   with_items:
+   # - https://yum.postgresql.org/9.6/redhat/rhel-6-x86_64/pgdg-redhat96-9.6-3.noarch.rpm
    - https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-6-x86_64/pgdg-redhat96-9.6-3.noarch.rpm
    - postgresql96-server
    - https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-6-x86_64/postgresql96-contrib-9.6.2-2PGDG.rhel6.x86_64.rpm
@@ -74,19 +75,6 @@
    - libffi.x86_64
    - python-cffi
    - python-psycopg2.x86_64
-
-- name: "Create External Drive script"
-  template:
-    src: "{{ role_path }}/templates/setup_ext_drive.j2"
-    dest: "/root/script/setup_ext_drive.sh"
-    backup: yes
-    owner: "root"
-    group: "root"
-    mode: "u+rwx"
-
-- name: "Execute External Drive Script"
-  shell: "/root/script/setup_ext_drive.sh"
-  register: external_drive_setup
 
 - name: "Create Postgres data directory"
   file:

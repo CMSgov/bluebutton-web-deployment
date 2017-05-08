@@ -1,0 +1,17 @@
+---
+# File: attach_ext_drive.yml 
+# Created: 5/8/17
+# Author: '@ekivemark'
+
+- name: "Create External Drive script"
+  template:
+    src: "{{ role_path }}/templates/setup_ext_drive.j2"
+    dest: "/root/script/setup_ext_drive.sh"
+    backup: yes
+    owner: "root"
+    group: "root"
+    mode: "u+rwx"
+
+- name: "Execute External Drive Script"
+  shell: "/root/script/setup_ext_drive.sh"
+  register: external_drive_setup

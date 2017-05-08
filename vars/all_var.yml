@@ -158,7 +158,7 @@
   cf_data_vpc_id: "{{ cf_vpc_id }}"
   cf_data_vol_size: "{{ env_cf_data_vol_size }}"
   cf_data_vol_id: "{{ env_cf_data_vol_id }}"
-  cf_data_device: "/dev/xvdb"
+  cf_data_device: "xvdb"
 
   cf_data_db_backup_key_id: "{{ env_cf_data_db_backup_key_id }}"
   cf_data_db_backup_secret_key: "{{ env_cf_data_db_backup_secret_key }}"
