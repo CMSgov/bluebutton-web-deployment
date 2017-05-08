@@ -35,7 +35,6 @@
     - "./../../vars/all_var.yml"
 
   roles:
-    - ../../roles/postgres/tasks/attach_ext_drive.yml
     - ../../roles/splunk
     - ../../roles/postgres
 
@@ -43,6 +42,8 @@
   - name: "Set Hostname to {{ cf_data_pgsql_server_name }} "
     hostname:
       name: "{{ cf_data_pgsql_server_name }}"
+
+  - include: ../../roles/postgres/tasks/attach_ext_drive.yml
 
   - include: ../../roles/postgres/tasks/pgpass.yml
 
