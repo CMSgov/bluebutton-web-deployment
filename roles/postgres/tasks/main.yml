@@ -72,7 +72,7 @@
 
 - name: "Create External Drive script"
   template:
-    src: setup_ext_drive.j2
+    src: "{{ role_path }}/templates/setup_ext_drive.j2"
     dest: "/root/script/setup_ext_drive.sh"
     backup: yes
     owner: "root"
