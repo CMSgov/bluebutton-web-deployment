@@ -16,13 +16,14 @@
   become_user: root
   template:
     src: "../templates/setup_ext_drive.j2"
-    dest: "/root/script/setup_ext_drive.sh"
+    dest: "/root/setup_ext_drive.sh"
     backup: yes
     owner: "root"
     group: "root"
     mode: "u+rwx"
+    state: present
 
 - name: "Execute External Drive Script"
   become_user: root
-  shell: "/root/script/setup_ext_drive.sh"
+  shell: "/root/setup_ext_drive.sh"
   register: external_drive_setup
