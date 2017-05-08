@@ -17,6 +17,7 @@
 
 - name: "Restart Splunk "
   become_user: root
+  become: yes
   command: "/opt/splunkforwarder/bin/splunk restart"
   register: splunk_status
 
