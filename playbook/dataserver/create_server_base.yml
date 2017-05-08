@@ -87,6 +87,14 @@
     with_items: "{{ data_fips_output.instances }}"
     register: ec2_vol
 
+  - name: "Attach ec2_vol to /data"
+    mount:
+      name: /data
+      src: "/dev/{{ cf_data_device }}"
+      fstype: ext4
+      state: mounted
+      fstab: /etc/fstab
+      opts: "defaults nofail 0 2"
 
   - name: "add private_ip to /etc/ansible/hosts"
     lineinfile:
