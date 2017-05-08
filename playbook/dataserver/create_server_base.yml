@@ -88,10 +88,6 @@
     register: ec2_vol
 
 
-# Configure server to use attached volume
-  # attach_ext_drive moved to separate task in roles/prostgres/task
-  - include: ../../roles/postgres/tasks/attach_ext_drive.yml
-
   - name: "add private_ip to /etc/ansible/hosts"
     lineinfile:
       dest: "/etc/ansible/hosts"
@@ -99,3 +95,7 @@
       line: "[dbservers]\n{{ data_fips_output.instances[0]['private_ip'] }}"
       backup: yes
 
+## Configure server to use attached volume
+#  # attach_ext_drive moved to separate task in roles/prostgres/task
+#  - include: ../../roles/postgres/tasks/attach_ext_drive.yml
+#
