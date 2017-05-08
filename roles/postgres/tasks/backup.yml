@@ -1,0 +1,64 @@
+---
+# File: backup.yml 
+# Created: 5/7/17
+# Author: '@ekivemark'
+
+- name: "setup Backup script"
+  template:
+    src: db_backup.sh.j2
+    dest: "{{ role_db_data_dir }}/db_backup.sh"
+    owner: "{{ role_db_user }}"
+    group: "{{ role_db_user }}"
+    mode: "0755"
+
+- name: "Setup Postgres Backup"
+  file:
+    src: "{{ role_db_backup_pub_key }}"
+    dest: "{{ role_db_data_dir }}/{{ role_db_backup_pub_key }}"
+    owner: "{{ role_db_user }}"
+    group: "{{ role_db_user }}"
+    mode: "0755"
+
+- name: "Setup Cron for database backups - start with current cron jobs"
+  become_user: root
+  shell: "cat /etc/crontab >/root/cron.txt "
+
+- name: "Add database Cron jobs"
+  lineinfile:
+    owner: root
+    group: root
+    dest: "/root/cron.txt"
+    line: "# Postgres backups"
+
+- name: "Add hourly job"
+  lineinfile:
+    owner: root
+    group: root
+    dest: "/root/cron.txt"
+    line: "@hourly /bin/sh {{ role_db_data_dir }}/db_backup.sh hourly "
+
+- name: "Add daily job"
+  lineinfile:
+    owner: root
+    group: root
+    dest: "/root/cron.txt"
+    line: "@daily /bin/sh {{ role_db_data_dir }}/db_backup.sh daily "
+
+- name: "Add weekly job"
+  lineinfile:
+    owner: root
+    group: root
+    dest: "/root/cron.txt"
+    line: "@weekly /bin/sh {{ role_db_data_dir }}/db_backup.sh weekly "
+
+
+- name: "Check if cron source file exists"
+  stat:
+    path: /root/cron.txt
+  register: cron_file
+
+- name: "Copy crontab if exists"
+  shell: crontab /root/cron.txt
+  when: cron_file.stat.exists is defined and cron_file.stat.exists
+
+

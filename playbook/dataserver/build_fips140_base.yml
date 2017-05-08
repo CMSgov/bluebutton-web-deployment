@@ -25,6 +25,8 @@
   roles:
     - ../../roles/base_patch
     - ../../roles/fips140
+    - ../../roles/splunk
+
   tasks:
   - name: "pinging..."
     become_user: root

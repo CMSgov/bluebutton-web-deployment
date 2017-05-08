@@ -1,0 +1,12 @@
+---
+# File: pgpass.yml 
+# Created: 5/7/17
+# Author: '@ekivemark'
+
+- name: "Create .pgpass file"
+  template:
+    src: "pgpass.j2"
+    dest: "{{ role_db_data_dir }}/.pgpass"
+    owner: "role_db_user"
+    group: "role_db_user"
+    mode: "0600"

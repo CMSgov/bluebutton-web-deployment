@@ -736,7 +736,7 @@
                           "export EXT_AWS_BLK=xvdb \n",
                           "mkfs -t ext4 /dev/$EXT_AWS_BLK \n",
                           "mkdir -p /data \n",
-                          "mount /dev/$EXT_AWS_BLK /data \n",
+                          "mount /dev/$EXT_AWS_BLK /data \n",ca
                           "rm -f /etc/fstab.orig \n",
                           "cp /etc/fstab /etc/fstab.orig \n",
                           "file -s /dev/$EXT_AWS_BLK \n",
@@ -758,10 +758,16 @@
                           "echo '# initialize database in $PGDATA' >>$BUILD_LOG \n",
                           "cp /etc/init.d/postgresql-9.6 /home/ec2-user \n",
                           "echo '# change default PGDATA variable in startup script' >>$BUILD_LOG \n",
+
                           "sed -i 's@var\/lib\/pgsql\/9.6\/data@data\/pgsql\/9.6\/data@' /etc/init.d/postgresql-9.6\n",
+
                           "service postgresql-9.6 initdb \n",
+
                           "echo '# configure postgresql to start on OS boot' >>$BUILD_LOG \n",
                           "chkconfig postgresql-9.6 on \n",
+
+
+
 
                           "echo '# configure postgresql to listen on ip addresses' >>$BUILD_LOG \n",
                           "echo '# ' >>$PGDATA/postgresql.conf \n",
@@ -868,6 +874,8 @@
                           "echo ' After running sql script:${PG_INIT_SCRIPT}' >>$BUILD_LOG \n",
                           "ls -la $PGDATA >>$BUILD_LOG \n",
 
+
+
                           "echo 'Installing Secure Postgres Backup... ' >>$BUILD_LOG \n",
                           "/usr/local/bin/aws s3 cp ",
                           " s3://bb-config/all_env/db/db_backup.sh ",
@@ -931,9 +939,12 @@
                           "cat /etc/crontab >>$BUILD_LOG \n",
                           "echo 'Postgres Backup Installed. ' >>$BUILD_LOG \n",
 
+
+
                           "# Configure AWS CLI Credentials \n",
                           "mkdir -p /root/.aws \n",
                           "export AWS_DEFAULT_REGION=us-east-1 \n",
+
                           "/usr/local/bin/aws s3 cp s3://bb-config/all_env/aws/bb-",
                           {"Ref": "TagKeyStack"},
                           "-db-backup/config /root/.aws/config \n",
@@ -949,13 +960,19 @@
                           ") \n",
                           "echo pyapps:$pass \n",
                           "useradd -m -p $pass pyapps \n",
+
+
+
                           "echo 'Add pyapps to sudoers:' >>$BUILD_LOG \n",
                           "echo 'pyapps       ALL=(ALL)       NOPASSWD: ALL' >/etc/sudoers.d/pyapps.conf \n",
+
+
 
                           "echo 'RHEL Version:' >>$BUILD_LOG \n",
                           "cat /etc/redhat-release >>$BUILD_LOG \n",
                           "echo 'package updates... ' >>$BUILD_LOG \n",
                           "yum-config-manager --enable rhel-server-rhscl-6-rpms \n",
+
                           "yum -y update >>$BUILD_LOG \n",
                           "echo 'Installing support dependencies' >>$BUILD_LOG \n",
                           "yum -y groupinstall 'Development Tools' \n",
@@ -965,6 +982,7 @@
                           " libffi.x86_64 python-cffi \n",
                           "mkdir -p /home/ec2-user/download \n",
                           "cd /home/ec2-user/download \n",
+
                           "echo 'downloading and installing libffi-devel' >>$BUILD_LOG \n",
                           "wget http://mirror.centos.org/centos/6/os/x86_64/Packages/libffi-devel-3.0.5-3.2.el6.x86_64.rpm \n",
                           "yum -y install ./libffi-devel-3.0.5-3.2.el6.x86_64.rpm \n",
@@ -973,6 +991,8 @@
 
                           "# echo 'Installing DB Drivers:MySQL' >>$BUILD_LOG \n",
                           "# yum -y install mysql-devel.x86_64 \n",
+
+
 
                           "echo 'Installing DB Drivers:postgreSQL' >>$BUILD_LOG \n",
                           "yum -y install python-psycopg2.x86_64 \n",
