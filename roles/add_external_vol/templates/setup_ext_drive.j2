@@ -7,7 +7,7 @@ mkfs -t ext4 /dev/{{ cf_data_device }}
 mkdir -p /data
 mount /dev/{{ cf_data_device }} /data
 rm -f /etc/fstab.orig
-cp /etc/fstab /etc/fstab.orig
+cp /etc/fstab /etc/fstab.saved
 file -s /dev/{{ cf_data_device }}
 # Replace uuid with correct value
 # Mount the data block device
