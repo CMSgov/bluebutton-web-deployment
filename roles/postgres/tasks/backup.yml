@@ -5,7 +5,7 @@
 
 - name: "setup Backup script"
   template:
-    src: db_backup.sh.j2
+    src: "{{ role_path }}/templates/db_backup.sh.j2"
     dest: "{{ role_db_data_dir }}/db_backup.sh"
     owner: "{{ role_db_user }}"
     group: "{{ role_db_user }}"
@@ -13,7 +13,7 @@
 
 - name: "Setup Postgres Backup"
   file:
-    src: "{{ role_db_backup_pub_key }}"
+    src: "{{ role_path }}/files/{{ role_db_backup_pub_key }}"
     dest: "{{ role_db_data_dir }}/{{ role_db_backup_pub_key }}"
     owner: "{{ role_db_user }}"
     group: "{{ role_db_user }}"
