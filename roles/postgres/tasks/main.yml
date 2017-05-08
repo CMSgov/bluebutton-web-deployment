@@ -28,7 +28,7 @@
   shell: "echo 'exclude=postgresql*' >>/etc/yum/pluginconf.d/rhnplugin.conf"
 
 - name: "Update yum config-manager"
-  become-user: root
+  become_user: root
   shell: "yum-config-manager --enable rhel-server-rhscl-6-rpms"
 
 - name: "Install Development Tools"
