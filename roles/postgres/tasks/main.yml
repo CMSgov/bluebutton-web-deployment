@@ -36,6 +36,11 @@
   become: yes
   shell: "yum-config-manager --enable rhel-server-rhscl-6-rpms"
 
+- name: "Update yum config-manager for optional RHEL channel"
+  become_user: root
+  become: yes
+  shell: "yum-config-manager --enable rhel-6-server-optional-rpms"
+
 #- name: "RPM Update - CentOS/RHEL 7"
 #  become_user: root
 #  shell: "rpm -Uvh https://yum.postgresql.org/9.6/redhat/rhel-7-x86_64/pgdg-centos96-9.6-3.noarch.rpm"
