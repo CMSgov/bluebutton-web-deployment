@@ -29,8 +29,7 @@
 
 - name: "Update yum config-manager"
   become-user: root
-  shell: "yum-config-manager --enable rhel-server-rhscl-6-rpms "
-                          "
+  shell: "yum-config-manager --enable rhel-server-rhscl-6-rpms"
 
 - name: "Install Development Tools"
   become_user: root
