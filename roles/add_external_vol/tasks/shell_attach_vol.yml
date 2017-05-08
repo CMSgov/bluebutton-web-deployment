@@ -21,7 +21,7 @@
     owner: "root"
     group: "root"
     mode: "u+rwx"
-    state: present
+    
 
 - name: "Execute External Drive Script"
   become_user: root
