@@ -5,7 +5,7 @@
 
 - name: Attach Data Volume to Database Server
   hosts: dbservers
-  connection: local
+  # connection: local
   gather_facts: True
   vars:
     env: "dev"
