@@ -81,11 +81,15 @@
        instance: "{{ item.id }}"
        volume_size: "{{ cf_data_vol_size }}"
        # id: "{{ cf_data_vol_id }}"
-       device_name: "/dev/xvdb"
+       device_name: "/dev/{{ cf_data_device }}"
        encrypted: yes
        region: "{{ cf_region }}"
     with_items: "{{ data_fips_output.instances }}"
     register: ec2_vol
+
+
+# Configure server to use attached volume
+  - include: ../../roles/postgres/tasks/attach_ext_drive.yml
 
   - name: "add private_ip to /etc/ansible/hosts"
     lineinfile:
