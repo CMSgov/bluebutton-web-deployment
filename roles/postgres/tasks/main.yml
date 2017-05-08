@@ -35,8 +35,6 @@
   become_user: root
   shell: "yum -y groupinstall 'Development Tools' "
 
-- name:
-
 - name: "Install Postgresql components"
   yum:
     pkg: "{{item}}"
