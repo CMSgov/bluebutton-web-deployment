@@ -124,7 +124,7 @@
   shell: "chkconfig postgresql-9.6 on"
 
 - name: "Set postgresql to listen on ip addresses"
-  beome_user: root
+  become_user: root
   lineinfile:
     dest: "{{ role_db_data_dir }}/postgresql.conf"
     owner: "{{ role_db_user }}"
@@ -133,7 +133,7 @@
     state: present
 
 - name: "Update pg_hba.conf"
-  beome_user: root
+  become_user: root
   lineinfile:
     owner: "{{ role_db_user }}"
     group: "{{ role_db_user }}"
@@ -157,7 +157,7 @@
     line: "host    all    all    {{ common_cf_layer[env_az]['app'] }}    password "
 
 - name: "Start Database"
-  beome_user: root
+  become_user: root
   shell: "service postgresql-9.6 start"
 
 - name: "Create db init sql script"
