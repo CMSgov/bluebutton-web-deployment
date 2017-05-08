@@ -19,5 +19,6 @@
 
 - name: "Execute External Drive Script"
   become_user: root
+  become: yes
   shell: "/home/ec2-user/script/setup_ext_drive.sh"
   register: external_drive_setup
