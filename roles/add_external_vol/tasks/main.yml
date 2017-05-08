@@ -10,7 +10,7 @@
     src: /dev/xvdb
     fstype: ext4
     state: mounted
-    fstab: /etc/fstab 
+    fstab: /etc/fstab
 
 
 #- name: "Create a script directory for root account"

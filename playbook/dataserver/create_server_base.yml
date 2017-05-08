@@ -98,13 +98,3 @@
 #  # attach_ext_drive moved to separate task in roles/prostgres/task
 #  - include: ../../roles/postgres/tasks/attach_ext_drive.yml
 #
-  - name: "Attach ec2_vol to /data"
-    hosts: "{{ data_fips_output.instances[0]['private_ip'] }}"
-    mount:
-      name: /data
-      src: "/dev/{{ cf_data_device }}"
-      fstype: ext4
-      state: mounted
-      fstab: /etc/fstab
-      opts: "defaults nofail 0 2"
-
