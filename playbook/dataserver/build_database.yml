@@ -24,6 +24,7 @@
 - name: Provision Database
   hosts: dbservers
   # connection: local
+  remote_user: ec2-user
   gather_facts: True
   vars:
     env: "dev"
