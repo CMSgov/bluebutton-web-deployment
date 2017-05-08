@@ -82,15 +82,15 @@
 
 - name: "Create Postgres data directory"
   file: "{{ role_db_data_dir }}"
-  owner: "{{ role_db_user }}"
-  group: "{{ role_db_user }}"
-  recurse: yes
+    owner: "{{ role_db_user }}"
+    group: "{{ role_db_user }}"
+    recurse: yes
 
 - name: "Create Postgres temp directory"
   file: "{{ role_db_temp_dir }}"
-  owner: "{{ role_db_user }}"
-  group: "{{ role_db_user }}"
-  recurse: yes
+    owner: "{{ role_db_user }}"
+    group: "{{ role_db_user }}"
+    recurse: yes
 
 # Startup script: /etc/init.d/postgresql-9.6
 # Default data location: /var/lib/postgresql/[version]/data/
@@ -178,10 +178,6 @@
   shell: "psql -f {{ role_db_data_dir }}/django_init.sql"
   register: django_db_init
 
-
-
-
-###############################
 - name: "Setup /etc/ld.so.conf"
   become_user: root
   shell: "echo '/usr/local/lib' >>/etc/ld.so.conf"
