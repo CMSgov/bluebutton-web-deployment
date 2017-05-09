@@ -1,10 +1,10 @@
 ---
-# File: create_database.yml 
-# Created: 4/18/17
+# File: build_appserver.yml 
+# Created: 5/9/17
+# Author: '@ekivemark'
 
 # Playbook to:
-#  - create Postgres 9.x Database Server
-#  - create App Server
+#  - create Python3/Django AppServer
 #
 # Based on: http://odecee.com.au/cloudformation-and-ansible/
 # Vars file is relative to playbook file
@@ -21,16 +21,18 @@
 # all_var incorporates preceding variables and defines variables without prefixes.
 # use all_var variables in scripts.
 
-- name: Provision Database
-  hosts: dbservers
+- name: Build App Server
+  hosts: appservers
   # connection: local
   remote_user: ec2-user
   gather_facts: True
   vars:
     env: "dev"
     azone: "az1"
+    sub_zone: "app"
+    sg_zone: "appserver"
     env_az: "{{ env }}-{{ azone }}"
-    env_cf_data_version: "20"
+    env_cf_app_version: "01"
     splunk_client_name: "BBAPI-{{ env|upper }}-DATA"
   vars_files:
     - "./../../vars/common.yml"
@@ -39,16 +41,6 @@
     - "./../../vars/all_var.yml"
 
   roles:
-    - ../../roles/splunk
-    # moved add_external_vol to its own playbook - attach_data_volume.yml
-    # - ../../roles/add_external_vol
-    - ../../roles/postgres
-
-  tasks:
-  - name: "Set Hostname to {{ cf_data_pgsql_server_name }} "
-    remote_user: ec2-user
-    become_user: root
-    become: yes
-    hostname:
-      name: "{{ cf_data_pgsql_server_name }}"
-
+    # - ../../roles/
+    - ../../roles/apache
+    
