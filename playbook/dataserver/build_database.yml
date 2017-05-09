@@ -34,7 +34,7 @@
     - "./../../vault/env/{{ env }}/vault.yml"
     - "./../../vars/env/{{ env }}/env.yml"
     - "./../../vars/all_var.yml"
-    - "./../../roles/postgres/defaults/main.yml"
+    - "./../../roles/postgres/vars/main.yml"
 
   roles:
     - ../../roles/splunk

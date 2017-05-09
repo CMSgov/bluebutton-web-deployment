@@ -45,7 +45,7 @@
 - name: "Write aws config file"
   become_user: root
   template:
-    src: "{{ role_path }}/templates/root_aws_config.js"
+    src: "../templates/root_aws_config.js"
     dest: "/root/.aws/config"
     backup: yes
     owner: root
@@ -55,7 +55,7 @@
 - name: "write aws credentials"
   become_user: root
   template:
-    src: "{{ role_path }}/templates/root_aws_credentials.j2"
+    src: "../templates/root_aws_credentials.j2"
     dest: "/root/.aws/credentials"
     owner: root
     group: root

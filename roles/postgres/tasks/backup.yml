@@ -5,18 +5,18 @@
 
 - name: "setup Backup script"
   template:
-    src: "{{ role_path }}/templates/db_backup.sh.j2"
-    dest: "{{ role_db_data_dir }}/db_backup.sh"
-    owner: "{{ role_db_user }}"
-    group: "{{ role_db_user }}"
+    src: "../templates/db_backup.sh.j2"
+    dest: "{{ db_server_data_dir }}/db_backup.sh"
+    owner: "{{ db_server_account }}"
+    group: "{{ db_server_account }}"
     mode: "0755"
 
 - name: "Setup Postgres Backup"
   file:
-    src: "{{ role_path }}/files/{{ role_db_backup_pub_key }}"
-    dest: "{{ role_db_data_dir }}/{{ role_db_backup_pub_key }}"
-    owner: "{{ role_db_user }}"
-    group: "{{ role_db_user }}"
+    src: "../files/{{ db_server_backup_pub_key }}"
+    dest: "{{ db_server_data_dir }}/{{ db_server_backup_pub_key }}"
+    owner: "{{ db_server_account }}"
+    group: "{{ db_server_account }}"
     mode: "0755"
 
 - name: "Setup Cron for database backups - start with current cron jobs"
@@ -35,21 +35,21 @@
     owner: root
     group: root
     dest: "/root/cron.txt"
-    line: "@hourly /bin/sh {{ role_db_data_dir }}/db_backup.sh hourly "
+    line: "@hourly /bin/sh {{ db_server_data_dir }}/db_backup.sh hourly "
 
 - name: "Add daily job"
   lineinfile:
     owner: root
     group: root
     dest: "/root/cron.txt"
-    line: "@daily /bin/sh {{ role_db_data_dir }}/db_backup.sh daily "
+    line: "@daily /bin/sh {{ db_server_data_dir }}/db_backup.sh daily "
 
 - name: "Add weekly job"
   lineinfile:
     owner: root
     group: root
     dest: "/root/cron.txt"
-    line: "@weekly /bin/sh {{ role_db_data_dir }}/db_backup.sh weekly "
+    line: "@weekly /bin/sh {{ db_server_data_dir }}/db_backup.sh weekly "
 
 
 - name: "Check if cron source file exists"
