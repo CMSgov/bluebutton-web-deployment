@@ -181,12 +181,20 @@
     owner: "{{ db_server_account }}"
     group: "{{ db_server_account }}"
     regexp: "^port = 5432"
-    line: |
-      port = {{ common_db_type[cf_data_database_type]['DbHostPort'] }}
+    line: "port = {{ common_db_type[cf_data_database_type]['DbHostPort'] }}"
       #-------------------------------
       # LISTEN ON EXTERNAL PORTS
       #-------------------------------
       listen_addresses = '*'
+    backup: yes
+
+- name: "listen to anything"
+  lineinfile:
+    dest: "{{ db_server_data_dir }}/postgresql.conf"
+    owner: "{{ db_server_account }}"
+    group: "{{ db_server_account }}"
+    regexp: "^listen_addresses ="
+    line: "listen_addresses = '*'"
     backup: yes
 
 
@@ -197,11 +205,7 @@
     owner: "{{ db_server_account }}"
     group: "{{ db_server_account }}"
     dest: "{{ db_server_data_dir }}/pg_hba.conf"
-    line: |
-      #-------------------------------
-      # LISTEN ON EXTERNAL PORTS
-      #-------------------------------
-      host    all    all    {{ common_cf_layer[env_az][env_cf_data_tag_key_layer] }}    password
+    line: "host    all    all    {{ common_cf_layer[env_az][env_cf_data_tag_key_layer] }}    password"
     backup: yes
 
 #- name: "Update pg_hba.conf with this subnet address"
@@ -233,8 +237,10 @@
   register: postgres_start_result
 
 - name: "Create db init sql script"
+  become_user: root
+  become: yes
   template:
-    src: db_init_script.j2
+    src: "../templates/db_init_script.j2"
     dest: "{{ db_server_data_dir }}/django_init.sql"
     backup: yes
     owner: "{{ db_server_account }}"
