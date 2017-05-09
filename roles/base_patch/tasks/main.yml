@@ -42,24 +42,6 @@
   ignore_errors: true
   register: reboot_hint
 
-- name: "Write aws config file"
-  become_user: root
-  template:
-    src: "../templates/root_aws_config.js"
-    dest: "/root/.aws/config"
-    backup: yes
-    owner: root
-    group: root
-    mode: "u+r"
-
-- name: "write aws credentials"
-  become_user: root
-  template:
-    src: "../templates/root_aws_credentials.j2"
-    dest: "/root/.aws/credentials"
-    owner: root
-    group: root
-    mode: "u+r"
 
 - name: "Rebooting ..."
   command: shutdown -r now "Reboot required for updated kernel"
