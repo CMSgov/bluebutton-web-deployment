@@ -154,11 +154,12 @@
 - name: "Initialize Database Service"
   become_user: root
   become: yes
-  service:
-    name: postgresql-9.6
-    state: started
-    args: initdb
-  register: postgres_init_result
+  shell: "service postgresql-9.6 initdb"
+#  service:
+#    name: postgresql-9.6
+#    state: started
+#    args: initdb
+#  register: postgres_init_result
 
 - name: "Set database to start on OS Boot"
   become_user: root
