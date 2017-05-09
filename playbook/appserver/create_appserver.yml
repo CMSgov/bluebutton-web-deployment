@@ -1,11 +1,10 @@
 ---
-# File: create_database.yml 
-# Created: 4/18/17
+# File: create_appserver.yml
+# Created: 5/09/17
 
 # Playbook to:
-#  - create Postgres 9.x Database Server
-#  - create App Server
-#
+#  - create Python3/Django AppServer
+
 # Based on: http://odecee.com.au/cloudformation-and-ansible/
 # Vars file is relative to playbook file
 # vars_files:
@@ -21,75 +20,129 @@
 # all_var incorporates preceding variables and defines variables without prefixes.
 # use all_var variables in scripts.
 
-- name: Provision Database
+- name: Provision Appserver
   hosts: localhost
   connection: local
   # gather_facts: False
   vars:
     env: "dev"
+    azone: "az1"
+    sub_zone: "app"
+    env_az: "{{ env }}-{{ azone }}"
+    env_cf_data_version: "20"
+    splunk_client_name: "BBAPI-{{ env|upper }}-APP"
   vars_files:
     - "./../../vars/common.yml"
     - "./../../vault/env/{{ env }}/vault.yml"
     - "./../../vars/env/{{ env }}/env.yml"
     - "./../../vars/all_var.yml"
 
+#  tasks:
+#  - name: "launch appserver server via CloudFormation"
+#    cloudformation:
+#      stack_name: "bb-{{ env }}-app-01"
+#      state: "present"
+#      region: "us-east-1"
+#      disable_rollback: true
+#      template: "../../templates/appserver/vpc-pickenv-fe-pyapps-postgres-2.json"
+#      template_parameters:
+#
+#        # Create_database: data_vpc_output:
+#        # "stack_outputs": {
+#        # "DBPrivateIp": "10.224.90.116",
+#        # "DBPwd": "P!th0nDjang0",
+#        # "DBTable": "bb_fe_test_pg_01",
+#        # "DBType": "postgres",
+#        # "DBUser": "pymaster",
+#        # "DbEcInstanceId": "i-056801437bdeb9d89",
+#        # "Ec2SecurityGrp": "sg-feaa8b81"
+#        # },
+#        AZone: "{{ cf_app_azone }}"
+#        BuildImageId: "{{ cf_app_build_image_id }}"
+#        InstanceName: "{{ cf_app_instance_name }}"
+#        TagKeyStack: "{{ cf_app_tag_key_stack }}"
+#        TagKeyLayer: "{{ cf_app_tag_key_layer }}"
+#        KeyName: "{{ cf_app_key_name }}"
+#        InstanceType: "{{ cf_app_instance_type }}"
+#        PublicServerName: "{{ cf_app_public_server_name }}"
+#        PyServerName: "{{ cf_app_pyserver_name }}"
+#        PyVirtualenv: "{{ cf_app_py_virtual_env }}"
+#        PyAppHome: "{{ cf_app_pyapp_home }}"
+#        PyAppSettings: "{{ cf_app_pyapp_settings }}"
+#        PyRepoBranch: "{{ cf_app_repo_branch }}"
+#        pyappsUser: "{{ cf_app_pyapps_user }}"
+#
+#        pyappsemail: "{{ cf_app_pyapps_email }}"
+#        pyappsPassword: "{{ cf_app_pyapps_pwd }}"
+#        HerdMember: "{{ cf_app_herd_member }}"
+#
+#        DatabasePrefix: "{{ cf_app_db_prefix }}"
+#
+#        # Inherited from Create_database_outputs
+#        DatabaseType: "{{ data_vpc_output.stack_outputs.DBType }}"
+#        pyDbUser: "{{ data_vpc_output.stack_outputs.DBUser }}"
+#        pyDbPassword: "{{ data_vpc_output.stack_outputs.DBPwd }}"
+#        DatabaseHostAddress: "{{ data_vpc_output.stack_outputs.DBPrivateIp }}"
+#
+#        AwsContentKeyId: "{{ cf_app_aws_content_key_id }}"
+#        AwsContentAccessKey: "{{ cf_app_aws_content_access_key }}"
+#        TargetVpcId: "{{ cf_app_target_vpc_id }}"
+#        AppEc2SecurityGrp: "{{ cf_app_sg_app_zone_id }}"
+#
+#
+#      tags:
+#        Stack: "BB-{{ env }}-{{ cf_app_azone }}-{{ env_cf_app_tag_key_layer }}-{{ cf_app_herd_member }}-ansible-cloudformation"
+#        Business: "{{ cf_tags_business }}"
+#        Application: "{{ cf_tags_application }}"
+#        Environment: "{{ env }}"
+#        Function: "{{ cf_app_tag_key_layer }}-{{ cf_app_herd_member }}"
+#    register: app_vpc_output
+
+
   tasks:
-  - name: "launch appserver server via CloudFormation"
-    cloudformation:
-      stack_name: "bb-{{ env }}-app-01"
-      state: "present"
-      region: "us-east-1"
-      disable_rollback: true
-      template: "../../templates/appserver/vpc-pickenv-fe-pyapps-postgres-2.json"
-      template_parameters:
+  - name: "launch App Server"
+    ec2:
+      # connection: local
+      # gather_facts: False
+      # tags: provisioning
+      # Necessary Variables for creating/provisioning the EC2 Instance
+      #vars:
+      # Adding instance_id list to see if only one server is created.
+      # instance_ids: ["i-028b8fcc6eaf54779"]
+      instance_type: "{{ cf_app_instance_type }}"
+      # security_group:
+      group: "BB-SG-{{ env|upper }}-{{ sub_zone|upper }}-ALLZONE" # Change the security group name here
+      # This image should be updated monthly.
+      # Current version is: EAST-RH 7-3 Gold Image V.1.09 (HVM) 04-21-2017 - ami-fdde41eb
+      # EAST-RH 6-9 Gold Image V.1.01 (PV) 04-21-17 - ami-3dda452b
+      # EAST-RH 6-8 Gold Image V.3.17 (PV)Splunk-CFN-FIPS140-02-24-17 (ami-f070abe6)
+      image: "ami-fdde41eb" # Change the AMI, from which you want to launch the server
 
-        # Create_database: data_vpc_output:
-        # "stack_outputs": {
-        # "DBPrivateIp": "10.224.90.116",
-        # "DBPwd": "P!th0nDjang0",
-        # "DBTable": "bb_fe_test_pg_01",
-        # "DBType": "postgres",
-        # "DBUser": "pymaster",
-        # "DbEcInstanceId": "i-056801437bdeb9d89",
-        # "Ec2SecurityGrp": "sg-feaa8b81"
-        # },
-        AZone: "{{ cf_app_azone }}"
-        BuildImageId: "{{ cf_app_build_image_id }}"
-        InstanceName: "{{ cf_app_instance_name }}"
-        TagKeyStack: "{{ cf_app_tag_key_stack }}"
-        TagKeyLayer: "{{ cf_app_tag_key_layer }}"
-        KeyName: "{{ cf_app_key_name }}"
-        InstanceType: "{{ cf_app_instance_type }}"
-        PublicServerName: "{{ cf_app_public_server_name }}"
-        PyServerName: "{{ cf_app_pyserver_name }}"
-        PyVirtualenv: "{{ cf_app_py_virtual_env }}"
-        PyAppHome: "{{ cf_app_pyapp_home }}"
-        PyAppSettings: "{{ cf_app_pyapp_settings }}"
-        PyRepoBranch: "{{ cf_app_repo_branch }}"
-        pyappsUser: "{{ cf_app_pyapps_user }}"
-
-        pyappsemail: "{{ cf_app_pyapps_email }}"
-        pyappsPassword: "{{ cf_app_pyapps_pwd }}"
-        HerdMember: "{{ cf_app_herd_member }}"
-
-        DatabasePrefix: "{{ cf_app_db_prefix }}"
-
-        # Inherited from Create_database_outputs
-        DatabaseType: "{{ data_vpc_output.stack_outputs.DBType }}"
-        pyDbUser: "{{ data_vpc_output.stack_outputs.DBUser }}"
-        pyDbPassword: "{{ data_vpc_output.stack_outputs.DBPwd }}"
-        DatabaseHostAddress: "{{ data_vpc_output.stack_outputs.DBPrivateIp }}"
-
-        AwsContentKeyId: "{{ cf_app_aws_content_key_id }}"
-        AwsContentAccessKey: "{{ cf_app_aws_content_access_key }}"
-        TargetVpcId: "{{ cf_app_target_vpc_id }}"
-        AppEc2SecurityGrp: "{{ cf_app_sg_app_zone_id }}"
-
-
-      tags:
-        Stack: "BB-{{ env }}-{{ cf_app_azone }}-{{ env_cf_app_tag_key_layer }}-{{ cf_app_herd_member }}-ansible-cloudformation"
+      key_name: "{{ cf_app_key_name }}" # Change the keypair name
+      region: "{{ cf_region }}"
+      # tenancy must be "dedicated"
+      tenancy: "dedicated"
+      # DEV AZ1 DATA
+      vpc_subnet_id: "{{ common_cf_subnet[env_az][env_cf_app_tag_key_layer] }}"  # "subnet-80ecfbaa"
+      count: 1
+      # state: present
+      termination_protection: yes
+      # tags to instance_tags
+      # Wait for desired state
+      wait: yes
+      instance_tags:
+        Name: "bb-{{ env }}-{{ cf_app_azone }}-{{ env_cf_app_tag_key_layer }}-{{ env_cf_app_version }}"
+        Stack: "BB-{{ env|upper }}-{{ cf_app_azone|upper }}-{{ env_cf_app_tag_key_layer|upper }}-ANSIBLE"
         Business: "{{ cf_tags_business }}"
         Application: "{{ cf_tags_application }}"
-        Environment: "{{ env }}"
-        Function: "{{ cf_app_tag_key_layer }}-{{ cf_app_herd_member }}"
-    register: app_vpc_output
+        Environment: "{{ env|upper }}"
+        Function: "{{ cf_app_tag_key_layer }}-AppServer"
+    register: app_ec2_output
+
+  - name: "add private_ip to /etc/ansible/hosts"
+    lineinfile:
+      dest: "/etc/ansible/hosts"
+      regexp: "[appservers]"
+      line: "[appservers]\n{{ app_ec2_output.instances[0]['private_ip'] }}"
+      backup: yes
+
