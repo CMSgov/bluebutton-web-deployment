@@ -16,7 +16,7 @@
 - name: "Setup Postgres Backup"
   become_user: root
   become: yes
-  file:
+  copy:
     src: "../files/{{ db_server_backup_pub_key }}"
     dest: "{{ db_server_data_dir }}/{{ db_server_backup_pub_key }}"
     owner: "{{ db_server_account }}"
