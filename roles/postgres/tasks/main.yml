@@ -182,10 +182,6 @@
     group: "{{ db_server_account }}"
     regexp: "^port = 5432"
     line: "port = {{ common_db_type[cf_data_database_type]['DbHostPort'] }}"
-      #-------------------------------
-      # LISTEN ON EXTERNAL PORTS
-      #-------------------------------
-      listen_addresses = '*'
     backup: yes
 
 - name: "listen to anything"
