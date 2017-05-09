@@ -23,7 +23,7 @@
 
 - name: Final sudoers file check
   become_user: root
-  shell: visudo -q -c -f /etc/sudoers.tmp && cp -f /etc/sudoers.tmp /etc/sudoers
+  shell: "visudo -q -c -f /etc/sudoers.tmp && cp -f /etc/sudoers.tmp /etc/sudoers"
 
 - name: "clean up /root for dataservers"
   become_user: root
