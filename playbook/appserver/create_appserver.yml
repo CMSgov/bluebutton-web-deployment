@@ -28,6 +28,7 @@
     env: "dev"
     azone: "az1"
     sub_zone: "app"
+    sg_zone: "appserver"
     env_az: "{{ env }}-{{ azone }}"
     env_cf_data_version: "20"
     splunk_client_name: "BBAPI-{{ env|upper }}-APP"
@@ -111,7 +112,7 @@
       # instance_ids: ["i-028b8fcc6eaf54779"]
       instance_type: "{{ cf_app_instance_type }}"
       # security_group:
-      group: "BB-SG-{{ env|upper }}-{{ sub_zone|upper }}-ALLZONE" # Change the security group name here
+      group: "BB-SG-{{ env|upper }}-{{ sg_zone|upper }}-ALLZONE" # Change the security group name here
       # This image should be updated monthly.
       # Current version is: EAST-RH 7-3 Gold Image V.1.09 (HVM) 04-21-2017 - ami-fdde41eb
       # EAST-RH 6-9 Gold Image V.1.01 (PV) 04-21-17 - ami-3dda452b
