@@ -1,9 +1,9 @@
 ---
-# File: create_database.yml 
+# File: set_backup.yml
 # Created: 4/18/17
 
 # Playbook to:
-#  - create Postgres 9.x Database Server
+#  - define database_backups
 #  - create App Server
 #
 # Based on: http://odecee.com.au/cloudformation-and-ansible/
@@ -21,7 +21,7 @@
 # all_var incorporates preceding variables and defines variables without prefixes.
 # use all_var variables in scripts.
 
-- name: Provision Database
+- name: setup backups
   hosts: dbservers
   # connection: local
   remote_user: ec2-user
@@ -38,17 +38,11 @@
     - "./../../vars/env/{{ env }}/env.yml"
     - "./../../vars/all_var.yml"
 
-  roles:
-    - ../../roles/splunk
-    # moved add_external_vol to its own playbook - attach_data_volume.yml
-    # - ../../roles/add_external_vol
-    - ../../roles/postgres
-
   tasks:
-  - name: "Set Hostname to {{ cf_data_pgsql_server_name }} "
-    remote_user: ec2-user
-    become_user: root
-    become: yes
-    hostname:
-      name: "{{ cf_data_pgsql_server_name }}"
+  - include: ../../roles/base_patch/tasks/set_aws_credentials.yml
+
+  - include: ../../roles/postgres/tasks/pgpass.yml
+
+  - include: ../../roles/postgres/tasks/backup.yml
+
 
