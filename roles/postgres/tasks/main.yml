@@ -41,14 +41,24 @@
   become: yes
   shell: "yum-config-manager --enable rhel-6-server-optional-rpms"
 
-#- name: "RPM Update - CentOS/RHEL 7"
-#  become_user: root
-#  shell: "rpm -Uvh https://yum.postgresql.org/9.6/redhat/rhel-7-x86_64/pgdg-centos96-9.6-3.noarch.rpm"
+- name: "Add Postgres YUM repository for RHEL 6"
+  become_user: root
+  become: yes
+  yum:
+    name: "{{ item }}"
+    state: installed
+  with_items:
+    - https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-6-x86_64/pgdg-redhat96-9.6-3.noarch.rpm
+    - https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-6-x86_64/postgresql96-contrib-9.6.2-2PGDG.rhel6.x86_64.rpm
+    - http://mirror.centos.org/centos/6/os/x86_64/Packages/libffi-devel-3.0.5-3.2.el6.x86_64.rpm
 
-#- name: "RPM Update - CentOS/RHEL 6"
+#- name: "Add Postgres YUM repository for RHEL 7"
 #  become_user: root
 #  become: yes
-#  shell: "rpm -Uvh https://yum.postgresql.org/9.6/redhat/rhel-6-x86_64/pgdg-redhat96-9.6-3.noarch.rpm"
+#  yum:
+#    name: https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-7-x86_64/pgdg-redhat96-9.6-3.noarch.rpm
+#    state: latest
+
 
 - name: "Install Development Tools"
   become_user: root
@@ -93,33 +103,32 @@
     pkg: "{{item}}"
     state: installed
   with_items:
-   # - https://yum.postgresql.org/9.6/redhat/rhel-6-x86_64/pgdg-redhat96-9.6-3.noarch.rpm
-   - https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-6-x86_64/pgdg-redhat96-9.6-3.noarch.rpm
-   - postgresql96-server.x86_64
-   - https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-6-x86_64/postgresql96-contrib-9.6.2-2PGDG.rhel6.x86_64.rpm
-   - http://mirror.centos.org/centos/6/os/x86_64/Packages/libffi-devel-3.0.5-3.2.el6.x86_64.rpm
-   - libxml2-devel
-   - libxslt-devel
-   # - gcc
-   # - gcc-c++
-   # - git
-   - httpd-devel
-   - zlib-devel
-   - bzip2-devel
-   - openssl-devel
-   - ncurses-devel
-   - sqlite-devel
-   - readline-devel
-   - tk-devel
-   - gdbm-devel
-   - db4-devel
-   # - libpcap-devel
-   - xz-devel
-   - python-devel
-   - postgresql-devel
-   - libffi.x86_64
-   - python-cffi
-   - python-psycopg2.x86_64
+    -
+    - postgresql96-server
+    - postgresql96-contrib
+    - python-psycopg2.x86_64
+
+#    - libxml2-devel
+#    - libxslt-devel
+#    # - gcc
+#    # - gcc-c++
+#    # - git
+#    - httpd-devel
+#    - zlib-devel
+#    - bzip2-devel
+#    - openssl-devel
+#    - ncurses-devel
+#    - sqlite-devel
+#    - readline-devel
+#    - tk-devel
+#    - gdbm-devel
+#    - db4-devel
+#    # - libpcap-devel
+#    - xz-devel
+#    - python-devel
+#    - postgresql-devel
+#    - libffi.x86_64
+#    - python-cffi
 
 - name: "Create Postgres data directory"
   become_user: root
