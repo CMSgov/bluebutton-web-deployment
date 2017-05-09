@@ -15,7 +15,7 @@
     mode: "u+x"
     owner: root
     group: root
-    src: "{{ role_path }}/files/fips_update.sh"
+    src: "../files/fips_update.sh"
     dest: "/root/fips140/fips_update.sh"
 
 # yum update run in base_patch

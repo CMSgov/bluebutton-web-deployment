@@ -14,7 +14,7 @@
   become: yes
   user:
     name: pyapps
-        password={{ PgslPassword }}
+        password={{ PgsqlPassword }}
         state=present
         append=yes
         groups=sudo
@@ -123,16 +123,16 @@
 
 - name: "Create Postgres data directory"
   file:
-    dest: "{{ role_db_data_dir }}"
-    owner: "{{ role_db_user }}"
-    group: "{{ role_db_user }}"
+    dest: "{{ db_server_data_dir }}"
+    owner: "{{ db_server_account }}"
+    group: "{{ db_server_account }}"
     recurse: yes
 
 - name: "Create Postgres temp directory"
   file:
-    dest: "{{ role_db_temp_dir }}"
-    owner: "{{ role_db_user }}"
-    group: "{{ role_db_user }}"
+    dest: "{{ db_server_temp_dir }}"
+    owner: "{{ db_server_account }}"
+    group: "{{ db_server_account }}"
     recurse: yes
 
 # Startup script: /etc/init.d/postgresql-9.6
@@ -143,7 +143,7 @@
   lineinfile:
     dest: "/etc/init.d/postgresql-9.6"
     regexp: "^PGDATA="
-    line: "PGDATA={{ role_db_data_dir }}"
+    line: "PGDATA={{ db_server_data_dir }}"
 
 # Switch from default port 5432.
 - name: "Setup Database port"
@@ -151,9 +151,9 @@
   become_user: root
   become: yes
   lineinfile:
-    dest: "{ role_db_data_dir }}/postgresql.conf"
-    owner: "{{ role_db_user }}"
-    group: "{{ role_db_user }}"
+    dest: "{db_server_data_dir }}/postgresql.conf"
+    owner: "{{ db_server_account }}"
+    group: "{{ db_server_account }}"
     regex: "^port = 5432"
     line: "port = {{ common_db_type[cf_data_database_type]['DbHostPort'] }}"
     backup: yes
@@ -169,9 +169,9 @@
 - name: "Set postgresql to listen on ip addresses"
   become_user: root
   lineinfile:
-    dest: "{{ role_db_data_dir }}/postgresql.conf"
-    owner: "{{ role_db_user }}"
-    group: "{{ role_db_user }}"
+    dest: "{{ db_server_data_dir }}/postgresql.conf"
+    owner: "{{ db_server_account }}"
+    group: "{{ db_server_account }}"
     line: "\n#-------------------------------\n# LISTEN ON EXTERNAL PORTS\n#-------------------------------\nlisten_addresses = '*'\n"
     state: present
 
@@ -179,27 +179,27 @@
   become_user: root
   become: yes
   lineinfile:
-    owner: "{{ role_db_user }}"
-    group: "{{ role_db_user }}"
-    dest: "{{ role_db_data_dir }}/pg_hba.conf"
+    owner: "{{ db_server_account }}"
+    group: "{{ db_server_account }}"
+    dest: "{{ db_server_data_dir }}/pg_hba.conf"
     line: "\n#-------------------------------\n# LISTEN ON EXTERNAL PORTS\n#-------------------------------\n"
 
 - name: "Update pg_hba.conf with this subnet address"
   become_user: root
   become: yes
   lineinfile:
-    owner: "{{ role_db_user }}"
-    group: "{{ role_db_user }}"
-    dest: "{{ role_db_data_dir }}/pg_hba.conf"
+    owner: "{{ db_server_account }}"
+    group: "{{ db_server_account }}"
+    dest: "{{ db_server_data_dir }}/pg_hba.conf"
     line: "host    all    all    {{ common_cf_layer[env_az][env_cf_data_tag_key_layer] }}    password "
 
 - name: "Update pg_hba.conf with app layer address"
   become_user: root
   become: yes
   lineinfile:
-    owner: "{{ role_db_user }}"
-    group: "{{ role_db_user }}"
-    dest: "{{ role_db_data_dir }}/pg_hba.conf"
+    owner: "{{ db_server_account }}"
+    group: "{{ db_server_account }}"
+    dest: "{{ db_server_data_dir }}/pg_hba.conf"
     line: "host    all    all    {{ common_cf_layer[env_az]['app'] }}    password "
 
 - name: "Start Database"
@@ -210,16 +210,16 @@
 - name: "Create db init sql script"
   template:
     src: db_init_script.j2
-    dest: "{{ role_db_data_dir }}/django_init.sql"
+    dest: "{{ db_server_data_dir }}/django_init.sql"
     backup: yes
-    owner: "{{ role_db_user }}"
-    group: "{{ role_db_user }}"
+    owner: "{{ db_server_account }}"
+    group: "{{ db_server_account }}"
     mode: "u+rwx"
 
 - name: "Run db init sql script"
-  become_user: "{{ role_db_user}}"
+  become_user: "{{ db_server_account}}"
   become: yes
-  shell: "psql -f {{ role_db_data_dir }}/django_init.sql"
+  shell: "psql -f {{ db_server_data_dir }}/django_init.sql"
   register: django_db_init
 
 - name: "Setup /etc/ld.so.conf"
