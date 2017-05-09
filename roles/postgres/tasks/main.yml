@@ -248,7 +248,7 @@
 - name: "Run db init sql script"
   become_user: "{{ db_server_account}}"
   become: yes
-  shell: "psql -f {{ db_server_data_dir }}/django_init.sql"
+  shell: "psql -h localhost -p {{ common_db_type[cf_data_database_type]['DbHostPort'] }} -f {{ db_server_data_dir }}/django_init.sql"
   register: django_db_init
 
 - name: "Setup /etc/ld.so.conf"
