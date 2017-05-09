@@ -157,7 +157,7 @@
   become_user: root
   become: yes
   lineinfile:
-    dest: "{db_server_data_dir }}/postgresql.conf"
+    dest: "{( db_server_data_dir }}/postgresql.conf"
     owner: "{{ db_server_account }}"
     group: "{{ db_server_account }}"
     regexp: "^port = 5432"
