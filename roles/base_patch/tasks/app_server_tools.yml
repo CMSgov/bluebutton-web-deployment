@@ -1,0 +1,33 @@
+---
+# File: roles/base_patch/taska/app_server_tools.yml
+# Created: 5/9/17
+# Author: '@ekivemark'
+
+- name: "Install base App Server Components"
+  become_user: root
+  become: yes
+  yum:
+    pkg: "{{ item }}"
+    state: installed
+  with_items:
+    - gcc
+    - gcc-c++
+    - git
+    - python-psycopg2.x86_64
+    - httpd
+    - httpd-devel
+    - mod_wsgi
+    - bzip2-devel
+    - openssl-devel
+    - ncurses-devel
+    # - sqlite-devel
+    - readline-devel
+    - tk-devel
+    - gdbm-devel
+    - db4-devel
+    - libxml2-devel
+    - libxslt-devel
+    - libpcap-devel
+    - xz-devel
+    - zlib-devel
+

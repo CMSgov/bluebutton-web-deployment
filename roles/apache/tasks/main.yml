@@ -1,0 +1,23 @@
+---
+# File: roles/apache/main.yml
+# Created: 5/9/17
+# Author: '@ekivemark'
+
+- name: "Install supporting packages"
+  include: ../../base_patch/tasks/app_server_tools.yml
+
+- name: "Install Apache (httpd)"
+  become_user: root
+  become: yes
+  yum:
+    name: httpd
+    state: latest
+
+- name: "Check Apache is running"
+  become_user: root
+  become: yes
+  service:
+    name: httpd
+    state: running
+    enabled: yes
+
