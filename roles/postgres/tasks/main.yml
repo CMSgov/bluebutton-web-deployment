@@ -151,6 +151,14 @@
     regexp: "^PGDATA="
     line: "PGDATA={{ db_server_data_dir }}"
 
+- name: "Initialize Database Service"
+  become_user: root
+  shell: "service postgresql-9.6 initdb"
+
+- name: "Set database to start on OS Boot"
+  become_user: root
+  shell: "chkconfig postgresql-9.6 on"
+
 # Switch from default port 5432.
 - name: "Setup Database port"
 #########
@@ -164,13 +172,6 @@
     line: "port = {{ common_db_type[cf_data_database_type]['DbHostPort'] }}"
     backup: yes
 
-- name: "Initialize Database Service"
-  become_user: root
-  shell: "service postgresql-9.6 initdb"
-
-- name: "Set database to start on OS Boot"
-  become_user: root
-  shell: "chkconfig postgresql-9.6 on"
 
 - name: "Set postgresql to listen on ip addresses"
   become_user: root
