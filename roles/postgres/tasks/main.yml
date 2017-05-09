@@ -100,10 +100,9 @@
   become_user: root
   become: yes
   yum:
-    pkg: "{{item}}"
+    pkg: "{{ item }}"
     state: installed
   with_items:
-    -
     - postgresql96-server
     - postgresql96-contrib
     - python-psycopg2.x86_64
