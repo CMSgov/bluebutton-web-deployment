@@ -160,7 +160,7 @@
     dest: "{db_server_data_dir }}/postgresql.conf"
     owner: "{{ db_server_account }}"
     group: "{{ db_server_account }}"
-    regex: "^port = 5432"
+    regexp: "^port = 5432"
     line: "port = {{ common_db_type[cf_data_database_type]['DbHostPort'] }}"
     backup: yes
 
