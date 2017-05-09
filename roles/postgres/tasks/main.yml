@@ -122,6 +122,8 @@
    - python-psycopg2.x86_64
 
 - name: "Create Postgres data directory"
+  become_user: root
+  become: yes
   file:
     dest: "{{ db_server_data_dir }}"
     owner: "{{ db_server_account }}"
@@ -130,6 +132,8 @@
     recurse: yes
 
 - name: "Create Postgres temp directory"
+  become_user: root
+  become: yes
   file:
     dest: "{{ db_server_temp_dir }}"
     owner: "{{ db_server_account }}"
