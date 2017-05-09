@@ -4,6 +4,8 @@
 # Author: '@ekivemark'
 
 - name: "Create .pgpass file"
+  become_user: root
+  become: yes
   template:
     src: "../templates/pgpass.j2"
     dest: "{{ db_server_data_dir }}/.pgpass"
