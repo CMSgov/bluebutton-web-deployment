@@ -46,6 +46,8 @@
 
   tasks:
   - name: "Set Hostname to {{ cf_data_pgsql_server_name }} "
+    become_user: root
+    become: yes
     hostname:
       name: "{{ cf_data_pgsql_server_name }}"
 
