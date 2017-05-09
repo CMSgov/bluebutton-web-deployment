@@ -163,7 +163,13 @@
 
 - name: "Set database to start on OS Boot"
   become_user: root
-  shell: "chkconfig postgresql-9.6 on"
+  become: yes
+  service:
+    name: "{{ item }}"
+    enabled: yes
+  with_items:
+    - postgresql-9.6
+
 
 # Switch from default port 5432.
 - name: "Setup Database port"
