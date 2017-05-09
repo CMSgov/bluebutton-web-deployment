@@ -45,15 +45,10 @@
     - ../../roles/postgres
 
   tasks:
-#  - name: "Set Hostname to {{ cf_data_pgsql_server_name }} "
-#    remote_user: ec2-user
-#    become_user: root
-#    become: yes
-#    hostname:
-#      name: "{{ cf_data_pgsql_server_name }}"
-
-  - include: ../../roles/postgres/tasks/pgpass.yml
-
-  - include: ../../roles/postgres/tasks/backup.yml
-
+  - name: "Set Hostname to {{ cf_data_pgsql_server_name }} "
+    remote_user: ec2-user
+    become_user: root
+    become: yes
+    hostname:
+      name: "{{ cf_data_pgsql_server_name }}"
 
