@@ -182,24 +182,13 @@
     group: "{{ db_server_account }}"
     regexp: "^port = 5432"
     line: |
-      "port = {{ common_db_type[cf_data_database_type]['DbHostPort'] }}\n
-       #-------------------------------\n
-       # LISTEN ON EXTERNAL PORTS\n
-       #-------------------------------\n
-       listen_addresses = '*'\n"
-
+      port = {{ common_db_type[cf_data_database_type]['DbHostPort'] }}
+      #-------------------------------
+      # LISTEN ON EXTERNAL PORTS
+      #-------------------------------
+      listen_addresses = '*'
     backup: yes
 
-
-- name: "Set postgresql to listen on ip addresses"
-  become_user: root
-  lineinfile:
-    dest: "{{ db_server_data_dir }}/postgresql.conf"
-    owner: "{{ db_server_account }}"
-    group: "{{ db_server_account }}"
-    line: "\n#2-------------------------------\n# LISTEN ON EXTERNAL PORTS\n#-------------------------------\nlisten_addresses = '*'\n"
-    state: present
-    backup: yes
 
 - name: "Update pg_hba.conf"
   become_user: root
@@ -208,18 +197,22 @@
     owner: "{{ db_server_account }}"
     group: "{{ db_server_account }}"
     dest: "{{ db_server_data_dir }}/pg_hba.conf"
-    line: "\n#-------------------------------\n# LISTEN ON EXTERNAL PORTS\n#-------------------------------\n"
+    line: |
+      #-------------------------------
+      # LISTEN ON EXTERNAL PORTS
+      #-------------------------------
+      host    all    all    {{ common_cf_layer[env_az][env_cf_data_tag_key_layer] }}    password
     backup: yes
 
-- name: "Update pg_hba.conf with this subnet address"
-  become_user: root
-  become: yes
-  lineinfile:
-    owner: "{{ db_server_account }}"
-    group: "{{ db_server_account }}"
-    dest: "{{ db_server_data_dir }}/pg_hba.conf"
-    line: "host    all    all    {{ common_cf_layer[env_az][env_cf_data_tag_key_layer] }}    password "
-    backup: yes
+#- name: "Update pg_hba.conf with this subnet address"
+#  become_user: root
+#  become: yes
+#  lineinfile:
+#    owner: "{{ db_server_account }}"
+#    group: "{{ db_server_account }}"
+#    dest: "{{ db_server_data_dir }}/pg_hba.conf"
+#    line: "host    all    all    {{ common_cf_layer[env_az][env_cf_data_tag_key_layer] }}    password "
+#    backup: yes
 
 - name: "Update pg_hba.conf with app layer address"
   become_user: root
