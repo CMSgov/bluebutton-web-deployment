@@ -27,8 +27,9 @@
   # gather_facts: False
   vars:
     env: "dev"
-    env_az: "{{ env }}-az1"
-    env_cf_data_version: "11"
+    azone: "az1"
+    env_az: "{{ env }}-{{ azone }}"
+    env_cf_data_version: "20"
     splunk_client_name: "BBAPI-{{ env }}-DATA"
   vars_files:
     - "./../../vars/common.yml"
