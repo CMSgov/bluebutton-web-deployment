@@ -14,7 +14,7 @@
     - gcc
     - gcc-c++
     - git
-    - python-psycopg2.x86_64
+    - python-psycopg2
     - httpd
     - httpd-devel
     - mod_wsgi
@@ -31,8 +31,8 @@
     - db4-devel
     - libxml2-devel
     - libxslt-devel
-    - libffi.x86_64
-    - http://mirror.centos.org/centos/6/os/x86_64/Packages/libffi-devel-3.0.5-3.2.el6.x86_64.rpm
+    - libffi
+    - libffi-devel
     # - libpcap-devel
     - xz-devel
     - zlib-devel

@@ -6,23 +6,86 @@
 
 - name: "create download directory"
   file:
-    dest: /root/.aws
-    mode: 0600
-    owner: root
-    group: root
-    state: directory
-
-
-  file:
     dest: "/home/ec2-user/download"
     state: directory
     mode: 0600
-    owner: "{{ remote_user }}"
-    group: "{{ remote_user }}"
+    owner: "ec2-user"
+    group: "ec2-user"
   register: app_download_dir
 
 - name: "Download python 3"
+  become_user: root
+  become: yes
   unarchive:
     src: "https://www.python.org/ftp/python/3.5.2/Python-3.5.2.tar.xz"
-    dest: /home/ec2-user/download
+    dest: "/home/ec2-user/download"
     remote_src: True
+
+- name: "Running ./configure for Python 3.5"
+  become_user: root
+  become: yes
+  command: '"{{ item }}" chdir=/home/ec2-user/download/Python-3.5.2'
+  with_items:
+    - "./configure --prefix=/usr/local --enable-shared  LDFLAGS='-Wl,-rpath /usr/local/lib' --enable-loadable-sqlite-extensions "
+
+- name: "Running make for Python 3.5"
+  become_user: root
+  become: yes
+  command: '"{{ item }}" chdir=/home/ec2-user/download/Python-3.5.2'
+  with_items:
+    - make
+
+- name: "Running make altinstall for Python 3.5"
+  become_user: root
+  become: yes
+  command: 'make altinstall chdir=/home/ec2-user/download/Python-3.5.2'
+
+- name: "Download Mod_WSGI 4.5.3"
+  become_user: root
+  become: yes
+  get_url:
+    url: "https://codeload.github.com/GrahamDumpleton/mod_wsgi/tar.gz/4.5.3"
+    dest: "/home/ec2-user/download/mod_wsgi_4.5.3.tar.gz"
+    remote_src: True
+
+- name: "Unarchive mod_wsgi"
+  become_user: root
+  become: yes
+  unarchive:
+    src: "/home/ec2-user/download/mod_wsgi_4.5.3.tar.gz"
+    dest: "/home/ec2-user/download/mod_wsgi-4.5.3"
+    remote_src: True
+
+- name: "Running configure for Mod-wsgi"
+  become_user: root
+  become: yes
+  command: '"{{ item }}" chdir=/home/ec2-user/download/mod_wsgi-4.5.3'
+  with items:
+    - "./configure --with-python=/usr/local/bin/python3.5 --with-apxs=/usr/sbin/apxs"
+
+- name: "Prepare to refresh ld cache"
+  become_user: root
+  become: yes
+  lineinfile:
+    dest: "/etc/ld.so.conf"
+    line: "/usr/local/lib"
+    state: present
+
+- name: "Refresh LD Cache"
+  become_user: root
+  become: yes
+  command: "/sbin/ldconfig"
+
+- name: "Running make for Mod_Wsgi"
+  become_user: root
+  become: yes
+  command: '"{{ item }}" chdir=/home/ec2-user/download/mod_wsgi-4.5.3'
+  with_items:
+    - make
+
+- name: "Running make install for Mod-wsgi"
+  become_user: root
+  become: yes
+  command: 'make install chdir=/home/ec2-user/download/mod_wsgi-4.5.3'
+
+
