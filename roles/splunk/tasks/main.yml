@@ -4,7 +4,7 @@
 # Author: '@ekivemark'
 
 - name: "Configure Splunk ..."
-  remote_user: ec2-user
+  #remote_user: ec2-user
   become_user: root
   become: yes
   lineinfile:
