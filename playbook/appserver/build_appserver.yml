@@ -45,12 +45,18 @@
   roles:
     # - ../../roles/
     - ../../roles/splunk
-    - ../../roles/base_patch/tasks/fix_sudoers.yml
-    - ../../roles/base_patch/tasks/app_server_tools.yml
-    - ../../roles/base_patch/tasks/update_packages.yml
-    - ../../roles/base_patch/tasks/create_app_user.yml
     - ../../roles/apache
-    - ../../roles/python3
-    - ../../roles/app_env
 
+  tasks:
+  - include: ../../roles/base_patch/tasks/fix_sudoers.yml
+
+  - include: ../../roles/base_patch/tasks/app_server_tools.yml
+
+  - include: ../../roles/base_patch/tasks/update_packages.yml
+
+  - include: ../../roles/base_patch/tasks/create_app_user.yml
+
+  - include: ../../roles/python3
+
+  - include: ../../roles/app_env
 
