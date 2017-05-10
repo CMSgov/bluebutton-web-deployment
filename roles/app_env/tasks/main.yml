@@ -24,15 +24,54 @@
     mode: 0755
     state: directory
 
+- name: "Create a certstore"
+  become_user: root
+  become: yes
+  file:
+    dest: "{{ cf_app_pyapp_home }}/certstore"
+    mode: 0755
+    owner: "{{ cf_app_pyapps_user }}"
+    group: "{{ cf_app_pyapps_user }}"
+
 - name: "Create Virtualenv"
   become_user: root
   become: yes
   shell: "cd /var/virtualenv ; /usr/local/bin/pyvenv-3.5 hhs_o_server "
 
-- name: "Set ownership to pyapps"
+- name: "Set ownership to pyapps:apache"
+  become_user: root
+  become: yes
   file:
     owner: "{{ cf_app_pyapps_user }}"
-    group: "{{ cf_app_pyapps_user }}"
+    group: "apache"
     dest: "/var/virtualenv"
     state: directory
     recurse: yes
+
+- name: "Install Application code from Github"
+  become_user: root
+  become: yes
+  git:
+    repo: "{{ common_repository }}"
+    dest: "{{ cf_app_pyapp_home }}"
+    version: "{{ cf_app_repo_branch }}"
+
+- name: "Set permissions to application code"
+  become_user: root
+  become: yes
+  file:
+    dest: "{{ cf_app_pyapp_home }}"
+    state: directory
+    recurse: yes
+    owner: "{{ cf_app_pyapps_user }}"
+    group: "apache"
+
+- name: "pip and basic update"
+  shell: |
+    cd {{ cf_app_pyapp_home }}
+    source {{ cf_app_py_virtual_env }}/bin/activate
+    export PATH={{ cf_app_py_virtual_env }}/bin:$PATH
+    {{ cf_app_py_virtual_env }}/bin/pip3.5 {{ item }}
+  with_items:
+    - install --upgrade pip
+
