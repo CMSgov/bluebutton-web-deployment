@@ -9,8 +9,8 @@
   become: yes
   file:
     dest: "/var/virtualenv"
-    owner: pyapps
-    group: pyapps
+    owner: "{{ cf_app_pyapps_user }}"
+    group: "{{ cf_app_pyapps_user }}"
     mode: 0755
     state: directory
 
@@ -19,15 +19,20 @@
   become: yes
   file:
     dest: "/var/pyapps"
-    owner: pyapps
-    group: pyapps
+    owner: "{{ cf_app_pyapps_user }}"
+    group: "{{ cf_app_pyapps_user }}"
     mode: 0755
     state: directory
 
 - name: "Create Virtualenv"
   become_user: root
   become: yes
-  command: "cd /var/virtualenv ; {{ item }} "
-  with_items:
-    - /usr/local/bin/pyvenv-3.5 hhs_o_server
+  shell: "cd /var/virtualenv ; /usr/local/bin/pyvenv-3.5 hhs_o_server "
 
+- name: "Set ownership to pyapps"
+  file:
+    owner: "{{ cf_app_pyapps_user }}"
+    group: "{{ cf_app_pyapps_user }}"
+    dest: "/var/virtualenv"
+    state: directory
+    recurse: yes
