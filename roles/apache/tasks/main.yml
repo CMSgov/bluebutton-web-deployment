@@ -10,8 +10,11 @@
   become_user: root
   become: yes
   yum:
-    name: httpd
+    name: "{{ item }}"
     state: latest
+    with_items:
+      - httpd
+      - mod_ssl
 
 - name: "Check Apache is running"
   become_user: root

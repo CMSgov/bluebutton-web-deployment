@@ -39,7 +39,7 @@
     - "./../../vars/all_var.yml"
 
   tasks:
-  - include: ../../roles/base_patch/tasks/set_aws_credentials.yml
+  - include: ../../roles/base_patch/tasks/set_db_aws_credentials.yml
 
   - include: ../../roles/postgres/tasks/pgpass.yml
 

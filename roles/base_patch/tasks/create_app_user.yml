@@ -1,0 +1,11 @@
+---
+# File: roles/base_patch/tasks/create_app_user.yml
+# Created: 5/10/17
+# Author: '@ekivemark'
+# Create the pyapps user on the appserver.
+
+
+- name: "Creating Appserver User"
+  user:
+    name: "{{ cf_app_pyapps_user }}"
+    password: "{{ cf_app_pyapps_pwd | password_hash('sha512') }}"
