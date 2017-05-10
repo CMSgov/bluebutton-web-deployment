@@ -25,6 +25,8 @@
   hosts: appservers
   # connection: local
   remote_user: ec2-user
+  become_user: root
+  become: yes
   gather_facts: True
   vars:
     env: "dev"
