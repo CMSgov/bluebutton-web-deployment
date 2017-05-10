@@ -24,21 +24,21 @@
 - name: "Running ./configure for Python 3.5"
   become_user: root
   become: yes
-  command: '"{{ item }}" chdir=/home/ec2-user/download/Python-3.5.2'
+  command: "cd /home/ec2-user/download/Python-3.5.2 ; {{ item }} "
   with_items:
     - ./configure --prefix=/usr/local --enable-shared  LDFLAGS='-Wl,-rpath /usr/local/lib' --enable-loadable-sqlite-extensions
 
 - name: "Running make for Python 3.5"
   become_user: root
   become: yes
-  command: '"{{ item }}" chdir=/home/ec2-user/download/Python-3.5.2'
+  command: "cd /home/ec2-user/download/Python-3.5.2 ; {{ item }}"
   with_items:
     - make
 
 - name: "Running make altinstall for Python 3.5"
   become_user: root
   become: yes
-  command: 'make altinstall chdir=/home/ec2-user/download/Python-3.5.2'
+  command: "cd /home/ec2-user/download/Python-3.5.2 ; make altinstall"
 
 - name: "Download Mod_WSGI 4.5.3"
   become_user: root
@@ -56,10 +56,10 @@
     dest: "/home/ec2-user/download/mod_wsgi-4.5.3"
     remote_src: True
 
-- name: "Running configure for Mod-wsgi"
+- name: "Running configure for mod_wsgi"
   become_user: root
   become: yes
-  command: '"{{ item }}" chdir=/home/ec2-user/download/mod_wsgi-4.5.3'
+  command: "cd /home/ec2-user/download/mod_wsgi-4.5.3; {{ item }}"
   with_items:
     - ./configure --with-python=/usr/local/bin/python3.5 --with-apxs=/usr/sbin/apxs
 
@@ -79,13 +79,14 @@
 - name: "Running make for Mod_Wsgi"
   become_user: root
   become: yes
-  command: '"{{ item }}" chdir=/home/ec2-user/download/mod_wsgi-4.5.3'
+  command: "cd /home/ec2-user/download/mod_wsgi-4.5.3; {{ item }}"
   with_items:
     - make
 
-- name: "Running make install for Mod-wsgi"
+- name: "Running make install for mod_wsgi"
   become_user: root
   become: yes
-  command: 'make install chdir=/home/ec2-user/download/mod_wsgi-4.5.3'
+  command: "cd /home/ec2-user/download/mod_wsgi-4.5.3; make install"
+
 
 
