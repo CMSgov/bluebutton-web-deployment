@@ -51,11 +51,9 @@
 - name: "Unarchive mod_wsgi"
   become_user: root
   become: yes
-  unarchive:
-    src: "/home/ec2-user/download/mod_wsgi_4.5.3.tar.gz"
-    dest: "/home/ec2-user/download/mod_wsgi-4.5.3"
-    remote_src: True
-
+  command: "cd /home/ec2-user/download ; tar -xzvf mod_wsgi_4.5.3.tar.gz "
+  register: mod_wsgi_info
+  
 - name: "Running configure for mod_wsgi"
   become_user: root
   become: yes
