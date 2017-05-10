@@ -16,6 +16,8 @@ common_remote_user: "ec2-user"
 
 # Environment VPC Subnets
 
+common_repository: "https://github.com/transparenthealth/hhs_oauth_server"
+
 common_cf_subnet: {
           "dev-az1": {
               "dmz": "subnet-82ecfba8",

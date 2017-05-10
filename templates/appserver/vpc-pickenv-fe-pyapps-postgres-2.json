@@ -895,8 +895,6 @@
                 "chmod -R 755 /var/virtualenv \n",
                 "chmod -R 755 /var/pyapps \n",
 
-                "##############################################################\n",
-
 
                 "cd /var/virtualenv \n",
                 "/usr/local/bin/pyvenv-3.5 hhs_o_server \n",
@@ -915,6 +913,10 @@
                 "echo 'Changing ownership:",{"Ref": "PyVirtualenv"} ," ' >>$BUILD_LOG \n",
                 "chown -Rf pyapps:apache /var/pyapps \n",
                 "chown -Rf pyapps:apache /var/virtualenv \n",
+
+
+                "##############################################################\n",
+
 
                 "# activate Virtualenv \n",
                 "echo 'Activate Virtualenv' >>$BUILD_LOG \n",
