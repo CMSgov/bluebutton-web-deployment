@@ -21,6 +21,9 @@
     - bzip2-devel
     - openssl-devel
     - ncurses-devel
+    - postgresql-devel
+    - python-devel
+    - python-cffi
     # - sqlite-devel
     - readline-devel
     - tk-devel
@@ -28,6 +31,8 @@
     - db4-devel
     - libxml2-devel
     - libxslt-devel
+    - libffi.x86_64
+    - http://mirror.centos.org/centos/6/os/x86_64/Packages/libffi-devel-3.0.5-3.2.el6.x86_64.rpm
     # - libpcap-devel
     - xz-devel
     - zlib-devel

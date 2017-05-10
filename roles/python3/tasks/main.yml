@@ -1,0 +1,28 @@
+---
+# File: roles/python3/tasks/main.yml
+# Created: 5/10/17
+# Author: '@ekivemark'
+# download and install python3
+
+- name: "create download directory"
+  file:
+    dest: /root/.aws
+    mode: 0600
+    owner: root
+    group: root
+    state: directory
+
+
+  file:
+    dest: "/home/ec2-user/download"
+    state: directory
+    mode: 0600
+    owner: "{{ remote_user }}"
+    group: "{{ remote_user }}"
+  register: app_download_dir
+
+- name: "Download python 3"
+  unarchive:
+    src: "https://www.python.org/ftp/python/3.5.2/Python-3.5.2.tar.xz"
+    dest: /home/ec2-user/download
+    remote_src: True
