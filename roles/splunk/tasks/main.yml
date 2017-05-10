@@ -8,8 +8,8 @@
   become: yes
   lineinfile:
     dest: "/opt/splunkforwarder/etc/system/local/deploymentclient.conf"
-    owner: splunk
-    group: splunk
+    # owner: splunk
+    # group: splunk
     mode: "u+rwx g+x"
     regexp: "^clientName = REPLACE-WITH-APP-NAME"
     line: "clientName = {{ splunk_client_name }}"
