@@ -45,5 +45,8 @@
   roles:
     # - ../../roles/
     - ../../roles/splunk
+    - ../../roles/base_patch/tasks/fix_sudoers.yml
     - ../../roles/base_patch/tasks/app_server_tools.yml
+    - ../../roles/base_patch/tasks/update_packages.yml
+    - ../../roles/base_patch/tasks/create_app_user.yml
     - ../../roles/apache

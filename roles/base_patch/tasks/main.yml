@@ -4,31 +4,13 @@
 # Author: @ekivemark
 # Source: http://blog.programster.org/ansible-update-and-reboot-if-required-amazon-linux-servers/
 
-- name: Copy sudoers file for safety
-  become_user: root
-  command: "cp -f /etc/sudoers /etc/sudoers.tmp"
-
-- name: Create sudoers file backup
-  become_user: root
-  command: "cp -f /etc/sudoers /etc/sudoers.${date}.bak"
-
-- name: "patch sudoers file"
-  become_user: root
-  vars:
-    ansible_ssh_pipelining: no
-  lineinfile:
-    dest: /etc/sudoers.tmp
-    line: 'Defaults   requiretty'
-    state: absent
-
-- name: Final sudoers file check
-  become_user: root
-  shell: "visudo -q -c -f /etc/sudoers.tmp && cp -f /etc/sudoers.tmp /etc/sudoers"
+- name: "fix sudoers file"
+  include: ./fix_sudoers.yml
 
 - name: "clean up /root for dataservers"
   become_user: root
   file:
-    dest: /root/fips_140_2_update.log.*
+    dest: "/root/fips_140_2_update.log.*"
     state: absent
 
 - name: "upgrade all packages"
