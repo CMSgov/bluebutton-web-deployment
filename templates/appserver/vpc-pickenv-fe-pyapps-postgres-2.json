@@ -814,15 +814,13 @@
                 "echo 'Installing SSL Module for Apache' >>$BUILD_LOG \n",
                 "yum -y install mod_ssl \n",
 
-               "##############################################################\n",
-
-
                 "echo 'RHEL Version:' >>$BUILD_LOG \n",
                 "cat /etc/redhat-release >>$BUILD_LOG \n",
 
                 "echo 'package updates... ' >>$BUILD_LOG \n",
                 "yum-config-manager --enable rhel-server-rhscl-6-rpms \n",
                 "yum -y update >>$BUILD_LOG \n",
+
 
                 "echo 'Installing support dependencies' >>$BUILD_LOG \n",
                 "yum -y groupinstall 'Development Tools' \n",
@@ -846,6 +844,9 @@
 
                 "echo 'Installing DB Drivers:postgreSQL' >>$BUILD_LOG \n",
                 "yum -y install python-psycopg2.x86_64 \n",
+
+                "##############################################################\n",
+
 
                 "echo '/usr/local/lib' >>/etc/ld.so.conf \n",
 
