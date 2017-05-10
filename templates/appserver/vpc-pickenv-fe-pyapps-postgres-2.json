@@ -845,8 +845,6 @@
                 "echo 'Installing DB Drivers:postgreSQL' >>$BUILD_LOG \n",
                 "yum -y install python-psycopg2.x86_64 \n",
 
-                "##############################################################\n",
-
 
                 "echo '/usr/local/lib' >>/etc/ld.so.conf \n",
 
@@ -876,9 +874,11 @@
                 "make \n",
                 "make install \n",
 
+
                 "echo 'Setup for front-end app' >>$BUILD_LOG \n",
                 "mkdir -p /var/virtualenv \n",
                 "mkdir -p /var/pyapps \n",
+
 
                 "echo 'Checking SELINUX status' >>$BUILD_LOG \n",
                 "cat /etc/selinux/config >>$BUILD_LOG \n",
@@ -894,6 +894,10 @@
                 "echo 'Install Virtual Env:",{"Ref": "PyVirtualenv"} ," ' >>$BUILD_LOG \n",
                 "chmod -R 755 /var/virtualenv \n",
                 "chmod -R 755 /var/pyapps \n",
+
+                "##############################################################\n",
+
+
                 "cd /var/virtualenv \n",
                 "/usr/local/bin/pyvenv-3.5 hhs_o_server \n",
                 "chmod -R 0755 /var/virtualenv \n",
