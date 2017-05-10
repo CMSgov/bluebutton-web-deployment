@@ -77,14 +77,14 @@
 - name: "Running make for Mod_Wsgi"
   become_user: root
   become: yes
-  command: "cd /home/ec2-user/download/mod_wsgi-4.5.3; {{ item }}"
+  command: "cd /home/ec2-user/download/mod_wsgi-4.5.3 ; {{ item }}"
   with_items:
     - make
 
 - name: "Running make install for mod_wsgi"
   become_user: root
   become: yes
-  command: "cd /home/ec2-user/download/mod_wsgi-4.5.3; make install"
+  command: "cd /home/ec2-user/download/mod_wsgi-4.5.3 ; make install"
 
 
 
