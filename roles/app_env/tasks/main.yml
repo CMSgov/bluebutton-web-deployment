@@ -27,7 +27,7 @@
 - name: "Create Virtualenv"
   become_user: root
   become: yes
-  command: '"{{ item }}" chdir=/var/virtualenv'
+  command: "cd /var/virtualenv ; {{ item }} "
   with_items:
-    - "/usr/local/bin/pyvenv-3.5 hhs_o_server"
+    - /usr/local/bin/pyvenv-3.5 hhs_o_server
 
