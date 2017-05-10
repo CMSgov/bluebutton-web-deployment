@@ -4,6 +4,7 @@
 # Author: '@ekivemark'
 
 - name: "Install base App Server Components"
+  remote_user: ec2-user
   become_user: root
   become: yes
   yum:

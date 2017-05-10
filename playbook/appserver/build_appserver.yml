@@ -33,7 +33,7 @@
     sg_zone: "appserver"
     env_az: "{{ env }}-{{ azone }}"
     env_cf_app_version: "01"
-    splunk_client_name: "BBAPI-{{ env|upper }}-DATA"
+    splunk_client_name: "BBAPI-{{ env|upper }}-{{ sub_zone|upper }}"
   vars_files:
     - "./../../vars/common.yml"
     - "./../../vault/env/{{ env }}/vault.yml"
@@ -42,5 +42,6 @@
 
   roles:
     # - ../../roles/
+    - ../../roles/splunk
+    - ../../roles/base_patch/tasks/app_server_tools.yml
     - ../../roles/apache
-    
