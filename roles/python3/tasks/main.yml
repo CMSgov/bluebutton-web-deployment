@@ -26,7 +26,7 @@
   become: yes
   command: '"{{ item }}" chdir=/home/ec2-user/download/Python-3.5.2'
   with_items:
-    - "./configure --prefix=/usr/local --enable-shared  LDFLAGS='-Wl,-rpath /usr/local/lib' --enable-loadable-sqlite-extensions "
+    - ./configure --prefix=/usr/local --enable-shared  LDFLAGS='-Wl,-rpath /usr/local/lib' --enable-loadable-sqlite-extensions
 
 - name: "Running make for Python 3.5"
   become_user: root
@@ -61,7 +61,7 @@
   become: yes
   command: '"{{ item }}" chdir=/home/ec2-user/download/mod_wsgi-4.5.3'
   with_items:
-    - "./configure --with-python=/usr/local/bin/python3.5 --with-apxs=/usr/sbin/apxs"
+    - ./configure --with-python=/usr/local/bin/python3.5 --with-apxs=/usr/sbin/apxs
 
 - name: "Prepare to refresh ld cache"
   become_user: root
