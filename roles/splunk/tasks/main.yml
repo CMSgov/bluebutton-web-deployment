@@ -4,9 +4,9 @@
 # Author: '@ekivemark'
 
 - name: "Configure Splunk ..."
-  remote_user: ec2-user
-  become_user: root
-  become: yes
+  #remote_user: ec2-user
+  # become_user: root
+  # become: yes
   lineinfile:
     dest: "/opt/splunkforwarder/etc/system/local/deploymentclient.conf"
     owner: splunk
