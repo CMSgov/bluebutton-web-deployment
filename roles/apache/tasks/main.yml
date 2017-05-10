@@ -12,9 +12,9 @@
   yum:
     name: "{{ item }}"
     state: latest
-    with_items:
-      - httpd
-      - mod_ssl
+  with_items:
+    - httpd
+    - mod_ssl
 
 - name: "Check Apache is running"
   become_user: root
