@@ -28,7 +28,7 @@
     - db4-devel
     - libxml2-devel
     - libxslt-devel
-    - libpcap-devel
+    # - libpcap-devel
     - xz-devel
     - zlib-devel
 
