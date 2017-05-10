@@ -4,17 +4,16 @@
 # Author: '@ekivemark'
 
 - name: "Configure Splunk ..."
-  #remote_user: ec2-user
-  become_user: root
+  become_user: splunk
   become: yes
   lineinfile:
     dest: "/opt/splunkforwarder/etc/system/local/deploymentclient.conf"
     owner: splunk
     group: splunk
-    mode: u+rwx
+    mode: "u+rwx g+x"
     regexp: "^clientName = REPLACE-WITH-APP-NAME"
     line: "clientName = {{ splunk_client_name }}"
-    # backup: yes
+    backup: yes
 
 - name: "Restart Splunk "
   become_user: root
