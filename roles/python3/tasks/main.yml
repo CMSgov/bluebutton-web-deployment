@@ -53,11 +53,11 @@
   become: yes
   command: "cd /home/ec2-user/download ; tar -xzvf mod_wsgi_4.5.3.tar.gz "
   register: mod_wsgi_info
-  
+
 - name: "Running configure for mod_wsgi"
   become_user: root
   become: yes
-  command: "cd /home/ec2-user/download/mod_wsgi-4.5.3; {{ item }}"
+  command: "cd /home/ec2-user/download/mod_wsgi-4.5.3 ; {{ item }}"
   with_items:
     - ./configure --with-python=/usr/local/bin/python3.5 --with-apxs=/usr/sbin/apxs
 
