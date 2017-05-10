@@ -11,7 +11,7 @@
     owner: splunk
     group: splunk
     mode: "750"
-    regexp: "^clientName = REPLACE-WITH-APP-NAME"
+    regexp: "^clientName"
     line: "clientName = {{ splunk_client_name }}"
     backup: yes
 
