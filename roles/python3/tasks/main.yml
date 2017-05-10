@@ -60,7 +60,7 @@
   become_user: root
   become: yes
   command: '"{{ item }}" chdir=/home/ec2-user/download/mod_wsgi-4.5.3'
-  with items:
+  with_items:
     - "./configure --with-python=/usr/local/bin/python3.5 --with-apxs=/usr/sbin/apxs"
 
 - name: "Prepare to refresh ld cache"

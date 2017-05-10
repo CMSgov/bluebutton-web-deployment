@@ -51,4 +51,6 @@
     - ../../roles/base_patch/tasks/create_app_user.yml
     - ../../roles/apache
     - ../../roles/python3
+    - ../../roles/app_env
+
 
