@@ -62,10 +62,6 @@
   become: yes
   shell: "chmod +x {{ cf_app_pyapp_home }}"
 
-- name: make sure apache server is running
-  become_user: root
-  become: yes
-
 - name: "Check Apache"
   become_user: root
   become: yes
