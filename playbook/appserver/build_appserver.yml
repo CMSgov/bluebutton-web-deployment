@@ -55,7 +55,7 @@
   - include: ../../roles/python3/tasks/main.yml
   - include: ../../roles/app_env/tasks/main.yml
   - include: ../../roles/app_env/tasks/set_config_scripts.yml
-  
+
 
 
 
