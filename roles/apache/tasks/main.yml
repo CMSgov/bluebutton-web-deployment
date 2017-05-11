@@ -16,6 +16,26 @@
     - httpd
     - mod_ssl
 
+- name: "Create Virtualhosts file"
+  become_user: root
+  become: yes
+  template:
+    src: ../templates/virtualhost_server_conf.j2
+    dest: "/etc/httpd/conf.d/virtualhost.conf"
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: "Copy Wsgi Load Module instruction in to place"
+  copy:
+    src: "../files/wsgi.conf"
+    # rhel 7 apache 2.4 configuration
+    dest: "/etc/httpd/conf.modules.d/10-wsgi.conf"
+    owner: root
+    group: root
+    mode: "0644"
+
+
 - name: "Check Apache is running"
   become_user: root
   become: yes
