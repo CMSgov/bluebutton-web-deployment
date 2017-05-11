@@ -915,9 +915,6 @@
                 "chown -Rf pyapps:apache /var/virtualenv \n",
 
 
-                "##############################################################\n",
-
-
                 "# activate Virtualenv \n",
                 "echo 'Activate Virtualenv' >>$BUILD_LOG \n",
                 "source ",{"Ref": "PyVirtualenv"} ,"/bin/activate \n",
@@ -938,6 +935,10 @@
 
                 " # Remember to edit files in bb-config for DJANGO_SETTINGS_MODULE \n",
                 "echo 'Integrate App with Apache2' >>$BUILD_LOG \n",
+
+                 "##############################################################\n",
+
+
 
                 "export DJ_SET_SH=",{"Ref":"PyAppHome"},"/django_settings.sh \n",
                 "# Copy local config files from S3 \n",

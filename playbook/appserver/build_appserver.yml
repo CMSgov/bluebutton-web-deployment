@@ -49,14 +49,12 @@
 
   tasks:
   - include: ../../roles/base_patch/tasks/fix_sudoers.yml
-
   - include: ../../roles/base_patch/tasks/app_server_tools.yml
-
   - include: ../../roles/base_patch/tasks/update_packages.yml
-
   - include: ../../roles/base_patch/tasks/create_app_user.yml
-
   - include: ../../roles/python3/tasks/main.yml
-
   - include: ../../roles/app_env/tasks/main.yml
+  - include: ./app_env_var.yml
+
+
 
