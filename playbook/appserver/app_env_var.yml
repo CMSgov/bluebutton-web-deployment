@@ -13,7 +13,7 @@
 #
 #
 # Apply to all app servers (prime, leader, follower)
-- hosts: app_prime_server,app_lead_server,app_follow_server
+- hosts: appservers
   vars:
     env: "dev"
 
