@@ -2,8 +2,10 @@
 # File: roles/app_env/tasks/set_config_scripts.yml
 # Created: 5/10/17
 # Author: '@ekivemark'
-
-- template:
+- name: "Install custom-envvars.py"
+  become_user: root
+  become: yes
+  template:
     src: ../../templates/appserver/custom-envvars.j2
     dest: "{{ install_root }}/custom-envvars.py"
     backup: yes
@@ -18,7 +20,10 @@
 #  - debug:
 #      msg: "{{ c_e_new_data.stdout }}"
 
-- template:
+- name: "Install django_settings.sh"
+  become_user: root
+  become: yes
+  template:
     src: ../../templates/appserver/django_settings.j2
     dest: "{{ install_root }}/django_settings.sh"
     backup: yes
@@ -43,21 +48,35 @@
 #    mode: 0644
 
 - name: display custom_env_vars.py
+  become_user: root
+  become: yes
   action: "shell /bin/cat {{ install_root }}/custom-envvars.py"
 
 - name: display django_settings.sh
+  become_user: root
+  become: yes
   action: "shell /bin/cat {{ install_root }}/django_settings.sh"
 
 - name: "Make new files executable"
+  become_user: root
+  become: yes
   shell: "chmod +x {{ cf_app_pyapp_home }}"
 
 - name: make sure apache server is running
+  become_user: root
+  become: yes
+
+- name: "Check Apache"
+  become_user: root
+  become: yes
   service:
     name: httpd
-    state: started
+    state: restarted
     enabled: yes
 
 - name: "Restart Apache on {{ env_env }}"
-  action: shell /bin/echo $HOSTNAME
+  become_user: root
+  become: yes
+  action: "shell /bin/echo $HOSTNAME"
   notify:
     - restart apache
