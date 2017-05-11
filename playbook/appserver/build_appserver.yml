@@ -45,7 +45,6 @@
   roles:
     # - ../../roles/
     - ../../roles/splunk
-    - ../../roles/python3
     - ../../roles/apache
 
   tasks:
