@@ -24,16 +24,6 @@
     mode: 0755
     state: directory
 
-- name: "Create a certstore"
-  become_user: root
-  become: yes
-  file:
-    dest: "{{ cf_app_pyapp_home }}/certstore"
-    mode: 0755
-    owner: "{{ cf_app_pyapps_user }}"
-    group: "{{ cf_app_pyapps_user }}"
-    state: directory
-
 - name: "Create Virtualenv"
   become_user: root
   become: yes
@@ -78,4 +68,13 @@
     - nstall psycopg2
     - install -r requirements/requirements.txt
 
+- name: "Create a certstore"
+  become_user: root
+  become: yes
+  file:
+    dest: "{{ cf_app_pyapp_home }}/certstore"
+    mode: 0755
+    owner: "{{ cf_app_pyapps_user }}"
+    group: "{{ cf_app_pyapps_user }}"
+    state: directory
 
