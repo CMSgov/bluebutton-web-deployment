@@ -36,7 +36,7 @@
     # - ../vars/all_vars.yml
     # - ../../vars/playbook/template_envvars.yml
 
-  remote_user: "{{ remote_user_account }}"
+  remote_user: ec2-user
   become: yes
   become_user: root
 
