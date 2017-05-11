@@ -17,7 +17,7 @@
   become_user: root
   become: yes
   unarchive:
-    src: "https://www.python.org/ftp/python/{{ python_ver_full }}/Python-{{ python_ver_full }}.tar.tgz"
+    src: "https://www.python.org/ftp/python/{{ python_ver_full }}/Python-{{ python_ver_full }}.tar.xz"
     dest: "/home/ec2-user/download"
     remote_src: True
 
