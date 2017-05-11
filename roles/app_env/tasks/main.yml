@@ -32,6 +32,7 @@
     mode: 0755
     owner: "{{ cf_app_pyapps_user }}"
     group: "{{ cf_app_pyapps_user }}"
+    state: directory
 
 - name: "Create Virtualenv"
   become_user: root
@@ -74,4 +75,7 @@
     {{ cf_app_py_virtual_env }}/bin/pip3.5 {{ item }}
   with_items:
     - install --upgrade pip
+    - nstall psycopg2
+    - install -r requirements/requirements.txt
+
 
