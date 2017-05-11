@@ -10,11 +10,11 @@
 
     <VirtualHost *:80>
         ServerAdmin webmaster@{{ cf_app_pyserver_name }}
-        DocumentRoot /var/www/doc/{{ cf_app_pyserver_name }}
-        ErrorLog logs/{{ cf_app_pyserver_name }}-error_log
-        CustomLog logs/{{ cf_app_pyserver_name }}-access_log common
+        DocumentRoot /var/www/doc/{{ cf_app_pyserver_name|lower }}
+        ErrorLog logs/{{ cf_app_pyserver_name|lower }}-error_log
+        CustomLog logs/{{ cf_app_pyserver_name|lower }}-access_log common
         LogLevel warn
-        ServerName {{ cf_app_pyserver_name }}
+        ServerName {{ cf_app_pyserver_name|lower }}
         WSGIDaemonProcess apache user={{ env_cf_app_pyapps_user }} group=apache threads=10 python-path={{ cf_app_py_virtual_env }}/bin:/usr/local/bin:{{ cf_app_pyapp_home }}:{{ cf_app_py_virtual_env }}/lib/python3.5/site-packages NF
 
         WSGIProcessGroup apache

@@ -24,6 +24,11 @@
   vpc_env_lower: "{{ env_vpc_lower }}"
   vpc_env_upper: "{{ env_vpc_upper }}"
 
+  # Make Python and mod_wsgi version parameters
+  python_ver: "{{ env_python_ver }}"
+  python_ver_full: "{{ env_python_ver_full }}"
+  mod_wsgi_ver_full: "{{ env_mod_wsgi_ver_full }}"
+
   # Remote user access account
   remote_user_account: "{{ env_remote_user_account }}"
 
