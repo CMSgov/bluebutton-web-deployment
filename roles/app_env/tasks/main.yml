@@ -54,7 +54,7 @@
   become: yes
   git:
     repo: "{{ common_repository }}"
-    dest: "{{ cf_app_pyapp_home }}"
+    dest: "{{ cf_app_pyapp_home }}/"
     version: "{{ cf_app_repo_branch }}"
 
 - name: "Set permissions to application code"
