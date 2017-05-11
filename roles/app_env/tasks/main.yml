@@ -67,7 +67,7 @@
     {{ cf_app_py_virtual_env }}/bin/pip3.5 {{ item }}
   with_items:
     - install --upgrade pip
-    - nstall psycopg2
+    - install psycopg2
     - install -r requirements/requirements.txt
 
 - name: "Create a certstore"
