@@ -13,53 +13,49 @@
     group: "ec2-user"
   register: app_download_dir
 
-- name: "Download python 3"
+- name: "Download python {{ python_ver_full }}"
   become_user: root
   become: yes
   unarchive:
-    src: "https://www.python.org/ftp/python/3.5.2/Python-3.5.2.tar.xz"
+    src: "https://www.python.org/ftp/python/{{ python_ver_full }}/Python-{{ python_ver_full }}.tar.tgz"
     dest: "/home/ec2-user/download"
     remote_src: True
 
-- name: "Running ./configure for Python 3.5"
+- name: "Running ./configure for Python {{ python_ver_full }}"
   become_user: root
   become: yes
-  command: "cd /home/ec2-user/download/Python-3.5.2 ; {{ item }} "
+  command: "cd /home/ec2-user/download/Python-{{ python_ver_full }} ; {{ item }} "
   with_items:
     - ./configure --prefix=/usr/local --enable-shared  LDFLAGS='-Wl,-rpath /usr/local/lib' --enable-loadable-sqlite-extensions
 
-- name: "Running make for Python 3.5"
+- name: "Running make for Python {{ python_ver_full }}"
   become_user: root
   become: yes
-  command: "cd /home/ec2-user/download/Python-3.5.2 ; {{ item }}"
-  with_items:
-    - make
+  command: "cd /home/ec2-user/download/Python-{{ python_ver_full }} ; make "
 
-- name: "Running make altinstall for Python 3.5"
+- name: "Running make altinstall for Python {{ python_ver_full }}"
   become_user: root
   become: yes
-  command: "cd /home/ec2-user/download/Python-3.5.2 ; make altinstall"
+  command: "cd /home/ec2-user/download/Python-{{ python_ver_full }} ; make altinstall"
 
-- name: "Download Mod_WSGI 4.5.3"
+- name: "Download Mod_WSGI {{ mod_wsg_ver_full }}"
   become_user: root
   become: yes
   get_url:
-    url: "https://codeload.github.com/GrahamDumpleton/mod_wsgi/tar.gz/4.5.3"
-    dest: "/home/ec2-user/download/mod_wsgi_4.5.3.tar.gz"
+    url: "https://codeload.github.com/GrahamDumpleton/mod_wsgi/tar.gz/{{ mod_wsgi_ver_full }}"
+    dest: "/home/ec2-user/download/mod_wsgi_{{ mod_wsgi_ver_full }}.tar.gz"
     remote_src: True
 
-- name: "Unarchive mod_wsgi"
+- name: "Unarchive mod_wsgi {{ mod_wsgi_ver_full }}"
   become_user: root
   become: yes
-  shell: "cd /home/ec2-user/download ; /usr/bin/tar -xzvf /home/ec2-user/download/mod_wsgi_4.5.3.tar.gz ; cd /home/ec2-user/download/mod_wsgi-4.5.3 "
+  shell: "cd /home/ec2-user/download ; /usr/bin/tar -xzvf /home/ec2-user/download/mod_wsgi_{{ mod_wsgi_ver_full }}.tar.gz ; cd /home/ec2-user/download/mod_wsgi-{{ mod_wsgi_ver_full }} "
   register: mod_wsgi_info
 
 - name: "Running configure for mod_wsgi"
   become_user: root
   become: yes
-  command: "cd /home/ec2-user/download/mod_wsgi-4.5.3 ; {{ item }}"
-  with_items:
-    - ./configure --with-python=/usr/local/bin/python3.5 --with-apxs=/usr/sbin/apxs
+  command: "cd /home/ec2-user/download/mod_wsgi-{{ mod_wsgi_ver_full }} ; ./configure --with-python=/usr/local/bin/python{{ python_ver }} --with-apxs=/usr/sbin/apxs "
 
 - name: "Prepare to refresh ld cache"
   become_user: root
@@ -74,17 +70,15 @@
   become: yes
   command: "/sbin/ldconfig"
 
-- name: "Running make for Mod_Wsgi"
+- name: "Running make for mod_wsgi"
   become_user: root
   become: yes
-  command: "cd /home/ec2-user/download/mod_wsgi-4.5.3 ; {{ item }}"
-  with_items:
-    - make
+  command: "cd /home/ec2-user/download/mod_wsgi-{{ mod_wsgi_ver_full }} ; make "
 
 - name: "Running make install for mod_wsgi"
   become_user: root
   become: yes
-  command: "cd /home/ec2-user/download/mod_wsgi-4.5.3 ; make install"
+  command: "cd /home/ec2-user/download/mod_wsgi-{{ mod_wsgi_ver_full }} ; make install "
 
 
 
