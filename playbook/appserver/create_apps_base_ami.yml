@@ -101,7 +101,7 @@
       backup: yes
 
 # Install python, apache and custom mod_wsgi
-- include: "build_appserver.yml build_target={{ app_ec2_output.instances[0]['private_ip'] }}"
+- include: build_appserver.yml build_target="{{ app_ec2_output.instances[0]['private_ip'] }}"
 
 - hosts: localhost
   vars_files:
