@@ -85,7 +85,7 @@
       name: "{{ app_ec2_output.instances[0]['private_ip'] }}"
       groups: just_created"
 
-#######################################################
+
 - hosts: just_created
   vars_files:
     - "./../../vars/common.yml"
@@ -93,20 +93,9 @@
     - "./../../vars/env/{{ env }}/env.yml"
     - "./../../vars/all_var.yml"
 
-  tasks:
-  - name: "appserver pre-config-splunk"
-    remote_user: "{{ remote_user_account }}"
-    become_user: root
-    become: yes
-    include: "./../../roles/splunk/tasks/main.yml"
-
-  - name: "appserver install python3"
-    remote_user: "{{ remote_user_account }}"
-    become_user: root
-    become: yes
-    include: "./../../roles/python3/tasks/main.yml"
-#######################################################
-
+  roles:
+    - "./../../roles/splunk"
+    - "./../../roles/python3"
 
 - hosts: localhost
   vars_files:
@@ -116,11 +105,6 @@
     - "./../../vars/all_var.yml"
 
   tasks:
-  - name: "add host to group"
-    add_host:
-      name: "{{ app_ec2_output.instances[0]['private_ip'] }}"
-      groups: "just_created"
-
   - name: "add private_ip to /etc/ansible/hosts"
     blockinfile:
       dest: "/etc/ansible/hosts"
