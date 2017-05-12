@@ -29,7 +29,7 @@
   become: yes
   # Python3.6 replaces pyvenv-(ver) with python3.6 -m venv
   # shell: "cd /var/virtualenv ; /usr/local/bin/pyvenv-{{ python_ver }} hhs_o_server "
-  shell: "cd /var/virtualenv ; /usr/local/bin/python{{ python_ver }} - m  venv {{ project_dir }} "
+  shell: "cd /var/virtualenv ; /usr/local/bin/python{{ python_ver }} -m  venv {{ project_dir }} "
 
 
 - name: "Set ownership to pyapps:apache"
