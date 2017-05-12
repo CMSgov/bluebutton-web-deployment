@@ -9,12 +9,14 @@
 
 - name: "clean up /root for dataservers"
   become_user: root
+  become: yes
   file:
     dest: "/root/fips_140_2_update.log.*"
     state: absent
 
 - name: "upgrade all packages"
   become_user: root
+  become: yes
   yum:
     name: "*"
     state: latest
