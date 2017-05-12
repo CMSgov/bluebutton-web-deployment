@@ -48,7 +48,7 @@
     - ../../roles/splunk
     - ../../roles/python3
     - ../../roles/apache
-    - ../../roles/mod_Wsgi
+    - ../../roles/mod_wsgi
 
   tasks:
   - include: ../../roles/base_patch/tasks/fix_sudoers.yml
