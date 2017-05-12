@@ -83,13 +83,13 @@
     group: "{{ cf_app_pyapps_user }}"
     state: directory
 
-#- name: "Create Virtualhosts file"
-#  become_user: root
-#  become: yes
-#  template:
-#    src: ../templates/virtualhost_server_conf.j2
-#    dest: "/etc/httpd/conf.d/virtualhost.conf"
-#    owner: root
-#    group: root
-#    mode: "0644"
+- name: "Create Virtualhosts file"
+  become_user: root
+  become: yes
+  template:
+    src: ../templates/virtualhost_server_conf.j2
+    dest: "/etc/httpd/conf.d/virtualhost.conf"
+    owner: root
+    group: root
+    mode: "0644"
 

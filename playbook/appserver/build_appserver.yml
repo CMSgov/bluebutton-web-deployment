@@ -60,5 +60,8 @@
   - include: ../../roles/app_env/tasks/main.yml
   - include: ../../roles/app_env/tasks/set_config_scripts.yml
 
+  # Now We should have a working machine
+  # Apache / Mod_Wsgi / Python3
+
   handlers:
   - include: ../../roles/app_env/handlers/main.yml
