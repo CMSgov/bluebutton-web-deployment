@@ -65,7 +65,7 @@
       vpc_subnet_id: "{{ common_cf_subnet[env_az][env_cf_app_tag_key_layer] }}"  # "subnet-80ecfbaa"
       count: 1
       # state: present
-      termination_protection: yes
+      termination_protection: no
       # tags to instance_tags
       # Wait for desired state
       wait: yes
@@ -107,7 +107,7 @@
       region: "{{ cf_region }}"
       instance_ids: "{{ app_ec2_output.instances_ids[0] }}"
 
-  - name: create vars file with  new ami info
+  - name: "create vars file with  new ami info"
     copy:
       content: |
              {{ env_cf_app_tag_key_layer }}-{{ansible_date_time.date }}-image_id: {{ ami_output.image_id }}
