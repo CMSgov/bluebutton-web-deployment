@@ -54,7 +54,8 @@
       mode: "0644"
 
   - name: "Restart Apache"
-    notify: restart apache
+    notify:
+      - restart apache
 
   handlers:
-  - include: ../../roles/app_env/handlers/main.yml
+  - include: ../../roles/apache/handlers/main.yml
