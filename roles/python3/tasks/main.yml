@@ -4,6 +4,9 @@
 # Author: '@ekivemark'
 # download and install python3
 
+- name: "Make sure dev tools are installed to allow Python3 to compile"
+  include: ./../../base_patch/tasks/app_server_tools.yml
+
 - name: "create download directory"
   file:
     dest: "/home/ec2-user/download"
