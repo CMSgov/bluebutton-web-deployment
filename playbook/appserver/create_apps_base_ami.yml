@@ -80,6 +80,10 @@
         region: "{{ cf_region }}"
     register: app_ec2_output
 
+  - name: add host to group
+    add_host:
+      name: "{{ ap_ec2_output.instances[0]['private_ip'] }}"
+      groups: just_created"
 
 #######################################################
 - hosts: just_created
