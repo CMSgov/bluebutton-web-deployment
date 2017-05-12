@@ -30,15 +30,18 @@
   become_user: root
   become: yes
   shell: "cd /home/ec2-user/download/Python-{{ python_ver_full }} ; make "
+  wait: yes
 
 - name: "Running make test for Python {{ python_ver_full }}"
   become_user: root
   become: yes
   shell: "cd /home/ec2-user/download/Python-{{ python_ver_full }} ; make test "
+  wait: yes
 
 - name: "Running make altinstall for Python {{ python_ver_full }}"
   become_user: root
   become: yes
   shell: "cd /home/ec2-user/download/Python-{{ python_ver_full }} ; make altinstall "
+  wait: yes
   register: py3_output
 

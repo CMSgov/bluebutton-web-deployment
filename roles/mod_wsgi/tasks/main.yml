@@ -49,11 +49,13 @@
   become_user: root
   become: yes
   shell: "cd /home/ec2-user/download/mod_wsgi-{{ mod_wsgi_ver_full }} ; make "
+  wait: yes
 
 - name: "Running make install for mod_wsgi"
   become_user: root
   become: yes
   shell: "cd /home/ec2-user/download/mod_wsgi-{{ mod_wsgi_ver_full }} ; make install "
+  wait: yes
 
 - name: "Copy Wsgi Load Module instruction in to place"
   become_user: root
@@ -65,6 +67,4 @@
     owner: root
     group: root
     mode: "0644"
-
-
 
