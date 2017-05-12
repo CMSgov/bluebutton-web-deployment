@@ -84,10 +84,10 @@
       groups: "just_created"
 
   - name: "add private_ip to /etc/ansible/hosts"
-    lineinfile:
+    blockinfile:
       dest: "/etc/ansible/hosts"
-      insertafter: "[buildapp]"
-      line: "{{ app_ec2_output.instances[0]['private_ip'] }}"
+      marker: "# {mark} ANSIBLE MANAGED BLOCK #"
+      block: "[buildapp]\n {{ app_ec2_output.instances[0]['private_ip'] }}"
       backup: yes
 
   - name: "Create the ami"
