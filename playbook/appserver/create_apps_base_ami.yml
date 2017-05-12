@@ -24,6 +24,7 @@
   hosts: localhost
   connection: local
   # gather_facts: False
+  cache_max_age: 0
   vars:
     env: "dev"
     azone: "az1"
