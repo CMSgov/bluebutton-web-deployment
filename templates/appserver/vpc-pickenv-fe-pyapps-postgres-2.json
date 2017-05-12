@@ -845,7 +845,6 @@
                 "echo 'Installing DB Drivers:postgreSQL' >>$BUILD_LOG \n",
                 "yum -y install python-psycopg2.x86_64 \n",
 
-
                 "echo '/usr/local/lib' >>/etc/ld.so.conf \n",
 
                 "echo 'Installing python 3.5.2' >>$BUILD_LOG \n",
