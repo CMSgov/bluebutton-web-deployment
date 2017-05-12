@@ -52,10 +52,8 @@
       owner: root
       group: root
       mode: "0644"
-
-  - name: "Restart Apache"
     notify:
       - restart apache
 
   handlers:
-  - include: ../../roles/apache/handlers/main.yml
+  - include: ./../../roles/apache/handlers/main.yml
