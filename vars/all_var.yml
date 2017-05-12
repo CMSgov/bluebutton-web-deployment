@@ -44,9 +44,6 @@
   rand_secret: "{{ env_rand_secret }}"
   django_secret_key: "{{ env_django_secret_key }}"
 
-  # Project directory for virtualenv and git clone
-  project_dir: "{{ common_project_dir }}"
-
   # a unix path-friendly name (IE, no spaces or special characters)
   project_name: "{{ common_project_name }}"
 
