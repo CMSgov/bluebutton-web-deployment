@@ -111,10 +111,10 @@
       region: "{{ cf_region }}"
       state: present
       description: "This was provisioned {{ ansible_date_time.iso8601 }}"
-      name: "{{ app_ec2_output.instances[0]['instance_tags']['ami_name'] }}-{{ ansible_date_time.epoch }}"
+      name: "{{ app_ec2_output.instances[0]['tags']['ami_name'] }}-{{ ansible_date_time.epoch }}"
       # name: "bb-{{ env }}-{{ cf_app_tag_key_layer }}-{{ ansible_date_time.epoch }}"
       wait: yes
-      tags: {"name": "{{ app_ec2_output.instances[0]['instance_tags']['ami_name']|lower }}-{{ ansible_date_time.date }}"}
+      tags: {"name": "{{ app_ec2_output.instances[0]['tags']['ami_name']|lower }}-{{ ansible_date_time.date }}"}
     register: ami_output
 
   - name: "Terminate temporary instance"
