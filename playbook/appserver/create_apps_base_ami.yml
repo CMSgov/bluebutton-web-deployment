@@ -85,8 +85,15 @@
       name: "{{ app_ec2_output.instances[0]['private_ip'] }}"
       groups: just_created"
 
+  - name: "add private_ip to /etc/ansible/hosts"
+    blockinfile:
+      dest: "/etc/ansible/hosts"
+      marker: "# {mark} ANSIBLE MANAGED BLOCK #"
+      block: "[buildapp]\n{{ app_ec2_output.instances[0]['private_ip'] }}"
+      backup: yes
 
-- hosts: just_created
+
+- hosts: buildapp
   vars_files:
     - "./../../vars/common.yml"
     - "./../../vault/env/{{ env }}/vault.yml"
@@ -105,13 +112,6 @@
     - "./../../vars/all_var.yml"
 
   tasks:
-  - name: "add private_ip to /etc/ansible/hosts"
-    blockinfile:
-      dest: "/etc/ansible/hosts"
-      marker: "# {mark} ANSIBLE MANAGED BLOCK #"
-      block: "[buildapp]\n{{ app_ec2_output.instances[0]['private_ip'] }}"
-      backup: yes
-
   - name: "Create the ami"
     ec2_ami:
       instance_id: "{{ app_ec2_output.instances[0]['id'] }}"
