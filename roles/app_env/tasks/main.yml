@@ -27,7 +27,10 @@
 - name: "Create Virtualenv"
   become_user: root
   become: yes
-  shell: "cd /var/virtualenv ; /usr/local/bin/pyvenv-3.5 hhs_o_server "
+  # Python3.6 replaces pyvenv-(ver) with python3.6 -m venv
+  # shell: "cd /var/virtualenv ; /usr/local/bin/pyvenv-{{ python_ver }} hhs_o_server "
+  shell: "cd /var/virtualenv ; /usr/local/bin/python{{ python_ver }} - m  venv {{ project_dir }} "
+
 
 - name: "Set ownership to pyapps:apache"
   become_user: root
@@ -64,7 +67,7 @@
     cd {{ cf_app_pyapp_home }}
     source {{ cf_app_py_virtual_env }}/bin/activate
     export PATH={{ cf_app_py_virtual_env }}/bin:$PATH
-    {{ cf_app_py_virtual_env }}/bin/pip3.5 {{ item }}
+    {{ cf_app_py_virtual_env }}/bin/pip{{ python_ver }} {{ item }}
   with_items:
     - install --upgrade pip
     - install psycopg2
