@@ -92,11 +92,11 @@
 
   - name: "Create the ami"
     ec2_ami:
-      instance_id: "{{ app_ec2_output.instance_ids[0] }}"
+      instance_id: "{{ app_ec2_output.instances[0]['id'] }}"
       region: "{{ region }}"
       state: present
       description: "This was provisioned {{ ansible_date_time.iso8601 }}"
-      name: "bb-{{ env }}-{{ cf_app_azone }}-{{ env_cf_app_tag_key_layer }}-{{ env_cf_app_version }}-{{ ansible_date_time.epoch }}"
+      name: "bb-{{ env }}-{{ cf_app_azone }}-{{ env_cf_app_tag_key_layer }}-{{ ansible_date_time.epoch }}"
       wait: yes
     register: ami_output
 
