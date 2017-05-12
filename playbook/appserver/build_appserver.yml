@@ -55,7 +55,7 @@
   - include: ../../roles/base_patch/tasks/app_server_tools.yml
   - include: ../../roles/base_patch/tasks/update_packages.yml
   - include: ../../roles/base_patch/tasks/create_app_user.yml
-   - include: ../../roles/app_env/tasks/main.yml
+  - include: ../../roles/app_env/tasks/main.yml
   - include: ../../roles/app_env/tasks/set_config_scripts.yml
 
   handlers:
