@@ -80,6 +80,13 @@
         region: "{{ cf_region }}"
     register: app_ec2_output
 
+  - name: waiting for ssh to start
+    wait_for:
+      port:22
+      host: "{{ app_ec2_output.instances[0]['private_ip'] }}"
+      timeout: 300
+      search_regex: OpenSSH
+      
   - name: add host to group
     add_host:
       name: "{{ app_ec2_output.instances[0]['private_ip'] }}"
