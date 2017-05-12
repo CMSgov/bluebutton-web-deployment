@@ -17,7 +17,7 @@
     - python-psycopg2
     - httpd
     - httpd-devel
-    - mod_wsgi
+    # - mod_wsgi
     - bzip2-devel
     - openssl-devel
     - ncurses-devel

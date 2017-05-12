@@ -24,9 +24,7 @@
 - name: "Running ./configure for Python {{ python_ver_full }}"
   become_user: root
   become: yes
-  command: "cd /home/ec2-user/download/Python-{{ python_ver_full }} ; {{ item }} "
-  with_items:
-    - ./configure --prefix=/usr/local --enable-shared  LDFLAGS='-Wl,-rpath /usr/local/lib' --enable-loadable-sqlite-extensions
+  command: "cd /home/ec2-user/download/Python-{{ python_ver_full }} ; ./configure --prefix=/usr/local --enable-shared  LDFLAGS='-Wl,-rpath /usr/local/lib' --enable-optimizations "
 
 - name: "Running make for Python {{ python_ver_full }}"
   become_user: root
@@ -38,7 +36,7 @@
   become: yes
   command: "cd /home/ec2-user/download/Python-{{ python_ver_full }} ; make altinstall"
 
-- name: "Download Mod_WSGI {{ mod_wsg_ver_full }}"
+- name: "Download mod_wsgi_{{ mod_wsgi_ver_full }}"
   become_user: root
   become: yes
   get_url:
@@ -46,7 +44,7 @@
     dest: "/home/ec2-user/download/mod_wsgi_{{ mod_wsgi_ver_full }}.tar.gz"
     remote_src: True
 
-- name: "Unarchive mod_wsgi {{ mod_wsgi_ver_full }}"
+- name: "Unarchive mod_wsgi_{{ mod_wsgi_ver_full }}"
   become_user: root
   become: yes
   shell: "cd /home/ec2-user/download ; /usr/bin/tar -xzvf /home/ec2-user/download/mod_wsgi_{{ mod_wsgi_ver_full }}.tar.gz ; cd /home/ec2-user/download/mod_wsgi-{{ mod_wsgi_ver_full }} "
@@ -55,7 +53,7 @@
 - name: "Running configure for mod_wsgi"
   become_user: root
   become: yes
-  command: "cd /home/ec2-user/download/mod_wsgi-{{ mod_wsgi_ver_full }} ; ./configure --with-python=/usr/local/bin/python{{ python_ver }} --with-apxs=/usr/sbin/apxs "
+  command: "cd /home/ec2-user/download/mod_wsgi-{{ mod_wsgi_ver_full }} ; ./configure --with-python=/usr/local/bin/python{{ python_ver }} --with-apxs=/usr/bin/apxs "
 
 - name: "Prepare to refresh ld cache"
   become_user: root
