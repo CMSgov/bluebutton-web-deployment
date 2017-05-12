@@ -112,5 +112,6 @@
       content: |
              {{ env_cf_app_tag_key_layer }}-{{ansible_date_time.date }}-image_id: {{ ami_output.image_id }}
              app_lc_suffix: {{ ansible_date_time.epoch }}
-      dest: "vars/{{ env }}-{{ env_cf_app_tag_key_layer }}-ami-settings.yml"
-    when: deploy is defined and deploy|bool == True
+      dest: "../vars/{{ env }}-{{ env_cf_app_tag_key_layer }}-ami-settings.yml"
+    # when: deploy is defined and deploy|bool == True
+    
