@@ -76,6 +76,7 @@
         Application: "{{ cf_tags_application }}"
         Environment: "{{ env|upper }}"
         Function: "{{ cf_app_tag_key_layer }}-AppServer"
+        ami_name: "BB-{{ env|upper }}-{{ cf_app_tag_key_layyer|upper }}"
     register: app_ec2_output
 
 
@@ -110,9 +111,10 @@
       region: "{{ cf_region }}"
       state: present
       description: "This was provisioned {{ ansible_date_time.iso8601 }}"
-      name: "bb-{{ env }}-{{ cf_app_tag_key_layer }}-{{ ansible_date_time.epoch }}"
+      name: "{{ app_ec2_output.instances[0]['instance_tags'}['ami_name'] }}-{{ ansible_date_time.epoch }}"
+      # name: "bb-{{ env }}-{{ cf_app_tag_key_layer }}-{{ ansible_date_time.epoch }}"
       wait: yes
-      tags: {"Name": "BB-{{ env }}-{{ cf_app_tag_key_layer }}-{{ ansible_date_time.date }}.{{ ansible_date_time.time }}"}
+      tags: {"name": "{{ app_ec2_output.instances[0]['instance_tags'}['ami_name']|lower }}-{{ ansible_date_time.date }}"}
     register: ami_output
 
   - name: "Terminate temporary instance"
