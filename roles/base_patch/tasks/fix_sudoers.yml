@@ -4,8 +4,6 @@
 # Author: '@ekivemark'
 # rhel sets Default requiretty. We need to fix that for ansible to work
 
-vars:
-  ansible_ssh_pipelining: no
 
 - name: Copy sudoers file for safety
   become_user: root
