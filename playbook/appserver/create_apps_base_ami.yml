@@ -105,7 +105,7 @@
       module: ec2
       state: absent
       region: "{{ cf_region }}"
-      instance_ids: "{{ app_ec2_output.instances_ids[0] }}"
+      instance_ids: "{{ app_ec2_output.instances[0]['id'] }}"
 
   - name: "create vars file with  new ami info"
     copy:
