@@ -36,47 +36,4 @@
   become: yes
   command: "cd /home/ec2-user/download/Python-{{ python_ver_full }} ; make altinstall"
 
-- name: "Download mod_wsgi_{{ mod_wsgi_ver_full }}"
-  become_user: root
-  become: yes
-  get_url:
-    url: "https://codeload.github.com/GrahamDumpleton/mod_wsgi/tar.gz/{{ mod_wsgi_ver_full }}"
-    dest: "/home/ec2-user/download/mod_wsgi_{{ mod_wsgi_ver_full }}.tar.gz"
-    remote_src: True
-
-- name: "Unarchive mod_wsgi_{{ mod_wsgi_ver_full }}"
-  become_user: root
-  become: yes
-  shell: "cd /home/ec2-user/download ; /usr/bin/tar -xzvf /home/ec2-user/download/mod_wsgi_{{ mod_wsgi_ver_full }}.tar.gz ; cd /home/ec2-user/download/mod_wsgi-{{ mod_wsgi_ver_full }} "
-  register: mod_wsgi_info
-
-- name: "Running configure for mod_wsgi"
-  become_user: root
-  become: yes
-  command: "cd /home/ec2-user/download/mod_wsgi-{{ mod_wsgi_ver_full }} ; ./configure --with-python=/usr/local/bin/python{{ python_ver }} --with-apxs=/usr/bin/apxs "
-
-- name: "Prepare to refresh ld cache"
-  become_user: root
-  become: yes
-  lineinfile:
-    dest: "/etc/ld.so.conf"
-    line: "/usr/local/lib"
-    state: present
-
-- name: "Refresh LD Cache"
-  become_user: root
-  become: yes
-  command: "/sbin/ldconfig"
-
-- name: "Running make for mod_wsgi"
-  become_user: root
-  become: yes
-  command: "cd /home/ec2-user/download/mod_wsgi-{{ mod_wsgi_ver_full }} ; make "
-
-- name: "Running make install for mod_wsgi"
-  become_user: root
-  become: yes
-  command: "cd /home/ec2-user/download/mod_wsgi-{{ mod_wsgi_ver_full }} ; make install "
-
-
 
