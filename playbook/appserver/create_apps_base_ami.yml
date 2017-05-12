@@ -98,8 +98,7 @@
       description: "This was provisioned {{ ansible_date_time.iso8601 }}"
       name: "bb-{{ env }}-{{ cf_app_azone }}-{{ env_cf_app_tag_key_layer }}-{{ ansible_date_time.epoch }}"
       wait: yes
-      tags:
-        Name: "BB-{{ env }}-{{ env_cf_app_tag_key_layer }}-{{ ansible_date_time.date }}.{{ ansible_date_time.time }}"
+      tags: {"Name": "BB-{{ env }}-{{ env_cf_app_tag_key_layer }}-{{ ansible_date_time.date }}.{{ ansible_date_time.time }}"}
     register: ami_output
 
   - name: "Terminate temporary instance"
