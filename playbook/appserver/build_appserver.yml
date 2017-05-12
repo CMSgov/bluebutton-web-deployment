@@ -45,6 +45,7 @@
 
   roles:
     # - ../../roles/
+    - ../../roles/base_patch
     - ../../roles/splunk
     - ../../roles/python3
     - ../../roles/apache
