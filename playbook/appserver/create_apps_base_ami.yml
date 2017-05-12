@@ -78,9 +78,9 @@
         Function: "{{ cf_app_tag_key_layer }}-AppServer"
     register: app_ec2_output
 
-  - name: add host to group
+  - name: "add host to group"
     add_host:
-      name: "{{ app_ec2_output.tagged_instances.0.public_ip }}"
+      name: "{{ app_ec2_output.instances[0]['private_ip'] }}"
       groups: "just_created"
 
   - name: "add private_ip to /etc/ansible/hosts"
@@ -92,7 +92,7 @@
 
   - name: "Create the ami"
     ec2_ami:
-      instance_id: "{{ app_ec2_output.0.id }}"
+      instance_id: "{{ app_ec2_output.instance_ids[0] }}"
       region: "{{ region }}"
       state: present
       description: "This was provisioned {{ ansible_date_time.iso8601 }}"
@@ -105,7 +105,7 @@
       module: ec2
       state: absent
       region: "{{ region }}"
-      instance_ids: "{{ app_ec2_output.tagged_instances.0.id }}"
+      instance_ids: "{{ app_ec2_output.instances_ids[0] }}"
 
   - name: create vars file with  new ami info
     copy:
