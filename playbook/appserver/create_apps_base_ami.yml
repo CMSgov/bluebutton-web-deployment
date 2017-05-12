@@ -78,6 +78,20 @@
         Function: "{{ cf_app_tag_key_layer }}-AppServer"
     register: app_ec2_output
 
+
+#######################################################
+- hosts: just_created
+  tasks:
+  - name: "appserver pre-config-splunk"
+    include: "./../../roles/splunk/tasks/main.yml"
+
+  - name: "appserver install python3"
+    include: "./../../roles/python3/tasks/main.yml"
+#######################################################
+
+
+- hosts: localhost
+  tasks:
   - name: "add host to group"
     add_host:
       name: "{{ app_ec2_output.instances[0]['private_ip'] }}"
@@ -111,7 +125,7 @@
   - name: "create vars file with  new ami info"
     copy:
       content: |
-             {{ env_cf_app_tag_key_layer }}-{{ansible_date_time.date }}-image_id: {{ ami_output.image_id }}
-             app_lc_suffix: {{ ansible_date_time.epoch }}
-      dest: "./../../vars/{{ env }}-{{ env_cf_app_tag_key_layer }}-ami-settings.yml"
+        base_image_id: {{ ami_output.image_id }}
+        base_lc_suffix: {{ ansible_date_time.epoch }}
+      dest: "./../../vars/{{ env }}-{{ env_cf_app_tag_key_layer }}-ami-{{ env_cf_app_tag_key_layer }}-{{ansible_date_time.date }}.yml"
     # when: deploy is defined and deploy|bool == True
