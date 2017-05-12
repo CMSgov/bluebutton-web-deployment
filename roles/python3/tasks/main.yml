@@ -24,21 +24,21 @@
 - name: "Running ./configure for Python {{ python_ver_full }}"
   become_user: root
   become: yes
-  command: "cd /home/ec2-user/download/Python-{{ python_ver_full }} ; ./configure --prefix=/usr/local --enable-shared  LDFLAGS='-Wl,-rpath /usr/local/lib' --enable-optimizations "
+  shell: "cd /home/ec2-user/download/Python-{{ python_ver_full }} ; ./configure --prefix=/usr/local --enable-shared  LDFLAGS='-Wl,-rpath /usr/local/lib' --enable-optimizations "
 
 - name: "Running make for Python {{ python_ver_full }}"
   become_user: root
   become: yes
-  command: "cd /home/ec2-user/download/Python-{{ python_ver_full }} ; make "
+  shell: "cd /home/ec2-user/download/Python-{{ python_ver_full }} ; make "
 
 - name: "Running make test for Python {{ python_ver_full }}"
   become_user: root
   become: yes
-  command: "cd /home/ec2-user/download/Python-{{ python_ver_full }} ; make test "
+  shell: "cd /home/ec2-user/download/Python-{{ python_ver_full }} ; make test "
 
 - name: "Running make altinstall for Python {{ python_ver_full }}"
   become_user: root
   become: yes
-  command: "cd /home/ec2-user/download/Python-{{ python_ver_full }} ; make altinstall "
+  shell: "cd /home/ec2-user/download/Python-{{ python_ver_full }} ; make altinstall "
   register: py3_output
 
