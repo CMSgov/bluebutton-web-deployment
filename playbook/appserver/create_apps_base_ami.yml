@@ -83,11 +83,23 @@
 
 #######################################################
 - hosts: just_created
+  vars_files:
+    - "./../../vars/common.yml"
+    - "./../../vault/env/{{ env }}/vault.yml"
+    - "./../../vars/env/{{ env }}/env.yml"
+    - "./../../vars/all_var.yml"
+
   tasks:
   - name: "appserver pre-config-splunk"
+    remote_user: "{{ remote_user_account }}"
+    become_user: root
+    become: yes
     include: "./../../roles/splunk/tasks/main.yml"
 
   - name: "appserver install python3"
+    remote_user: "{{ remote_user_account }}"
+    become_user: root
+    become: yes
     include: "./../../roles/python3/tasks/main.yml"
 #######################################################
 
