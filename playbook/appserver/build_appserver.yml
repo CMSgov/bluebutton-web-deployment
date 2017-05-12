@@ -23,7 +23,7 @@
 
 - name: Build App Server
   # hosts: appservers
-  hosts: buildapp
+  hosts: just_created
   # connection: local
   remote_user: ec2-user
   # become_user: root

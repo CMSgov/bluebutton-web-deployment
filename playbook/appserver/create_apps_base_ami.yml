@@ -91,7 +91,7 @@
   - name: add host to group
     add_host:
       name: "{{ app_ec2_output.instances[0]['private_ip'] }}"
-      groups: "buildapp"
+      groups: "just_created"
 
   - name: "add private_ip to /etc/ansible/hosts"
     blockinfile:
