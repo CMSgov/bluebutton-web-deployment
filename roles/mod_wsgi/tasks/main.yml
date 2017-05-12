@@ -55,5 +55,16 @@
   become: yes
   command: "cd /home/ec2-user/download/mod_wsgi-{{ mod_wsgi_ver_full }} ; make install "
 
+- name: "Copy Wsgi Load Module instruction in to place"
+  become_user: root
+  become: yes
+  copy:
+    src: "../files/wsgi.conf"
+    # rhel 7 apache 2.4 configuration
+    dest: "/etc/httpd/conf.modules.d/10-wsgi.conf"
+    owner: root
+    group: root
+    mode: "0644"
+
 
 
