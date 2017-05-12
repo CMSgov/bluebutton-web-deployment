@@ -42,7 +42,7 @@
     - "./../../vars/env/{{ env }}/env.yml"
     - "./../../vars/all_var.yml"
 
-   tasks:
+  tasks:
   - name: "Create Virtualhosts file"
     become_user: root
     become: yes
@@ -53,6 +53,8 @@
       group: root
       mode: "0644"
 
+  - name: "Restart Apache"
+    notify: restart apache
 
   handlers:
   - include: ../../roles/app_env/handlers/main.yml
