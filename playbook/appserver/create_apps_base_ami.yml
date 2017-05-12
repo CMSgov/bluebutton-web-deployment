@@ -24,7 +24,6 @@
   hosts: localhost
   connection: local
   # gather_facts: False
-  cache_max_age: 0
   vars:
     env: "dev"
     azone: "az1"
@@ -102,7 +101,7 @@
       backup: yes
 
 # Install python, apache and custom mod_wsgi
-- include: build_appserver.yml
+- include: "build_appserver.yml build_target={{ app_ec2_output.instances[0]['private_ip'] }}"
 
 - hosts: localhost
   vars_files:
