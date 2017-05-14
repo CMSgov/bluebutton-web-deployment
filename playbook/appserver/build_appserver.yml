@@ -58,8 +58,8 @@
   - include: ../../roles/base_patch/tasks/update_packages.yml
   - include: ../../roles/base_patch/tasks/create_app_user.yml
   - include: ../../roles/app_env/tasks/main.yml
-  - include: ../../roles/app_env/tasks/set_config_scripts.yml
   - include: ../../roles/app_env/tasks/refresh_app.yml
+  - include: ../../roles/app_env/tasks/set_config_scripts.yml
   - include: ../../roles/app_env/tasks/semanage_apps.yml
 
   # Now We should have a working machine

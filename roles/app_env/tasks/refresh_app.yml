@@ -10,7 +10,9 @@
   action: "shell source {{ venv }}/bin/activate"
 
 - name: switch to app folder
-  action: "shell cd {{ install_root }}/{{ project_name }}/"
+  become_user: root
+  become: yes
+  shell: "cd {{ install_root }}/{{ project_name }} "
 
 - git:
     repo: "{{ project_repo }}"
