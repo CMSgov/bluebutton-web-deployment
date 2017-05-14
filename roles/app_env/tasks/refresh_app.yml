@@ -24,18 +24,14 @@
   become: yes
   shell: "cd {{ install_root }}/{{ project_name }} "
 
-- name: "Check for previous repository install"
-  become_user: root
-  become: yes
-  git:
-    repo: "{{ project_repo }}"
-    dest: "{{ install_root }}/{{ project_name }}"
-    update: no
-  register: repo_present
+- name: "Check for git installation"
+  stat: "{{ install_root }}/{{ project_name }}/.git/*"
+  register: git_installed
+
 
 - name: "Check result of git check"
   debug:
-    msg: "repo_present is [{{ repo_present }}]"
+    msg: "git is [{{ git_installed }}]"
 
 - name: "install from git: {{ project_repo }} branch:{{ git_branch }}"
   become_user: root
@@ -45,7 +41,7 @@
     dest: "{{ install_root }}/{{ project_name }}"
     force: yes
     clone: yes
-  when: repo_present=False
+  when: not git_installed.stat.exists
 
   # Now pull a specific branch
 - name: "update from git: {{ project_repo }} branch:{{ git_branch }}"
@@ -55,8 +51,6 @@
     repo: "{{ project_repo }}"
     dest: "{{ install_root }}/{{ project_name }}"
     version: "{{ git_branch }}"
-
-
 
 # change ownership of files
 - name: "Update file ownership"
