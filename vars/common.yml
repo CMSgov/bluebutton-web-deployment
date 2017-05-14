@@ -5,7 +5,7 @@
 
 
 # a unix path-friendly name (IE, no spaces or special characters)
-# common_project_name: "hhs_oauth_server"
+common_project_name: "hhs_oauth_server"
 # defined in env.yml
 
 # Project directory for virtualenv and git clone
