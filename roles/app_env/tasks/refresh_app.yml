@@ -19,20 +19,21 @@
     group: "{{ app_group }}"
     mode:  "u+rw,g+rw,o-rwx"
 
-- name: switch to app folder
+- name: "Check for git installation"
   become_user: root
   become: yes
-  shell: "cd {{ install_root }}/{{ project_name }} "
-
-- name: "Check for git installation"
   stat:
     path: "{{ install_root }}/{{ project_name }}/.git/*"
   register: git_installed
 
-
 - name: "Check result of git check"
   debug:
     msg: "git is [{{ git_installed }}]"
+
+- name: switch to app folder
+  become_user: root
+  become: yes
+  shell: "cd {{ install_root }}/{{ project_name }} "
 
 - name: "install from git: {{ project_repo }} branch:{{ git_branch }}"
   become_user: root
