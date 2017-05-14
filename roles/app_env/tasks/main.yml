@@ -94,7 +94,8 @@
     state: directory
 
 - name: "update SELinux for the app"
-  include: ./semanage_app.yml
+  include: "{{ role_path }}/semanage_app.yml"
+  # ../../tasks/app_env/tasks/semanage_app.yml
 
 - name: "Create Virtualhosts file"
   become_user: root
@@ -107,4 +108,5 @@
     mode: "0644"
 
 - name: "update SELinux for the virtualenv"
-  include: ./semanage_virtualenv.yml
+  include: "{{ role_path }}/semanage_virtualenv.yml"
+  # ../../tasks/app_env/tasks/semanage_virtualenv.yml
