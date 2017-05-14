@@ -47,7 +47,7 @@
   become: yes
   file:
     owner: "{{ cf_app_pyapps_user }}"
-    group: "apache"
+    group: "{{ app_group }}"
     dest: "/var/virtualenv"
     state: directory
     recurse: yes
@@ -68,7 +68,7 @@
     state: directory
     recurse: yes
     owner: "{{ cf_app_pyapps_user }}"
-    group: "apache"
+    group: "{{ app_group }}"
 
 - name: "pip and basic update"
   become_user: root
@@ -90,7 +90,7 @@
     dest: "{{ cf_app_pyapp_home }}/certstore"
     mode: 0755
     owner: "{{ cf_app_pyapps_user }}"
-    group: "{{ cf_app_pyapps_user }}"
+    group: "{{ app_group }}"
     state: directory
 
 - name: "update SELinux for the app"

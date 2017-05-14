@@ -1,0 +1,71 @@
+---
+# File: refresh_app.yml 
+# Created: 5/14/17
+# Author: '@ekivemark'
+
+- name: become root and activate virtualenv
+  become: yes
+  become_method: sudo
+  become_user: root
+  action: "shell source {{ venv }}/bin/activate"
+
+- name: switch to app folder
+  action: "shell cd {{ install_root }}/{{ project_name }}/"
+
+- git:
+    repo: "{{ project_repo }}"
+    dest: "{{ install_root }}/{{ project_name }}"
+    force: yes
+    version: "{{ git_branch }}"
+
+# change ownership of files
+- file:
+    path: "{{ install_root }}/{{ project_name }}/"
+    recurse: yes
+    owner: "{{ app_owner }}"
+    group: "{{ app_group }}"
+    mode:  "u+rw,g+rw,o-rwx"
+
+# install dependencies with pip in virtualenv
+- pip:
+    requirements: "{{ install_root }}/{{ project_name }}/requirements/requirements.txt"
+    virtualenv: "{{ venv }}"
+
+# Change ownership for libraries
+- file:
+    path: "{{ venv }}"
+    recurse: yes
+    owner: "{{ app_owner }}"
+    group: "{{ app_group }}"
+    mode:  "u+rw,g+rw,o-rwx"
+
+# make manage.py executable
+- file:
+    path: "{{ install_root }}/{{ project_name }}/manage.py"
+    state: touch
+    mode: "u+rwx,g+rwx,o-rwx"
+
+- name: Django migrate
+  django_manage:
+    command: migrate
+    app_path: "{{ install_root }}/{{ project_name }}/"
+    virtualenv: "{{ venv }}"
+  when: "migrate=yes"
+
+- name: Django collectstatic
+  django_manage:
+    command: collectstatic
+    app_path: "{{ install_root }}/{{ project_name }}/"
+    virtualenv: "{{ venv }}"
+  when: "collectstatic=yes"
+
+- name: make sure apache server is running
+  service:
+    name: httpd
+    state: started
+    enabled: yes
+
+- name: Restart Apache
+  action: shell /bin/echo $HOSTNAME
+  notify:
+    - restart apache
