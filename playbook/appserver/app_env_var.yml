@@ -13,7 +13,7 @@
 #
 #
 # Apply to all app servers (prime, leader, follower)
-- hosts: appservers
+- hosts: "{{ build_target }}"
   vars:
     env: "dev"
 
@@ -98,6 +98,9 @@
 
   - name: "Make new files executable"
     shell: "chmod +x {{ cf_app_pyapp_home }}"
+
+  - name: "reset SELinux app permissions"
+    include: ./../../roles/app_env/semanage_apps.yml
 
   - name: make sure apache server is running
     service: name=httpd state=started enabled=yes

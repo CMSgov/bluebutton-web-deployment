@@ -31,6 +31,16 @@
   # shell: "cd /var/virtualenv ; /usr/local/bin/pyvenv-{{ python_ver }} hhs_o_server "
   shell: "cd /var/virtualenv ; /usr/local/bin/python{{ python_ver }} -m  venv {{ project_dir }} "
 
+- name: "Set permissions to application code"
+  become_user: root
+  become: yes
+  file:
+    dest: "{{ cf_app_pyapp_home }}"
+    state: directory
+    recurse: yes
+    owner: "{{ cf_app_pyapps_user }}"
+    group: "apache"
+
 
 - name: "Set ownership to pyapps:apache"
   become_user: root
@@ -83,6 +93,9 @@
     group: "{{ cf_app_pyapps_user }}"
     state: directory
 
+- name: "update SELinux for the app"
+  include: ./semanage_app.yml
+
 - name: "Create Virtualhosts file"
   become_user: root
   become: yes
@@ -93,3 +106,5 @@
     group: root
     mode: "0644"
 
+- name: "update SELinux for the virtualenv"
+  include: ./semanage_virtualenv.yml

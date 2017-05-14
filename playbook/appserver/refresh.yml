@@ -3,7 +3,7 @@
 # Run after refresh playbook
 
 # Apply to all app servers (prime, leader, follower)
-- hosts: app_prime_server,app_lead_server,app_follow_server
+- hosts: "{{ build_target }}"
   vars:
     env: "dev"
 
@@ -78,17 +78,20 @@
       command: migrate
       app_path: "{{ install_root }}/{{ project_name }}/"
       virtualenv: "{{ venv }}"
-    when: "inventory_hostname in groups['app_prime_server']"
+    when: "migrate=yes"
 
   - name: Django collectstatic
     django_manage:
       command: collectstatic
       app_path: "{{ install_root }}/{{ project_name }}/"
       virtualenv: "{{ venv }}"
-    when: "inventory_hostname in groups['app_prime_server']"
+    when: "collectstatic=yes"
 
   - name: make sure apache server is running
-    service: name=httpd state=started enabled=yes
+    service:
+      name: httpd
+      state: started
+      enabled: yes
  
   - name: Restart Apache
     action: shell /bin/echo $HOSTNAME
@@ -97,7 +100,9 @@
  
   handlers:
     - name: restart apache
-      service: name=httpd state=restarted
+      service:
+        name: httpd
+        state: restarted
 
 
 # vim:ff=unix ts=2 sw=2 ai expandtab ft=ansible
