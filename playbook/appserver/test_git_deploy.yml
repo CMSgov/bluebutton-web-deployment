@@ -1,0 +1,55 @@
+---
+# File: build_appserver.yml 
+# Created: 5/9/17
+# Author: '@ekivemark'
+
+# Playbook to:
+#  - create Python3/Django AppServer
+#
+# Based on: http://odecee.com.au/cloudformation-and-ansible/
+# Vars file is relative to playbook file
+# vars_files:
+# Vars file is relative to playbook file
+# Sequence:
+# 1. Common variables
+# 2. encrypted vault file
+# 3. environment specific variables
+# 4. all_vars which reference the preceding three files.
+# common_ prefixes common variables
+# vault_env_ prefixes encrypted variables
+# env_ prefixes environment specific variables
+# all_var incorporates preceding variables and defines variables without prefixes.
+# use all_var variables in scripts.
+
+- name: Test git deployments
+  # hosts: appservers
+  hosts: "{{ build_target }}"
+  # connection: local
+  remote_user: ec2-user
+  # become_user: root
+  # become: yes
+  gather_facts: True
+  vars:
+    ansible_ssh_pipelining: no
+    env: "dev"
+    azone: "az1"
+    sub_zone: "app"
+    sg_zone: "appserver"
+    env_az: "{{ env }}-{{ azone }}"
+    env_cf_app_version: "01"
+    splunk_client_name: "BBAPI-{{ env|upper }}-{{ sub_zone|upper }}"
+  vars_files:
+    - "./../../vars/common.yml"
+    - "./../../vault/env/{{ env }}/vault.yml"
+    - "./../../vars/env/{{ env }}/env.yml"
+    - "./../../vars/all_var.yml"
+
+
+  tasks:
+  - include: ../../roles/app_env/tasks/refresh_app.yml
+
+  # Now We should have a working machine
+  # Apache / Mod_Wsgi / Python3
+
+  handlers:
+  - include: ../../roles/app_env/handlers/main.yml
