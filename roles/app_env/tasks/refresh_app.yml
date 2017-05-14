@@ -14,14 +14,20 @@
   become: yes
   shell: "cd {{ install_root }}/{{ project_name }} "
 
-- git:
+- name: "install from git: {{ project_repo }} branch:{{ git_branch }}"
+  become_user: root
+  become: yes
+  git:
     repo: "{{ project_repo }}"
     dest: "{{ install_root }}/{{ project_name }}"
     force: yes
     version: "{{ git_branch }}"
 
 # change ownership of files
-- file:
+- name: "Update file ownership"
+  become_user: root
+  become: yes
+  file:
     path: "{{ install_root }}/{{ project_name }}/"
     recurse: yes
     owner: "{{ app_owner }}"
@@ -29,25 +35,35 @@
     mode:  "u+rw,g+rw,o-rwx"
 
 # install dependencies with pip in virtualenv
-- pip:
+- name: "pip install requirements"
+  become_user: root
+  become: yes
+  pip:
     requirements: "{{ install_root }}/{{ project_name }}/requirements/requirements.txt"
     virtualenv: "{{ venv }}"
 
 # Change ownership for libraries
-- file:
+- name: "Change ownership for libraries"
+  become_user: root
+  become: yes
+  file:
     path: "{{ venv }}"
     recurse: yes
     owner: "{{ app_owner }}"
     group: "{{ app_group }}"
     mode:  "u+rw,g+rw,o-rwx"
 
-# make manage.py executable
-- file:
+- name: make manage.py executable
+  become_user: root
+  become: yes
+  file:
     path: "{{ install_root }}/{{ project_name }}/manage.py"
     state: touch
     mode: "u+rwx,g+rwx,o-rwx"
 
 - name: Django migrate
+  become_user: root
+  become: yes
   django_manage:
     command: migrate
     app_path: "{{ install_root }}/{{ project_name }}/"
@@ -55,6 +71,8 @@
   when: "migrate=yes"
 
 - name: Django collectstatic
+  become_user: root
+  become: yes
   django_manage:
     command: collectstatic
     app_path: "{{ install_root }}/{{ project_name }}/"
@@ -62,12 +80,16 @@
   when: "collectstatic=yes"
 
 - name: make sure apache server is running
+  become_user: root
+  become: yes
   service:
     name: httpd
     state: started
     enabled: yes
 
 - name: Restart Apache
+  become_user: root
+  become: yes
   action: shell /bin/echo $HOSTNAME
   notify:
     - restart apache
