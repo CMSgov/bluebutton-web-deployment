@@ -33,6 +33,10 @@
     update: no
   register: repo_present
 
+- name: "Check result of git check"
+  debug:
+    msg: "repo_present is [{{ repo_present }}]"
+
 - name: "install from git: {{ project_repo }} branch:{{ git_branch }}"
   become_user: root
   become: yes
