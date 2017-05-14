@@ -25,7 +25,8 @@
   shell: "cd {{ install_root }}/{{ project_name }} "
 
 - name: "Check for git installation"
-  stat: "{{ install_root }}/{{ project_name }}/.git/*"
+  stat:
+    path: "{{ install_root }}/{{ project_name }}/.git/*"
   register: git_installed
 
 
