@@ -43,6 +43,17 @@
     - "./../../vars/all_var.yml"
 
   tasks:
+  - name: "Get a shortened variable"
+    debug:
+      msg: "This is a variable[{{ project_parent[:-1] }}]"
+
+  - name: "Set permissions for SELinux"
+    become_user: root
+    become: yes
+    shell: "semanage fcontext -a -t httpd_sys_content_t \"/var/pyapps(/.*)?\" "
+    # semanage fcontext -a -t httpd_sys_content_t "/var/virtualenv(/.*)?"
+
+
   - name: "Create Virtualhosts file"
     become_user: root
     become: yes
