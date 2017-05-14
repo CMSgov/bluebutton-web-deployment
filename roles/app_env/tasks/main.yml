@@ -94,7 +94,7 @@
     state: directory
 
 - name: "update SELinux for the app"
-  include: ../../roles/app_env/tasks/semanage_app.yml
+  include: ../../roles/app_env/tasks/semanage_apps.yml
 
 - name: "Create Virtualhosts file"
   become_user: root
