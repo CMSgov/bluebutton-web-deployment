@@ -9,6 +9,16 @@
   become_user: root
   action: "shell source {{ venv }}/bin/activate"
 
+- name: create app folder
+  become_user: root
+  become: yes
+  file:
+    dest: "{{ install_root }}/{{ project_name }}"
+    state: directory
+    owner: "{{ app_owner }}"
+    group: "{{ app_group }}"
+    mode:  "u+rw,g+rw,o-rwx"
+
 - name: switch to app folder
   become_user: root
   become: yes
