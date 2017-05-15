@@ -17,19 +17,19 @@
     mode: 0664
 
 - name: "write django_settings.sh script"
-    become_user: root
-    become: yes
-    template:
-      src: ../templates/appserver/django_settings.j2
-      dest: "{{ install_root }}/django_settings.sh"
-      backup: yes
-      owner: "{{ app_owner }}"
-      group: "{{ app_group }}"
-      mode: 0664
+  become_user: root
+  become: yes
+  template:
+    src: ../templates/appserver/django_settings.j2
+    dest: "{{ install_root }}/django_settings.sh"
+    backup: yes
+    owner: "{{ app_owner }}"
+    group: "{{ app_group }}"
+    mode: 0664
 
 
 - name: "Make new files executable"
-    become_user: root
-    become: yes
-    shell: "chmod +x {{ cf_app_pyapp_home }}"
+  become_user: root
+  become: yes
+  shell: "chmod +x {{ cf_app_pyapp_home }}"
 
