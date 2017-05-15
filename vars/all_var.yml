@@ -197,6 +197,7 @@
   cf_app_aws_content_key_id: "{{ env_cf_app_aws_content_key_id }}"
   cf_app_aws_content_access_key: "{{ env_cf_app_aws_content_access_key }}"
   cf_app_target_vpc_id: "{{ cf_vpc_id }}"
+  cf_app_log_dir: "{{ env_cf_app_log_dir }}"
 
   # Postgres Role related settings
   db_server_account: "postgres"
