@@ -37,6 +37,10 @@
             <Files production.py>
                 Allow from all
             </Files>
+
+            <Files aws*.py>
+                Allow from all
+            </Files>
         </Directory>
 
         # Alias /static/ {{ cf_app_pyapp_home }}/hhs_oauth_server/collectedstatic/
