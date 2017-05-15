@@ -46,24 +46,24 @@
 
 
   tasks:
-- name: "Create the app log directory "
-  become_user: root
-  become: yes
-  file:
-    dest: "{{ cf_app_log_dir }}"
-    owner: "{{ cf_app_pyapps_user }}"
-    group: "{{ cf_app_pyapps_user }}"
-    state: directory
-    mode: 0755
+  - name: "Create the app log directory "
+    become_user: root
+    become: yes
+    file:
+      dest: "{{ cf_app_log_dir }}"
+      owner: "{{ cf_app_pyapps_user }}"
+      group: "{{ cf_app_pyapps_user }}"
+      state: directory
+      mode: 0755
 
-- name: "Create the debug log"
-  become_user: root
-  become: yes
-  touch:
-    dest: "{{ cf_app_log_dir }}/debug.log"
-    owner: "{{ cf_app_pyapps_user }}"
-    group: "{{ cf_app_pyapps_user }}"
-    mode: 0766
+  - name: "Create the debug log"
+    become_user: root
+    become: yes
+    touch:
+      dest: "{{ cf_app_log_dir }}/debug.log"
+      owner: "{{ cf_app_pyapps_user }}"
+      group: "{{ cf_app_pyapps_user }}"
+      mode: 0766
 
   - include: ../../roles/app_env/tasks/set_config_scripts.yml
   - include: ../../roles/app_env/tasks/refresh_app.yml
