@@ -4,7 +4,7 @@
 # Author: '@ekivemark'
 
 - name: "Install supporting packages"
-  include: ../../base_patch/tasks/app_server_tools.yml
+  include: ../app_tools/tasks/main.yml
 
 - name: "Install Apache (httpd)"
   become_user: root
