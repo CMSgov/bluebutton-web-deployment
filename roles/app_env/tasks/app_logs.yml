@@ -1,0 +1,52 @@
+---
+# File: roles/app_env/tasks/app_logs.yml
+# Created: 5/15/17
+# Author: '@ekivemark'
+# Create the App logging directory and touch the app logs
+
+- name: "Create the app log directory "
+  become_user: root
+  become: yes
+  file:
+    dest: "{{ cf_app_log_dir }}"
+    owner: "{{ cf_app_pyapps_user }}"
+    group: "{{ cf_app_pyapps_user }}"
+    state: directory
+    mode: 0755
+
+- name: "Create the logs"
+  become_user: root
+  become: yes
+  file:
+    dest: "{{ cf_app_log_dir }}/{{ item }}"
+    owner: "{{ cf_app_pyapps_user }}"
+    group: "{{ cf_app_pyapps_user }}"
+    state: touch
+    mode: 0766
+  with_items:
+    - debug.log
+    - error.log
+    - info.log
+
+
+#- name: "Create the error log"
+#  become_user: root
+#  become: yes
+#  file:
+#    dest: "{{ cf_app_log_dir }}/error.log"
+#    owner: "{{ cf_app_pyapps_user }}"
+#    group: "{{ cf_app_pyapps_user }}"
+#    state: touch
+#    mode: 0766
+#
+#- name: "Create the info log"
+#  become_user: root
+#  become: yes
+#  file:
+#    dest: "{{ cf_app_log_dir }}/info.log"
+#    owner: "{{ cf_app_pyapps_user }}"
+#    group: "{{ cf_app_pyapps_user }}"
+#    state: touch
+#    mode: 0766
+
+

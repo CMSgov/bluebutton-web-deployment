@@ -66,6 +66,27 @@
       state: touch
       mode: 0766
 
+  - name: "Create the error log"
+    become_user: root
+    become: yes
+    file:
+      dest: "{{ cf_app_log_dir }}/error.log"
+      owner: "{{ cf_app_pyapps_user }}"
+      group: "{{ cf_app_pyapps_user }}"
+      state: touch
+      mode: 0766
+
+  - name: "Create the info log"
+    become_user: root
+    become: yes
+    file:
+      dest: "{{ cf_app_log_dir }}/info.log"
+      owner: "{{ cf_app_pyapps_user }}"
+      group: "{{ cf_app_pyapps_user }}"
+      state: touch
+      mode: 0766
+
+
   - include: ../../roles/app_env/tasks/set_config_scripts.yml
   - include: ../../roles/app_env/tasks/refresh_app.yml
 
