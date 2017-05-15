@@ -34,7 +34,6 @@
   command: shutdown -r now "Reboot required for SELinux state change"
   async: 0
   poll: 0
-  sudo: true
   ignore_errors: true
   when: check_selinux.changed
   register: rebooting
