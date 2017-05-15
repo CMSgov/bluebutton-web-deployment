@@ -47,9 +47,7 @@
   roles:
     # - ../../roles/
     - ../../roles/base_patch
-    - ./../../roles/base_patch/tasks/selinux_mode.yml
-      selinux_policy="{{ cf_app_selinux_policy }}"
-      selinux_state="{{ cf_app_selinux_state }}"
+    - ./../../roles/base_patch/tasks/selinux_mode.yml { selinux_policy='{{ cf_app_selinux_policy }}' selinux_state='{{ cf_app_selinux_state }}' }
     - ../../roles/splunk
     - ../../roles/python3
     - ../../roles/apache
