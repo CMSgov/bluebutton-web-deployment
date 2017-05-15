@@ -5,7 +5,7 @@
 # download and install python3
 
 - name: "Make sure dev tools are installed to allow Python3 to compile"
-  include: ./../../base_patch/tasks/app_server_tools.yml
+  include: ../app_tools/tasks/main.yml
 
 - name: "create download directory"
   file:
@@ -33,12 +33,6 @@
   become_user: root
   become: yes
   shell: "cd /home/ec2-user/download/Python-{{ python_ver_full }} ; make "
-
-#- name: "Running make test for Python {{ python_ver_full }}"
-#  become_user: root
-#  become: yes
-#  shell: "cd /home/ec2-user/download/Python-{{ python_ver_full }} ; make test "
-
 
 - name: "Running make altinstall for Python {{ python_ver_full }}"
   become_user: root
