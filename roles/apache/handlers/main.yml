@@ -4,6 +4,8 @@
 # Author: '@ekivemark'
 
 - name: restart apache
+  become_user: root
+  become: yes
   service:
     name: httpd
     state: restarted
