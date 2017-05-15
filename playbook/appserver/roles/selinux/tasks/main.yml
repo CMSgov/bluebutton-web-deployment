@@ -1,5 +1,5 @@
 ---
-# File: roles/base_patch/tasks/selinux_mode.yml
+# File: playbook/appserver/roles/selinux/tasks/main.yml
 # Created: 5/15/17
 # Author: '@ekivemark'
 # Set Selinux mode
@@ -24,8 +24,8 @@
   become_user: root
   become: yes
   selinux:
-    policy: "{{ selinux_policy }}"
-    state: "{{ selinux_state }}"
+    policy: "{{ cf_app_selinux_policy }}"
+    state: "{{ cf_app_selinux_state }}"
   register: check_selinux
 
 - name: "Reboot if selinux state changed"
