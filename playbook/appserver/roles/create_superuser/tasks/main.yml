@@ -1,0 +1,33 @@
+---
+# File: playbook/appserver/roles/create_superuser/tasks/main.yml
+# Created: 5/15/17
+# Author: '@ekivemark'
+
+# check for superuser and if not exist create it.
+
+- name: "does superuser exist?"
+  become_user: root
+  become: yes
+  command: echo "from django.contrib.auth import get_user_model; User = get_user_model(); print(User.objects.filter(username='{{ cf_app_pyapps_user }}').count()>0)" | {{ cf_app_py_virtual_env }}/bin/python ./manage.py shell
+  args:
+    chdir: "{{ cf_app_pyapp_home }}/{{ common_project_name }}"
+  environment:
+    DJANGO_SETTINGS_MODULE: "{{ django_settings_module }}"
+  register: superuser_existed
+
+- name: "Create super user and set password"
+  become_user: root
+  become: yes
+  shell: |
+    cd {{ cf_app_pyapp_home }}/{{ common_project_name }} ;
+    export DJANGO_SUPERUSER_USERNAME="{{ cf_app_pyapps_user }}" ;
+    export DJANGO_SUPERUSER_PASSWORD="{{ cf_app_pyapps_pwd }}" ;
+    export DJANGO_SUPERUSER_EMAIL="{{ cf_app_pyapps_email }}" ;
+    # create Superuser \n",
+    {{ cf_app_py_virtual_env }}/bin/python3 manage.py create_super_user_from_envars ;
+    # remove superuser variables ;
+    export DJANGO_SUPERUSER_USERNAME='' ;
+    export DJANGO_SUPERUSER_PASSWORD='' ;
+    export DJANGO_SUPERUSER_EMAIL='';
+  when: not superuser_existed
+
