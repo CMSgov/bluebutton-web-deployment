@@ -99,7 +99,7 @@
     command: migrate
     app_path: "{{ install_root }}/{{ project_name }}/"
     virtualenv: "{{ venv }}"
-  when: "{{ migrate|upper }} == 'YES' "
+  when: (migrate == 'yes')
 
 - name: Django collectstatic
   become_user: root
@@ -108,7 +108,7 @@
     command: collectstatic
     app_path: "{{ install_root }}/{{ project_name }}/"
     virtualenv: "{{ venv }}"
-  when: "{{ collectstatic|upper }} == 'YES' "
+  when: (collectstatic == 'yes')
 
 - name: make sure apache server is running
   become_user: root
