@@ -133,7 +133,7 @@
   become_user: root
   become: yes
   shell: |
-    cd {{ cf_app_pyapp_home }}
+    cd {{ cf_app_pyapp_home }}/{{ common_project_name }}
     source {{ cf_app_py_virtual_env }}/bin/activate
     export PATH={{ cf_app_py_virtual_env }}/bin:$PATH
     {{ cf_app_py_virtual_env }}/bin/pip{{ python_ver }} {{ item }}
