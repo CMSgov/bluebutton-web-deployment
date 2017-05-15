@@ -19,15 +19,15 @@
   become_user: root
   become: yes
   shell: |
-    cd {{ cf_app_pyapp_home }}/{{ common_project_name }} ;
-    export DJANGO_SUPERUSER_USERNAME="{{ cf_app_pyapps_user }}" ;
-    export DJANGO_SUPERUSER_PASSWORD="{{ cf_app_pyapps_pwd }}" ;
-    export DJANGO_SUPERUSER_EMAIL="{{ cf_app_pyapps_email }}" ;
-    # create Superuser \n",
-    {{ cf_app_py_virtual_env }}/bin/python3 manage.py create_super_user_from_envars ;
-    # remove superuser variables ;
-    export DJANGO_SUPERUSER_USERNAME='' ;
-    export DJANGO_SUPERUSER_PASSWORD='' ;
-    export DJANGO_SUPERUSER_EMAIL='';
+    cd {{ cf_app_pyapp_home }}/{{ common_project_name }}
+    export DJANGO_SUPERUSER_USERNAME={{ cf_app_pyapps_user }}
+    export DJANGO_SUPERUSER_PASSWORD={{ cf_app_pyapps_pwd }}
+    export DJANGO_SUPERUSER_EMAIL={{ cf_app_pyapps_email }}
+    # create Superuser
+    {{ cf_app_py_virtual_env }}/bin/python3 manage.py create_super_user_from_envars
+    # remove superuser variables
+    export DJANGO_SUPERUSER_USERNAME=''
+    export DJANGO_SUPERUSER_PASSWORD=''
+    export DJANGO_SUPERUSER_EMAIL=''
   when: not superuser_existed
 
