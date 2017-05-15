@@ -1,0 +1,127 @@
+---
+# File: playbook/appserver/roles/app_env/tasks/main.yml
+# Created: 5/10/17
+# Author: '@ekivemark'
+# Create the application environment
+
+- name: " Create the virtualenv folder"
+  become_user: root
+  become: yes
+  file:
+    dest: "/var/virtualenv"
+    owner: "{{ cf_app_pyapps_user }}"
+    group: "{{ cf_app_pyapps_user }}"
+    mode: 0755
+    state: directory
+
+- name: "Create the app folder"
+  become_user: root
+  become: yes
+  file:
+    dest: "/var/pyapps"
+    owner: "{{ cf_app_pyapps_user }}"
+    group: "{{ cf_app_pyapps_user }}"
+    mode: 0755
+    state: directory
+
+- name: "Create the app log directory "
+  become_user: root
+  become: yes
+  file:
+    dest: "{{ cf_app_log_dir }}"
+    owner: "{{ cf_app_pyapps_user }}"
+    group: "{{ cf_app_pyapps_user }}"
+    state: directory
+    mode: 0755
+
+- name: "Create the debug log"
+  become_user: root
+  become: yes
+  file:
+    dest: "{{ cf_app_log_dir }}/debug.log"
+    owner: "{{ cf_app_pyapps_user }}"
+    group: "{{ cf_app_pyapps_user }}"
+    state: touch
+    mode: 0766
+
+- name: "Create Virtualenv"
+  become_user: root
+  become: yes
+  # Python3.6 replaces pyvenv-(ver) with python3.6 -m venv
+  # shell: "cd /var/virtualenv ; /usr/local/bin/pyvenv-{{ python_ver }} hhs_o_server "
+  shell: "cd /var/virtualenv ; /usr/local/bin/python{{ python_ver }} -m  venv {{ project_dir }} "
+
+- name: "Set permissions to application code"
+  become_user: root
+  become: yes
+  file:
+    dest: "{{ cf_app_pyapp_home }}"
+    state: directory
+    recurse: yes
+    owner: "{{ cf_app_pyapps_user }}"
+    group: "apache"
+    mode: 0755
+
+
+- name: "Set ownership to pyapps:apache"
+  become_user: root
+  become: yes
+  file:
+    owner: "{{ cf_app_pyapps_user }}"
+    group: "{{ app_group }}"
+    dest: "/var/virtualenv"
+    state: directory
+    recurse: yes
+
+- name: "Install Application code from Github"
+  become_user: root
+  become: yes
+  git:
+    repo: "{{ common_repository }}"
+    dest: "{{ cf_app_pyapp_home }}/"
+    version: "{{ cf_app_repo_branch }}"
+
+- name: "Set permissions to application code"
+  become_user: root
+  become: yes
+  file:
+    dest: "{{ cf_app_pyapp_home }}"
+    state: directory
+    recurse: yes
+    owner: "{{ cf_app_pyapps_user }}"
+    group: "{{ app_group }}"
+    mode: 0755
+
+- name: "pip and basic update"
+  become_user: root
+  become: yes
+  shell: |
+    cd {{ cf_app_pyapp_home }}
+    source {{ cf_app_py_virtual_env }}/bin/activate
+    export PATH={{ cf_app_py_virtual_env }}/bin:$PATH
+    {{ cf_app_py_virtual_env }}/bin/pip{{ python_ver }} {{ item }}
+  with_items:
+    - install --upgrade pip
+    - install psycopg2
+    - install -r requirements/requirements.txt
+
+- name: "Create a certstore"
+  become_user: root
+  become: yes
+  file:
+    dest: "{{ cf_app_pyapp_home }}/certstore"
+    mode: 0755
+    owner: "{{ cf_app_pyapps_user }}"
+    group: "{{ app_group }}"
+    state: directory
+
+- name: "Create Virtualhosts file"
+  become_user: root
+  become: yes
+  template:
+    src: ../templates/virtualhost_server_conf.j2
+    dest: "/etc/httpd/conf.d/virtualhost.conf"
+    owner: root
+    group: root
+    mode: "0644"
+
