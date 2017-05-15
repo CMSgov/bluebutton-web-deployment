@@ -878,11 +878,10 @@
                 "mkdir -p /var/virtualenv \n",
                 "mkdir -p /var/pyapps \n",
 
-
                 "echo 'Checking SELINUX status' >>$BUILD_LOG \n",
                 "cat /etc/selinux/config >>$BUILD_LOG \n",
                 "echo 'Configure SELinux' >>$BUILD_LOG \n",
-                "# semanage fcontext -a -t httpd_sys_content_t \"/var/pyapps(/.*)?\" \n",
+                "# semanage fcontext -a -t httpd_sys_content_t \"/var/pyapRps(/.*)?\" \n",
                 "# semanage fcontext -a -t httpd_sys_content_t \"/var/virtualenv(/.*)?\" \n",
                 "# restorecon -Rv /var \n",
 
