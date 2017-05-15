@@ -79,7 +79,10 @@
   tasks:
   - include: ../../roles/base_patch/tasks/fix_sudoers.yml
   - include: ../../roles/base_patch/tasks/update_packages.yml
+  - include_role:
+      name: create_superuser
   - include: ../../roles/app_env/tasks/refresh_app.yml
+
 
   - name: make sure apache server is running
     service:
