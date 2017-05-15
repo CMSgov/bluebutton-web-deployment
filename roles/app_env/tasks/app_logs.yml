@@ -9,10 +9,10 @@
   become: yes
   file:
     dest: "{{ cf_app_log_dir }}"
-    owner: "{{ cf_app_pyapps_user }}"
-    group: "{{ cf_app_pyapps_user }}"
+    owner: root
+    group: logreader
     state: directory
-    mode: 0755
+    mode: 0775
 
 - name: "Create the logs"
   become_user: root
@@ -22,7 +22,7 @@
     owner: "{{ cf_app_pyapps_user }}"
     group: "{{ cf_app_pyapps_user }}"
     state: touch
-    mode: 0766
+    mode: 0776
   with_items:
     - debug.log
     - error.log
