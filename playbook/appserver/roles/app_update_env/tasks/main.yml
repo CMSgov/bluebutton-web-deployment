@@ -5,18 +5,18 @@
 
 # Write the environment variable files
 
-  - name: "Write custom-envvars file"
-    become_user: root
-    become: yes
-    template:
-      src: ../templates/appserver/custom-envvars.j2
-      dest: "{{ install_root }}/custom-envvars.py"
-      backup: yes
-      owner: "{{ app_owner }}"
-      group: "{{ app_group }}"
-      mode: 0664
+- name: "Write custom-envvars file"
+  become_user: root
+  become: yes
+  template:
+    src: ../templates/appserver/custom-envvars.j2
+    dest: "{{ install_root }}/custom-envvars.py"
+    backup: yes
+    owner: "{{ app_owner }}"
+    group: "{{ app_group }}"
+    mode: 0664
 
-  name: "write django_settings.sh script"
+- name: "write django_settings.sh script"
     become_user: root
     become: yes
     template:
@@ -28,7 +28,7 @@
       mode: 0664
 
 
-  name: "Make new files executable"
+- name: "Make new files executable"
     become_user: root
     become: yes
     shell: "chmod +x {{ cf_app_pyapp_home }}"
