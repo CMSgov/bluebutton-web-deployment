@@ -90,29 +90,29 @@
 #    group: "{{ app_group }}"
 #    mode: 0644
 
-  - name: display custom_env_vars.py
-    action: "shell /bin/cat {{ install_root }}/custom-envvars.py"
-
-  - name: display django_settings.sh
-    action: "shell /bin/cat {{ install_root }}/django_settings.sh"
+#  - name: display custom_env_vars.py
+#    action: "shell /bin/cat {{ install_root }}/custom-envvars.py"
+#
+#  - name: display django_settings.sh
+#    action: "shell /bin/cat {{ install_root }}/django_settings.sh"
 
   - name: "Make new files executable"
     shell: "chmod +x {{ cf_app_pyapp_home }}"
 
-  - name: "reset SELinux app permissions"
-    include: ./../../roles/app_env/semanage_apps.yml
+#  - name: "reset SELinux app permissions"
+#    include: ./../../roles/app_env/semanage_apps.yml
 
-  - name: make sure apache server is running
-    service: name=httpd state=started enabled=yes
-
-  - name: "Restart Apache on {{ env_env }}"
-    action: shell /bin/echo $HOSTNAME
-    notify:
-      - restart apache
-
-  handlers:
-  - name: restart apache
-    service: name=httpd state=restarted
+#  - name: make sure apache server is running
+#    service: name=httpd state=started enabled=yes
+#
+#  - name: "Restart Apache on {{ env_env }}"
+#    action: shell /bin/echo $HOSTNAME
+#    notify:
+#      - restart apache
+#
+#  handlers:
+#  - name: restart apache
+#    service: name=httpd state=restarted
 
 # vim:ff=unix ts=2 sw=2 ai expandtab ft=ansible
 

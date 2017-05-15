@@ -43,9 +43,9 @@
     - "./../../vars/all_var.yml"
 
   tasks:
-  - name: "Get a shortened variable"
-    debug:
-      msg: "This is a variable[{{ project_parent[:-1] }}]"
+#  - name: "Get a shortened variable"
+#    debug:
+#      msg: "This is a variable[{{ project_parent[:-1] }}]"
 
   - name: "Set permissions for SELinux"
     become_user: root
