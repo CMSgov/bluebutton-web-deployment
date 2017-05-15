@@ -46,6 +46,7 @@
 
 
   tasks:
+  - include: ../../roles/app_env/tasks/set_config_scripts.yml
   - include: ../../roles/app_env/tasks/refresh_app.yml
 
   # Now We should have a working machine
