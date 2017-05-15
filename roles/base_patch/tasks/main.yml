@@ -36,8 +36,6 @@
   register: rebooting
 
 
-
-
 - name: "Wait for thing to reboot..."
   pause: seconds=45
   when: rebooting|changed

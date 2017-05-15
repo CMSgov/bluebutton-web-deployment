@@ -46,19 +46,28 @@
 
   roles:
     # - ../../roles/
+    # - roles/
     - ../../roles/base_patch
+    # Check SELINIUX set to permissive
     - roles/selinux
+    # Install AppServer tools
+    - roles/app_tools
+    # Create the pyapps user
+    - roles/app_user
+    # Create the pyapps logs
+    - roles/app_logs
+    # Change Server ID for Splunk
     - ../../roles/splunk
-    - ../../roles/python3
-    - ../../roles/apache
-    - ../../roles/mod_wsgi
+    # Install Python3.x
+    - roles/python3
+    # Install Apache
+    - roles/apache
+    # install mod_wsgi
+    - roles/mod_wsgi
 
   tasks:
   - include: ../../roles/base_patch/tasks/fix_sudoers.yml
-  - include: ../../roles/base_patch/tasks/app_server_tools.yml
   - include: ../../roles/base_patch/tasks/update_packages.yml
-  - include: ../../roles/base_patch/tasks/create_app_user.yml
-  - include: ../../roles/app_env/tasks/app_log.yml
   - include: ../../roles/app_env/tasks/main.yml
   - include: ../../roles/app_env/tasks/refresh_app.yml
   - include: ../../roles/app_env/tasks/set_config_scripts.yml
