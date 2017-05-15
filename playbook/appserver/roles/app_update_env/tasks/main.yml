@@ -9,7 +9,7 @@
   become_user: root
   become: yes
   template:
-    src: ../templates/appserver/custom-envvars.j2
+    src: ../templates/custom-envvars.j2
     dest: "{{ install_root }}/custom-envvars.py"
     backup: yes
     owner: "{{ app_owner }}"
@@ -20,7 +20,7 @@
   become_user: root
   become: yes
   template:
-    src: ../templates/appserver/django_settings.j2
+    src: ../templates/django_settings.j2
     dest: "{{ install_root }}/django_settings.sh"
     backup: yes
     owner: "{{ app_owner }}"
