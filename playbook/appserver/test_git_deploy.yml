@@ -46,6 +46,17 @@
 
 
   tasks:
+  - name: "Create the logs directory "
+    become_user: root
+    become: yes
+    file:
+      dest: "/var/logs/pyapps"
+      owner: "{{ cf_app_pyapps_user }}"
+      group: "{{ cf_app_pyapps_user }}"
+      state: directory
+      mode: 0755
+
+
   - include: ../../roles/app_env/tasks/set_config_scripts.yml
   - include: ../../roles/app_env/tasks/refresh_app.yml
 
@@ -54,4 +65,3 @@
 
   handlers:
   - include: ../../roles/apache/handlers/main.yml
-  
