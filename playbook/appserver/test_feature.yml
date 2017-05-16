@@ -83,6 +83,7 @@
 #
 
   - name: "Get elb facts"
+    connection: local
     action:
       module: ec2_elb_facts
       aws_access_key: "{{ aws_access_id }}"
