@@ -14,7 +14,7 @@
 #####
 
 [mgmtservers]
-{% for host in ec2_remote_facts_info %}
+{% for host in ec2_remote_facts_info.instances %}
     {{ host }}
 {% endfor %}
 
