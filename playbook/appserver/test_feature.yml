@@ -30,7 +30,6 @@
     - "./../../vars/all_var.yml"
 
   tasks:
-
   - name: "add {{ build_target }} to appservers section"
     connection: local
     lineinfile:

@@ -96,7 +96,7 @@
   - name: "add private_ip to /etc/ansible/hosts"
     blockinfile:
       dest: "/etc/ansible/hosts"
-      marker: "# {mark} ANSIBLE MANAGED BLOCK #"
+      marker: "# {mark} ANSIBLE MANAGED BLOCK buildapp #"
       block: "[buildapp]\n{{ app_ec2_output.instances[0]['private_ip'] }}"
       backup: yes
 
@@ -111,6 +111,20 @@
     - "./../../vars/all_var.yml"
 
   tasks:
+  - name: "remove buildapp entry"
+    blockinfile:
+      dest: "/etc/ansible/hosts"
+      marker: "# {mark} ANSIBLE MANAGED BLOCK buildapp #"
+      content: ""
+
+  - name: "Update appservers in hosts"
+    ini_file:
+      dest: /etc/ansible/hosts
+      section: appservers
+      option: "{{ app_ec2_output.instances[0]['private_ip'] }}"
+      value: ""
+      backup:yes
+
   - name: "Create the ami"
     ec2_ami:
       instance_id: "{{ app_ec2_output.instances[0]['id'] }}"
@@ -123,12 +137,12 @@
       tags: {"name": "{{ app_ec2_output.instances[0]['tags']['ami_name']|lower }}-{{ ansible_date_time.date }}"}
     register: ami_output
 
-  - name: "Terminate temporary instance"
-    action:
-      module: ec2
-      state: absent
-      region: "{{ app_ec2_output.instances[0]['tags']['region'] }}"
-      instance_ids: "{{ app_ec2_output.instances[0]['id'] }}"
+#  - name: "Terminate temporary instance"
+#    action:
+#      module: ec2
+#      state: absent
+#      region: "{{ app_ec2_output.instances[0]['tags']['region'] }}"
+#      instance_ids: "{{ app_ec2_output.instances[0]['id'] }}"
 
   - name: "create vars file with  new ami info"
     copy:
