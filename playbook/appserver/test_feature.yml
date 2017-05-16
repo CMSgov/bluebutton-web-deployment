@@ -104,8 +104,8 @@
       region: "{{ aws_region }}"
       filters:
         vpc_id: "{{ cf_vpc_id }}"
-        Environment: "{{ env|upper }}"
-        Managed: "BB-MANAGED-{{ env|upper }}"
+        "tag:Environment": "{{ env|upper }}"
+        "tag:Managed": "BB-MANAGED-{{ env|upper }}"
     register: ec2_remote_facts_info
 
   - name: show facts
