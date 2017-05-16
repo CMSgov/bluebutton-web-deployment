@@ -35,7 +35,6 @@
     connection: local
     lineinfile:
       dest: "/etc/ansible/hosts"
-      state: present
       regexp: "^[appservers]"
       line: "[appservers]\n{{ build_target }}\n"
 
