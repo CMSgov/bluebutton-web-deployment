@@ -32,6 +32,7 @@
   tasks:
 
   - name: "Update appservers in hosts"
+    connection: local
     ini_file:
       dest: /etc/ansible/hosts
       section: appservers
