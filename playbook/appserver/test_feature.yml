@@ -33,6 +33,14 @@
 #    debug:
 #      msg: "the server ip address is {{ hostvars[groups['dbservers'][0]]['inventory_hostname'] }}"
 
-   - name: " Attach server to ec2_elb"
-     include: roles/attach_to_elb/tasks/main.yml
-     
+  - name: "Get facts"
+    ec2_facts:
+    register: ec2_facts_info
+
+  - name: show facts
+    debug:
+      msg: "{{ ec2_facts_info }}"
+
+  - name: " Attach server to ec2_elb"
+    include: roles/attach_to_elb/tasks/main.yml
+
