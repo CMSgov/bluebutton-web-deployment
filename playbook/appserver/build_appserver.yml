@@ -38,6 +38,8 @@
     env_az: "{{ env }}-{{ azone }}"
     env_cf_app_version: "01"
     splunk_client_name: "BBAPI-{{ env|upper }}-{{ sub_zone|upper }}"
+    migrate: "yes"
+    collectstatic: "yes"
   vars_files:
     - "./../../vars/common.yml"
     - "./../../vault/env/{{ env }}/vault.yml"
