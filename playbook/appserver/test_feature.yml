@@ -29,6 +29,10 @@
     - "./../../vars/all_var.yml"
 
   tasks:
-  - name: "Get the database server"
-    debug:
-      msg: "the server ip address is {{ hostvars[groups['dbservers'][0]]['inventory_hostname'] }}"
+#  - name: "Get the database server"
+#    debug:
+#      msg: "the server ip address is {{ hostvars[groups['dbservers'][0]]['inventory_hostname'] }}"
+
+   - name: " Attach server to ec2_elb"
+     include: roles/attach_to_elb/tasks/main.yml
+     
