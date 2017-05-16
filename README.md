@@ -101,18 +101,19 @@ to the remote user account used to connect to a server.
 ## Host Configuration
 
 Hosts fall into the following groups:
- - loadbalancers
- - appprimeserver
- - appleadservers
- - appfollowerservers
+ - mgmtservers (The ansible management server)
+ - appservers
  - dbservers
- - mgmtservers
+ 
+When creating a MGMT server instance in ec2 to run ansible add the following
+tags to the instance:
+ 
+ - Managed = "BB-MANAGED-{{ env|upper }}"
+ - Environment = {{ env|upper }} eg. DEV | TEST | IMPL | PROD
+ - Layer = "MGMT" 
 
-Appservers are LEADER or FOLLOWer Servers. If multiple environments are 
-installed place one of the LEADER servers into the _appprimeserver_ group, the
-other LEADERs go in the _appleadservers_ group. All FOLLOWers go in the
-_appfollowerservers_ group.
-
-
+These fields are added to each ec2 instance to be managed. These instances
+will automatically be grouped in to the relevant group in /etc/anasible/hosts
+based upon their Layer setting (MGMT | APP | DATA)
 
 more information about hhs_ansible is here: [./documentation.md]
