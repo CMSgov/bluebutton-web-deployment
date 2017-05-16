@@ -88,6 +88,7 @@
       module: ec2_elb_facts
       aws_access_key: "{{ aws_access_id }}"
       aws_secret_key: "{{ aws_secret_key_id }}"
+      names: ['BB-DEV-WebLB-1', 'BB-TEST-WEBLB', 'BB-IMPL-WEBLB']
       region: "{{ aws_region }}"
     register: elb_facts
 
