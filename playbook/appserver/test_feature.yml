@@ -31,4 +31,4 @@
   tasks:
   - name: "Get the database server"
     debug:
-      msg: "the server ip address is {{ hostvars[groups['dbservers'][0]]['ansible_eth0']['ipv4']['address'] }}"
+      msg: "the server ip address is {{ hostvars[groups['dbservers'][0]] }}"
