@@ -74,7 +74,18 @@ Install hhs_ansible:
     cd /hhs_ansible
     git clone https://github.com/TransparentHealth/hhs_ansible.git
 
-Add your hosts to 
+Updating the Application Load Balancers requires a newer version of awscli.
+Install updated version as follows:
+
+    sudo /bin/bash
+    cd /root
+    pip install --upgrade --user awscli
+   
+this will install the updated version to 
+
+    /root/.local/bin
+
+Then add your hosts to 
     
     /etc/ansible/hosts
     
