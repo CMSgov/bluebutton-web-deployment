@@ -41,6 +41,15 @@
     debug:
       msg: "{{ ec2_facts_info }}"
 
-  - name: " Attach server to ec2_elb"
-    include: roles/attach_to_elb/tasks/main.yml
+  - name: "Get remote facts"
+    ec2_remote_facts:
+    register: ec2_remote_facts_info
+
+  - name: show facts
+    debug:
+      msg: "{{ ec2_remote_facts_info }}"
+
+
+#  - name: " Attach server to ec2_elb"
+#    include: roles/attach_to_elb/tasks/main.yml
 
