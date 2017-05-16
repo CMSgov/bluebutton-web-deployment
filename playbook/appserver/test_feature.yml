@@ -8,7 +8,8 @@
 - name: "Test Feature"
   # hosts: appservers
   hosts: localhost  ## "{{ build_target }}"
-  # connection: local
+  # Disable if testing remote machine functions
+  connection: local
   remote_user: ec2-user
   # become_user: root
   # become: yes
