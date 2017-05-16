@@ -60,11 +60,12 @@
     debug:
       msg: "{{ ec2_facts_info }}"
 
-  - name: "Get remote facts"
+  - name: "Get remote facts for vpc {{ cf_vpc_id }}"
     ec2_remote_facts:
       aws_access_key: "{{ aws_access_id }}"
       aws_secret_key: "{{ aws_secret_key_id }}"
       region: "{{ aws_region }}"
+      vpc_id: "{{ cf_vpc_id }}"
     register: ec2_remote_facts_info
 
   - name: show facts
