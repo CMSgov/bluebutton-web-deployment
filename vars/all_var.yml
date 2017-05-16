@@ -220,3 +220,4 @@
   mon_nessus_user: "{{ env_mon_nessus_user }}"
   mon_nessus_pwd: "{{ env_mon_nessus_pwd }}"
 
+  app_lb_arn: "{{ env_app_lb_arn}}"
