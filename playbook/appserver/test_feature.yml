@@ -30,6 +30,14 @@
     - "./../../vars/all_var.yml"
 
   tasks:
+  - name: "Show the ini file"
+    connection: local
+    shell: "cat /etc/ansible/hosts"
+    register: ansible_hosts_content
+
+  - debug:
+      msg: "{{ ansible_hosts_content }}"
+
   - name: "add {{ build_target }} to appservers section"
     connection: local
     lineinfile:
