@@ -76,6 +76,7 @@
         Business: "{{ cf_tags_business }}"
         Application: "{{ cf_tags_application }}"
         Environment: "{{ env|upper }}"
+        ami_name: "BB-{{ env|upper }}-{{ cf_data_tag_key_layer|upper }}"
         Layer:  "{{ cf_data_tag_key_layer|upper }}"
         Function: "{{ cf_data_tag_key_layer }}-{{ cf_data_database_type }}"
         Managed: "BB-MANAGED-{{ env|upper }}"
