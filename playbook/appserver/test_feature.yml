@@ -31,83 +31,94 @@
 
   tasks:
 
-  - name: "Update appservers in hosts"
+  - name: "add {{ build_target }} to appservers section"
     connection: local
-    ini_file:
-      dest: /etc/ansible/hosts
-      section: appservers
-      option: "10.224.999.999"
-      value: ""
-      backup: yes
+    lineinfile:
+      dest: "/etc/ansible/hosts"
+      regexp: "^[appservers]"
+      line: "[appservers]\n{{ build_target }}"
+
+  - name: "remove buildapp entry"
+    blockinfile:
+      dest: "/etc/ansible/hosts"
+      marker: "# {mark} ANSIBLE MANAGED BLOCK buildapp #"
+      content: ""
+
+  - name: Show the ini file
+    connection: local
+    shell: "cat /etc/ansible/hosts"
+    register: ansible_hosts_content
+    debug:
+      msg: "{{ ansible_hosts_content }}"
 
 #  - name: "Get the database server"
 #    debug:
 #      msg: "the server ip address is {{ hostvars[groups['dbservers'][0]]['inventory_hostname'] }}"
 
-  - name: get aws_region
-    set_fact:
-        aws_region: "{{ lookup('ini', 'region section=default file=/root/.aws/config') }}"
-  - debug:
-      msg: "using default region {{ aws_region }} "
-
-
-  - name: get aws_key
-    set_fact:
-        aws_access_id: "{{ lookup('ini', 'aws_access_key_id section=default file=/root/.aws/credentials') }}"
-  - debug:
-      msg: "using default access key {{ aws_access_id }} "
-
-  - name: get aws_secret
-    set_fact:
-        aws_secret_key_id: "{{ lookup('ini', 'aws_secret_access_key section=default file=/root/.aws/credentials') }}"
-  - debug:
-      msg: "using default secret {{ aws_secret_key_id }} "
-
-  - name: "Get facts"
-    become_user: root
-    become: yes
-    ec2_facts:
-    register: ec2_facts_info
-
-  - name: show facts
-    debug:
-      msg: "{{ ec2_facts_info }}"
-
-  - name: get the instance_id
-    debug:
-      msg: "{{ ec2_facts_info['ansible_facts']['ansible_ec2_local_ipv4'] }} instance id is {{ ec2_facts_info['ansible_facts']['ansible_ec2_instance_id']}}"
-
-
-#  - name: "Get remote facts for vpc {{ cf_vpc_id }}"
-#    ec2_remote_facts:
-#      aws_access_key: "{{ aws_access_id }}"
-#      aws_secret_key: "{{ aws_secret_key_id }}"
-#      region: "{{ aws_region }}"
-#      filters:
-#        vpc_id: "{{ cf_vpc_id }}"
-#    register: ec2_remote_facts_info
+#  - name: get aws_region
+#    set_fact:
+#        aws_region: "{{ lookup('ini', 'region section=default file=/root/.aws/config') }}"
+#  - debug:
+#      msg: "using default region {{ aws_region }} "
+#
+#
+#  - name: get aws_key
+#    set_fact:
+#        aws_access_id: "{{ lookup('ini', 'aws_access_key_id section=default file=/root/.aws/credentials') }}"
+#  - debug:
+#      msg: "using default access key {{ aws_access_id }} "
+#
+#  - name: get aws_secret
+#    set_fact:
+#        aws_secret_key_id: "{{ lookup('ini', 'aws_secret_access_key section=default file=/root/.aws/credentials') }}"
+#  - debug:
+#      msg: "using default secret {{ aws_secret_key_id }} "
+#
+#  - name: "Get facts"
+#    become_user: root
+#    become: yes
+#    ec2_facts:
+#    register: ec2_facts_info
 #
 #  - name: show facts
 #    debug:
-#      msg: "{{ ec2_remote_facts_info }}"
+#      msg: "{{ ec2_facts_info }}"
 #
-
-  - name: "Get elb facts"
-    connection: local
-    action:
-      module: ec2_elb_facts
-      aws_access_key: "{{ aws_access_id }}"
-      aws_secret_key: "{{ aws_secret_key_id }}"
-      names: ['BB-DEV-WebLB-1-592302630.us-east-1.elb.amazonaws.com', 'BB-TEST-WEBLB-241569787.us-east-1.elb.amazonaws.com', 'BB-IMPL-WEBLB-2133808602.us-east-1.elb.amazonaws.com']
-      region: "{{ aws_region }}"
-    register: elb_facts
-
-  - name: "show elb facts"
-    debug:
-      msg: "{{ elb_facts }}"
-
-  - name: " Attach server to ec2_elb"
-    vars:
-      instance_to_attach: "{{ ec2_facts_info['ansible_facts']['ansible_ec2_instance_id']}}"
-    include: roles/attach_to_elb/tasks/main.yml
-
+#  - name: get the instance_id
+#    debug:
+#      msg: "{{ ec2_facts_info['ansible_facts']['ansible_ec2_local_ipv4'] }} instance id is {{ ec2_facts_info['ansible_facts']['ansible_ec2_instance_id']}}"
+#
+#
+##  - name: "Get remote facts for vpc {{ cf_vpc_id }}"
+##    ec2_remote_facts:
+##      aws_access_key: "{{ aws_access_id }}"
+##      aws_secret_key: "{{ aws_secret_key_id }}"
+##      region: "{{ aws_region }}"
+##      filters:
+##        vpc_id: "{{ cf_vpc_id }}"
+##    register: ec2_remote_facts_info
+##
+##  - name: show facts
+##    debug:
+##      msg: "{{ ec2_remote_facts_info }}"
+##
+#
+#  - name: "Get elb facts"
+#    connection: local
+#    action:
+#      module: ec2_elb_facts
+#      aws_access_key: "{{ aws_access_id }}"
+#      aws_secret_key: "{{ aws_secret_key_id }}"
+#      names: ['BB-DEV-WebLB-1-592302630.us-east-1.elb.amazonaws.com', 'BB-TEST-WEBLB-241569787.us-east-1.elb.amazonaws.com', 'BB-IMPL-WEBLB-2133808602.us-east-1.elb.amazonaws.com']
+#      region: "{{ aws_region }}"
+#    register: elb_facts
+#
+#  - name: "show elb facts"
+#    debug:
+#      msg: "{{ elb_facts }}"
+#
+#  - name: " Attach server to ec2_elb"
+#    vars:
+#      instance_to_attach: "{{ ec2_facts_info['ansible_facts']['ansible_ec2_instance_id']}}"
+#    include: roles/attach_to_elb/tasks/main.yml
+#
