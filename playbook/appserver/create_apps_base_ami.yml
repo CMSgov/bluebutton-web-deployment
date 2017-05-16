@@ -118,12 +118,19 @@
       content: ""
 
   - name: "Update appservers in hosts"
-    ini_file:
-      dest: /etc/ansible/hosts
-      section: appservers
-      option: "{{ app_ec2_output.instances[0]['private_ip'] }}"
-      value: ""
-      backup:yes
+    connection: local
+    lineinfile:
+      dest: "/etc/ansible/hosts"
+      regexp: "^\[appservers\]"
+      line: "[appservers]\n{{ build_target }}\n"
+
+  - name: "remove buildapp entry"
+    connection: local
+    blockinfile:
+      dest: "/etc/ansible/hosts"
+      marker: "# {mark} ANSIBLE MANAGED BLOCK buildapp #"
+      content: ""
+
 
   - name: "Create the ami"
     ec2_ami:
