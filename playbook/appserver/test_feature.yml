@@ -39,6 +39,7 @@
       line: "[appservers]\n{{ build_target }}"
 
   - name: "remove buildapp entry"
+    connection: local
     blockinfile:
       dest: "/etc/ansible/hosts"
       marker: "# {mark} ANSIBLE MANAGED BLOCK buildapp #"
