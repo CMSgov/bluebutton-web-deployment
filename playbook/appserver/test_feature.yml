@@ -39,11 +39,9 @@
       value: ""
       backup:yes
 
-
-
-#  - name: "Get the database server"
-#    debug:
-#      msg: "the server ip address is {{ hostvars[groups['dbservers'][0]]['inventory_hostname'] }}"
+  #  - name: "Get the database server"
+  #    debug:
+  #      msg: "the server ip address is {{ hostvars[groups['dbservers'][0]]['inventory_hostname'] }}"
 
   - name: get aws_region
     set_fact:
