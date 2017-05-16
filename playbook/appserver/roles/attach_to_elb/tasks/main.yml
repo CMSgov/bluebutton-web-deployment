@@ -13,7 +13,6 @@
     msg: "the elbs are - {{ elb_facts }}"
 
 - name: "attach server to Application LB"
-  local_action:
-    shell: "aws elbv2 register-targets --target-group-arn {{ app_lb_arn }} --targets Id={{ instance_to_attach }} "
+  shell: "aws elbv2 register-targets --target-group-arn {{ app_lb_arn }} --targets Id={{ instance_to_attach }} "
   register: app_lb_result
 
