@@ -1,0 +1,22 @@
+---
+# File: playbook/appserver/roles/attach_to_elb/tasks/main.yml
+# Created: 5/16/17
+# Author: '@ekivemark'
+# Attach server to ELB
+
+- name: "get instance_id"
+  debug:
+    msg: "Instance is {{ ansible_ec2_instance_id }}"
+
+- name: "get elbs"
+  debug:
+    msg: "the elbs are - {{ ec2_elbs }}"
+
+- name: "attach server to ELB"
+  local_action:
+    module: ec2_elb
+    instance_id: "{{ ansible_ec2_instance_id }}"
+    ec2_elbs: "{{ item }}"
+    state: present
+  with_items: "{{ ec2_elbs }}"
+
