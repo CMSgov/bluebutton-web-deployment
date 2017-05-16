@@ -137,6 +137,7 @@
     connection: local
     template:
       src: ../../templates/environment/ansible_hosts.j2
-      dest: /root/test_ansible_host
+      dest: /etc/ansible/hosts
+
 
 

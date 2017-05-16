@@ -73,12 +73,14 @@
       # Wait for desired state
       wait: yes
       instance_tags:
-        Name: "bb-{{ env }}-{{ cf_app_azone }}-{{ env_cf_app_tag_key_layer }}-{{ env_cf_app_version }}"
+        Name: "bb-{{ env }}-{{ cf_app_azone }}-{{ env_cf_app_tag_key_layer }}-{{ cf_app_version }}"
         Stack: "BB-{{ env|upper }}-{{ cf_app_azone|upper }}-{{ env_cf_app_tag_key_layer|upper }}-ANSIBLE"
         Business: "{{ cf_tags_business }}"
         Application: "{{ cf_tags_application }}"
         Environment: "{{ env|upper }}"
         Function: "{{ cf_app_tag_key_layer }}-AppServer"
+        Layer: "{{ {{ cf_app_tag_key_layer|upper }}"
+        Managed: "BB-MANAGED-{{ env|upper}}"
     register: app_ec2_output
 
   - name: "add private_ip to /etc/ansible/hosts"

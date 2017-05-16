@@ -93,6 +93,9 @@
     notify:
       - restart apache
 
+  - name: "Add in to Load Balancer"
+    include: roles/attach_to_elb/tasks/main.yml
+
   handlers:
   - name: restart apache
     service: name=httpd state=restarted

@@ -71,11 +71,11 @@
       # Wait for desired state - so we can attach a volume
       wait: yes
       instance_tags:
-        Name: "bb-{{ env }}-{{ cf_data_azone }}-{{ env_cf_data_tag_key_layer }}-{{ env_cf_data_version }}"
+        Name: "bb-{{ env }}-{{ cf_data_azone }}-{{ env_cf_data_tag_key_layer }}-{{ cf_data_version }}"
         Stack: "BB-{{ env }}-{{ cf_data_azone }}-{{ env_cf_data_tag_key_layer }}-ansible"
         Business: "{{ cf_tags_business }}"
         Application: "{{ cf_tags_application }}"
-        Environment: "{{ env }}"
+        Environment: "{{ env|upper }}"
         Layer:  "{{ cf_data_tag_key_layer|upper }}"
         Function: "{{ cf_data_tag_key_layer }}-{{ cf_data_database_type }}"
         Managed: "BB-MANAGED-{{ env|upper }}"
@@ -91,6 +91,29 @@
        region: "{{ cf_region }}"
     with_items: "{{ data_fips_output.instances }}"
     register: ec2_vol
+
+  - name: "create vars file with  new ami info"
+    copy:
+      content: |
+        base_image_id: {{ ami_output.image_id }}
+        base_lc_suffix: {{ ansible_date_time.epoch }}
+      dest: "./../../vars/{{ env }}-{{ cf_data_tag_key_layer }}-ami-{{ cf_data_tag_key_layer }}-{{ansible_date_time.date }}.yml"
+    # when: deploy is defined and deploy|bool == True
+
+  - name: add host to group
+    add_host:
+      name: "{{ data_fips_output.instances[0]['private_ip'] }}"
+      groups: "just_created"
+
+  - name: "add private_ip to /etc/ansible/hosts"
+    blockinfile:
+      dest: "/etc/ansible/hosts"
+      marker: "# {mark} ANSIBLE MANAGED BLOCK builddb #"
+      block: "[buildapp]\n{{ data_fips_output.instances[0]['private_ip'] }}"
+      backup: yes
+
+# Install python, apache and custom mod_wsgi
+- include: build_database.yml build_target=just_created
 
   - name: "add private_ip to /etc/ansible/hosts"
     lineinfile:
