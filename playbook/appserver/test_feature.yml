@@ -36,14 +36,14 @@
   - name: get aws_key
     set_fact:
         aws_access_id: "{{ lookup('ini', 'aws_access_key_id section=default file=/root/.aws/credentials') }}"
-    - debug:
-        msg: "using default access key {{ aws_access_id }} "
+  - debug:
+      msg: "using default access key {{ aws_access_id }} "
 
   - name: get aws_secret
     set_fact:
         aws_secret_key_id: "{{ lookup('ini', 'aws_secret_access_key section=default file=/root/.aws/credentials') }}"
-    - debug:
-        msg: "using default secret {{ aws_secret_key_id }} "
+  - debug:
+      msg: "using default secret {{ aws_secret_key_id }} "
 
   - name: "Get facts"
     ec2_facts:
