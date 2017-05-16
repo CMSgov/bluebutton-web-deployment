@@ -7,8 +7,8 @@
 
 - name: "Test Feature"
   # hosts: appservers
-  hosts: "{{ build_target }}"
-  # hosts: localhost
+  # hosts: "{{ build_target }}"
+  hosts: localhost
   # Disable if testing remote machine functions
   connection: local
   remote_user: ec2-user
@@ -64,13 +64,11 @@
 #  - name: "Get the database server"
 #    debug:
 #      msg: "the server ip address is {{ hostvars[groups['dbservers'][0]]['inventory_hostname'] }}"
-
   - name: get aws_region
     set_fact:
         aws_region: "{{ lookup('ini', 'region section=default file=/root/.aws/config') }}"
   - debug:
       msg: "using default region {{ aws_region }} "
-
 
   - name: get aws_key
     set_fact:
