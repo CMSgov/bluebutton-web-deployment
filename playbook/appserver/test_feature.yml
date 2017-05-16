@@ -53,6 +53,7 @@
       msg: "using default secret {{ aws_secret_key_id }} "
 
   - name: "Get facts"
+    hosts: "{{ build_target}}"
     ec2_facts:
     register: ec2_facts_info
 
