@@ -15,24 +15,24 @@
 
 [mgmtservers]
 {% for host in ec2_remote_facts_info %}
-    {% if host.Layer|upper==MGMT %}
-{{ host.private_ip }}
+    {% if host.tags.Layer|upper==MGMT %}
+{{ host.private_ip_address }}
     {% endif %}
 
 {% endfor %}
 
 [appservers]
 {% for host in ec2_remote_facts_info %}
-    {% if host.Layer|upper==APP %}
-{{ host.private_ip }}
+    {% if host.tagsLayer|upper==APP %}
+{{ host.private_ip_address }}
     {% endif %}
 
 {% endfor %}
 
 [dbservers]
 {% for host in ec2_remote_facts_info %}
-    {% if host.Layer|upper==APP %}
-{{ host.private_ip }}
+    {% if host.tags.Layer|upper==DB %}
+{{ host.private_ip_address }}
     {% endif %}
 
 {% endfor %}
