@@ -7,7 +7,8 @@
 
 - name: "Test Feature"
   # hosts: appservers
-  #hosts: "{{ build_target }}"
+  hosts: "{{ build_target }}"
+  # hosts: localhost
   # Disable if testing remote machine functions
   connection: local
   remote_user: ec2-user
