@@ -71,7 +71,7 @@
       # Wait for desired state - so we can attach a volume
       wait: yes
       instance_tags:
-        Name: "bb-{{ env }}-{{ cf_data_azone }}-{{ env_cf_data_tag_key_layer }}-{{ cf_data_version }}"
+        Name: "bb-{{ env }}-{{ cf_data_azone }}-{{ env_cf_data_tag_key_layer }}-{{ cf_platform_version }}"
         Stack: "BB-{{ env }}-{{ cf_data_azone }}-{{ env_cf_data_tag_key_layer }}-ansible"
         Business: "{{ cf_tags_business }}"
         Application: "{{ cf_tags_application }}"
