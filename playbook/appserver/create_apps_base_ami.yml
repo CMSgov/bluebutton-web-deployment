@@ -77,8 +77,10 @@
         Application: "{{ cf_tags_application }}"
         Environment: "{{ env|upper }}"
         Function: "{{ cf_app_tag_key_layer }}-AppServer"
+        Layer:  "{{ cf_data_tag_key_layer }}"
         ami_name: "BB-{{ env|upper }}-{{ cf_app_tag_key_layer|upper }}"
         region: "{{ cf_region }}"
+        Managed: "BB-MANAGED-{{ env|upper }}"
     register: app_ec2_output
 
   - name: waiting for ssh to start
