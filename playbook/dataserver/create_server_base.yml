@@ -115,6 +115,14 @@
 # Install python, apache and custom mod_wsgi
 - include: build_database.yml build_target=just_created
 
+- hosts: localhost
+  vars_files:
+    - "./../../vars/common.yml"
+    - "./../../vault/env/{{ env }}/vault.yml"
+    - "./../../vars/env/{{ env }}/env.yml"
+    - "./../../vars/all_var.yml"
+
+  tasks:
   - name: "add private_ip to /etc/ansible/hosts"
     lineinfile:
       dest: "/etc/ansible/hosts"
