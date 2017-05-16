@@ -44,11 +44,12 @@
       marker: "# {mark} ANSIBLE MANAGED BLOCK buildapp #"
       content: ""
 
-  - name: Show the ini file
+  - name: "Show the ini file"
     connection: local
     shell: "cat /etc/ansible/hosts"
     register: ansible_hosts_content
-    debug:
+
+  - debug:
       msg: "{{ ansible_hosts_content }}"
 
 #  - name: "Get the database server"
