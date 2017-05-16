@@ -33,6 +33,13 @@
 #  - name: "Get the database server"
 #    debug:
 #      msg: "the server ip address is {{ hostvars[groups['dbservers'][0]]['inventory_hostname'] }}"
+  - name: get aws_region
+    set_fact:
+        aws_region: "{{ lookup('ini', 'region section=default file=/root/.aws/config') }}"
+  - debug:
+      msg: "using default region {{ aws_region }} "
+
+
   - name: get aws_key
     set_fact:
         aws_access_id: "{{ lookup('ini', 'aws_access_key_id section=default file=/root/.aws/credentials') }}"
@@ -57,6 +64,7 @@
     ec2_remote_facts:
       aws_access_key: "{{ aws_access_id }}"
       aws_secret_key: "{{ aws_secret_key_id }}"
+      region: "{{ aws_region }}"
     register: ec2_remote_facts_info
 
   - name: show facts
