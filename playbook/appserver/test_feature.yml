@@ -30,6 +30,17 @@
     - "./../../vars/all_var.yml"
 
   tasks:
+
+  - name: "Update appservers in hosts"
+    ini_file:
+      dest: /etc/ansible/hosts
+      section: appservers
+      option: "10.224.999.999"
+      value: ""
+      backup:yes
+
+
+
 #  - name: "Get the database server"
 #    debug:
 #      msg: "the server ip address is {{ hostvars[groups['dbservers'][0]]['inventory_hostname'] }}"
