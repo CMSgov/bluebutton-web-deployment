@@ -93,7 +93,7 @@
   - name: "add private_ip to /etc/ansible/hosts"
     lineinfile:
       dest: "/etc/ansible/hosts"
-      regexp: "[dbservers]"
+      regexp: '\[dbservers\]'
       line: "[dbservers]\n{{ data_fips_output.instances[0]['private_ip'] }}"
       backup: yes
 

@@ -42,7 +42,7 @@
     connection: local
     lineinfile:
       dest: "/etc/ansible/hosts"
-      regexp: "\[appservers\]"
+      regexp: '\[appservers\]'
       line: "[appservers]\n{{ build_target }}\n"
 
   - name: "remove buildapp entry"
