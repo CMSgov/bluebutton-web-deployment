@@ -5,7 +5,7 @@
 
 # Use this playbook to call roles and tasks for testing purposes only
 
-- name: Test Feature
+- name: "Test Feature"
   # hosts: appservers
   hosts: "{{ build_target }}"
   # connection: local
@@ -29,6 +29,6 @@
     - "./../../vars/all_var.yml"
 
   tasks:
-  - name: Get the database server
+  - name: "Get the database server"
     debug:
-      msg: "the server ip address is {{ hostvars[groups['dbservers'][0] }}"
+      msg: "the server ip address is {{ hostvars[groups['dbservers'][0]] }}"
