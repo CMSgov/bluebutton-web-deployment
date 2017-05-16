@@ -15,10 +15,28 @@
 
 [mgmtservers]
 {% for host in ec2_remote_facts_info.instances %}
-    {{ host }}
+
+    {% if host.tags.Layer|upper==MGMT %}
+{{ host.private_ip_address }}
+    {% endif %}
+
 {% endfor %}
 
 [appservers]
+{% for host in ec2_remote_facts_info.instances %}
+
+    {% if host.tags.Layer|upper==APP %}
+{{ host.private_ip_address }}
+    {% endif %}
+
+{% endfor %}
+{% for host in ec2_remote_facts_info.instances %}
+
+    {% if host.tags.Layer|upper==DATA %}
+{{ host.private_ip_address }}
+    {% endif %}
+
+{% endfor %}
 
 
 [dbservers]
