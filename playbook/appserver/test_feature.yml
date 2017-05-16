@@ -81,6 +81,17 @@
 #      msg: "{{ ec2_remote_facts_info }}"
 #
 
-#  - name: " Attach server to ec2_elb"
-#    include: roles/attach_to_elb/tasks/main.yml
+  - name: "Get elb facts"
+    action:
+      module: ec2_elb_facts
+    register: elb_facts
+
+  - name: "show elb facts"
+    debug:
+      msg: "{{ elb_facts }}"
+
+  - name: " Attach server to ec2_elb"
+    vars:
+      instance_to_attach: "{{ ec2_facts_info['ansible_facts']['ansible_ec2_instance_id']}}"
+    include: roles/attach_to_elb/tasks/main.yml
 
