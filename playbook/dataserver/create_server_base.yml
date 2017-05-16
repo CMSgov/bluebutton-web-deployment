@@ -95,7 +95,7 @@
   - name: "create vars file with  new ami info"
     copy:
       content: |
-        base_image_id: {{ ami_output.image_id }}
+        base_image_id: {{ data_fips_output.image_id }}
         base_lc_suffix: {{ ansible_date_time.epoch }}
       dest: "./../../vars/{{ env }}-{{ cf_data_tag_key_layer }}-ami-{{ cf_data_tag_key_layer }}-{{ansible_date_time.date }}.yml"
     # when: deploy is defined and deploy|bool == True
