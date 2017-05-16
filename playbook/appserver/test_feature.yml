@@ -31,4 +31,4 @@
   tasks:
   - name: "Get the database server"
     debug:
-      msg: "the server ip address is {{ hostvars[groups['dbservers'][0]] }}"
+      msg: "the server ip address is {{ hostvars }}"
