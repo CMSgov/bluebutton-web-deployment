@@ -52,6 +52,8 @@
     delegate_to: localhost
 
   - name: "Find the database and instance"
+    become_user: root
+    become: yes
     shell: "locate bin/psql | xargs -i xargs -t '{}' -V "
     register: db_version_info
 
