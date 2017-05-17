@@ -32,36 +32,34 @@
 
   tasks:
   - name: "Setup data capture"
-    connection: local
     file:
       dest: "{{ local_dest }}"
       owner: "{{ remote_user }}"
       group: "{{ remote_user }}"
       mode: "0744"
       state: directory
+    delegate_to: localhost
 
   - name: "touch file for data capture"
-    connection: local
     copy:
       dest: "{{ local_dest }}/{{ local_capture }}"
       owner: "{{ remote_user }}"
       group: "{{ remote_user }}"
       mode: "0744"
       state: touch
-
+    delegate_to: localhost
 
   - name: "Find the database and instance"
     shell: "locate bin/psql | xargs -i xargs -t '{}' -V "
     register: db_version_info
 
   - name: "save info to local file"
-    connection: local
     blockinfile:
       dest: "{{ local_dest }}/{{ local_capture }}"
       block: "{{ db_version_info.stdout }}"
       insert_after: EOF
       state: present
-      
+    delegate_to: localhost
 
 
 
