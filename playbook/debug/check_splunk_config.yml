@@ -36,17 +36,17 @@
       sub_zone: "mgmt"
       splunk_client_name: "BBAPI-{{ env|upper }}-{{ sub_zone|upper }}"
 
-    name: "Check Splunk Configuration..."
+  - name: "Check Splunk Configuration..."
     become_user: root
     become: yes
 
     shell: " echo $HOSTNAME ; cat /opt/splunkforwarder/etc/system/local/deploymentclient.conf "
     register: splunk_config_mgmt
 
-    name: "Here is the Splunk configuarion for {{ hosts }}"
+  - name: "Here is the Splunk configuartion for {{ hosts }}"
     debug:
       msg: "{{ splunk_config_mgmt.stdout.split('\n') }}"
-    name: "Splunk Config Errors"
+  - name: "Splunk Config Errors"
     debug:
       msg: "{{ splunk_config_mgmt.stderr.split('\n') }}"
 
@@ -55,17 +55,17 @@
       sub_zone: "data"
       splunk_client_name: "BBAPI-{{ env|upper }}-{{ sub_zone|upper }}"
 
-    name: "Check Splunk Configuration..."
+  - name: "Check Splunk Configuration..."
     become_user: root
     become: yes
 
     shell: " echo $HOSTNAME ; cat /opt/splunkforwarder/etc/system/local/deploymentclient.conf "
     register: splunk_config_data
 
-    name: "Here is the Splunk configuarion for {{ hosts }}"
+  - name: "Here is the Splunk configuartion for {{ hosts }}"
     debug:
       msg: "{{ splunk_config_data.stdout.split('\n') }}"
-    name: "Splunk Config Errors"
+  - name: "Splunk Config Errors"
     debug:
       msg: "{{ splunk_config_data.stderr.split('\n') }}"
 
@@ -74,17 +74,17 @@
       sub_zone: "mgmt"
       splunk_client_name: "BBAPI-{{ env|upper }}-{{ sub_zone|upper }}"
 
-    name: "Check Splunk Configuration..."
+  - name: "Check Splunk Configuration..."
     become_user: root
     become: yes
 
     shell: " echo $HOSTNAME ; cat /opt/splunkforwarder/etc/system/local/deploymentclient.conf "
     register: splunk_config_app
 
-    name: "Here is the Splunk configuarion for {{ hosts }}"
+  - name: "Here is the Splunk configuartion for {{ hosts }}"
     debug:
       msg: "{{ splunk_config_app.stdout.split('\n') }}"
-    name: "Splunk Config Errors"
+  - name: "Splunk Config Errors"
     debug:
       msg: "{{ splunk_config_app.stderr.split('\n') }}"
 
