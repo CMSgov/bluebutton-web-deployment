@@ -30,20 +30,61 @@
     - "./../../vars/env/{{ env }}/env.yml"
     - "./../../vars/all_var.yml"
 
-  roles:
-    - ../../roles/splunk
-
   tasks:
-  - name: "Check Splunk Configuration..."
+  - hosts: mgmtservers
+    set_fact:
+      sub_zone: "mgmt"
+      splunk_client_name: "BBAPI-{{ env|upper }}-{{ sub_zone|upper }}"
+
+    name: "Check Splunk Configuration..."
     become_user: root
     become: yes
+
     shell: " echo $HOSTNAME ; cat /opt/splunkforwarder/etc/system/local/deploymentclient.conf "
     register: splunk_config
 
-  - name: "Here is the Splunk configuarion"
+    name: "Here is the Splunk configuarion for {{ hosts }}"
     debug:
       msg: "{{ splunk_config.stdout.split('\n') }}"
-  - name: "Splunk Config Errors"
+    name: "Splunk Config Errors"
+    debug:
+      msg: "{{ splunk_config.stderr.split('\n') }}"
+
+  - hosts: dbservers
+    set_fact:
+      sub_zone: "data"
+      splunk_client_name: "BBAPI-{{ env|upper }}-{{ sub_zone|upper }}"
+
+    name: "Check Splunk Configuration..."
+    become_user: root
+    become: yes
+
+    shell: " echo $HOSTNAME ; cat /opt/splunkforwarder/etc/system/local/deploymentclient.conf "
+    register: splunk_config
+
+    name: "Here is the Splunk configuarion for {{ hosts }}"
+    debug:
+      msg: "{{ splunk_config.stdout.split('\n') }}"
+    name: "Splunk Config Errors"
+    debug:
+      msg: "{{ splunk_config.stderr.split('\n') }}"
+
+  - hosts: appservers
+    set_fact:
+      sub_zone: "mgmt"
+      splunk_client_name: "BBAPI-{{ env|upper }}-{{ sub_zone|upper }}"
+
+    name: "Check Splunk Configuration..."
+    become_user: root
+    become: yes
+
+    shell: " echo $HOSTNAME ; cat /opt/splunkforwarder/etc/system/local/deploymentclient.conf "
+    register: splunk_config
+
+    name: "Here is the Splunk configuarion for {{ hosts }}"
+    debug:
+      msg: "{{ splunk_config.stdout.split('\n') }}"
+    name: "Splunk Config Errors"
     debug:
       msg: "{{ splunk_config.stderr.split('\n') }}"
 
