@@ -83,6 +83,14 @@
   - include: ../../roles/base_patch/tasks/update_packages.yml
   - include: roles/create_superuser/tasks/main.yml
   - include: ../../roles/app_env/tasks/refresh_app.yml
+  - include: ../platform/rewrite_hosts.yml
+
+  - name: "Update Ansible hosts file"
+    connection: local
+    blockinfile:
+      dest: "/etc/ansible/hosts"
+      marker: "# {mark} ANSIBLE MANAGED BLOCK buildapp #"
+      content: ""
 
   - name: make sure apache server is running
     service:

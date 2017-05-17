@@ -46,7 +46,15 @@
     - ../../roles/postgres
 
   tasks:
+  - name: "Update Ansible hosts file"
+    connection: local
+    blockinfile:
+      dest: "/etc/ansible/hosts"
+      marker: "# {mark} ANSIBLE MANAGED BLOCK builddb #"
+      content: ""
 
+  - include:
+    -  ../platform/rewrite_hosts.yml
 
   - name: "Set Hostname to {{ cf_data_pgsql_server_name }} "
     remote_user: ec2-user
