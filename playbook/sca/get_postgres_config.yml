@@ -47,7 +47,7 @@
     connection: local
     become_user: root
     become: yes
-    copy:
+    file:
       dest: "{{ local_dest }}/{{ local_capture }}"
       owner: "{{ remote_user_account }}"
       group: "{{ remote_user_account }}"
