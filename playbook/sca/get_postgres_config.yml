@@ -32,6 +32,7 @@
 
   tasks:
   - name: "Setup data capture"
+    connection: local
     file:
       dest: "{{ local_dest }}"
       owner: "{{ remote_user }}"
@@ -41,6 +42,7 @@
     delegate_to: localhost
 
   - name: "touch file for data capture"
+    connection: local
     copy:
       dest: "{{ local_dest }}/{{ local_capture }}"
       owner: "{{ remote_user }}"
@@ -54,6 +56,7 @@
     register: db_version_info
 
   - name: "save info to local file"
+    connection: local
     blockinfile:
       dest: "{{ local_dest }}/{{ local_capture }}"
       block: "{{ db_version_info.stdout }}"
