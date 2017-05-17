@@ -14,6 +14,7 @@
   become: yes
   gather_facts: True
   vars:
+    build_target: "appservers"
     ansible_ssh_pipelining: no
     env: "impl"
     azone: "az1"
@@ -24,8 +25,6 @@
     splunk_client_name: "BBAPI-{{ env|upper }}-{{ sub_zone|upper }}"
 #    migrate: "yes"
 #    collectstatic: "yes"
-
-    build_target: "appservers"
 
   vars_files:
     - "./../../vars/common.yml"
