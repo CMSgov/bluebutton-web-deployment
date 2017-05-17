@@ -31,20 +31,29 @@
     - "./../../vars/all_var.yml"
 
 - hosts: mgmtservers
+  vars:
+    build_target: "mgmtservers"
+    sub_zone: "mgmt"
   tasks:
-  - name: "Check servers  {{ hosts }}"
+  - name: "Check servers  {{ build_target }}"
     include:
-      - "./check_splunk_config.yml build_target={{ hosts }} sub_zone='mgmt' "
+      - ./check_splunk_config.yml
 
 - hosts: dataservers
+  vars:
+    build_target: "dbservers"
+    sub_zone: "data"
   tasks:
-  - name: "Check servers  {{ hosts }}"
+  - name: "Check servers  {{ build_target }}"
     include:
-      - "./check_splunk_config.yml build_target={{ hosts }} sub_zone='mgmt' "
+      - ./check_splunk_config.yml
 
 - hosts: appservers
+  vars:
+    build_target: "appservers"
+    sub_zone: "app"
   tasks:
-  - name: "Check servers  {{ hosts }}"
+  - name: "Check servers  {{ build_target }}"
     include:
-      - "./check_splunk_config.yml build_target={{ hosts }} sub_zone='mgmt' "
+      - ./check_splunk_config.yml
 

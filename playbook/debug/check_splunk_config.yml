@@ -7,7 +7,7 @@
 
 - name: Check Splunk
   # hosts: appservers
-  hosts: all
+  hosts: "{{ build_target}}"
   # connection: local
   remote_user: ec2-user
   become_user: root
@@ -30,25 +30,23 @@
     - "./../../vars/env/{{ env }}/env.yml"
     - "./../../vars/all_var.yml"
 
-  tasks:
-  - hosts: mgmtservers
-    set_fact:
-      sub_zone: "mgmt"
-      splunk_client_name: "BBAPI-{{ env|upper }}-{{ sub_zone|upper }}"
+  roles:
+    - ../../roles/splunk
 
+  tasks:
   - name: "Check Splunk Configuration..."
     become_user: root
     become: yes
 
     shell: " echo $HOSTNAME ; cat /opt/splunkforwarder/etc/system/local/deploymentclient.conf "
-    register: splunk_config_mgmt
+    register: splunk_config
 
   - name: "Here is the Splunk configuartion for {{ hosts }}"
     debug:
-      msg: "{{ splunk_config_mgmt.stdout.split('\n') }}"
+      msg: "{{ splunk_config.stdout.split('\n') }}"
   - name: "Splunk Config Errors"
     debug:
-      msg: "{{ splunk_config_mgmt.stderr.split('\n') }}"
+      msg: "{{ splunk_config.stderr.split('\n') }}"
 
   - hosts: dbservers
     set_fact:
