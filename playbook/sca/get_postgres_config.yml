@@ -37,8 +37,8 @@
     become: yes
     file:
       dest: "{{ local_dest }}"
-      owner: "{{ remote_user }}"
-      group: "{{ remote_user }}"
+      owner: "{{ remote_user_account }}"
+      group: "{{ remote_user_account }}"
       mode: "0744"
       state: directory
     delegate_to: localhost
@@ -49,8 +49,8 @@
     become: yes
     copy:
       dest: "{{ local_dest }}/{{ local_capture }}"
-      owner: "{{ remote_user }}"
-      group: "{{ remote_user }}"
+      owner: "{{ remote_user_account }}"
+      group: "{{ remote_user_account }}"
       mode: "0744"
       state: touch
     delegate_to: localhost
@@ -121,6 +121,9 @@
     blockinfile:
       dest: "{{ local_dest }}/{{ local_capture }}"
       block: "{{ db_version_info.stdout }}"
+      mode: "0755"
+      owner: "{{ remote_user_account }}"
+      group: "{{ remote_user_account }}"
       insert_after: EOF
       state: present
     delegate_to: localhost
