@@ -46,6 +46,8 @@
     - ../../roles/postgres
 
   tasks:
+
+
   - name: "Set Hostname to {{ cf_data_pgsql_server_name }} "
     remote_user: ec2-user
     become_user: root
