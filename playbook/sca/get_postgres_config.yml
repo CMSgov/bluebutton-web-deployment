@@ -32,13 +32,12 @@
 
   tasks:
   - name: "Setup data capture"
-    local_action:
-      copy:
-        dest: "{{ local_dest }}"
-        owner: "{{ remote_user }}"
-        group: "{{ remote_user }}"
-        mode: "0744"
-        state: directory
+    local_action: file
+      dest: "{{ local_dest }}"
+      owner: "{{ remote_user }}"
+      group: "{{ remote_user }}"
+      mode: "0744"
+      state: directory
 
   - name: "touch file for data capture"
     local_action:
@@ -55,10 +54,9 @@
     register: db_version_info
 
   - name: "save info to local file"
-    local_action:
-      copy:
-        content: "{{ db_version_info.stdout }}"
-        dest: "{{ local_dest }}/{{ local_capture }}"
+    local_action: copy
+      content: "{{ db_version_info.stdout }}"
+      dest: "{{ local_dest }}/{{ local_capture }}"
 
 
 
