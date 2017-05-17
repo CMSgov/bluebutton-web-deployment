@@ -9,13 +9,14 @@
   shell: "rpm -q --queryformat '%{RELEASE}' rpm | grep -o [[:digit:]]*\\$ "
   register: rhel_version
 
-- debug:
-    msg: "RHEL Major Version is {{ rhel_version }}"
+- name: "What major version?"
+  debug:
+    msg: "RHEL Major Version is {{ rhel_version.stdout }}"
 
 - name: "Update yum configs"
   become_user: root
   become: yes
-  shell: "yum-config-manager --enable rhel-server-rhscl-{{ rhel_version }}-rpms"
+  shell: "yum-config-manager --enable rhel-server-rhscl-{{ rhel_version.stdout }}-rpms"
 
 - name: "upgrade all packages"
   become_user: root
