@@ -5,7 +5,7 @@
 
 # Process splunk config for groups of servers
 
-- name: Check Splunk
+- name: "Check Splunk - appservers"
   hosts: appservers
   # hosts: local
   # connection: local
@@ -23,8 +23,8 @@
     env_az: "{{ env }}-{{ azone }}"
     env_cf_app_version: "01"
     splunk_client_name: "BBAPI-{{ env|upper }}-{{ sub_zone|upper }}"
-#    migrate: "yes"
-#    collectstatic: "yes"
+    #    migrate: "yes"
+    #    collectstatic: "yes"
 
   vars_files:
     - "./../../vars/common.yml"
@@ -33,23 +33,21 @@
     - "./../../vars/all_var.yml"
 
   tasks:
-    include:
-      - ./check_splunk_config.yml
+    include: ./check_splunk_config.yml
 
-
-- hosts: mgmtservers
+- name: "Check mgmtservers"
+  hosts: mgmtservers
   vars:
     build_target: "mgmtservers"
     sub_zone: "mgmt"
   tasks:
-    include:
-      - ./check_splunk_config.yml
+    include: ./check_splunk_config.yml
 
-- hosts: dataservers
+- name: "Check dataservers"
+  hosts: dataservers
   vars:
     build_target: "dbservers"
     sub_zone: "data"
   tasks:
-    include:
-      - ./check_splunk_config.yml
+    include: ./check_splunk_config.yml
 
