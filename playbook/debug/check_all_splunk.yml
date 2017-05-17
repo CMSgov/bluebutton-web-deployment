@@ -1,0 +1,49 @@
+---
+# File: playbook/debug/check_all_splunk.yml
+# Created: 5/17/17
+# Author: '@ekivemark'
+
+# Process splunk config for groups of servers
+
+- name: Check Splunk
+  # hosts: appservers
+  hosts: local
+  # connection: local
+  remote_user: ec2-user
+  become_user: root
+  become: yes
+  gather_facts: True
+  vars:
+    ansible_ssh_pipelining: no
+    env: "impl"
+    azone: "az1"
+    sub_zone: "app"
+    sg_zone: "appserver"
+    env_az: "{{ env }}-{{ azone }}"
+    env_cf_app_version: "01"
+    splunk_client_name: "BBAPI-{{ env|upper }}-{{ sub_zone|upper }}"
+#    migrate: "yes"
+#    collectstatic: "yes"
+  vars_files:
+    - "./../../vars/common.yml"
+    - "./../../vault/env/{{ env }}/vault.yml"
+    - "./../../vars/env/{{ env }}/env.yml"
+    - "./../../vars/all_var.yml"
+
+
+  tasks:
+  - hosts: mgmtservers
+  - name: "Check servers  {{ hosts }}"
+    include:
+      - "./check_splunk_config.yml build_target={{ hosts }} sub_zone='mgmt' "
+
+  - hosts: dataservers
+  - name: "Check servers  {{ hosts }}"
+    include:
+      - "./check_splunk_config.yml build_target={{ hosts }} sub_zone='mgmt' "
+
+  - hosts: appservers
+  - name: "Check servers  {{ hosts }}"
+    include:
+      - "./check_splunk_config.yml build_target={{ hosts }} sub_zone='mgmt' "
+
