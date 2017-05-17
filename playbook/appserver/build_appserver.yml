@@ -71,7 +71,7 @@
     # Update application code and write virtualhosts file
     - roles/app_update
     # Update environment variable files
-    - roles/app_update_env
+    - roles/ap]p_update_env
     # Set permissions for app under selinux
     - roles/semanage_apps
     # Set permissions for virtualenv under selinux

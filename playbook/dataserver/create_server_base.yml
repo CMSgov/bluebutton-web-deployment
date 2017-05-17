@@ -135,7 +135,7 @@
     blockinfile:
       dest: "/etc/ansible/hosts"
       marker: "# {mark} ANSIBLE MANAGED BLOCK builddb #"
-      block: "[buildapp]\n{{ data_fips_output.instances[0]['private_ip'] }}"
+      block: "[builddb]\n{{ data_fips_output.instances[0]['private_ip'] }}"
       backup: yes
 
   - name: "add private_ip to /etc/ansible/hosts"
