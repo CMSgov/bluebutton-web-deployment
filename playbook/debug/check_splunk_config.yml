@@ -41,14 +41,14 @@
     become: yes
 
     shell: " echo $HOSTNAME ; cat /opt/splunkforwarder/etc/system/local/deploymentclient.conf "
-    register: splunk_config
+    register: splunk_config_mgmt
 
     name: "Here is the Splunk configuarion for {{ hosts }}"
     debug:
-      msg: "{{ splunk_config.stdout.split('\n') }}"
+      msg: "{{ splunk_config_mgmt.stdout.split('\n') }}"
     name: "Splunk Config Errors"
     debug:
-      msg: "{{ splunk_config.stderr.split('\n') }}"
+      msg: "{{ splunk_config_mgmt.stderr.split('\n') }}"
 
   - hosts: dbservers
     set_fact:
@@ -60,14 +60,14 @@
     become: yes
 
     shell: " echo $HOSTNAME ; cat /opt/splunkforwarder/etc/system/local/deploymentclient.conf "
-    register: splunk_config
+    register: splunk_config_data
 
     name: "Here is the Splunk configuarion for {{ hosts }}"
     debug:
-      msg: "{{ splunk_config.stdout.split('\n') }}"
+      msg: "{{ splunk_config_data.stdout.split('\n') }}"
     name: "Splunk Config Errors"
     debug:
-      msg: "{{ splunk_config.stderr.split('\n') }}"
+      msg: "{{ splunk_config_data.stderr.split('\n') }}"
 
   - hosts: appservers
     set_fact:
@@ -79,12 +79,12 @@
     become: yes
 
     shell: " echo $HOSTNAME ; cat /opt/splunkforwarder/etc/system/local/deploymentclient.conf "
-    register: splunk_config
+    register: splunk_config_app
 
     name: "Here is the Splunk configuarion for {{ hosts }}"
     debug:
-      msg: "{{ splunk_config.stdout.split('\n') }}"
+      msg: "{{ splunk_config_app.stdout.split('\n') }}"
     name: "Splunk Config Errors"
     debug:
-      msg: "{{ splunk_config.stderr.split('\n') }}"
+      msg: "{{ splunk_config_app.stderr.split('\n') }}"
 
