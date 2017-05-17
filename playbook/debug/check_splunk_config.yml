@@ -1,0 +1,41 @@
+---
+# File: playbook/debug/check_splunk_config.yml
+# Created: 5/17/17
+# Author: '@ekivemark'
+
+# Check the setting of the splunk config file
+
+- name: Check Splunk
+  # hosts: appservers
+  hosts: all
+  # connection: local
+  remote_user: ec2-user
+  become_user: root
+  become: yes
+  gather_facts: True
+  vars:
+    ansible_ssh_pipelining: no
+    env: "impl"
+    azone: "az1"
+    sub_zone: "app"
+    sg_zone: "appserver"
+    env_az: "{{ env }}-{{ azone }}"
+    env_cf_app_version: "01"
+    splunk_client_name: "BBAPI-{{ env|upper }}-{{ sub_zone|upper }}"
+#    migrate: "yes"
+#    collectstatic: "yes"
+  vars_files:
+    - "./../../vars/common.yml"
+    - "./../../vault/env/{{ env }}/vault.yml"
+    - "./../../vars/env/{{ env }}/env.yml"
+    - "./../../vars/all_var.yml"
+
+  tasks:
+  - name: "Configure Splunk ..."
+  become_user: root
+  become: yes
+  shell: " cat $HOSTNAME ; cat /opt/splunkforwarder/etc/system/local/deploymentclient.conf "
+  register: splunk_config
+
+  debug:
+    msg: "{{ inventory_hostname }} \n {{ splunk_config }}"
