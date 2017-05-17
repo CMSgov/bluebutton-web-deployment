@@ -34,9 +34,13 @@
   - name: "Configure Splunk ..."
     become_user: root
     become: yes
-    shell: " cat $HOSTNAME ; cat /opt/splunkforwarder/etc/system/local/deploymentclient.conf "
+    shell: " echo $HOSTNAME ; cat /opt/splunkforwarder/etc/system/local/deploymentclient.conf "
     register: splunk_config
 
   - name: "Here is the Splunk configuarion"
     debug:
-      msg: "{{ inventory_hostname }} \n {{ splunk_config }}"
+      msg: "{{ splunk_config.stdout.split('\n') }}"
+  - name: "Splunk Config Errors"
+    debug:
+      msg: "{{ splunk_config.stderr.split('\n') }}"
+
