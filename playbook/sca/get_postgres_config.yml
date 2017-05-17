@@ -55,11 +55,13 @@
     register: db_version_info
 
   - name: "save info to local file"
-    local_action: copy
-      content: "{{ db_version_info.stdout }}"
+    connection: local
+    blockinfile:
       dest: "{{ local_dest }}/{{ local_capture }}"
-
-
+      block: "{{ db_version_info.stdout }}"
+      insert_after: EOF
+      state: present
+      
 
 
 
