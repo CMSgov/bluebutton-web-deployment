@@ -5,9 +5,8 @@
 
 # Check the setting of the splunk config file
 
-- name: Check Splunk
-  # hosts: appservers
-  hosts: "{{ build_target}}"
+# hosts: appservers
+- hosts: "{{ build_target}}"
   # connection: local
   remote_user: ec2-user
   become_user: root
@@ -39,7 +38,6 @@
   - name: "Check Splunk Configuration..."
     become_user: root
     become: yes
-
     shell: " echo $HOSTNAME ; cat /opt/splunkforwarder/etc/system/local/deploymentclient.conf "
     register: splunk_config
 
