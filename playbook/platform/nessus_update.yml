@@ -13,6 +13,7 @@
 - hosts: all
   vars:
     env: "dev"
+    ansible_ssh_pipelining: no
 
   # env value is passed in from command line using
   #   --extra-vars env=dev | test | impl | prod
