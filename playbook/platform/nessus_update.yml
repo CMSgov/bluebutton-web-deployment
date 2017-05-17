@@ -13,7 +13,7 @@
 - hosts: all
   vars:
     env: "dev"
-    nessus_user: "nessus_service"
+
   # env value is passed in from command line using
   #   --extra-vars env=dev | test | impl | prod
   # Vars file is relative to playbook file
@@ -37,7 +37,7 @@
 
   remote_user: "{{ remote_user_account }}"
   become: yes
-  become_user: {{ mon_nessus_user }}
+  become_user: "{{ mon_nessus_user }}"
 
   tasks:
   - name: "Create the .ssh folder for {{ mon_nessus_user }}"
