@@ -69,7 +69,7 @@
       mode: "0755"
       owner: "{{ remote_user_account }}"
       group: "{{ remote_user_account }}"
-      insert_after: EOF
+      insertafter: EOF
       state: present
 
   - name: "Fetch files"
