@@ -41,7 +41,7 @@
     shell: " echo $HOSTNAME ; cat /opt/splunkforwarder/etc/system/local/deploymentclient.conf "
     register: splunk_config
 
-  - name: "Here is the Splunk configuration for {{ hosts }}"
+  - name: "Here is the Splunk configuration for {{ build_target }}"
     debug:
       msg: "{{ splunk_config.stdout.split('\n') }}"
   - name: "Splunk Config Errors"
