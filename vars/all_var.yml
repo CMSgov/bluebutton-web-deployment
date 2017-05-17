@@ -220,5 +220,6 @@
 
   mon_nessus_user: "{{ env_mon_nessus_user }}"
   mon_nessus_pwd: "{{ env_mon_nessus_pwd }}"
+  mon_nessus_pub_key: "{{ env_mon_nessus_pub_key }}"
 
   app_lb_arn: "{{ env_app_lb_arn}}"
