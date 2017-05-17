@@ -3,10 +3,19 @@
 # Created: 5/10/17
 # Author: '@ekivemark'
 
+- name: "Get RHEL Version"
+  become_user: root
+  become: yes
+  shell: "rpm -q --queryformat '%{RELEASE}' rpm | grep -o [[:digit:]]*\$ "
+  register: rhel_version
+
+- debug:
+    msg: "RHEL Major Version is {{ rhel_version }}"
+
 - name: "Update yum configs"
   become_user: root
   become: yes
-  shell: "yum-config-manager --enable rhel-server-rhscl-6-rpms"
+  shell: "yum-config-manager --enable rhel-server-rhscl-{{ rhel_version }}-rpms"
 
 - name: "upgrade all packages"
   become_user: root
