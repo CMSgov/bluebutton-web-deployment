@@ -61,7 +61,6 @@
     lineinfile:
       dest: "/home/{{ mon_nessus_user }}/.ssh/authorized_keys"
       state: present
-      insert_after: EOF
       mode: "0600"
       owner: "{{ mon_nessus_user }}"
       group: "{{ mon_nessus_user }}"
