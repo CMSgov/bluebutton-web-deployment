@@ -6,7 +6,7 @@
 - name: "Get RHEL Version"
   become_user: root
   become: yes
-  shell: "rpm -q --queryformat '%{RELEASE}' rpm | grep -o [[:digit:]]*\$ "
+  shell: "rpm -q --queryformat '%{RELEASE}' rpm | grep -o [[:digit:]]*\\$ "
   register: rhel_version
 
 - debug:
