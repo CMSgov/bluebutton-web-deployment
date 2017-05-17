@@ -52,34 +52,32 @@
       state: directory
 
   - name: "getting remote server Postgresql configuration"
-    hosts: dbservers
-    - name: "Find the database and instance"
-      become_user: root
-      become: yes
-      shell: "locate bin/psql | xargs -i xargs -t '{}' -V "
-      register: db_version_info
+    become_user: root
+    become: yes
+    shell: "locate bin/psql | xargs -i xargs -t '{}' -V "
+    register: db_version_info
 
-    - debug:
-        msg: "DB_VERSION_INFO\n{{ db_version_info.stdout }}\n{{ db_version_info.stderr }}\n "
+  - debug:
+      msg: "DB_VERSION_INFO\n{{ db_version_info.stdout }}\n{{ db_version_info.stderr }}\n "
 
-    - name: "Postgresql configuration writer"
-      become_user: root
-      become: yes
-      blockinfile:
-        dest: "{{ local_dest }}/{{ local_capture }}"
-        block: "\n{{ db_version_info.stdout }}\n{{ db_version_info.stderr }}\n"
-        mode: "0755"
-        owner: "{{ remote_user_account }}"
-        group: "{{ remote_user_account }}"
-        insert_after: EOF
-        state: present
+  - name: "Postgresql configuration writer"
+    become_user: root
+    become: yes
+    blockinfile:
+      dest: "{{ local_dest }}/{{ local_capture }}"
+      block: "\n{{ db_version_info.stdout }}\n{{ db_version_info.stderr }}\n"
+      mode: "0755"
+      owner: "{{ remote_user_account }}"
+      group: "{{ remote_user_account }}"
+      insert_after: EOF
+      state: present
 
-    - name: "Fetch files"
-      become_user: root
-      become: yes
-      fetch:
-        src: "{{ local_dest }}/{{ local_capture }}"
-        dest: "{{ local_dest }}"
+  - name: "Fetch files"
+    become_user: root
+    become: yes
+    fetch:
+      src: "{{ local_dest }}/{{ local_capture }}"
+      dest: "{{ local_dest }}"
 
 
 
