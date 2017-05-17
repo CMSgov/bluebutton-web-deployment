@@ -6,8 +6,8 @@
 # Process splunk config for groups of servers
 
 - name: Check Splunk
-  # hosts: appservers
-  hosts: local
+  hosts: appservers
+  # hosts: local
   # connection: local
   remote_user: ec2-user
   become_user: root
@@ -24,11 +24,19 @@
     splunk_client_name: "BBAPI-{{ env|upper }}-{{ sub_zone|upper }}"
 #    migrate: "yes"
 #    collectstatic: "yes"
+
+    build_target: "appservers"
+
   vars_files:
     - "./../../vars/common.yml"
     - "./../../vault/env/{{ env }}/vault.yml"
     - "./../../vars/env/{{ env }}/env.yml"
     - "./../../vars/all_var.yml"
+
+  tasks:
+    include:
+      - ./check_splunk_config.yml
+
 
 - hosts: mgmtservers
   vars:
@@ -42,14 +50,6 @@
   vars:
     build_target: "dbservers"
     sub_zone: "data"
-  tasks:
-    include:
-      - ./check_splunk_config.yml
-
-- hosts: appservers
-  vars:
-    build_target: "appservers"
-    sub_zone: "app"
   tasks:
     include:
       - ./check_splunk_config.yml
