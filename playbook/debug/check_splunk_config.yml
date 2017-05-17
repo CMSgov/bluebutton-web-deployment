@@ -4,8 +4,8 @@
 # Author: '@ekivemark'
 
 # Check the setting of the splunk config file
-
-- hosts: "{{ build_target }}"
+- name: "checking splunk.."
+  hosts: "{{ build_target }}"
   # hosts: appservers
   # connection: local
   remote_user: ec2-user
