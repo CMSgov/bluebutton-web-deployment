@@ -16,6 +16,7 @@
     ansible_ssh_pipelining: no
     env: "dev"
     env_cf_app_version: "01"
+
   vars_files:
     - "./../../vars/common.yml"
     - "./../../vault/env/{{ env }}/vault.yml"
@@ -24,4 +25,3 @@
 
   tasks:
   - include: "../../roles/base_patch/tasks/update_packages.yml"
-
