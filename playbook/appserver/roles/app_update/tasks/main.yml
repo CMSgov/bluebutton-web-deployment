@@ -83,12 +83,7 @@
 
 - name: "Check result of git check"
   debug:
-    msg: "git is [{{ git_installed }}]"
-
-- name: switch to app folder
-  become_user: root
-  become: yes
-  shell: "cd {{ install_root }}/{{ project_name }} "
+    msg: "git is installed [{{ git_installed.exists }}]"
 
 - name: "install from git: {{ project_repo }} branch:{{ git_branch }}"
   become_user: root
@@ -99,6 +94,11 @@
     force: yes
     clone: yes
   when: not git_installed.stat.exists
+
+#- name: switch to app folder
+#  become_user: root
+#  become: yes
+#  shell: "cd {{ install_root }}/{{ project_name }} "
 
   # Now pull a specific branch
 - name: "update from git: {{ project_repo }} branch:{{ git_branch }}"
