@@ -30,10 +30,12 @@
     - "./../../vars/env/{{ env }}/env.yml"
     - "./../../vars/all_var.yml"
 
-  roles:
-    - ../../roles/splunk
+#  roles:
+#    - ../../roles/splunk
 
   tasks:
+  - include: ../../roles/splunk/tasks/main.yml
+
   - name: "Check Splunk Configuration..."
     become_user: root
     become: yes
