@@ -5,8 +5,8 @@
 
 # compile the postgres configuration
 
-- name: "getting Postgresql configuration"
-  hosts: dbservers
+- name: "Postgresql configuration collector"
+  hosts: localhost
   # hosts: appservers
   # connection: local
   remote_user: ec2-user
@@ -51,12 +51,66 @@
       state: touch
     delegate_to: localhost
 
+- name: "getting remote server Postgresql configuration"
+  hosts: dbservers
+  # hosts: appservers
+  # connection: local
+  remote_user: ec2-user
+  become_user: postgres
+  become: yes
+  gather_facts: True
+  vars:
+    ansible_ssh_pipelining: no
+    env: "impl"
+    azone: "az1"
+    sub_zone: "data"
+    sg_zone: "data"
+    env_az: "{{ env }}-{{ azone }}"
+    env_cf_app_version: "01"
+    local_dest: "/home/ec2-user/info_capture"
+    local_capture: "postgres_info.txt"
+
+  vars_files:
+    - "./../../vars/common.yml"
+    - "./../../vault/env/{{ env }}/vault.yml"
+    - "./../../vars/env/{{ env }}/env.yml"
+    - "./../../vars/all_var.yml"
+
+
+  tasks:
   - name: "Find the database and instance"
     become_user: root
     become: yes
     shell: "locate bin/psql | xargs -i xargs -t '{}' -V "
     register: db_version_info
 
+
+- name: "Postgresql configuration collector"
+  hosts: localhost
+  # hosts: appservers
+  # connection: local
+  remote_user: ec2-user
+  become_user: postgres
+  become: yes
+  gather_facts: True
+  vars:
+    ansible_ssh_pipelining: no
+    env: "impl"
+    azone: "az1"
+    sub_zone: "data"
+    sg_zone: "data"
+    env_az: "{{ env }}-{{ azone }}"
+    env_cf_app_version: "01"
+    local_dest: "/home/ec2-user/info_capture"
+    local_capture: "postgres_info.txt"
+
+  vars_files:
+    - "./../../vars/common.yml"
+    - "./../../vault/env/{{ env }}/vault.yml"
+    - "./../../vars/env/{{ env }}/env.yml"
+    - "./../../vars/all_var.yml"
+
+  tasks:
   - name: "save info to local file"
     connection: local
     blockinfile:
