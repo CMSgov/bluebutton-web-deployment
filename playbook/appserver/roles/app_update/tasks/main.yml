@@ -83,7 +83,8 @@
 
 - name: "Check result of git check"
   debug:
-    msg: "git is installed [{{ git_installed.exists }}]"
+    msg: "git is installed [{{ git_installed.stat.exists }}]"
+  ignore_errors: yes
 
 - name: "install from git: {{ project_repo }} branch:{{ git_branch }}"
   become_user: root
