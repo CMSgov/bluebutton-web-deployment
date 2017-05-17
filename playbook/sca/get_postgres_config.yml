@@ -6,24 +6,24 @@
 # compile the postgres configuration
 
 - name: "getting Postgresql configuration"
-  hosts: "{{ build_target }}"
+  hosts: dbservers
   # hosts: appservers
   # connection: local
   remote_user: ec2-user
-  become_user: root
+  become_user: postgres
   become: yes
   gather_facts: True
   vars:
     ansible_ssh_pipelining: no
     env: "impl"
     azone: "az1"
-    sub_zone: "app"
-    sg_zone: "appserver"
+    sub_zone: "data"
+    sg_zone: "data"
     env_az: "{{ env }}-{{ azone }}"
     env_cf_app_version: "01"
-    splunk_client_name: "BBAPI-{{ env|upper }}-{{ sub_zone|upper }}"
-    #    migrate: "yes"
-    #    collectstatic: "yes"
+    local_dest: "/home/ec2-user/info_capture"
+    local_capture: "postgres_info.txt"
+
   vars_files:
     - "./../../vars/common.yml"
     - "./../../vault/env/{{ env }}/vault.yml"
@@ -31,4 +31,36 @@
     - "./../../vars/all_var.yml"
 
   tasks:
+  - name: "Setup data capture"
+    local_action:
+      file:
+        dest: "{{ local_dest }}"
+        owner: "{{ remote_user }}"
+        group: "{{ remote_user }}"
+        mode: "0744"
+        state: directory
+
+  - name: "touch file for data capture"
+    local_action:
+      file:
+        dest: "{{ local_dest }}/{{ local_capture }}"
+        owner: "{{ remote_user }}"
+        group: "{{ remote_user }}"
+        mode: "0744"
+        state: touch
+
+
+  - name: "Find the database and instance"
+    shell: "locate bin/psql | xargs -i xargs -t '{}' -V "
+    register: db_version_info
+
+  - name: "save info to local file"
+    local_action:
+      copy:
+        content: "{{ db_version_info.stdout }}"
+        dest: "{{ local_dest }}/{{ local_capture }}"
+
+
+
+
 
