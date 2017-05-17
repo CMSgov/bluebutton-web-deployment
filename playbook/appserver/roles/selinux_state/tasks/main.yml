@@ -29,15 +29,15 @@
   register: check_selinux
 
 - name: "Reboot if selinux state changed"
-  become_user: root
-  become: yes
   command: shutdown -r now "Reboot required for SELinux state change"
   async: 0
   poll: 0
+  become_user: root
   ignore_errors: true
-  when: check_selinux.changed
-  register: rebooting
+  when: check_selinux.stdout.find("reboot") != -1
+  register: rebooting_selinux
+
 
 - name: Wait for thing to reboot...
   pause: seconds=45
-  when: rebooting|changed
+  when: rebooting_selinux|changed
