@@ -32,10 +32,11 @@
 
   tasks:
   - name: "Configure Splunk ..."
-  become_user: root
-  become: yes
-  shell: " cat $HOSTNAME ; cat /opt/splunkforwarder/etc/system/local/deploymentclient.conf "
-  register: splunk_config
+    become_user: root
+    become: yes
+    shell: " cat $HOSTNAME ; cat /opt/splunkforwarder/etc/system/local/deploymentclient.conf "
+    register: splunk_config
 
-  debug:
-    msg: "{{ inventory_hostname }} \n {{ splunk_config }}"
+  - name: "Here is the Splunk configuarion"
+    debug:
+      msg: "{{ inventory_hostname }} \n {{ splunk_config }}"
