@@ -35,7 +35,7 @@
     build_target: "mgmtservers"
     sub_zone: "mgmt"
   tasks:
-  - include:
+    include:
       - ./check_splunk_config.yml
 
 - hosts: dataservers
@@ -43,7 +43,7 @@
     build_target: "dbservers"
     sub_zone: "data"
   tasks:
-  - include:
+    include:
       - ./check_splunk_config.yml
 
 - hosts: appservers
@@ -51,6 +51,6 @@
     build_target: "appservers"
     sub_zone: "app"
   tasks:
-  - include:
+    include:
       - ./check_splunk_config.yml
 
