@@ -42,12 +42,12 @@
 
   - name: "touch file for data capture"
     connection: local
-      copy:
-        dest: "{{ local_dest }}/{{ local_capture }}"
-        owner: "{{ remote_user }}"
-        group: "{{ remote_user }}"
-        mode: "0744"
-        state: touch
+    copy:
+      dest: "{{ local_dest }}/{{ local_capture }}"
+      owner: "{{ remote_user }}"
+      group: "{{ remote_user }}"
+      mode: "0744"
+      state: touch
 
 
   - name: "Find the database and instance"
