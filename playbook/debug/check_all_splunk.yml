@@ -5,7 +5,7 @@
 
 # Process splunk config for groups of servers
 
-- name: "Check Splunk - appservers"
+- name: "Check appservers for splunk config"
   hosts: appservers
   # hosts: local
   # connection: local
@@ -33,21 +33,21 @@
     - "./../../vars/all_var.yml"
 
   tasks:
-    include: ./check_splunk_config.yml
+  - include: ./check_splunk_config.yml
 
-- name: "Check mgmtservers"
+- name: "Check mgmtservers for splunk config"
   hosts: mgmtservers
   vars:
     build_target: "mgmtservers"
     sub_zone: "mgmt"
   tasks:
-    include: ./check_splunk_config.yml
+   - include: ./check_splunk_config.yml
 
-- name: "Check dataservers"
+- name: "Check dataservers for splunk config"
   hosts: dataservers
   vars:
     build_target: "dbservers"
     sub_zone: "data"
   tasks:
-    include: ./check_splunk_config.yml
+  - include: ./check_splunk_config.yml
 
