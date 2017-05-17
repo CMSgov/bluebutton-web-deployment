@@ -32,7 +32,8 @@
 
   tasks:
   - name: "Setup data capture"
-    local_action: file
+    connection: local
+    file:
       dest: "{{ local_dest }}"
       owner: "{{ remote_user }}"
       group: "{{ remote_user }}"
@@ -40,7 +41,7 @@
       state: directory
 
   - name: "touch file for data capture"
-    local_action:
+    connection: local
       copy:
         dest: "{{ local_dest }}/{{ local_capture }}"
         owner: "{{ remote_user }}"
