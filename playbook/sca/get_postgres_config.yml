@@ -10,7 +10,7 @@
   # hosts: appservers
   # connection: local
   remote_user: ec2-user
-  become_user: postgres
+  become_user: root
   become: yes
   gather_facts: True
   vars:
@@ -56,7 +56,7 @@
   # hosts: appservers
   # connection: local
   remote_user: ec2-user
-  become_user: postgres
+  become_user: root
   become: yes
   gather_facts: True
   vars:
@@ -76,7 +76,6 @@
     - "./../../vars/env/{{ env }}/env.yml"
     - "./../../vars/all_var.yml"
 
-
   tasks:
   - name: "Find the database and instance"
     become_user: root
@@ -85,12 +84,12 @@
     register: db_version_info
 
 
-- name: "Postgresql configuration collector"
+- name: "Postgresql configuration writer"
   hosts: localhost
   # hosts: appservers
   # connection: local
   remote_user: ec2-user
-  become_user: postgres
+  become_user: root
   become: yes
   gather_facts: True
   vars:
