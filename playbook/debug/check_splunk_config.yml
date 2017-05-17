@@ -30,8 +30,11 @@
     - "./../../vars/env/{{ env }}/env.yml"
     - "./../../vars/all_var.yml"
 
+  roles:
+    - ../../roles/splunk
+
   tasks:
-  - name: "Configure Splunk ..."
+  - name: "Check Splunk Configuration..."
     become_user: root
     become: yes
     shell: " echo $HOSTNAME ; cat /opt/splunkforwarder/etc/system/local/deploymentclient.conf "

@@ -6,14 +6,26 @@
 - name: "Configure Splunk ..."
   become_user: root
   become: yes
-  lineinfile:
+  template:
+    src: "../templates/splunk_deployment_conf.j2"
     dest: "/opt/splunkforwarder/etc/system/local/deploymentclient.conf"
     owner: splunk
     group: splunk
     mode: "750"
-    regexp: "^clientName"
-    line: "clientName = {{ splunk_client_name }}"
     backup: yes
+
+# Replacing patch with template
+#  become_user: root
+#  become: yes
+#  lineinfile:
+#    dest: "/opt/splunkforwarder/etc/system/local/deploymentclient.conf"
+#    owner: splunk
+#    group: splunk
+#    mode: "750"
+#    regexp: "^clientName"
+#    line: "clientName = {{ splunk_client_name }}"
+#    backup: yes
+
 
 - name: "Restart Splunk "
   become_user: root
