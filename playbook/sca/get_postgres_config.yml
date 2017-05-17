@@ -87,6 +87,9 @@
     shell: "locate bin/psql | xargs -i xargs -t '{}' -V "
     register: db_version_info
 
+  - debug:
+      msg: "DB_VERSION_INFO - {{ db_version_info }}"
+
 
 - name: "Postgresql configuration writer"
   hosts: localhost
@@ -120,7 +123,7 @@
     become: yes
     blockinfile:
       dest: "{{ local_dest }}/{{ local_capture }}"
-      block: "{{ db_version_info.stdout }}"
+      block: "\n{{ db_version_info.stdout }}\n{{ db_version_info.stderr }} "
       mode: "0755"
       owner: "{{ remote_user_account }}"
       group: "{{ remote_user_account }}"
