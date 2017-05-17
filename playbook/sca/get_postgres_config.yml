@@ -68,7 +68,7 @@
     blockinfile:
       dest: "{{ local_dest }}/{{ local_capture }}"
       create: yes
-      block: "\n{{ db_version_info.stdout }}\n{{ db_version_info.stderr }}\n"
+      block: "\nResult:{{ db_version_info.stdout }}\nCommand:{{ db_version_info.stderr }}\n"
       mode: "0755"
       owner: "{{ remote_user_account }}"
       group: "{{ remote_user_account }}"
