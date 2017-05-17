@@ -24,7 +24,7 @@
     - postgresql-devel
     - python-devel
     - python-cffi
-    # - sqlite-devel
+    - sqlite-devel
     - readline-devel
     - tk-devel
     - gdbm-devel
