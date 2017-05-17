@@ -18,13 +18,14 @@
 
   ami_release: "{{ env_ami_release }}"
 
+  ### Environment:
+  env_env: "dev"
+
+
   ### Cloud Formation Tags:
   cf_tags_business: "{{ common_cf_tags_business }}"
   cf_tags_application: "{{ common_cf_tags_application }}"
 
-  ### VPC Info:
-  vpc_env_lower: "{{ env_vpc_lower }}"
-  vpc_env_upper: "{{ env_vpc_upper }}"
 
   # Make Python and mod_wsgi version parameters
   python_ver: "{{ env_python_ver }}"
