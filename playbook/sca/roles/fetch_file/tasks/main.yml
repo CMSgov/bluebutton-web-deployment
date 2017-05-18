@@ -48,9 +48,9 @@
     create: yes
     block: |
       ===fetch_file:BEGIN======================================================================
-      {{ fetch_file_perms }}
-      {{ fetch_user_id }}
-      {{ fetch_group_id }}
+      {{ fetch_file_perms.stdout }}
+      {{ fetch_user_id.std_out }}
+      {{ fetch_group_id.stdout }}
       ===fetch_file:END========================================================================
     mode: "0755"
     owner: "{{ remote_user_account }}"
