@@ -17,28 +17,28 @@
   fetch:
     src: "{{ fetch_path }}/{{ fetch_filename }}"
     dest: "{{ local_dest }}"
-  when: fetch_content is defined and fetch_content == true
+  when: fetch_content is defined and fetch_content == 1
 
 - name: "file permissions for {{ fetch_path }}/{{ fetch_filename }}"
   become_user: root
   become: yes
   shell: "echo File permissions info for {{ fetch_path }}/{{ fetch_filename }}: ;ls -la {{ fetch_path }}/{{ fetch_filename }} "
   register: fetch_file_perms
-  when: fetch_perms is defined and fetch_perms == true
+  when: fetch_perms is defined and fetch_perms == 1
 
 - name: "user id information for {{ fetch_path }}/{{ fetch_filename }}"
   become_user: root
   become: yes
   shell: "echo User info related to {{ fetch_path }}/{{ fetch_filename }}: ; id $(ls -la {{ fetch_path }}/{{ fetch_filename }} | cut -d ' ' -f 3 )"
   register: fetch_user_id
-  when: fetch_perms is defined and fetch_perms == true
+  when: fetch_perms is defined and fetch_perms == 1
 
 - name: "group id information for {{ fetch_path }}/{{ fetch_filename }}"
   become_user: root
   become: yes
   shell: "echo Group info related to {{ fetch_path }}/{{ fetch_filename }}: ; id $(ls -la {{ fetch_path }}/{{ fetch_filename }} | cut -d ' ' -f 4 )"
   register: fetch_group_id
-  when: fetch_group_info is defined and fetch_group_info == true
+  when: fetch_group_info is defined and fetch_group_info == 1
 
 - name: "{{ fetch_path }}/{{ fetch_filename }} Info collector"
   become_user: root
