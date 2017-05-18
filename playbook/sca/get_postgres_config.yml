@@ -90,7 +90,7 @@
      fetch_content: true
      fetch__perms: true
      fetch_group_info: true
-    include: roles/fetch_file/tasks/main.yml
+    include: ./roles/fetch_file/tasks/main.yml
 
 
 
