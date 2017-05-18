@@ -82,6 +82,17 @@
       src: "{{ local_dest }}/{{ local_capture }}"
       dest: "{{ local_dest }}"
 
+  -name: "get file info"
+   vars:
+     # See roles/fetch_file/tasks/main.yml
+     fetch_path: "/data/pgsql/9.6/data"
+     fetch_filename: "postgresql.conf"
+     fetch_content: true
+     fetch__perms: true
+     fetch_group_info: true
+     include: roles/fetch_file/tasks/main.yml
+
+
 
 
 
