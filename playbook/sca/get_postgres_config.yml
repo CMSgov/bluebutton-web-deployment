@@ -98,7 +98,7 @@
   - name: "set facts for fetch_file"
     set_fact:
       fetch_path: "/data/pgsql/9.6/data"
-      fetch_filename: {{ item }}
+      fetch_filename: "{{ item }}"
       fetch_content: 1
       fetch_perms: 1
       fetch_group_info: 1
