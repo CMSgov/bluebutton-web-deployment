@@ -56,9 +56,9 @@
   become_user: root
   become: yes
   blockinfile:
-    dest: "{{ local_dest }}/{{ local_capture }}.FF_info"
+    dest: "{{ local_dest }}/{{ fetch_filename }}.FF_info"
     create: yes
-    marker: "=== { mark } fetch_file: {{ fetch_filenamr }} ==============================="
+    marker: "=== { mark } fetch_file: {{ fetch_filename }} ==============================="
       {{ fetch_file_perms.stdout }}
 
       {{ fetch_user_id.stdout }}
@@ -74,7 +74,7 @@
   become_user: root
   become: yes
   fetch:
-    src: "{{ local_dest }}/{{ local_capture }}.FF_info"
+    src: "{{ local_dest }}/{{ fetch_filename }}.FF_info"
     dest: "{{ local_dest }}"
 
 
