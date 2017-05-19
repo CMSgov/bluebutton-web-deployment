@@ -88,7 +88,7 @@
       fetch_path: "/data/pgsql/9.6/data"
       fetch_filename: "postgresql.conf"
       fetch_content: 1
-      fetch__perms: 1
+      fetch_perms: 1
       fetch_group_info: 1
 
   - name: "now fetch_file for {{ fetch_path }}/{{ fetch_filename }} "
