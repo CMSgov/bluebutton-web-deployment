@@ -20,7 +20,7 @@
     env_az: "{{ env }}-{{ azone }}"
     env_cf_app_version: "01"
     local_dest: "/home/ec2-user/info_capture"
-    # local_capture: "postgres_info.txt"
+    local_capture: "postgres_info.txt"
 
   vars_files:
     - "./../../vars/common.yml"
