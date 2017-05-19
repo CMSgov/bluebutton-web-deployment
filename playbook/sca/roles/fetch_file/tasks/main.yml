@@ -26,6 +26,7 @@
 - name: "file permissions for {{ fetch_path }}/{{ fetch_filename }}"
   become_user: root
   become: yes
+  ignore_errors: yes
   shell: "echo File permissions info for {{ fetch_path }}/{{ fetch_filename }}: ;ls -la {{ fetch_path }}/{{ fetch_filename }} "
   register: fetch_file_perms
   when: fetch_perms == 1
@@ -80,6 +81,4 @@
   fetch:
     src: "{{ local_dest }}/{{ fetch_filename }}.FF_info"
     dest: "{{ local_dest }}"
-
-
 
