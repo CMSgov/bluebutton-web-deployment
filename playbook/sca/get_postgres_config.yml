@@ -88,63 +88,25 @@
       dest: "{{ local_dest }}"
 
   # See roles/fetch_file/tasks/main.yml
-  tasks:
   - name: "set facts for fetch_file 1"
     become_user: root
     become: yes
-    set_fact:
-      fetch_filename: "postgresql.conf"
-      # fetch_content: 1
-      # fetch_perms: 1
-      # fetch_group_info: 1
-    include:  "./roles/fetch_file/tasks/main.yml fetch_filename={{ fetch_filename }}"
+    include:  ./roles/fetch_file/tasks/main.yml fetch_filename=postgresql.conf
 
-  tasks:
   - name: "set facts for fetch_file 2"
     become_user: root
     become: yes
-    set_fact:
-      fetch_filename: "pg_hba.conf"
-      # fetch_content: 1
-      # fetch_perms: 1
-      # fetch_group_info: 1
-    include:  ./roles/fetch_file/tasks/main.yml
+    include:  ./roles/fetch_file/tasks/main.yml fetch_filename=pg_hba.conf
 
-  tasks:
+
   - name: "set facts for fetch_file 3"
     become_user: root
     become: yes
-    set_fact:
-      fetch_filename: "pg_ident.conf"
-      # fetch_content: 1
-      # fetch_perms: 1
-      # fetch_group_info: 1
-    include:  ./roles/fetch_file/tasks/main.yml
+    include:  ./roles/fetch_file/tasks/main.yml fetch_filename=pg_ident.conf
 
-  tasks:
+
   - name: "set facts for fetch_file 4"
     become_user: root
     become: yes
-    vars:
-      fetch_filename: "pgauthid"
-      # fetch_content: 1
-      # fetch_perms: 1
-      # fetch_group_info: 1
-    include:  ./roles/fetch_file/tasks/main.yml
-
-
-#    vars:
-#      fetch_path: "{{ item['d'] }}"
-#      fetch_filename: "{{ item.['f'] }}"
-#      fetch_content: "{{ item.['c'] }}"
-#      fetch_perms: "{{ item.['p'] }}"
-#      fetch_group_info: "{{ item.['g'] }}"
-#
-#    with_items:
-#      - { "d": "{{ fetch_path }}", "f": "postgresql.conf", "c": 1, "p": 1, "g": 1 }
-#      - { "d": "{{ fetch_path }}", "f": "pg_hba.conf", "c": 1, "p": 1, "g": 1 }
-#      - { "d": "{{ fetch_path }}", "f": "pg_ident.conf", "c": 1, "p": 1, "g": 1 }
-#      - { "d": "{{ fetch_path }}", "f": "pgauthid", "c": 1, "p": 1, "g": 1 }
-#
-
+    include:  ./roles/fetch_file/tasks/main.yml fetch_filename=pgauthid
 
