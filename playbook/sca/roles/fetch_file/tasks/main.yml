@@ -58,14 +58,12 @@
   blockinfile:
     dest: "{{ local_dest }}/{{ local_capture }}.FF_info"
     create: yes
-    block: |
-      ===fetch_file:BEGIN======================================================================
+    marker: "==={ mark } fetch_file: {{ fetch_filenamr }} ===================================="
       {{ fetch_file_perms.stdout }}
 
       {{ fetch_user_id.stdout }}
 
       {{ fetch_group_id.stdout }}
-      ===fetch_file:END========================================================================
     mode: "0755"
     owner: "{{ remote_user_account }}"
     group: "{{ remote_user_account }}"
