@@ -87,6 +87,8 @@
     include: ./roles/fetch_file/tasks/main.yml
 
   - name: "set facts for fetch_file"
+    become_user: root
+    become: yes
     set_fact:
       fetch_path: "/data/pgsql/9.6/data"
       fetch_filename: "{{ item }}"
