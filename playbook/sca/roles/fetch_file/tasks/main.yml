@@ -56,6 +56,11 @@
   register: fetch_group_id
   when: fetch_group_info == 1
 
+- name: "Clear down info collector"
+  file:
+    dest: "{{ local_dest }}/{{ fetch_filename }}.FF_info"
+    state: absent
+
 - name: "Info collector"
   become_user: root
   become: yes
