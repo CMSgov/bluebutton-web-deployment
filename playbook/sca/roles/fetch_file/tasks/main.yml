@@ -62,7 +62,7 @@
   blockinfile:
     dest: "{{ local_dest }}/{{ fetch_filename }}.FF_info"
     create: yes
-    marker: "=== { mark } fetch_file: {{ fetch_filename }} ==============================="
+    marker: "=== {mark} fetch_file: {{ fetch_filename }} ==============================="
     block: |
       ls {{ local_dest }}/{{ ansible_hostname }}/{{ fetch_path }}/{{ fetch_filename }}
       {{ fetch_file_perms.stdout }}
