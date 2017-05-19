@@ -21,7 +21,7 @@
   when: fetch_content == 1
 
 - debug:
-    msg: "{{ result was {{ fetched_file_result }}"
+    msg: "result was {{ fetched_file_result }}"
 
 - name: "setting fact"
   set_fact:
