@@ -83,15 +83,7 @@
       dest: "{{ local_dest }}"
 
 # See roles/fetch_file/tasks/main.yml
-  - name: "set facts for fetch_file for postgresql.conf"
-    set_fact:
-      fetch_path: "/data/pgsql/9.6/data"
-      fetch_filename: "postgresql.conf"
-      fetch_content: 1
-      fetch_perms: 1
-      fetch_group_info: 1
-
-  - name: "now fetch_file for {{ fetch_path }}/{{ fetch_filename }} "
+  - name: "now fetch_file for files in {{ fetch_path }} "
     include: ./roles/fetch_file/tasks/main.yml
 
   - name: "set facts for fetch_file"
@@ -103,6 +95,7 @@
       fetch_group_info: 1
     include: ./roles/fetch_file/tasks/main.yml
     with_items:
+      - "postgresql.conf"
       - "pg_hba.conf"
       - "pg_idnet.conf"
       - "pg_authid"
