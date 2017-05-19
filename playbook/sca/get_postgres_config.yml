@@ -83,9 +83,6 @@
       dest: "{{ local_dest }}"
 
 # See roles/fetch_file/tasks/main.yml
-  - name: "now fetch_file for files in {{ fetch_path }} "
-    include: ./roles/fetch_file/tasks/main.yml
-
   - name: "set facts for fetch_file"
     become_user: root
     become: yes
