@@ -88,6 +88,7 @@
       dest: "{{ local_dest }}"
 
   # See roles/fetch_file/tasks/main.yml
+  tasks:
   - name: "set facts for fetch_file 1"
     become_user: root
     become: yes
@@ -96,8 +97,9 @@
       # fetch_content: 1
       # fetch_perms: 1
       # fetch_group_info: 1
-    include:  ./roles/fetch_file/tasks/main.yml
+    include:  "./roles/fetch_file/tasks/main.yml fetch_filename={{ fetch_filename }}"
 
+  tasks:
   - name: "set facts for fetch_file 2"
     become_user: root
     become: yes
@@ -108,6 +110,7 @@
       # fetch_group_info: 1
     include:  ./roles/fetch_file/tasks/main.yml
 
+  tasks:
   - name: "set facts for fetch_file 3"
     become_user: root
     become: yes
@@ -118,10 +121,11 @@
       # fetch_group_info: 1
     include:  ./roles/fetch_file/tasks/main.yml
 
+  tasks:
   - name: "set facts for fetch_file 4"
     become_user: root
     become: yes
-    set_fact:
+    vars:
       fetch_filename: "pgauthid"
       # fetch_content: 1
       # fetch_perms: 1

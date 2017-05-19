@@ -59,6 +59,7 @@
     dest: "{{ local_dest }}/{{ fetch_filename }}.FF_info"
     create: yes
     marker: "=== { mark } fetch_file: {{ fetch_filename }} ==============================="
+    block: |
       {{ fetch_file_perms.stdout }}
 
       {{ fetch_user_id.stdout }}
