@@ -95,6 +95,18 @@
     include: ./roles/fetch_file/tasks/main.yml
 
 
-
+  - name: "set facts for fetch_file"
+    set_fact:
+      fetch_path: "/data/pgsql/9.6/data"
+      fetch_filename: {{ item }}
+      fetch_content: 1
+      fetch_perms: 1
+      fetch_group_info: 1
+    include: ./roles/fetch_file/tasks/main.yml
+    with_items:
+      - "pg_hba.conf"
+      - "pg_idnet.conf"
+      - "pg_authid"
+      - "pg_ident.conf"
 
 
