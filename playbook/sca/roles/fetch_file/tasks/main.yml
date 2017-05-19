@@ -52,7 +52,7 @@
   register: fetch_group_id
   when: fetch_group_info == 1
 
-- name: "{{ fetch_path }}/{{ fetch_filename }} Info collector"
+- name: "Info collector"
   become_user: root
   become: yes
   blockinfile:
@@ -63,7 +63,7 @@
       {{ fetch_file_perms.stdout }}
 
       {{ fetch_user_id.stdout }}
-      
+
       {{ fetch_group_id.stdout }}
       ===fetch_file:END========================================================================
     mode: "0755"
