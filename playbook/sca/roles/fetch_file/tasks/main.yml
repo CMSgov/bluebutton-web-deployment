@@ -17,7 +17,11 @@
   fetch:
     src: "{{ fetch_path }}/{{ fetch_filename }}"
     dest: "{{ local_dest }}"
+  register: fetched_file_result
   when: fetch_content == 1
+
+- debug:
+    msg: "{{ result was {{ fetched_file_result }}"
 
 - name: "setting fact"
   set_fact:
