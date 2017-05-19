@@ -61,7 +61,7 @@
     block: |
       ===fetch_file:BEGIN======================================================================
       {{ fetch_file_perms.stdout }}
-      {{ fetch_user_id.std_out }}
+      {{ fetch_user_id.stdout }}
       {{ fetch_group_id.stdout }}
       ===fetch_file:END========================================================================
     mode: "0755"
