@@ -64,6 +64,7 @@
     create: yes
     marker: "=== { mark } fetch_file: {{ fetch_filename }} ==============================="
     block: |
+      ls {{ local_dest }}/{{ ansible_hostname }}/{{ fetch_path }}/{{ fetch_filename }}
       {{ fetch_file_perms.stdout }}
 
       {{ fetch_user_id.stdout }}
