@@ -20,7 +20,7 @@
     env_az: "{{ env }}-{{ azone }}"
     env_cf_app_version: "01"
     local_dest: "/home/ec2-user/info_capture"
-    local_capture: "postgres_info.txt"
+    # local_capture: "postgres_info.txt"
 
   vars_files:
     - "./../../vars/common.yml"
@@ -86,12 +86,12 @@
   - name: "set facts for fetch_file"
     become_user: root
     become: yes
-    include: "./roles/fetch_file/tasks/main.yml fetch_path={{ item.d }} fetch_filename={{ item.f }} fetch_content={{ item.c }} fetch_perms={{ item.p }} fetch_group_info={{ item.g }} "
-    with_items:
-      - { "d": "{{ fetch_path }}", "f": "postgresql.conf", "c": 1, "p": 1, "g": 1 }
-      - { "d": "{{ fetch_path }}", "f": "pg_hba.conf", "c": 1, "p": 1, "g": 1 }
-      - { "d": "{{ fetch_path }}", "f": "pg_ident.conf", "c": 1, "p": 1, "g": 1 }
-      - { "d": "{{ fetch_path }}", "f": "pgauthid", "c": 1, "p": 1, "g": 1 }
+    include:  "./roles/fetch_file/tasks/main.yml fetch_path={{ item.d }} fetch_filename={{ item.f }} fetch_content={{ item.c }} fetch_perms={{ item.p }} fetch_group_info={{ item.g }} "
+      with_items:
+        - { "d": "{{ fetch_path }}", "f": "postgresql.conf", "c": 1, "p": 1, "g": 1 }
+        - { "d": "{{ fetch_path }}", "f": "pg_hba.conf", "c": 1, "p": 1, "g": 1 }
+        - { "d": "{{ fetch_path }}", "f": "pg_ident.conf", "c": 1, "p": 1, "g": 1 }
+        - { "d": "{{ fetch_path }}", "f": "pgauthid", "c": 1, "p": 1, "g": 1 }
 
 
 
