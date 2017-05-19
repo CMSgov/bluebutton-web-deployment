@@ -65,7 +65,7 @@
     create: yes
     marker: "=== {mark} fetch_file: {{ fetch_filename }} ==============================="
     block: |
-      ls {{ fetched_file_result.file }}
+      ls {{ fetched_file_result.dest }}
       {{ fetch_file_perms.stdout }}
 
       {{ fetch_user_id.stdout }}
