@@ -60,8 +60,8 @@
     create: yes
     block: |
       ===fetch_file:BEGIN======================================================================
-      {{ fetch_file_perms.stdout }}
-      {{ fetch_user_id.stdout }}
+      {{ fetch_file_perms.stdout }}\n
+      {{ fetch_user_id.stdout }}\n
       {{ fetch_group_id.stdout }}
       ===fetch_file:END========================================================================
     mode: "0755"
