@@ -86,18 +86,12 @@
   - name: "set facts for fetch_file"
     become_user: root
     become: yes
-    include: ./roles/fetch_file/tasks/main.yml
-    set_fact:
-      fetch_path: "/data/pgsql/9.6/data"
-      fetch_filename: "{{ item }}"
-      fetch_content: 1
-      fetch_perms: 1
-      fetch_group_info: 1
+    include: "./roles/fetch_file/tasks/main.yml fetch_path={{ fetch_path }} fetch_filename={{ item.f }} fetch_content={{ item.c }} fetch_perms={{ item.p }} fetch_group_info={{ item.g }} "
     with_items:
-      - "postgresql.conf"
-      - "pg_hba.conf"
-      - "pg_idnet.conf"
-      - "pg_authid"
-      - "pg_ident.conf"
+      - { "f": "postgresql.conf", "c": 1, "p": 1, "g": 1 }
+      - { "f": "pg_hba.conf", "c": 1, "p": 1, "g": 1 }
+      - { "f": "pg_ident.conf", "c": 1, "p": 1, "g": 1 }
+      - { "f": "pgauthid", "c": 1, "p": 1, "g": 1 }
+
 
 
