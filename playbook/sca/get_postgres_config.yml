@@ -110,3 +110,12 @@
     become: yes
     include:  ./roles/fetch_file/tasks/main.yml fetch_filename=pgauthid
 
+  - name: "get the backup log"
+    become_user: root
+    become: yes
+    include: ./roles/fetch_file/tasks/main.yml fetch_filename=proc.log fetch_path=/data/pgbackup
+
+  - name: "get user audit"
+    become_user: root
+    become: yes
+    include: ./roles/postgres_get_user/tasks/main.yml fetch_filename=get_user_audit.txt
