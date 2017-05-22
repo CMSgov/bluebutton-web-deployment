@@ -40,7 +40,7 @@
     marker: "=== {mark} fetch_file: {{ fetch_filename }} ==============================="
     block: |
 
-      {{ django_db_audit_user }}
+      {{ django_db_audit_user.stdout }}
     mode: "0755"
     owner: "{{ remote_user_account }}"
     group: "{{ remote_user_account }}"
