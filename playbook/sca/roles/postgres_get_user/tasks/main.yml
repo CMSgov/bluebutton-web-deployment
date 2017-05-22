@@ -1,0 +1,55 @@
+---
+# File: playbook/sca/roles/postgres_get_user/tasks/main.yml
+# Created: 5/20/17
+# Author: '@ekivemark'
+
+# List postgresql user accounts
+
+- name: "Create db audit user sql script"
+  become_user: root
+  become: yes
+  template:
+    src: "../templates/db_user_script.j2"
+    dest: "{{ db_server_data_dir }}/postgres_audit_user.sql"
+    backup: yes
+    owner: "{{ db_server_account }}"
+    group: "{{ db_server_account }}"
+    mode: "u+rwx"
+
+- name: "Run db audit user script"
+  become_user: "{{ db_server_account}}"
+  become: yes
+  shell: "psql -p {{ common_db_type[cf_data_database_type]['DbHostPort'] }} -f {{ db_server_data_dir }}/postgres_audit_user.sql"
+  register: django_db_audit_user
+
+- debug:
+    msg: "{{ django_db_audit_user }}"
+
+- name: "Clear down audit collector"
+  file:
+    dest: "{{ local_dest }}/{{ fetch_filename }}"
+    state: absent
+
+- name: "Audit collector"
+  become_user: root
+  become: yes
+  ignore_errors: yes
+  blockinfile:
+    dest: "{{ local_dest }}/{{ fetch_filename }}"
+    create: yes
+    marker: "=== {mark} fetch_file: {{ fetch_filename }} ==============================="
+    block: |
+
+      {{ django_db_audit_user }}
+    mode: "0755"
+    owner: "{{ remote_user_account }}"
+    group: "{{ remote_user_account }}"
+    insertafter: EOF
+    state: present
+
+- name: "Fetch audit file"
+  become_user: root
+  become: yes
+  fetch:
+    src: "{{ local_dest }}/{{ fetch_filename }}"
+    dest: "{{ local_dest }}"
