@@ -78,6 +78,8 @@
         version: 2.2.1.0
       - name: awscli
         version: 1.11.86
+      - name: setuptools
+        version: 35.0.2
 
 #  - name: "install hhs_ansible"
 #    shell: "mkdir -p /hhs_ansible ; cd /hhs_ansible ; git clone https://github.com/HHSIDEALab/hhs_ansible "
