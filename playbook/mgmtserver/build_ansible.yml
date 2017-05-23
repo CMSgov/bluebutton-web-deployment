@@ -1,0 +1,111 @@
+---
+# File: playbook/mgmtserver/build_ansible.yml
+# Created: 5/22/17
+# Author: '@ekivemark'
+
+# take a new server in the mgmt zone and setup to use ansible
+# provide extra-vars 'env=[environment] build_target=[server_ip_address]'
+
+- name: "Build Ansible Server"
+  hosts: "{{ build_target }}"
+  become_user: root
+  remote_user: ec2-user
+  become: yes
+  connection: smart
+  vars:
+    # det a default environment. We don't mind mucking with the dev environment
+    env: "dev"
+    ansible_ssh_pipelining: no
+  vars_files:
+    - "./../../vars/common.yml"
+    - "./../../vault/env/{{ env }}/vault.yml"
+    - "./../../vars/env/{{ env }}/env.yml"
+    - "./../../vars/all_var.yml"
+    # - ../vars/all_vars.yml
+    # - ../../vars/playbook/template_envvars.yml
+
+  tasks:
+  - debug:
+      msg: "Environment = {{ env }}, Target = {{ build_target }}"
+
+  - name: "setup folders"
+    become_user: root
+    become: yes
+    file:
+      dest: "/root/.ansible-vault"
+      state: directory
+      owner: root
+      group: root
+      mode: "0600"
+    register: create_vault
+
+  - debug:
+      msg: "{{ create_vault.stdout }}"
+
+  - name: "yum installs"
+    become_user: root
+    become: yes
+    yum:
+      name: "{{ item }}"
+      state: installed
+    with_items:
+      - python-pip
+      - git
+      - python-boto
+
+  - name: "pip installs with optional version"
+    become_user: root
+    become: yes
+    # ansible==2.2.1.0
+    # awsccli==1.11.86
+    pip:
+      name: "{{ item.name }}"
+      version: "{{ item.version | default(omit) }}"
+    with_items:
+      - name: ansible
+        version: 2.2.1.0
+      - name: awscli
+        version: 1.11.86
+
+  - name: "install hhs_ansible"
+    shell: "mkdir -p /hhs_ansible ; cd /hhs_ansible ; git clone https://github.com/HHSIDEALab/hhs_ansible "
+
+  - name: "Setup go_ansible script"
+    template:
+      src: "../../templates/mgmtserver/{{ env }}/go_ansible.sh.j2"
+      dest: "/home/{{ remote_user_account }}/go_ansible"
+      mode: "0770"
+      owner: "{{ remote_user_account }}"
+      group: "{{ remote_user_account }}"
+
+  - name: "create folder for ansible-vault"
+    file:
+      dest: "/root/.ansible-vault"
+      state: directory
+      owner: root
+      group: root
+      mode: "0600"
+
+  - name: "create folder for .ec2"
+    file:
+      dest: "/root/.ec2"
+      state: directory
+      owner: root
+      group: root
+      mode: "0600"
+
+  - name: "create folder for .aws configuration"
+    file:
+      dest: "/root/.aws"
+      state: directory
+      owner: root
+      group: root
+      mode: "0600"
+
+  - name: "Copy ansible setup script"
+    template:
+      src: "../../templates/mgmtserver/{{ env }}/setup_ansible.sh.j2"
+      dest: "/home/{{ remote_user_account }}/setup_ansible"
+      mode: "0770"
+      owner: "{{ remote_user_account }}"
+      group: "{{ remote_user_account }}"
