@@ -4,7 +4,7 @@
 # Ping all servers
 # A basic script to check things are working.
 
-- hosts: all
+- hosts: "{{ build_target }}"
   vars:
     env: "dev"
   # Vars file is relative to playbook file

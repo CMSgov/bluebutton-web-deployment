@@ -11,11 +11,14 @@
   become_user: root
   remote_user: ec2-user
   become: yes
-  connection: smart
+  # connection: smart
   vars:
     # det a default environment. We don't mind mucking with the dev environment
-    env: "dev"
+    env: "test"
+    splunk_client_name: "BBAPI-{{ env|upper }}-MGMT"
     ansible_ssh_pipelining: no
+    hhs_ansible_git_branch: master
+    hhs_ansible_repo: "https://github.com/HHSIDEALab/hhs_ansible.git"
   vars_files:
     - "./../../vars/common.yml"
     - "./../../vault/env/{{ env }}/vault.yml"
@@ -23,6 +26,10 @@
     - "./../../vars/all_var.yml"
     # - ../vars/all_vars.yml
     # - ../../vars/playbook/template_envvars.yml
+
+  roles:
+    - ../../roles/splunk
+    - ../appserver/roles/app_tools
 
   tasks:
   - debug:
@@ -40,7 +47,7 @@
     register: create_vault
 
   - debug:
-      msg: "{{ create_vault.stdout }}"
+      msg: "{{ create_vault.stdout | default(omit) }}"
 
   - name: "yum installs"
     become_user: root
@@ -52,6 +59,11 @@
       - python-pip
       - git
       - python-boto
+
+  - name: "Upgrade pip"
+    shell: "pip install --upgrade pip"
+    register: pip_upgrade
+    ignore_errors: yes
 
   - name: "pip installs with optional version"
     become_user: root
@@ -67,8 +79,41 @@
       - name: awscli
         version: 1.11.86
 
-  - name: "install hhs_ansible"
-    shell: "mkdir -p /hhs_ansible ; cd /hhs_ansible ; git clone https://github.com/HHSIDEALab/hhs_ansible "
+#  - name: "install hhs_ansible"
+#    shell: "mkdir -p /hhs_ansible ; cd /hhs_ansible ; git clone https://github.com/HHSIDEALab/hhs_ansible "
+
+    ########################################
+  - name: "Check for git installation"
+    become_user: root
+    become: yes
+    stat:
+      path: "/hhs_ansible/hhs_ansible/.git/*"
+    register: git_installed
+
+  - name: "Check result of git check"
+    debug:
+      msg: "git is installed [{{ git_installed.stat.exists }}]"
+    ignore_errors: yes
+
+  - name: "install from git: hhs_ansible branch:{{ hhs_ansible_git_branch }}"
+    become_user: root
+    become: yes
+    git:
+      repo: "{{ hhs_ansible_repo }}"
+      dest: "/hhs_ansible/hhs_ansible"
+      force: yes
+      clone: yes
+    when: not git_installed.stat.exists
+
+  # Now pull a specific branch
+  - name: "update from git: hhs_ansible branch:{{ hhs_ansible_git_branch }}"
+    become_user: root
+    become: yes
+    git:
+      repo: "{{ hhs_ansible_repo }}"
+      dest: "/hhs_ansible/hhs_ansible"
+      version: "{{ hhs_ansible_git_branch }}"
+
 
   - name: "Setup go_ansible script"
     template:
@@ -109,3 +154,4 @@
       mode: "0770"
       owner: "{{ remote_user_account }}"
       group: "{{ remote_user_account }}"
+
