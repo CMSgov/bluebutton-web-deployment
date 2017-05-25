@@ -54,7 +54,7 @@
       content: ""
 
   - include:
-    -  ../platform/rewrite_hosts.yml
+    - ../platform/rewrite_hosts.yml
 
   - name: "Set Hostname to {{ cf_data_pgsql_server_name }} "
     remote_user: ec2-user
