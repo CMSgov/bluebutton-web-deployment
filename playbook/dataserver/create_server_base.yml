@@ -91,13 +91,13 @@
        device_name: "/dev/{{ cf_data_device }}"
        encrypted: yes
        region: "{{ cf_region }}"
-       tags:
-         Name: "bb-{{ env }}-{{ cf_data_azone }}-{{ env_cf_data_tag_key_layer }}-{{ cf_platform_version }}-DATA"
-         Stack: "BB-{{ env }}-{{ cf_data_azone }}-{{ env_cf_data_tag_key_layer }}-STORAGE"
-         Business: "{{ cf_tags_business }}"
-         Application: "{{ cf_tags_application }}"
-         Environment: "{{ env|upper }}"
-         Layer: "{{ cf_data_tag_key_layer|upper }}"
+#       tags:      ## Requires Ansible 2.3
+#         Name: "bb-{{ env }}-{{ cf_data_azone }}-{{ env_cf_data_tag_key_layer }}-{{ cf_platform_version }}-DATA"
+#         Stack: "BB-{{ env }}-{{ cf_data_azone }}-{{ env_cf_data_tag_key_layer }}-STORAGE"
+#         Business: "{{ cf_tags_business }}"
+#         Application: "{{ cf_tags_application }}"
+#         Environment: "{{ env|upper }}"
+#         Layer: "{{ cf_data_tag_key_layer|upper }}"
     with_items: "{{ data_fips_output.instances }}"
     register: ec2_vol
 
