@@ -97,6 +97,9 @@
 
 # Install postgresql
 - include: build_database.yml build_target=just_created
+- include: ./set_backup.yml build_target=just_created
+
+
 
 - hosts: localhost
   vars_files:
