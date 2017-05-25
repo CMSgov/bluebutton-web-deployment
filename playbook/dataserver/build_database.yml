@@ -53,8 +53,10 @@
       marker: "# {mark} ANSIBLE MANAGED BLOCK builddb #"
       content: ""
 
-  - include:
-    - ../platform/rewrite_hosts.yml
+  - name: "rewrite hosts_file"
+    include:
+      - ./../platform/rewrite_hosts.yml
+
 
   - name: "Set Hostname to {{ cf_data_pgsql_server_name }} "
     remote_user: ec2-user
