@@ -46,6 +46,11 @@
     - ../../roles/postgres
 
   tasks:
+  - name: "Setup backups"
+    become_user: root
+    become: yes
+    include: ./set_backup.yml
+
   - name: "Update Ansible hosts file"
     connection: local
     blockinfile:
