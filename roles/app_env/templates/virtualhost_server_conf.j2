@@ -1,7 +1,7 @@
-
 # Copied to /etc/httpd/virtualhost/server.conf
 # Configured for Apache 2.4
 # From /hhs_ansible/hhs_ansible/roles/apache/templates/virtualhost_server_conf.j2
+# Release: Nessus Trace fix 2017-05-18
     WSGISocketPrefix /var/run/modwsgi
 
     WSGIApplicationGroup %{GLOBAL}
@@ -19,6 +19,13 @@
 
         WSGIProcessGroup apache
         WSGIScriptAlias / {{ cf_app_pyapp_home }}/hhs_oauth_server/hhs_oauth_server/wsgi.py
+
+        # BEGIN Nessus Trace fix 2017-05-18
+        # CVE-2003-1567,CVE-2004-2320,CVE-2010-0386
+        RewriteEngine on
+        RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK)
+        RewriteRule .* - [F]
+        # END Nessus Trace fix 2017-05-18
 
         # Directory specification needed to allow apache to load wsgi.py
         # Directory  to point to folder where wsgi.py stored
