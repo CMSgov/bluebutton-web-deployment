@@ -34,12 +34,20 @@
 - name: "Update yum config-manager"
   become_user: root
   become: yes
-  shell: "yum-config-manager --enable rhel-server-rhscl-6-rpms"
+  shell: "yum-config-manager --enable {{ item }} ; echo Processed {{ item }}"
+  with_items:
+    - rhel-server-rhscl-6-rpms
+    - rhel-6-server-optional-rpms
+  register: yum_config
 
-- name: "Update yum config-manager for optional RHEL channel"
-  become_user: root
-  become: yes
-  shell: "yum-config-manager --enable rhel-6-server-optional-rpms"
+#- name: "Update yum config-manager for optional RHEL channel"
+#  become_user: root
+#  become: yes
+#  shell: "yum-config-manager --enable rhel-6-server-optional-rpms"
+
+- name: "wait so that the yum lock is removed"
+  pause: seconds=90
+  when: yum_config|changed
 
 - name: "Add Postgres YUM repository for RHEL 6"
   become_user: root
