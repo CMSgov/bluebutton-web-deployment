@@ -1,10 +1,10 @@
 ---
-# File: build_appserver.yml 
-# Created: 5/9/17
+# File: playbook/appserver/update_appserver.yml
+# Created: 5/24/17
 # Author: '@ekivemark'
 
 # Playbook to:
-#  - create Python3/Django AppServer
+#  - Update Python3/Django AppServer
 #
 # Based on: http://odecee.com.au/cloudformation-and-ansible/
 # Vars file is relative to playbook file
@@ -20,8 +20,11 @@
 # env_ prefixes environment specific variables
 # all_var incorporates preceding variables and defines variables without prefixes.
 # use all_var variables in scripts.
+# Implementing Nessus rewrite patch to virtualhosts.conf
+# Switch off default ssl.conf (ssl is handled by front-end App Load Balancer)
+# Release: Nessus Trace fix 2017-05-18
 
-- name: Build App Server
+- name: Update AppServer
   # hosts: appservers
   hosts: "{{ build_target }}"
   # connection: local
@@ -46,53 +49,11 @@
     - "./../../vars/env/{{ env }}/env.yml"
     - "./../../vars/all_var.yml"
 
-  roles:
-    # - ../../roles/
-    # - roles/
-    - ../../roles/base_patch
-    # Check SELINIUX set to permissive
-    - roles/selinux_state
-    # setup aws config and credentials
-    - roles/aws_config
-    # Install AppServer tools
-    - roles/app_tools
-    # Create the pyapps user
-    - roles/app_user
-    # Create the pyapps logs
-    - roles/app_logs
-    # Change Server ID for Splunk
-    - ../../roles/splunk
-    # Install Python3.x
-    - roles/python3
-    # Install Apache
-    - roles/apache
-    # install mod_wsgi
-    - roles/mod_wsgi
-    # Update application code and write virtualhosts file
-    - roles/app_update
-    # Update environment variable files
-    - roles/app_update_env
-    # Set permissions for app under selinux
-    - roles/semanage_apps
-    # Set permissions for virtualenv under selinux
-    - roles/semanage_virtualenv
-
-
   tasks:
-  - include: ../../roles/base_patch/tasks/fix_sudoers.yml
-  # Switch default ssl.conf off
-  - include: roles/apache/tasks/ssl_off.yml
   - include: ../../roles/base_patch/tasks/update_packages.yml
-  - include: roles/create_superuser/tasks/main.yml
-  - include: ../../roles/app_env/tasks/refresh_app.yml
-  - include: ../platform/rewrite_hosts.yml
-
-  - name: "Update Ansible hosts file"
-    connection: local
-    blockinfile:
-      dest: "/etc/ansible/hosts"
-      marker: "# {mark} ANSIBLE MANAGED BLOCK buildapp #"
-      content: ""
+    # Switch default ssl.conf off
+  - include: roles/apache/tasks/ssl_off.yml
+  - include: ./write_virtual_hosts.yml
 
   - name: make sure apache server is running
     service:
@@ -105,14 +66,7 @@
     notify:
       - restart apache
 
-  - name: "Add in to Load Balancer"
-    include: roles/attach_to_elb/tasks/main.yml
-
   handlers:
   - name: restart apache
     service: name=httpd state=restarted
-
-
-  # Now We should have a working machine
-  # Apache / Mod_Wsgi / Python3
 

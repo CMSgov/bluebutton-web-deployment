@@ -22,7 +22,7 @@
 # use all_var variables in scripts.
 
 - name: setup backups
-  hosts: dbservers
+  hosts: "{{ build_target }}"
   # connection: local
   remote_user: ec2-user
   gather_facts: True
