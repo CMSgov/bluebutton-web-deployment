@@ -54,8 +54,7 @@
       content: ""
 
   - name: "rewrite hosts_file"
-    include:
-      - ./../platform/rewrite_hosts.yml
+    include: ./../platform/rewrite_hosts.yml
 
 
   - name: "Set Hostname to {{ cf_data_pgsql_server_name }} "
