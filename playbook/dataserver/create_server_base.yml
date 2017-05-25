@@ -94,11 +94,15 @@
     with_items: "{{ data_fips_output.instances }}"
     register: ec2_vol
 
+  - name: "assign just_created"
+    connection: local
+    set_fact:
+        just_created_private_ip: "{{ data_fips_output.instances[0]['private_ip'] }}"
 
 # Install postgresql
-- include: build_database.yml build_target=just_created
-- include: ./set_backup.yml build_target=just_created
-
+- include: build_database.yml build_target=just_created_private_ip
+# Setup backups
+- include: ./set_backup.yml build_target=just_created_private_ip
 
 
 - hosts: localhost
