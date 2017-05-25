@@ -111,10 +111,15 @@
     debug:
       msg: "{{ just_created_private_ip }}"
 
+  - name: add host to group
+    add_host:
+      name: "{{ data_fips_output.instances[0]['private_ip'] }}"
+      groups: "just_created"
+
 # Install postgresql
-- include: build_database.yml build_target="{{ just_created_private_ip }}"
+- include: build_database.yml build_target=just_created
 # Setup backups
-- include: ./set_backup.yml build_target="{{ just_created_private_ip }}"
+- include: ./set_backup.yml build_target=just_created
 
 
 - hosts: localhost
@@ -145,10 +150,6 @@
       dest: "./../../vars/{{ env }}-{{ cf_data_tag_key_layer }}-ami-{{ cf_data_tag_key_layer }}-{{ansible_date_time.date }}.yml"
     # when: deploy is defined and deploy|bool == True
 
-  - name: add host to group
-    add_host:
-      name: "{{ data_fips_output.instances[0]['private_ip'] }}"
-      groups: "just_created"
 
   - name: "add private_ip to /etc/ansible/hosts"
     blockinfile:
