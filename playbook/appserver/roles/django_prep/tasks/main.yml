@@ -1,0 +1,25 @@
+---
+# File: playbook/appserver/roles/django_prep/tasks/main.yml
+# Created: 5/26/17
+# Author: '@ekivemark'
+
+# Perform django migrate and django collectstatic
+
+- name: Django migrate
+  become_user: root
+  become: yes
+  django_manage:
+    command: migrate
+    app_path: "{{ install_root }}/{{ project_name }}/"
+    virtualenv: "{{ venv }}"
+  when: (migrate == 'yes')
+
+- name: Django collectstatic
+  become_user: root
+  become: yes
+  django_manage:
+    command: collectstatic
+    app_path: "{{ install_root }}/{{ project_name }}/"
+    virtualenv: "{{ venv }}"
+  when: (collectstatic == 'yes')
+
