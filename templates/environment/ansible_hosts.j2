@@ -12,7 +12,6 @@
 ## Environment: {{ env|upper }}
 ##
 #####
-# {% for host in ec2_remote_facts_info.instances %}{{ host }}{% endfor %}
 #
 [mgmtservers]
 {% for host in ec2_remote_facts_info.instances %}{% if host.tags.Layer|upper=='MGMT' %}
