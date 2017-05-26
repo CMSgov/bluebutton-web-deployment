@@ -38,7 +38,7 @@
     - "./../../vault/env/{{ env }}/vault.yml"
     - "./../../vars/env/{{ env }}/env.yml"
     - "./../../vars/all_var.yml"
-    - "./../../var/{{ env }}-{{ sub_zone }}-ami-{{ ami_release }}.yml"
+    # - "./../../var/{{ env }}-{{ sub_zone }}-ami-{{ ami_release }}.yml"
 
   tasks:
   - name: "launch App Server"
