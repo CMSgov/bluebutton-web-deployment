@@ -1,0 +1,12 @@
+---
+# File: roles/check_env/tasks/main.yml
+# Created: 5/26/17
+# Author: '@ekivemark'
+
+# Check some settings
+# Using this to debug setings
+
+
+- name: "check engine light is on-{{ env }} | {{ env_env }} | {{ inventory_hostname }}"
+  debug:
+    msg: "Operating on {{ env }} and {{ inventory_hostname }}"

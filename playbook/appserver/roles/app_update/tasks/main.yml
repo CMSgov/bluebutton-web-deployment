@@ -102,7 +102,7 @@
 #  shell: "cd {{ install_root }}/{{ project_name }} "
 
   # Now pull a specific branch
-- name: "update from git: {{ project_repo }} branch:{{ git_branch }}"
+- name: "update from git: {{ project_repo }} branch:{{ git_branch }} to {{ env }}"
   become_user: root
   become: yes
   git:
@@ -163,62 +163,6 @@
     group: root
     mode: "0644"
 
-#############################
-#---
-# File: refresh_app.yml
-# Created: 5/14/17
-# Author: '@ekivemark'
-
-#- name: become root and activate virtualenv
-#  become: yes
-#  become_method: sudo
-#  become_user: root
-#  action: "shell source {{ venv }}/bin/activate"
-#
-#- name: create app folder
-#  become_user: root
-#  become: yes
-#  file:
-#    dest: "{{ install_root }}/{{ project_name }}"
-#    state: directory
-#    owner: "{{ app_owner }}"
-#    group: "{{ app_group }}"
-#    mode:  "u+rw,g+rw,o-rwx"
-#
-#- name: "Check for git installation"
-#  become_user: root
-#  become: yes
-#  stat:
-#    path: "{{ install_root }}/{{ project_name }}/.git/*"
-#  register: git_installed
-#
-#- name: "Check result of git check"
-#  debug:
-#    msg: "git is [{{ git_installed }}]"
-#
-#- name: switch to app folder
-#  become_user: root
-#  become: yes
-#  shell: "cd {{ install_root }}/{{ project_name }} "
-#
-#- name: "install from git: {{ project_repo }} branch:{{ git_branch }}"
-#  become_user: root
-#  become: yes
-#  git:
-#    repo: "{{ project_repo }}"
-#    dest: "{{ install_root }}/{{ project_name }}"
-#    force: yes
-#    clone: yes
-#  when: not git_installed.stat.exists
-#
-#  # Now pull a specific branch
-#- name: "update from git: {{ project_repo }} branch:{{ git_branch }}"
-#  become_user: root
-#  become: yes
-#  git:
-#    repo: "{{ project_repo }}"
-#    dest: "{{ install_root }}/{{ project_name }}"
-#    version: "{{ git_branch }}"
 
 # change ownership of files
 - name: "Update file ownership"
@@ -258,36 +202,8 @@
     state: touch
     mode: "u+rwx,g+rwx,o-rwx"
 
-- name: Django migrate
-  become_user: root
-  become: yes
-  django_manage:
-    command: migrate
-    app_path: "{{ install_root }}/{{ project_name }}/"
-    virtualenv: "{{ venv }}"
-  when: (migrate == 'yes')
-
-- name: Django collectstatic
-  become_user: root
-  become: yes
-  django_manage:
-    command: collectstatic
-    app_path: "{{ install_root }}/{{ project_name }}/"
-    virtualenv: "{{ venv }}"
-  when: (collectstatic == 'yes')
-
-#- name: make sure apache server is running
-#  become_user: root
-#  become: yes
-#  service:
-#    name: httpd
-#    state: started
-#    enabled: yes
-#
-#- name: Restart Apache
-#  become_user: root
-#  become: yes
-#  action: shell /bin/echo $HOSTNAME
-#  notify:
-#    - restart apache
+#####
+## Add the create variable files here before running Migrate and Collectstatic
+## Break Migrate and collectstatic out to separate role: django_prep
+#####
 
