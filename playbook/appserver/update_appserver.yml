@@ -61,7 +61,7 @@
       state: started
       enabled: yes
 
-  - name: "Restart Apache on {{ env_env }}"
+  - name: "Restart Apache on {{ env }}"
     action: shell /bin/echo $HOSTNAME
     notify:
       - restart apache

@@ -7,6 +7,6 @@
 # Using this to debug setings
 
 
-- name: "check engine light is on-{{ env }} | {{ env_env }} | {{ inventory_hostname }}"
+- name: "check engine light is on-{{ env }} | {{ env }} | {{ inventory_hostname }}"
   debug:
     msg: "Operating on {{ env }} and {{ inventory_hostname }}"

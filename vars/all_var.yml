@@ -19,7 +19,7 @@
   ami_release: "{{ env_ami_release }}"
 
   ### Environment:
-  env_env: "dev"
+  env: "{{ env_env }}"
 
 
   ### Cloud Formation Tags:
