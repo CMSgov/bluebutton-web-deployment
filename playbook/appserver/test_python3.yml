@@ -32,4 +32,3 @@
 
   roles:
     - ./roles/python3
-    
