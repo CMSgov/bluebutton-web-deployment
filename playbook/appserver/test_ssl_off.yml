@@ -6,7 +6,7 @@
 # test ssl_off role
 
 
-- name: Test git deployments
+- name: Test ssl_off
   # hosts: appservers
   hosts: "{{ build_target }}"
   # connection: local
@@ -15,6 +15,6 @@
   # become: yes
   gather_facts: True
 
-  roles:
-    - ./roles/apache/tasks/ssl_off.yml
+  tasks:
+  - include: ./roles/apache/tasks/ssl_off.yml
 
