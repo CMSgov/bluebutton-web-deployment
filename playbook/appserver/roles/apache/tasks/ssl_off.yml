@@ -12,6 +12,10 @@
   stat: "path=/etc/httpd/conf.d/ssl.conf "
   register: httpd_ssl_stat
 
+- name: result
+  debug:
+    msg: "{{ httpd_ssl_stat }}"
+
 - name: "Check for ssl.conf"
   debug:
     msg: "{{ httpd_ssl_stat }}"
