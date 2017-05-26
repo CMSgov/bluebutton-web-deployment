@@ -9,8 +9,7 @@
   become_user: root
   become: yes
   shell: |
-    PY_VER=$(if [ -f /usr/local/bin/python{{ python_ver }} ]; then /usr/local/bin/python{{ python_ver }} --version ; fi )
-    if [ $PY_VER = Python {{ python_ver_full }} ]; then echo True ; else echo False ; fi ;
+    if [ "$(if [ -f /usr/local/bin/python{{ python_ver }} ]; then /usr/local/bin/python{{ python_ver }} --version ; fi )" = "Python {{ python_ver_full }}" ] ; then echo True; else  echo False; fi;
   ignore_errors: true
   register: python_ver_installed
 
