@@ -70,7 +70,7 @@
     state: restarted
     enabled: yes
 
-- name: "Restart Apache on {{ env_env }}"
+- name: "Restart Apache on {{ env }}"
   become_user: root
   become: yes
   action: "shell /bin/echo $HOSTNAME"
