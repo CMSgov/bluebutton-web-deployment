@@ -12,8 +12,13 @@
   stat: "path=/etc/httpd/conf.d/ssl.conf "
   register: httpd_ssl_stat
 
+- name: "Check for ssl.conf"
+  debug:
+    msg: "{{ httpd_ssl_stat }}"
+
 - name: "Move ssl.conf to ssl.conf.disabled"
   become_user: root
   become: yes
   command: creates="/etc/httpd/conf.d/ssl.conf.disabled" mv /etc/httpd/conf.d/ssl.conf /etc/httpd/conf.d/ssl.conf.disabled
   when: httpd_ssl_stat.exists
+
