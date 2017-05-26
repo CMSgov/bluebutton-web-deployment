@@ -18,11 +18,11 @@
 
 - name: "Check for ssl.conf"
   debug:
-    msg: "{{ httpd_ssl_stat }}"
+    msg: "ssl.conf exists - {{ httpd_ssl_stat.stat.exists }}"
 
 - name: "Move ssl.conf to ssl.conf.disabled"
   become_user: root
   become: yes
   command: creates="/etc/httpd/conf.d/ssl.conf.disabled" mv /etc/httpd/conf.d/ssl.conf /etc/httpd/conf.d/ssl.conf.disabled
-  when: httpd_ssl_stat.exists
+  when: httpd_ssl_stat.stat.exists
 
