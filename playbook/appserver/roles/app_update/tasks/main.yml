@@ -102,7 +102,7 @@
 #  shell: "cd {{ install_root }}/{{ project_name }} "
 
   # Now pull a specific branch
-- name: "update from git: {{ project_repo }} branch:{{ git_branch }}"
+- name: "update from git: {{ project_repo }} branch:{{ git_branch }} to {{ env }}"
   become_user: root
   become: yes
   git:

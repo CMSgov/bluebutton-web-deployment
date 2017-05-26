@@ -68,6 +68,8 @@
     - roles/apache
     # install mod_wsgi
     - roles/mod_wsgi
+    # Check engine light
+    - ../../roles/check_env
     # Update application code and write virtualhosts file
     - roles/app_update
     # Update environment variable files
@@ -86,7 +88,7 @@
   - include: roles/apache/tasks/ssl_off.yml
   - include: ../../roles/base_patch/tasks/update_packages.yml
   - include: roles/create_superuser/tasks/main.yml
-  - include: ../../roles/app_env/tasks/refresh_app.yml
+  # - include: ../../roles/app_env/tasks/refresh_app.yml
   - include: ../platform/rewrite_hosts.yml
 
   - name: "Update Ansible hosts file"
