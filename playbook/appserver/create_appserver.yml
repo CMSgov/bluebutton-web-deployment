@@ -101,7 +101,7 @@
   - name: "add private_ip to /etc/ansible/hosts"
     lineinfile:
       dest: "/etc/ansible/hosts"
-      insertafter: "[appservers]"
-      line: "{{ app_ec2_output.instances[0]['private_ip'] }}"
+      insertafter: "\[appservers\]"
+      line: "[appservers]\n{{ app_ec2_output.instances[0]['private_ip'] }}"
       backup: yes
 
