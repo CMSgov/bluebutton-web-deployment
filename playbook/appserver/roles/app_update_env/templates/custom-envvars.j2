@@ -59,6 +59,9 @@ no_overwrite('AWS_STORAGE_BUCKET_NAME', '{{ s3_storage_bucket_name }}')
 no_overwrite('DJANGO_ORGANIZATION_NAME', '{{ django_org_name }}')
 no_overwrite('DJANGO_APPLICATION_TITLE', '{{ django_app_title }}')
 
+# admin prepend url
+no_overwrite('DJANGO_ADMIN_PREPEND_URL', '{{ django_admin_redirector }}')
+
 # Database Settings - postgres - Start
 # postgres://USER:PASSWORD@HOST:PORT/NAME
 no_overwrite('RDS_DB_PLATFORM', '{{ db_platform_type }}')

@@ -127,6 +127,11 @@
   django_org_name: "{{ env_django_org_name }}"
   django_app_title: "{{ env_django_app_title }}"
 
+  # Add a variable endpoint for admin/
+  # eg. To move from /admin/ to /secret/admin/
+  #     set redirector to 'secret/'
+  django_admin_redirector: "{{ env_django_admin_redirector }}"
+
   ### Database Settings:
   ## Postgresql 9.6
   ## export RDS_DB_PLATFORM='postgres'
