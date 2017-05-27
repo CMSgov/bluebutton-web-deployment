@@ -57,6 +57,9 @@ export AWS_STORAGE_BUCKET_NAME='{{ s3_storage_bucket_name }}'
 export DJANGO_ORGANIZATION_NAME='{{ django_org_name }}'
 export DJANGO_APPLICATION_TITLE='{{ django_app_title }}'
 
+# admin prepend url
+export DJANGO_ADMIN_PREPEND_URL='{{ django_admin_redirector }}'
+
 # Database Settings - PostgreSQL - Start
 export RDS_DB_PLATFORM='{{ db_platform_type }}'
 export RDS_DB_ENGINE='{{ db_engine_driver }}'
