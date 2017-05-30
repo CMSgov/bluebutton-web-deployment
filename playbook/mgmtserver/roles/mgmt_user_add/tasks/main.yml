@@ -1,0 +1,19 @@
+---
+# File: playbook/mgmtserver/roles/mgmt_user_add/tasks/main.yml
+# Created: 5/30/17
+# Author: '@ekivemark'
+
+# Add a management user to the Ansible Server
+
+
+# receive mgmt_user_name as variable
+
+- name: "Creating Management User"
+  become_user: root
+  become: yes
+  user:
+    name: "{{ mgmt_user_name }}"
+    generate_ssh_key: yes
+    ssh_key_bits: 2048
+    ssh_key_file: .ssh/id_rsa
+
