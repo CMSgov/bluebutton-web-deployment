@@ -26,7 +26,6 @@
     state: directory
     mode: "0700"
     owner: "{{ mgmt_user_name }}"
-    group: "{{ mgmt_user_name }}"
 
 - name: "setup authorized_keys for ssh access for {{ mgmt_user_name }}"
   become_user: root
@@ -41,7 +40,6 @@
     state: present
     mode: "0600"
     owner: "{{ mgmt_user_name }}"
-    group: "{{ mgmt_user_name }}"
 
 - name: Allow 'wheel' group to have passwordless sudo
   become_user: root
