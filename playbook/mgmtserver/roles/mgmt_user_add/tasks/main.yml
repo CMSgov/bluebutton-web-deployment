@@ -14,7 +14,7 @@
   user:
     name: "{{ mgmt_user_name }}"
     group: "{{ ans_group }}"
-    groups: "{{ ans_group }}, sudoers"
+    groups: "{{ ans_group }}, sudo"
     generate_ssh_key: yes
     shell: /bin/bash
     ssh_key_bits: 2048
