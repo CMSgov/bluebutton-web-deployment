@@ -22,7 +22,7 @@
 
 - name: "set ownership for /home/{{ mgmt_user_name }}/.ssh"
   file:
-    dest: "/home/{{ mgmt_user_name }}/.shh"
+    dest: "/home/{{ mgmt_user_name }}/.ssh"
     state: directory
     mode: "0700"
     owner: "{{ mgmt_user_name }}"
@@ -30,13 +30,13 @@
 - name: "setup authorized_keys for ssh access for {{ mgmt_user_name }}"
   become_user: root
   become: yes
-  shell: "cat /home/{{ mgmt_user_name }}/.shh/id_rsa.pub >> /home/{{ mgmt_user_name }}/.shh/authorized_keys"
+  shell: "cat /home/{{ mgmt_user_name }}/.ssh/id_rsa.pub >> /home/{{ mgmt_user_name }}/.ssh/authorized_keys"
 
 - name: "set ownership for /home/{{ mgmt_user_name }}/.ssh"
   become_user: root
   become: yes
   file:
-    dest: "/home/{{ mgmt_user_name }}/.shh/authorized_keys"
+    dest: "/home/{{ mgmt_user_name }}/.ssh/authorized_keys"
     state: present
     mode: "0600"
     owner: "{{ mgmt_user_name }}"
