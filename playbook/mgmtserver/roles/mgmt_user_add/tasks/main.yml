@@ -20,6 +20,29 @@
     ssh_key_bits: 2048
     ssh_key_file: .ssh/id_rsa
 
+- name: "set ownership for /home/{{ mgmt_user_name }}/.ssh"
+  file:
+    dest: "/home/{{ mgmt_user_name }}/.shh"
+    state: directory
+    mode: "0700"
+    owner: "{{ mgmt_user_name }}"
+    group: "{{ mgmt_user_name }}"
+
+- name: "setup authorized_keys for ssh access for {{ mgmt_user_name }}"
+  become_user: root
+  become: yes
+  shell: "cat /home/{{ mgmt_user_name }}/.shh/id_rsa.pub >> /home/{{ mgmt_user_name }}/.shh/authorized_keys"
+
+- name: "set ownership for /home/{{ mgmt_user_name }}/.ssh"
+  become_user: root
+  become: yes
+  file:
+    dest: "/home/{{ mgmt_user_name }}/.shh/authorized_keys"
+    state: present
+    mode: "0600"
+    owner: "{{ mgmt_user_name }}"
+    group: "{{ mgmt_user_name }}"
+
 - name: Allow 'wheel' group to have passwordless sudo
   become_user: root
   become: yes
