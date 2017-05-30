@@ -1,0 +1,32 @@
+---
+# File: playbook/mgmtserver/add_ansible_user.yml
+# Created: 5/30/17
+# Author: '@ekivemark'
+
+- name: "Create Ansible Management Users"
+  hosts: "{{ build_target }}"
+  become_user: root
+  remote_user: ec2-user
+  become: yes
+  connection: smart
+  vars:
+    # det a default environment. We don't mind mucking with the dev environment
+    env: "dev"
+    ansible_ssh_pipelining: no
+    ans_group: "ansmgmt"
+  vars_files:
+    - "./../../vars/common.yml"
+    - "./../../vault/env/{{ env }}/vault.yml"
+    - "./../../vars/env/{{ env }}/env.yml"
+    - "./../../vars/all_var.yml"
+
+
+  tasks:
+  - name: "Add group {{ ans_group }}"
+    become_user: root
+    become: yes
+    group:
+      name: "{{ ans_group }}"
+      state: present
+
+  - include: roles/mgmt_user_add/tasks/main.yml
