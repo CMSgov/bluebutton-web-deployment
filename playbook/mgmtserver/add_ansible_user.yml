@@ -22,6 +22,13 @@
 
 
   tasks:
+  - name: Make sure we have a 'wheel' group
+    become_user: root
+    become: yes
+    group:
+      name: wheel
+      state: present
+
   - name: "Add group {{ ans_group }}"
     become_user: root
     become: yes
