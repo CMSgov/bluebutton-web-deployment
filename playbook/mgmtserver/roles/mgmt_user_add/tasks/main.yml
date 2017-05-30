@@ -14,11 +14,20 @@
   user:
     name: "{{ mgmt_user_name }}"
     group: "{{ ans_group }}"
-    groups: "{{ ans_group }}, sudo"
+    groups: "{{ ans_group }}, wheel"
     generate_ssh_key: yes
     shell: /bin/bash
     ssh_key_bits: 2048
     ssh_key_file: .ssh/id_rsa
+
+- name: Allow 'wheel' group to have passwordless sudo
+  become_user: root
+  become: yes
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: '^%wheel'
+    line: '%wheel ALL=(ALL) NOPASSWD: ALL'
 
 - name: "Setup go_ansible in {{ env }} "
   become_user: root
