@@ -13,7 +13,31 @@
   become: yes
   user:
     name: "{{ mgmt_user_name }}"
+    group: "{{ ans_group }}"
+    groups: "{{ ans_group }}, sudoers"
     generate_ssh_key: yes
+    shell: /bin/bash
     ssh_key_bits: 2048
     ssh_key_file: .ssh/id_rsa
+
+- name: "Setup go_ansible in {{ env }} "
+  become_user: root
+  become: yes
+  template:
+    src: "../../templates/mgmtserver/{{ env }}/go_ansible.sh.j2"
+    dest: "/home/{{ mgmt_user_name }}/go_ansible"
+    owner: "{{ mgmt_user_name }}"
+    group: "{{ ans_group }}"
+    mode: "u+x"
+
+- name: "setup login for {{ mgmt_user_name }}"
+  become_user: root
+  become: yes
+  lineinfile:
+    state: present
+    regexp: '^~/go_ansible'
+    line: "~/go_ansible"
+    name: "{{ mgmt_user_name }}"
+    group: "{{ ans_group }}"
+    mode: "0750"
 

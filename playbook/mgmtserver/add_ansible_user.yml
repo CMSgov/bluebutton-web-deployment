@@ -13,6 +13,7 @@
     # det a default environment. We don't mind mucking with the dev environment
     env: "dev"
     ansible_ssh_pipelining: no
+    ans_group: "ansmgmt"
   vars_files:
     - "./../../vars/common.yml"
     - "./../../vault/env/{{ env }}/vault.yml"
@@ -21,11 +22,11 @@
 
 
   tasks:
-  - name: Add group "ansmgmt"
+  - name: "Add group {{ ans_group }}"
     become_user: root
     become: yes
     group:
-      name: ansmgmt
+      name: "{{ ans_group }}"
       state: present
 
   - include: roles/mgmt_user_add/tasks/main.yml
