@@ -43,6 +43,7 @@
   become_user: root
   become: yes
   lineinfile:
+    dest: "/home/{{ mgmt_user_name }}/.bashrc"
     state: present
     regexp: '^~/go_ansible'
     line: "~/go_ansible"
