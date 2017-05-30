@@ -47,7 +47,7 @@
     state: present
     regexp: '^~/go_ansible'
     line: "~/go_ansible"
-    name: "{{ mgmt_user_name }}"
+    owner: "{{ mgmt_user_name }}"
     group: "{{ ans_group }}"
     mode: "0750"
 
