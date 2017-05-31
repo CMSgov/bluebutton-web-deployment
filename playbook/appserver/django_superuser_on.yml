@@ -32,7 +32,6 @@
     ansible_ssh_pipelining: no
     env: "dev"
     sub_zone: "app"
-    env_cf_app_version: "01"
   vars_files:
     - "./../../vars/common.yml"
     - "./../../vault/env/{{ env }}/vault.yml"
