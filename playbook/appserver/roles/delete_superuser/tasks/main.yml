@@ -63,6 +63,17 @@
   register: superuser_count
   when: ( superuser_count.stdout != "0" )
 
+- name: "does superuser still exist?"
+  become_user: root
+  become: yes
+  shell:  |
+    cd {{ cf_app_pyapp_home }}/{{ common_project_name }} ;
+    echo "from django.contrib.auth import get_user_model; User = get_user_model(); print(User.objects.filter(username='{{ cf_app_pyapps_user }}').count())" | {{ cf_app_py_virtual_env }}/bin/python ./manage.py shell > {{ cf_app_pyapp_home }}/output/su_result.txt
+  args:
+    chdir: "{{ cf_app_pyapp_home }}/{{ common_project_name }}"
+  environment:
+    DJANGO_SETTINGS_MODULE: "{{ django_settings_module }}"
+
 - name: "was superuser deleted?"
   become_user: root
   become: yes
