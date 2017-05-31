@@ -39,7 +39,6 @@
   shell:  |
     cd {{ cf_app_pyapp_home }}/{{ common_project_name }} ;
     echo "from django.contrib.auth import get_user_model; User = get_user_model(); print(User.objects.filter(username='{{ cf_app_pyapps_user }}').count())" | {{ cf_app_py_virtual_env }}/bin/python ./manage.py shell > {{ cf_app_pyapp_home }}/output/su_result.txt
-    # cat {{ cf_app_pyapp_home }}/output/su_result.txt | grep >>> | cut -d ' ' -f 2
   args:
     chdir: "{{ cf_app_pyapp_home }}/{{ common_project_name }}"
   environment:
@@ -48,16 +47,15 @@
 - name: check su_result.txt
   become_user: root
   become: yes
-  shell: "cat {{ cf_app_pyapp_home }}/output/su_result.txt"
+  shell: "cat {{ cf_app_pyapp_home }}/output/su_result.txt # | grep >>> | cut -d ' ' -f 2 "
   register: superuser_count
 
-- name: "Create super user and set password"
+- name: "Delete superuser {{ cf_app_pyapps_user }}"
   become_user: root
   become: yes
   command:  |
     cd {{ cf_app_pyapp_home }}/{{ common_project_name }}
-    echo "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.get(username='{{ cf_app_pyapps_user }}', is_superuser=True).delete() " | {{ cf_app_py_virtual_env }}/bin/python ./manage.py shell > ../output/su_result.txt
-    cat ../su_result.txt | grep >>> | cut -d ' ' -f 2
+    echo "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.get(username='{{ cf_app_pyapps_user }}', is_superuser=True).delete() " | {{ cf_app_py_virtual_env }}/bin/python ./manage.py shell > {{ cf_app_pyapp_home }}/output/su_result.txt
   args:
     chdir: "{{ cf_app_pyapp_home }}/{{ common_project_name }}"
   environment:
@@ -65,17 +63,10 @@
   register: superuser_count
   when: ( superuser_count.stdout != "0" )
 
-- name: "does superuser exist?"
+- name: "was superuser deleted?"
   become_user: root
   become: yes
-  command:  |
-    cd {{ cf_app_pyapp_home }}/{{ common_project_name }}
-    echo "from django.contrib.auth import get_user_model; User = get_user_model(); print(User.objects.filter(username='{{ cf_app_pyapps_user }}').count())" | {{ cf_app_py_virtual_env }}/bin/python ./manage.py shell > ../output/su_result.txt
-    cat ../su_result.txt | grep >>> | cut -d ' ' -f 2
-  args:
-    chdir: "{{ cf_app_pyapp_home }}/{{ common_project_name }}"
-  environment:
-    DJANGO_SETTINGS_MODULE: "{{ django_settings_module }}"
+  shell: "cat {{ cf_app_pyapp_home }}/output/su_result.txt # | grep >>> | cut -d ' ' -f 2 "
   register: superuser_gone_count
 
 - name: "superuser count"
