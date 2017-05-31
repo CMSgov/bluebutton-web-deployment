@@ -47,7 +47,7 @@
 - name: check su_result.txt
   become_user: root
   become: yes
-  command: "cat {{ cf_app_pyapp_home }}/output/su_result.txt| grep Result[ | cut -d ' ' -f 2"
+  command: "cat {{ cf_app_pyapp_home }}/output/su_result.txt| grep 'Result[' | cut -d ' ' -f 2"
   register: superuser_count
 
 - name: "Delete superuser {{ cf_app_pyapps_user }}"
@@ -77,7 +77,7 @@
 - name: "was superuser deleted?"
   become_user: root
   become: yes
-  command: "cat {{ cf_app_pyapp_home }}/output/su_result.txt| grep Result[  | cut -d ' ' -f 2"
+  command: "cat {{ cf_app_pyapp_home }}/output/su_result.txt| grep 'Result['  | cut -d ' ' -f 2"
   register: superuser_gone_count
 
 - name: "superuser count"
