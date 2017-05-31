@@ -25,6 +25,16 @@
     mode: "0700"
     state: directory
 
+- name: setup intermediate result file
+  become_user: root
+  become: yes
+  file:
+    dest: "{{ cf_app_pyapp_home }}/output/su_result.txt"
+    mode: "0750"
+    owner: root
+    group: root
+    state: touch
+
 - name: "does superuser exist?"
   become_user: root
   become: yes
