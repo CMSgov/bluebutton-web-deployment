@@ -20,13 +20,14 @@
     - "./../../vars/env/{{ env }}/env.yml"
     - "./../../vars/all_var.yml"
 
+  vars_prompt:
+    - name: "delete_manager_user"
+      prompt: "Confirm deletion of {{ mgmt_user_name }}"
+      default: "no"
+      private: yes
+
+
 
   tasks:
-  - name: "delete_manager_user"
-    prompt: "Confirm deletion of {{ mgmt_user_name }}"
-    default: "no"
-    private: yes
-
-
   - include: roles/mgmt_user_del/tasks/main.yml
-    when: ( delete_manager_user == yes  )
+    when: ( delete_manager_user == 'yes'  )
