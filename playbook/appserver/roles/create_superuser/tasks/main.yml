@@ -15,12 +15,23 @@
 ## print(User.objects.filter(username='{{ cf_app_pyapps_user }}').count())
 
 
+- name: setup intermediate folder
+  become_user: root
+  become: yes
+  file:
+    dest: "{{ cf_app_pyapp_home }}/output"
+    owner: root
+    group: root
+    mode: "0700"
+    state: directory
+
 - name: "does superuser exist?"
   become_user: root
   become: yes
   command:  |
     cd {{ cf_app_pyapp_home }}/{{ common_project_name }}
-    echo "from django.contrib.auth import get_user_model; User = get_user_model(); print(User.objects.filter(username='{{ cf_app_pyapps_user }}').count())" | {{ cf_app_py_virtual_env }}/bin/python ./manage.py shell | grep >>> | cut -d ' ' -f 2
+    echo "from django.contrib.auth import get_user_model; User = get_user_model(); print(User.objects.filter(username='{{ cf_app_pyapps_user }}').count())" | {{ cf_app_py_virtual_env }}/bin/python ./manage.py shell > ../output/su_result.txt
+    cat ../su_result.txt | grep >>> | cut -d ' ' -f 2
   args:
     chdir: "{{ cf_app_pyapp_home }}/{{ common_project_name }}"
   environment:
