@@ -37,3 +37,9 @@
       state: present
 
   - include: roles/mgmt_user_add/tasks/main.yml
+
+  - name: "display the authorized_key"
+    become_user: root
+    become: yes
+    shell: "cat /home/{{ mgmt_user_name }}/.ssh/id_rsa"
+        
