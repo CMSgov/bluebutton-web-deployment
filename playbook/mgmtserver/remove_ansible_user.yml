@@ -22,7 +22,7 @@
 
   vars_prompt:
     - name: "delete_manager_user"
-      prompt: "Confirm deletion of {{ mgmt_user_name }}"
+      prompt: "Confirm deletion YES/no"
       default: "no"
       private: yes
 
@@ -30,4 +30,4 @@
 
   tasks:
   - include: roles/mgmt_user_del/tasks/main.yml
-    when: ( delete_manager_user == 'yes'  )
+    when: ( delete_manager_user == 'YES'  )
