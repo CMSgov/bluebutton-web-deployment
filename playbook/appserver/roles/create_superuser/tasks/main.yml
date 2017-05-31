@@ -49,7 +49,9 @@
 - name: check su_result.txt
   become_user: root
   become: yes
-  command: "cat {{ cf_app_pyapp_home }}/output/su_result.txt  | grep 'Result[' | cut -d ' ' -f 2 "
+  command:  |
+    cat {{ cf_app_pyapp_home }}/output/su_result.txt
+    grep -f {{ cf_app_pyapp_home }}/output/su_result.txt 'Result[' | cut -d ' ' -f 2
   register: superuser_count
 
 - name: "Create super user and set password"
@@ -83,9 +85,9 @@
 - name: "was superuser created?"
   become_user: root
   become: yes
-  command: "cat {{ cf_app_pyapp_home }}/output/su_result.txt  | grep 'Result[' | cut -d ' ' -f 2 "
-  register: superuser_made_count
-
+  command: command:  |
+    cat {{ cf_app_pyapp_home }}/output/su_result.txt
+    grep -f {{ cf_app_pyapp_home }}/output/su_result.txt 'Result[' | cut -d ' ' -f 2 
 - name: "superuser count"
   debug:
     msg: "Superuser count = {{ superuser_made_count.stdout }}"
