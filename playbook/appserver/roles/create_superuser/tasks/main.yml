@@ -50,7 +50,7 @@
   become_user: root
   become: yes
   command:  |
-    cat {{ cf_app_pyapp_home }}/output/su_result.txt
+    cat {{ cf_app_pyapp_home }}/output/su_result.txt ;
     grep -f {{ cf_app_pyapp_home }}/output/su_result.txt 'Result[' | cut -d ' ' -f 2
   register: superuser_count
 
@@ -86,7 +86,7 @@
   become_user: root
   become: yes
   command: |
-    cat {{ cf_app_pyapp_home }}/output/su_result.txt
+    cat {{ cf_app_pyapp_home }}/output/su_result.txt ;
     grep -f {{ cf_app_pyapp_home }}/output/su_result.txt 'Result[' | cut -d ' ' -f 2
 - name: "superuser count"
   debug:
