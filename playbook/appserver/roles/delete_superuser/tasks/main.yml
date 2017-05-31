@@ -19,7 +19,7 @@
   become: yes
   command:  |
     cd {{ cf_app_pyapp_home }}/{{ common_project_name }}
-    echo "from django.contrib.auth import get_user_model; User = get_user_model(); print(User.objects.filter(username='{{ cf_app_pyapps_user }}').count())" | {{ cf_app_py_virtual_env }}/bin/python ./manage.py shell
+    echo "from django.contrib.auth import get_user_model; User = get_user_model(); print(User.objects.filter(username='{{ cf_app_pyapps_user }}').count())" | {{ cf_app_py_virtual_env }}/bin/python ./manage.py shell | grep \>\>\> | cut -d ' ' -f 2
   args:
     chdir: "{{ cf_app_pyapp_home }}/{{ common_project_name }}"
   environment:
@@ -31,7 +31,7 @@
   become: yes
   command:  |
     cd {{ cf_app_pyapp_home }}/{{ common_project_name }}
-    echo "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.get(username='{{ cf_app_pyapps_user }}', is_superuser=True).delete() " | {{ cf_app_py_virtual_env }}/bin/python ./manage.py shell
+    echo "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.get(username='{{ cf_app_pyapps_user }}', is_superuser=True).delete() " | {{ cf_app_py_virtual_env }}/bin/python ./manage.py shell | grep \>\>\> | cut -d ' ' -f 2
   args:
     chdir: "{{ cf_app_pyapp_home }}/{{ common_project_name }}"
   environment:
@@ -44,7 +44,7 @@
   become: yes
   command:  |
     cd {{ cf_app_pyapp_home }}/{{ common_project_name }}
-    echo "from django.contrib.auth import get_user_model; User = get_user_model(); print(User.objects.filter(username='{{ cf_app_pyapps_user }}').count())" | {{ cf_app_py_virtual_env }}/bin/python ./manage.py shell
+    echo "from django.contrib.auth import get_user_model; User = get_user_model(); print(User.objects.filter(username='{{ cf_app_pyapps_user }}').count())" | {{ cf_app_py_virtual_env }}/bin/python ./manage.py shell | grep \>\>\> | cut -d ' ' -f 2
   args:
     chdir: "{{ cf_app_pyapp_home }}/{{ common_project_name }}"
   environment:
