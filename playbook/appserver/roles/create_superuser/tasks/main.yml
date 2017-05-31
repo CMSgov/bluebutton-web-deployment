@@ -15,26 +15,6 @@
 ## print(User.objects.filter(username='{{ cf_app_pyapps_user }}').count())
 
 
-- name: setup intermediate folder
-  become_user: root
-  become: yes
-  file:
-    dest: "{{ cf_app_pyapp_home }}/output"
-    owner: root
-    group: root
-    mode: "0700"
-    state: directory
-
-- name: setup intermediate result file
-  become_user: root
-  become: yes
-  file:
-    dest: "{{ cf_app_pyapp_home }}/output/su_result.txt"
-    mode: "0750"
-    owner: root
-    group: root
-    state: touch
-
 - name: "does superuser exist?"
   become_user: root
   become: yes
@@ -77,18 +57,14 @@
   become: yes
   shell: |
     cd {{ cf_app_pyapp_home }}/{{ common_project_name }}
-    echo "from django.contrib.auth import get_user_model; User = get_user_model(); print('Result[ %s ]' % User.objects.filter(username='{{ cf_app_pyapps_user }}').count())" | {{ cf_app_py_virtual_env }}/bin/python ./manage.py shell | grep 'Result(' | cut -d ' ' -f 3
+    echo "from django.contrib.auth import get_user_model; User = get_user_model(); print('Result( %s )' % User.objects.filter(username='{{ cf_app_pyapps_user }}').count())" | {{ cf_app_py_virtual_env }}/bin/python ./manage.py shell | grep 'Result(' | cut -d ' ' -f 3
   args:
     chdir: "{{ cf_app_pyapp_home }}/{{ common_project_name }}"
   environment:
     DJANGO_SETTINGS_MODULE: "{{ django_settings_module }}"
+  register: superuser_made_count
 
-- name: "was superuser created?"
-  become_user: root
-  become: yes
-  shell: |
-    cat {{ cf_app_pyapp_home }}/output/su_result.txt ;
-    grep -f {{ cf_app_pyapp_home }}/output/su_result.txt 'Result[' | cut -d ' ' -f 2
+
 - name: "superuser count"
   debug:
     msg: "Superuser count = {{ superuser_made_count.stdout }}"
