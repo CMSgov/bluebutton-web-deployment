@@ -34,6 +34,11 @@
     chdir: "{{ cf_app_pyapp_home }}/{{ common_project_name }}"
   environment:
     DJANGO_SETTINGS_MODULE: "{{ django_settings_module }}"
+
+- name: check su_result.txt
+  become_user: root
+  become: yes
+  shell: "cat {{ cf_app_pyapp_home }}/output/su_result.txt"
   register: superuser_count
 
 - name: "Create super user and set password"
