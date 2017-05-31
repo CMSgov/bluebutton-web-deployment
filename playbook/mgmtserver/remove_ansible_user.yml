@@ -1,0 +1,32 @@
+---
+# File: playbook/mgmtserver/remove_ansible_user.yml
+# Created: 5/30/17
+# Author: '@ekivemark'
+
+- name: "Remove Ansible Management User"
+  hosts: "{{ build_target }}"
+  become_user: root
+  remote_user: ec2-user
+  become: yes
+  connection: smart
+  vars:
+    # det a default environment. We don't mind mucking with the dev environment
+    env: "dev"
+    ansible_ssh_pipelining: no
+    ans_group: "ansmgmt"
+  vars_files:
+    - "./../../vars/common.yml"
+    - "./../../vault/env/{{ env }}/vault.yml"
+    - "./../../vars/env/{{ env }}/env.yml"
+    - "./../../vars/all_var.yml"
+
+
+  tasks:
+  - name: "delete_manager_user"
+    prompt: "Confirm deletion of {{ mgmt_user_name }}"
+    default: "no"
+    private: yes
+
+
+  - include: roles/mgmt_user_del/tasks/main.yml
+    when: ( delete_manager_user == yes  )
