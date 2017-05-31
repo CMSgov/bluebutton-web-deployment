@@ -30,4 +30,4 @@
     export DJANGO_SUPERUSER_PASSWORD=''
     export DJANGO_SUPERUSER_EMAIL=''
   # when: not superuser_existed.stdout
-  when: ( superuser_existed.stdout < 1 )
+  when: ( superuser_existed.stdout == "" )
