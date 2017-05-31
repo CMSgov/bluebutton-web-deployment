@@ -38,7 +38,7 @@
   become: yes
   shell:  |
     cd {{ cf_app_pyapp_home }}/{{ common_project_name }} ;
-    echo "from django.contrib.auth import get_user_model; User = get_user_model(); print(User.objects.filter(username='{{ cf_app_pyapps_user }}').count())" | {{ cf_app_py_virtual_env }}/bin/python ./manage.py shell > {{ cf_app_pyapp_home }}/output/su_result.txt
+    echo "from django.contrib.auth import get_user_model; User = get_user_model(); print('Result[ %s ]' % User.objects.filter(username='{{ cf_app_pyapps_user }}').count())" | {{ cf_app_py_virtual_env }}/bin/python ./manage.py shell > {{ cf_app_pyapp_home }}/output/su_result.txt
   args:
     chdir: "{{ cf_app_pyapp_home }}/{{ common_project_name }}"
   environment:
@@ -47,7 +47,7 @@
 - name: check su_result.txt
   become_user: root
   become: yes
-  command: "cat {{ cf_app_pyapp_home }}/output/su_result.txt| grep \">>>\" | cut -d ' ' -f 2"
+  command: "cat {{ cf_app_pyapp_home }}/output/su_result.txt| grep Result[ | cut -d ' ' -f 2"
   register: superuser_count
 
 - name: "Delete superuser {{ cf_app_pyapps_user }}"
@@ -68,7 +68,7 @@
   become: yes
   shell:  |
     cd {{ cf_app_pyapp_home }}/{{ common_project_name }} ;
-    echo "from django.contrib.auth import get_user_model; User = get_user_model(); print(User.objects.filter(username='{{ cf_app_pyapps_user }}').count())" | {{ cf_app_py_virtual_env }}/bin/python ./manage.py shell > {{ cf_app_pyapp_home }}/output/su_result.txt
+    echo "from django.contrib.auth import get_user_model; User = get_user_model(); print('Result[ %s ]' % User.objects.filter(username='{{ cf_app_pyapps_user }}').count())" | {{ cf_app_py_virtual_env }}/bin/python ./manage.py shell > {{ cf_app_pyapp_home }}/output/su_result.txt
   args:
     chdir: "{{ cf_app_pyapp_home }}/{{ common_project_name }}"
   environment:
@@ -77,7 +77,7 @@
 - name: "was superuser deleted?"
   become_user: root
   become: yes
-  command: "cat {{ cf_app_pyapp_home }}/output/su_result.txt| grep \">>>\"| cut -d ' ' -f 2"
+  command: "cat {{ cf_app_pyapp_home }}/output/su_result.txt| grep Result[  | cut -d ' ' -f 2"
   register: superuser_gone_count
 
 - name: "superuser count"
