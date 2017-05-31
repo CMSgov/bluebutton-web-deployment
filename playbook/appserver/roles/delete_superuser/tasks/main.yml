@@ -31,7 +31,7 @@
   become: yes
   command:  |
     cd {{ cf_app_pyapp_home }}/{{ common_project_name }}
-    echo "from django.contrib.auth import get_user_model; User = get_user_model(); outcome = User.objects.get(username='{{ cf_app_pyapps_user }}', is_superuser=True).delete(); print('Result( %s )' % outcome " | {{ cf_app_py_virtual_env }}/bin/python ./manage.py shell | grep 'Result(' | cut -d ' ' -f 3
+    echo "from django.contrib.auth import get_user_model; User = get_user_model(); outcome = User.objects.get(username='{{ cf_app_pyapps_user }}', is_superuser=True); outcome.delete(); print('Result( %s )' % len(outcome) " | {{ cf_app_py_virtual_env }}/bin/python ./manage.py shell | grep 'Result(' | cut -d ' ' -f 3
   args:
     chdir: "{{ cf_app_pyapp_home }}/{{ common_project_name }}"
   environment:
