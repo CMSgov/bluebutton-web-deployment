@@ -83,6 +83,12 @@
       backrefs: yes
       backup: yes
 
+  - name: Start PostgreSQL and enable at boot
+    service:
+      name: postgresql
+      enabled: yes
+      state: restarted
+
   - include: roles/alter_user/tasks/main.yml
 
   - include: ../../roles/postgres/tasks/pgpass.yml
