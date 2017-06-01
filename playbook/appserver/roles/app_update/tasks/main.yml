@@ -143,15 +143,16 @@
     - install psycopg2
     - install -r {{ cf_app_pyapp_home }}/{{ common_project_name }}/requirements/requirements.txt
 
-- name: "Create a certstore"
-  become_user: root
-  become: yes
-  file:
-    dest: "{{ cf_app_pyapp_home }}/certstore"
-    mode: 0755
-    owner: "{{ cf_app_pyapps_user }}"
-    group: "{{ app_group }}"
-    state: directory
+- include: ../../create_certstore/tasks/main.yml
+#- name: "Create a certstore"
+#  become_user: root
+#  become: yes
+#  file:
+#    dest: "{{ cf_app_pyapp_home }}/certstore"
+#    mode: 0755
+#    owner: "{{ cf_app_pyapps_user }}"
+#    group: "{{ app_group }}"
+#    state: directory
 
 - name: "Create Virtualhosts file"
   become_user: root
