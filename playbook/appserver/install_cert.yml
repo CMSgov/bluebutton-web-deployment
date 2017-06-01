@@ -25,13 +25,24 @@
   hosts: "{{ build_target }}"
   # connection: local
   remote_user: ec2-user
-  # become_user: root
-  # become: yes
+  become_user: root
+  become: yes
   gather_facts: True
   vars:
     ansible_ssh_pipelining: no
     env: "dev"
     sub_zone: "app"
+    # use extra-vars to define:
+    # local directory containing key and cert pair
+    src_cert_dir: ''
+    # target sub-dir under certstore/
+    # to avoid key conflicts
+    cert_sub_dir: ''
+    # source certificate.pem file - name will be retained on target
+    src_cert: ''
+    # source key.pem file - name will be retained on target
+    src_key: ''
+
   vars_files:
     - "./../../vars/common.yml"
     - "./../../vault/env/{{ env }}/vault.yml"
@@ -42,13 +53,31 @@
     - include: roles/create_certstore
 
   tasks:
-  - name: "Add certstore sub-folder"
+  - name: "Add certstore/{{ cert_sub_dir }} sub-folder"
     file: "{{ cf_app_pyapp_home }}/certstore/{{ cert_sub_dir }}"
     mode: 0755
     owner: "{{ cf_app_pyapps_user }}"
     group: "{{ app_group }}"
     recurse: yes
     state: directory
+
+  - name: "copy cert({{ src_cert }}) to certstore [{{ cert_sub_dir }}]"
+    copy:
+      src: "{{ src_cert_dir }}/{{ src_cert }}"
+      dest: "{{ cf_app_pyapp_home }}/certstore/{{ cert_sub_dir }}/{{ src_cert }}"
+      mode: 0755
+      owner: "{{ cf_app_pyapps_user }}"
+      group: "{{ app_group }}"
+    when: "src_cert_dir != '' and src_cert != '' "
+
+  - name: "copy key({{ src_key }}) to certstore [{{ cert_sub_dir }}]"
+    copy:
+      src: "{{ src_cert_dir }}/{{ src_key }}"
+      dest: "{{ cf_app_pyapp_home }}/certstore/{{ cert_sub_dir }}/{{ src_key }}"
+      mode: 0755
+      owner: "{{ cf_app_pyapps_user }}"
+      group: "{{ app_group }}"
+    when: "src_cert_dir != '' and src_key != '' "
 
 
 
