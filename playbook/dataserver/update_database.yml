@@ -67,7 +67,7 @@
       owner: "{{ db_server_account }}"
       group: "{{ db_server_account }}"
       regexp: "^port = "
-      line: "port = {{ common_db_type[cf_data_database_type]['DbHostPort'] }}"
+      line: "port = {{ db_host_port }}"
       backrefs: yes
       backup: yes
 
