@@ -49,10 +49,11 @@
     - "./../../vars/env/{{ env }}/env.yml"
     - "./../../vars/all_var.yml"
 
-  roles:
-    - include: roles/create_certstore
+
 
   tasks:
+  - include: roles/create_certstore/tasks/main.yml
+
   - name: "Add certstore/{{ cert_sub_dir }} sub-folder"
     file: "{{ cf_app_pyapp_home }}/certstore/{{ cert_sub_dir }}"
     mode: 0755
