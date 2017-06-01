@@ -41,9 +41,6 @@
     - "./../../vars/env/{{ env }}/env.yml"
     - "./../../vars/all_var.yml"
 
-  roles:
-    - ../../roles/postgres
-
   tasks:
   - name: "Update pg_hba.conf with app layer addresses"
     become_user: root
