@@ -56,12 +56,12 @@
 
   - name: "Add {{ cert_sub_dir }} to certstore"
     file:
-    dest: "{{ cf_app_pyapp_home }}/certstore/{{ cert_sub_dir }}"
-    mode: 0755
-    owner: "{{ cf_app_pyapps_user }}"
-    group: "{{ app_group }}"
-    recurse: yes
-    state: directory
+      dest: "{{ cf_app_pyapp_home }}/certstore/{{ cert_sub_dir }}"
+      mode: 0755
+      owner: "{{ cf_app_pyapps_user }}"
+      group: "{{ app_group }}"
+      recurse: yes
+      state: directory
 
   - name: "copy cert({{ src_cert }}) to certstore [{{ cert_sub_dir }}]"
     copy:
