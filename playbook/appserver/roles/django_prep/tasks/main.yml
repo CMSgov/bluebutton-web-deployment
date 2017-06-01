@@ -19,7 +19,7 @@
   become_user: root
   become: yes
   django_manage:
-    command: loaddata apps/accounts/fixtures/group.json
+    command: loaddata apps/accounts/fixtures/groups.json
     app_path: "{{ install_root }}/{{ project_name }}/"
     virtualenv: "{{ venv }}"
   when: ( add_groups == 'yes' )
