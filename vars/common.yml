@@ -210,6 +210,7 @@ common_db_type: {
               "DbEngineDriver": "django.db.backends.postgresql_psycopg2",
               "DbNameTable": "pg_01",
               "DbHostPort": "15432"
+              #"DbHostPort": "5432"
           },
           "mysql": {
               "DbLinkUrl": "mysql",

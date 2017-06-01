@@ -20,7 +20,7 @@ DB_TABLE_NAME={{ db_server_table_name }}
 # MAC_ADDR=`curl -s http://169.254.169.254/latest/meta-data/network/interfaces/macs/`
 # HOST_IP=`curl -s http://169.254.169.254/latest/meta-data/network/interfaces/macs/$MAC_ADDR/local-ipv4s/`
 HOST_IP={{ ansible_eth0.ipv4.address }}
-PG_ACCESSPORT={{ common_db_type[cf_data_database_type]['DbHostPort'] }}
+PG_ACCESSPORT={{ db_host_port }}
 PG_DATA_DIR={{ db_server_data_dir }}
 
 # export PGPASSWORD="R3s3t_Th1s"
@@ -29,7 +29,7 @@ export PGPASSFILE=$PG_DATA_DIR/.pgpass
 echo "Postgres backup: $NOW $PG_ENVIRONMENT:$DB_TABLE_NAME on $HOST_IP:$PG_ACCESSPORT Mode:$1 for $DB_USER started:$NOW" >>$PG_TEMP_DIR/proc.log
 echo "Postgres backup: $NOW $PG_ENVIRONMENT:$DB_TABLE_NAME on $HOST_IP:$PG_ACCESSPORT Mode:$1 for $DB_USER started:$NOW" >$PG_TEMP_DIR/latest.log
 cd $PG_TEMP_DIR
-/usr/pgsql-9.6/bin/pg_dump -U $DB_USER -h $HOST_IP -p {{ common_db_type[cf_data_database_type]['DbHostPort'] }} $DB_TABLE_NAME | /usr/bin/bzip2 | /usr/bin/openssl smime -encrypt -aes256 -binary -outform DEM -out $PG_TEMP_DIR/$DB_TABLE_NAME.$NOW.sql.bz2.ssl {{ db_server_data_dir }}/{{ db_server_backup_pub_key }}
+/usr/pgsql-9.6/bin/pg_dump -U $DB_USER -h $HOST_IP -p {{ db_host_port }} $DB_TABLE_NAME | /usr/bin/bzip2 | /usr/bin/openssl smime -encrypt -aes256 -binary -outform DEM -out $PG_TEMP_DIR/$DB_TABLE_NAME.$NOW.sql.bz2.ssl {{ db_server_data_dir }}/{{ db_server_backup_pub_key }}
 /usr/local/bin/aws s3 mv $PG_TEMP_DIR/$DB_TABLE_NAME.$NOW.sql.bz2.ssl s3://bb-dbback-$PG_ENVIRONMENT/$1/
 NOW_ENDED=$(date +"%Y%m%d_%H%M%S")
 echo "Postgres backup: $NOW $PG_ENVIRONMENT:$DB_TABLE_NAME on $HOST_IP:$PG_ACCESSPORT Mode:$1 for $DB_USER completed:$NOW_ENDED" >>$PG_TEMP_DIR/proc.log

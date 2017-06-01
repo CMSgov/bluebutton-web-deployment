@@ -19,6 +19,6 @@
 - name: "Run alter_user sql script"
   become_user: "{{ db_server_account}}"
   become: yes
-  shell: "psql -p {{ common_db_type[cf_data_database_type]['DbHostPort'] }} -f {{ db_server_data_dir }}/django_alter_user.sql"
-  register: django_db_init
+  shell: "psql -p {{ db-host_port }} -f {{ db_server_data_dir }}/django_alter_user.sql"
+  register: django_alter_user
 
