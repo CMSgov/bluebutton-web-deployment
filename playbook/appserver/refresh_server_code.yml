@@ -31,10 +31,11 @@
   gather_facts: True
   vars:
     ansible_ssh_pipelining: no
+    # Choose update actions. Override with --extra-vars
     migrate: "yes"
     collectstatic: "yes"
-    add_groups: "yes"
-    add_scopes: "yes"
+    add_groups: "no"
+    add_scopes: "no"
   vars_files:
     - "./../../vars/common.yml"
     - "./../../vault/env/{{ env }}/vault.yml"
