@@ -48,4 +48,4 @@
 #  - include: ../../roles/postgres/tasks/backup.yml
 #
 
-   - include ./set_backup_tasks.yml
+   - include: ./set_backup_tasks.yml
