@@ -8,7 +8,7 @@
 
 - name: "write postgresql.conf template"
   template:
-    src: "{{ role_path }}/templates/postgresl_conf.j2"
+    src: "./roles/update_progres_conf/templates/postgresl_conf.j2"
     dest: "{{ db_server_data_dir }}/postgresql.conf"
     backup: yes
     owner: "{{ db_server_account }}"
