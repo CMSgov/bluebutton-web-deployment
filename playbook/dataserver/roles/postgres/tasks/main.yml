@@ -198,68 +198,17 @@
     - postgresql-9.6
 
 
+##########################
+# setup postgresql.conf
+# setup pg_hba.conf
+##########################
 # Switch from default port 5432.
-- name: "Setup Database port"
-#########
-  become_user: root
-  become: yes
-  lineinfile:
-    dest: "{{ db_server_data_dir }}/postgresql.conf"
-    owner: "{{ db_server_account }}"
-    group: "{{ db_server_account }}"
-    regexp: "^port = 5432"
-    line: "port = {{ common_db_type[cf_data_database_type]['DbHostPort'] }}"
-    backup: yes
+# - name: "Setup Database configuration"
+# replace line in replacements with a template copy
+- include: ../../update_postgres_conf/tasks/main.yml
 
-- name: "listen to anything"
-  become_user: root
-  become: yes
-  lineinfile:
-    dest: "{{ db_server_data_dir }}/postgresql.conf"
-    owner: "{{ db_server_account }}"
-    group: "{{ db_server_account }}"
-    regexp: "^listen_addresses ="
-    line: "listen_addresses = '*'"
-    backup: yes
-
-- name: "Update pg_hba.conf"
-  become_user: root
-  become: yes
-  lineinfile:
-    owner: "{{ db_server_account }}"
-    group: "{{ db_server_account }}"
-    dest: "{{ db_server_data_dir }}/pg_hba.conf"
-    line: "host  all  all {{ item }}  password "
-    backup: yes
-  with_items:
-    - "{{ cf_env_layer[env][['az1']['data'] }}"
-    - "{{ cf_env_layer[env][['az2']['data'] }}"
-    - "{{ cf_env_layer[env][['az3']['data'] }}"
-
-#- name: "Update pg_hba.conf with this subnet address"
-#  become_user: root
-#  become: yes
-#  lineinfile:
-#    owner: "{{ db_server_account }}"
-#    group: "{{ db_server_account }}"
-#    dest: "{{ db_server_data_dir }}/pg_hba.conf"
-#    line: "host    all    all    {{ common_cf_layer[env_az][env_cf_data_tag_key_layer] }}    password "
-#    backup: yes
-
-- name: "Update pg_hba.conf with app layer address"
-  become_user: root
-  become: yes
-  lineinfile:
-    owner: "{{ db_server_account }}"
-    group: "{{ db_server_account }}"
-    dest: "{{ db_server_data_dir }}/pg_hba.conf"
-    line: "host all all {{ item }}  password "
-    backup: yes
-  with_items:
-    - "{{ cf_env_layer[env][['az1']['app'] }}"
-    - "{{ cf_env_layer[env][['az2']['app'] }}"
-    - "{{ cf_env_layer[env][['az3']['app'] }}"
-
+# replace line in replacements with a template copy
+- include: ../../update_pg_hba/tasks/main.yml
 
 - name: "Start Database"
   become_user: root

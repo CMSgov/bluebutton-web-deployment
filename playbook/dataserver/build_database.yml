@@ -45,7 +45,7 @@
     - ../../roles/splunk
     # moved add_external_vol to its own playbook - attach_data_volume.yml
     # - ../../roles/add_external_vol
-    - ../../roles/postgres
+    - ./roles/postgres
 
   tasks:
   - include: ./set_backup_tasks.yml
