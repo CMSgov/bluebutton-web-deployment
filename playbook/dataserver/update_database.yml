@@ -42,46 +42,7 @@
     - "./../../vars/all_var.yml"
 
   tasks:
-  - name: "Update pg_hba.conf with app layer addresses"
-    become_user: root
-    become: yes
-    lineinfile:
-      owner: "{{ db_server_account }}"
-      group: "{{ db_server_account }}"
-      dest: "{{ db_server_data_dir }}/pg_hba.conf"
-      line: "host all all {{ item }}  password "
-      backup: yes
-    with_items:
-      - "{{ cf_env_layer[env]['az1']['app'] }}"
-      - "{{ cf_env_layer[env]['az2']['app'] }}"
-      - "{{ cf_env_layer[env]['az3']['app'] }}"
-      - "{{ cf_env_layer[env]['az1']['data'] }}"
-      - "{{ cf_env_layer[env]['az2']['data'] }}"
-      - "{{ cf_env_layer[env]['az3']['data'] }}"
-
-  - name: "Update Database port"
-    become_user: root
-    become: yes
-    lineinfile:
-      dest: "{{ db_server_data_dir }}/postgresql.conf"
-      owner: "{{ db_server_account }}"
-      group: "{{ db_server_account }}"
-      regexp: "^port = "
-      line: "port = {{ db_host_port }}"
-      backrefs: yes
-      backup: yes
-
-  - name: "listen to anything"
-    become_user: root
-    become: yes
-    lineinfile:
-      dest: "{{ db_server_data_dir }}/postgresql.conf"
-      owner: "{{ db_server_account }}"
-      group: "{{ db_server_account }}"
-      regexp: "^listen_addresses ="
-      line: "listen_addresses = '*'"
-      backrefs: yes
-      backup: yes
+  - include: ./roles/postgres/tasks/main.yml
 
   - name: Start PostgreSQL and enable at boot
     service:
@@ -91,4 +52,4 @@
 
   - include: roles/alter_user/tasks/main.yml
 
-  - include: ../../roles/postgres/tasks/pgpass.yml
+  - include: ./roles/postgres/tasks/pgpass.yml
