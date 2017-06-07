@@ -10,7 +10,7 @@
 # which looks up values in vars/env/{{ env }}/env.yml
 # which looks up encrypted values in vault/env/{{ env }}/vault.yml
 
-- hosts: all
+- hosts: "{{ build_target }}"
   vars:
     env: "dev"
     ansible_ssh_pipelining: no

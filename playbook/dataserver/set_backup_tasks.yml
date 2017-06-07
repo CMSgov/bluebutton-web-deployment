@@ -5,7 +5,7 @@
 
 - include: ../../roles/base_patch/tasks/set_db_aws_credentials.yml
 
-- include: ../../roles/postgres/tasks/pgpass.yml
+- include: ./postgres/tasks/pgpass.yml
 
-- include: ../../roles/postgres/tasks/backup.yml
+- include: ./roles/postgres/tasks/backup.yml
 

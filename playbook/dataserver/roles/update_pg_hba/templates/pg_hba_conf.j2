@@ -1,0 +1,30 @@
+# PostgreSQL Client Authentication Configuration File
+# ===================================================
+# V1.1 Generated from hhs_ansible template
+# /playbook/dataserver/roles/update_pg_hba/templates/pg_hba_conf.j2
+# Updated via:
+# /playbook/dataserver/roles/update_pg_hba/tasks/main.yml
+
+# TYPE  DATABASE        USER            ADDRESS                 METHOD
+
+# "local" is for Unix domain socket connections only
+local   all             all                                     peer
+# IPv4 local connections:
+host    all             all             127.0.0.1/32            ident
+# IPv6 local connections:
+host    all             all             ::1/128                 ident
+# Allow replication connections from localhost, by a user with the
+# replication privilege.
+#local   replication     postgres                                peer
+#host    replication     postgres        127.0.0.1/32            ident
+#host    replication     postgres        ::1/128                 ident
+
+# Remote connections - use MD5
+# AppServer Subnet Access
+{% for az in ['az1','az2','az3'] %}
+host    all    all   {{ cf_env_layer[env][[az]['app'] }}   md5
+{% endfor %}
+# DataServer Subnet Access
+{% for az in ['az1','az2','az3'] %}
+host    all    all   {{ cf_env_layer[env][[az]['data'] }}   md5
+{% endfor %}
