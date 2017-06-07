@@ -7,11 +7,11 @@
 # Version 1.0
 
 - name: "write postgresql.conf template"
-  - template:
-      src: "../templates/postgresl_conf.j2"
-      dest: "{{ db_server_data_dir }}/postgresql.conf"
-      backup: yes
-      owner: "{{ db_server_account }}"
-      group: "{{ db_server_account }}"
-      mode: "u+rwx"
+  template:
+    src: "../templates/postgresl_conf.j2"
+    dest: "{{ db_server_data_dir }}/postgresql.conf"
+    backup: yes
+    owner: "{{ db_server_account }}"
+    group: "{{ db_server_account }}"
+    mode: "u+rwx"
 
