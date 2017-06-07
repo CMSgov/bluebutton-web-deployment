@@ -21,7 +21,22 @@ host    all             all             ::1/128                 ident
 
 # Remote connections - use MD5
 # AppServer Subnet Access
+{% for environ in cf_env_layer %}
+   # {{ environ }}
+
+   {% endif %}
+{% endfor %}
+
 {% for app_az in subnet_app %}
+          az1: "{{ cf_env_layer[env]['az1']['app'] }}"
+      az2: "{{ cf_env_layer[env]['az2']['app'] }}"
+      az3: "{{ cf_env_layer[env]['az3']['app'] }}"
+    subnet_data:
+      az1: "{{ cf_env_layer[env]['az1']['data'] }}"
+      az2: "{{ cf_env_layer[env]['az2']['data'] }}"
+      az3: "{{ cf_env_layer[env]['az3']['data'] }}"
+
+
 host    all    all   {{ app_az }}   md5
 {% endfor %}
 # DataServer Subnet Access
