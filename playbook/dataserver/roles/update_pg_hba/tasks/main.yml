@@ -6,11 +6,10 @@
 # Version 1.0
 
 - name: "write pg_hba.conf template"
-  - template:
-      src: "../templates/pg_hba_conf.j2"
-      dest: "{{ db_server_data_dir }}/pg_hba.conf"
-      backup: yes
-      owner: "{{ db_server_account }}"
-      group: "{{ db_server_account }}"
-      mode: "u+rwx"
-
+  template:
+    src: "../templates/pg_hba_conf.j2"
+    dest: "{{ db_server_data_dir }}/pg_hba.conf"
+    backup: yes
+    owner: "{{ db_server_account }}"
+    group: "{{ db_server_account }}"
+    mode: "u+rwx"
