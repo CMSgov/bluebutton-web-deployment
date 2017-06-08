@@ -1,0 +1,83 @@
+---
+# File: update_nagios.yml 
+# Created: 6/8/17
+# Author: '@ekivemark'
+
+# Patch for nagios (RHSA­2017:0259)
+
+# update the nagios package
+# Scope: All Environment Servers
+# Purpose: Default nagios package has a security vulnerability.
+# This playbook applies the approved package to remediate the vulnerability.
+
+- hosts: "{{ build_target }}"
+  vars:
+    env: "dev"
+    ansible_ssh_pipelining: no
+
+  # env value is passed in from command line using
+  #   --extra-vars env=dev | test | impl | prod
+  # Vars file is relative to playbook file
+  # Sequence:
+  # 1. Common variables
+  # 2. encrypted vault file
+  # 3. environment specific variables
+  # 4. all_vars which reference the preceding three files.
+  # common_ prefixes common variables
+  # vault_env_ prefixes encrypted variables
+  # env_ prefixes environment specific variables
+  # all_var incorporates preceding variables and defines variables without prefixes.
+  # use all_var variables in scripts.
+  vars_files:
+    - "./../../vars/common.yml"
+    - "./../../vault/env/{{ env }}/vault.yml"
+    - "./../../vars/env/{{ env }}/env.yml"
+    - "./../../vars/all_var.yml"
+    # - ../vars/all_vars.yml
+    # - ../../vars/playbook/template_envvars.yml
+
+  remote_user: "{{ remote_user_account }}"
+  become: yes
+  become_user: "{{ mon_nessus_user }}"
+
+  tasks:
+  - name: "Check nagios version"
+    become_user: root
+    become: yes
+    command: "rpm -q nagios-common"
+    register: nagios_version
+
+  - name: "do we need to upgrade nagios"
+    set_fact:
+      do_nagios_upgrade: ( if ( nagios_version == 'nagios-common-3.5.1-1.el6.x86_64' | bool)
+
+  - name: "download nagios"
+    become_user: root
+    become: yes
+    command: "wget ftp://ftp.muug.mb.ca/mirror/fedora/linux/releases/23/Everything/x86_64/os/Packages/n/nagios­ common­3.5.1­9.fc23.x86_64.rpm"
+    when: do_nagios_upgrade
+
+  - name: "install nagios common package"
+    become_user: root
+    become: yes
+    yum:
+      name: "nagios­common­3.5.1­9.fc23.x86_64.rpm"
+      state: present
+    when: do_nagios_upgrade
+
+
+  - name: "Remove older nagios package"
+    become_user: root
+    become: yes
+    yum:
+      name: "nagios­common­3.5.1­1.el6"
+      state: absent
+    when: do_nagios_upgrade
+
+  - name:
+    become_user: root
+    become: yes
+    service:
+      name: "nrpe"
+      status: restarted
+    register: nagios_service_state
