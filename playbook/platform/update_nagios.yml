@@ -81,5 +81,5 @@
     become: yes
     service:
       name: "nrpe"
-      status: restarted
+      state: reloaded
     register: nagios_service_state
