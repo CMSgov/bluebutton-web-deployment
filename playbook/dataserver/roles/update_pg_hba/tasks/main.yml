@@ -5,16 +5,16 @@
 # Create/update pg_hba.conf file for Postgres 9.6
 # Version 1.0
 
-#- name: "prepare facts for pg_hba.conf"
-#  set_fact:
-#    subnet_app:
-#      - az1: "{{ cf_env_layer[env]['az1']['app'] }}"
-#      - az2: "{{ cf_env_layer[env]['az2']['app'] }}"
-#      - az3: "{{ cf_env_layer[env]['az3']['app'] }}"
-#    subnet_data:
-#      - az1: "{{ cf_env_layer[env]['az1']['data'] }}"
-#      - az2: "{{ cf_env_layer[env]['az2']['data'] }}"
-#      - az3: "{{ cf_env_layer[env]['az3']['data'] }}"
+- name: "prepare facts for pg_hba.conf"
+  set_fact:
+    subnet_app:
+      az1: "{{ cf_env_layer[env]['az1']['app'] }}"
+      az2: "{{ cf_env_layer[env]['az2']['app'] }}"
+      az3: "{{ cf_env_layer[env]['az3']['app'] }}"
+    subnet_data:
+      az1: "{{ cf_env_layer[env]['az1']['data'] }}"
+      az2: "{{ cf_env_layer[env]['az2']['data'] }}"
+      az3: "{{ cf_env_layer[env]['az3']['data'] }}"
 
 - name: "write pg_hba.conf template"
   template:
