@@ -1,0 +1,69 @@
+---
+# File: main.yml 
+# Created: 6/8/17
+# Author: '@ekivemark'
+
+# nagios_update to replace RHEL6 nagios 3.5.1-1 package
+
+- name: "Check nagios version"
+  become_user: root
+  become: yes
+  command: "rpm -q nagios-common"
+  register: nagios_version
+
+- name: "do we need to upgrade nagios"
+  set_fact:
+    do_nagios_upgrade:  "{{ ( nagios_version.stdout == 'nagios-common-3.5.1-1.el6.x86_64')|bool }}"
+
+- debug:
+    msg: "do_nagios_upgrade [{{ nagios_version.stdout }} = {{ do_nagios_upgrade }} ]"
+
+- name: "Setup download location"
+  become_user: root
+  become: yes
+  file:
+    dest: "/home/ec2-user/download"
+    owner: root
+    group: root
+    mode: "0600"
+    state: directory
+    recurse: yes
+
+- name: "copy nagios to server"
+  become_user: root
+  become: yes
+  copy:
+    src: "./files/nagios/nagios­common­3.5.1­9.fc23.x86_64.rpm"
+    dest: "/home/ec2-user/download/nagios­ common­3.5.1­9.fc23.x86_64.rpm"
+    owner: root
+    group: root
+    mode: "0600"
+  when: do_nagios_upgrade
+
+- name: "install nagios common package"
+  become_user: root
+  become: yes
+  yum:
+    name: "/home/ec2-user/download/nagios­common­3.5.1­9.fc23.x86_64.rpm"
+    state: present
+  when: do_nagios_upgrade
+
+- name: "Remove older nagios package"
+  become_user: root
+  become: yes
+  yum:
+    name: "nagios­common­3.5.1­1.el6"
+    state: absent
+  when: do_nagios_upgrade
+
+- name:
+  become_user: root
+  become: yes
+  service:
+    name: nrpe
+    state: reloaded
+  when: do_nagios_upgrade
+  register: nagios_service_state
+
+- debug:
+    msg: "Nagios Service State = {{ nagios_service_state }} ]"
