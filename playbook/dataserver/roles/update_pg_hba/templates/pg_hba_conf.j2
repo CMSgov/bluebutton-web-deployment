@@ -21,12 +21,12 @@ host    all             all             ::1/128                 ident
 
 # Remote connections - use MD5
 # AppServer Subnet Access
-{% for sub_az_app in subnet_app.iteritems() %}
+{% for sub_az_app in subnet_app%}
 host    all    all   {{ sub_az_app }}   md5
 {% endfor %}
 
 # DataServer Subnet Access
-{% for sub_az_data in subnet_app.iteritems() %}
+{% for sub_az_data in subnet_app %}
 host    all    all   {{ sub_az_data }}   md5
 {% endfor %}
 
