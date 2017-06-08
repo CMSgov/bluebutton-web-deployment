@@ -54,17 +54,30 @@
   - debug:
       msg: "do_nagios_upgrade [{{ nagios_version.stdout }} = {{ do_nagios_upgrade }} ]"
 
+  - name: "Setup download location"
+    become_user: root
+    become: yes
+    file:
+      dest: "/home/ec2-user/download"
+      owner: root
+      group: root
+      mode: 0600
+      state: directory
+      recurse: yes
+
   - name: "download nagios"
     become_user: root
     become: yes
-    command: "wget ftp://ftp.muug.mb.ca/mirror/fedora/linux/releases/23/Everything/x86_64/os/Packages/n/nagios­ common­3.5.1­9.fc23.x86_64.rpm"
+    get_url:
+      url: "ftp://ftp.muug.mb.ca/mirror/fedora/linux/releases/23/Everything/x86_64/os/Packages/n/nagios­ common­3.5.1­9.fc23.x86_64.rpm"
+      dest: "/home/ec2-user/download/nagios­ common­3.5.1­9.fc23.x86_64.rpm"
     when: do_nagios_upgrade
 
   - name: "install nagios common package"
     become_user: root
     become: yes
     yum:
-      name: "nagios­common­3.5.1­9.fc23.x86_64.rpm"
+      name: "/home/ec2-user/download/nagios­common­3.5.1­9.fc23.x86_64.rpm"
       state: present
     when: do_nagios_upgrade
 
@@ -80,6 +93,9 @@
     become_user: root
     become: yes
     service:
-      name: "nrpe"
+      name: nrpe
       state: reloaded
+    when: do_nagios_upgrade
     register: nagios_service_state
+
+    
