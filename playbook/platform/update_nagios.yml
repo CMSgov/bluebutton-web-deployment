@@ -51,6 +51,9 @@
     set_fact:
       do_nagios_upgrade:  ( nagios_version.stdout == 'nagios-common-3.5.1-1.el6.x86_64' | bool)
 
+  - debug:
+      msg: "do_nagios_upgrade [{{ nagios_version.stdout }} = {{ do_nagios_upgrade }} ]"
+
   - name: "download nagios"
     become_user: root
     become: yes
