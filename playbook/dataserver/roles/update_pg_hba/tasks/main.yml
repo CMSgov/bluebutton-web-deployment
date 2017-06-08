@@ -8,13 +8,13 @@
 - name: "prepare facts for pg_hba.conf"
   set_fact:
     subnet_app:
-      az1: "{{ cf_env_layer[env]['az1']['app'] }}"
-      az2: "{{ cf_env_layer[env]['az2']['app'] }}"
-      az3: "{{ cf_env_layer[env]['az3']['app'] }}"
+      - "{{ cf_env_layer[env]['az1']['app'] }}"
+      - "{{ cf_env_layer[env]['az2']['app'] }}"
+      - "{{ cf_env_layer[env]['az3']['app'] }}"
     subnet_data:
-      az1: "{{ cf_env_layer[env]['az1']['data'] }}"
-      az2: "{{ cf_env_layer[env]['az2']['data'] }}"
-      az3: "{{ cf_env_layer[env]['az3']['data'] }}"
+      - "{{ cf_env_layer[env]['az1']['data'] }}"
+      - "{{ cf_env_layer[env]['az2']['data'] }}"
+      - "{{ cf_env_layer[env]['az3']['data'] }}"
 
 - name: "write pg_hba.conf template"
   template:
