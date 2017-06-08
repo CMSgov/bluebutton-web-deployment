@@ -3,7 +3,7 @@
 # Created: 6/8/17
 # Author: '@ekivemark'
 
-# nagios_update
+# nagios_update to replace RHEL6 nagios 3.5.1-1 package
 
 - name: "Check nagios version"
   become_user: root
