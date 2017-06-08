@@ -61,16 +61,19 @@
       dest: "/home/ec2-user/download"
       owner: root
       group: root
-      mode: 0600
+      mode: "0600"
       state: directory
       recurse: yes
 
-  - name: "download nagios"
+  - name: "copy nagios to server"
     become_user: root
     become: yes
-    get_url:
-      url: "ftp://ftp.muug.mb.ca/mirror/fedora/linux/releases/23/Everything/x86_64/os/Packages/n/nagios­ common­3.5.1­9.fc23.x86_64.rpm"
+    copy:
+      src: "files/platform/all/nagios/nagios­common­3.5.1­9.fc23.x86_64.rpm"
       dest: "/home/ec2-user/download/nagios­ common­3.5.1­9.fc23.x86_64.rpm"
+      owner: root
+      group: root
+      mode: "0600"
     when: do_nagios_upgrade
 
   - name: "install nagios common package"
@@ -98,4 +101,3 @@
     when: do_nagios_upgrade
     register: nagios_service_state
 
-    
