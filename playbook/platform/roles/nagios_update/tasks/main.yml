@@ -34,7 +34,7 @@
   become: yes
   copy:
     src: "./../files/nagios/nagios-common-3.5.1-9.fc23.x86_64.rpm"
-    dest: "/home/ec2-user/download/nagios­ common­3.5.1­9.fc23.x86_64.rpm"
+    dest: "/home/ec2-user/download/nagios­common­3.5.1­9.fc23.x86_64.rpm"
     owner: root
     group: root
     mode: "0600"
