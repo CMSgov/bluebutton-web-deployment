@@ -26,7 +26,7 @@ host    all    all   {{ sub_az_app }}   md5
 {% endfor %}
 
 # DataServer Subnet Access
-{% for sub_az_data in subnet_app %}
+{% for sub_az_data in subnet_data %}
 host    all    all   {{ sub_az_data }}   md5
 {% endfor %}
 
