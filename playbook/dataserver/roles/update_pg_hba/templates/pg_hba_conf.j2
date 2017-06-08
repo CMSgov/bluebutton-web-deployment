@@ -21,13 +21,11 @@ host    all             all             ::1/128                 ident
 
 # Remote connections - use MD5
 # AppServer Subnet Access
-{% for environ in cf_env_layer|from_json %}
 
-   # {{ environ }}
 
-    {% for environ_az in environ %}
+   # {{ subnet_app }}
 
-    # host    all    all   {{ environ_az }}   md5
+   # host    all    all   {{ subnet_data }}   md5
 
     {% endfor %}
 {% endfor %}
