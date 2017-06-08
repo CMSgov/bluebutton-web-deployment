@@ -25,21 +25,12 @@ host    all             all             ::1/128                 ident
 
    # {{ environ }}
 
+    {% for environ_az in environ %}
+
+    # host    all    all   {{ environ_az }}   md5
+
+    {% endfor %}
 {% endfor %}
 
-{% for app_az in subnet_app %}
-          az1: "{{ cf_env_layer[env]['az1']['app'] }}"
-      az2: "{{ cf_env_layer[env]['az2']['app'] }}"
-      az3: "{{ cf_env_layer[env]['az3']['app'] }}"
-    subnet_data:
-      az1: "{{ cf_env_layer[env]['az1']['data'] }}"
-      az2: "{{ cf_env_layer[env]['az2']['data'] }}"
-      az3: "{{ cf_env_layer[env]['az3']['data'] }}"
-
-
-host    all    all   {{ app_az }}   md5
-{% endfor %}
 # DataServer Subnet Access
-{% for data_az in subnet_data %}
-host    all    all   {{ data_az }}   md5
-{% endfor %}
+
