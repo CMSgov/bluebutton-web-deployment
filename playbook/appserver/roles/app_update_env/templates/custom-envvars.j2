@@ -72,10 +72,14 @@ no_overwrite('RDS_PASSWORD', '{{ db_user_pw }}')
 no_overwrite('RDS_HOSTNAME', '{{ db_host_address }}')
 no_overwrite('RDS_PORT', '{{ db_host_port }}')
 
+# Pass options in a url query string
+# e.g. '?key1=value1&key2=value2'
+no_overwrite('RDS_DB_OPTIONS', '{{ db_host_options }}')
+
 DEFAULT_DB_SET = "{{ db_platform_type }}://"
 DEFAULT_DB_SET += os.environ.get('RDS_USERNAME')  + ":"+ os.environ.get('RDS_PASSWORD') + "@"
 DEFAULT_DB_SET += os.environ.get('RDS_HOSTNAME') + ":" + os.environ.get('RDS_PORT') + "/"
-DEFAULT_DB_SET += os.environ.get('RDS_DB_NAME')
+DEFAULT_DB_SET += os.environ.get('RDS_DB_OPTIONS')
 # Switch ssl on
 DEFAULT_DB_SET += '?sslmode=require'
 

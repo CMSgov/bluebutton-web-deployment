@@ -68,9 +68,13 @@ export RDS_USERNAME='{{ db_user_name }}'
 export RDS_PASSWORD='{{ db_user_pw }}'
 export RDS_HOSTNAME='{{ db_host_address }}'
 export RDS_PORT='{{ db_host_port }}'
-# postgres://USER:PASSWORD@HOST:PORT/NAME
-export DEFAULT_DB_SET="$RDS_DB_PLATFORM://$RDS_USERNAME:$RDS_PASSWORD@$RDS_HOSTNAME:$RDS_PORT/$RDS_DB_NAME?sslmode=require"
+# Pass options in a url query string
+# e.g. '?key1=value1&key2=value2'
+export RDS_DB_OPTIONS='{{ db_host_options }}'
 
+# postgres://USER:PASSWORD@HOST:PORT/NAME
+export DEFAULT_DB_SET="$RDS_DB_PLATFORM://$RDS_USERNAME:$RDS_PASSWORD@$RDS_HOSTNAME:$RDS_PORT/$RDS_DB_NAME"
+export DEFAULT_DB_SET=$DEFAULT_DB_SET+$RDS_DB_OPTIONS
 # Using dj_database_url in settings
 export DATABASES_CUSTOM="$DEFAULT_DB_SET"
 
