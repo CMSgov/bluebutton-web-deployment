@@ -1,0 +1,44 @@
+---
+# File: install_self_cert_scripts.yml 
+# Created: 6/9/17
+# Author: '@ekivemark'
+# Install scripts to create self-signed certificates on Mgmt Server
+
+# Take zip file from files section and install for root
+
+- name: "install scripts for Self-signed Certificates"
+  hosts: "{{ build_target }}"
+  become_user: root
+  remote_user: ec2-user
+  become: yes
+  connection: local
+  vars:
+    # det a default environment. We don't mind mucking with the dev environment
+    env: "dev"
+    ansible_ssh_pipelining: no
+  vars_files:
+    - "./../../vars/common.yml"
+    - "./../../vault/env/{{ env }}/vault.yml"
+    - "./../../vars/env/{{ env }}/env.yml"
+    - "./../../vars/all_var.yml"
+    # - ../vars/all_vars.yml
+    # - ../../vars/playbook/template_envvars.yml
+
+  tasks:
+  - name: "download cert_scripts zip file"
+    become_user: root
+    become: yes
+    file:
+      src: "../../files/mgmtserver/cert_scripts_base.zip"
+      dest: "/root/cert_scripts_base.zip"
+      mode: "0660"
+      owner: root
+      group: root
+
+  - name: "setup cert_scripts"
+    become_user: root
+    become: yes
+    shell: "cd /root ; unzip /cert_scripts_base.zip"
+
+    
+

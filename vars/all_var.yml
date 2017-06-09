@@ -176,6 +176,13 @@
   cf_data_vol_id: "{{ env_cf_data_vol_id }}"
   cf_data_device: "xvdb"
 
+  # ssl settings: on | off
+  cf_data_ssl: "{{ env_cf_data_ssl }}"
+  cf_data_cert_file: "{{ env_cf_data_cert_file }}"
+  cf_data_key_file: "{{ env_cf_data_key_file }}"
+  cf_data_ca_file: "{{ env_cf_data_ca_file }}"
+  cf_data_crl_file: "{{ env_cf_data_crl_file }}"
+
   cf_data_db_backup_key_id: "{{ env_cf_data_db_backup_key_id }}"
   cf_data_db_backup_secret_key: "{{ env_cf_data_db_backup_secret_key }}"
 
