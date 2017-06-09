@@ -36,7 +36,19 @@ max_connections = 100			# (change requires restart)
 
 # - Security and Authentication -
 #ssl = off
-ssl = on
+ssl = {{ cf_data_ssl }}
+{% if cf_data_ssl == 'on' %}
+#ssl_ciphers = 'HIGH:MEDIUM:+3DES:!aNULL' # allowed SSL ciphers
+					# (change requires restart)
+#ssl_prefer_server_ciphers = on		# (change requires restart)
+#ssl_ecdh_curve = 'prime256v1'		# (change requires restart)
+
+ssl_cert_file = '{{ cf_data_cert_file }}'		# (change requires restart)
+ssl_key_file = '{{ cf_data_key_file }}'		# (change requires restart)
+ssl_ca_file = '{{ cf_data_ca_file }}'			# (change requires restart)
+ssl_crl_file = '{{ cf_data_crl_file }}'			# (change requires restart)
+
+{% endif %}
 
 #------------------------------------------------------------------------------
 # RESOURCE USAGE (except WAL)
