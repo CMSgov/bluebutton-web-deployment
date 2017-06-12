@@ -31,6 +31,7 @@
     file:
       src: "../../files/mgmtserver/cert_scripts_base.zip"
       dest: "/root/cert_scripts_base.zip"
+      state: present
       mode: "0660"
       owner: root
       group: root
@@ -38,7 +39,11 @@
   - name: "setup cert_scripts"
     become_user: root
     become: yes
-    shell: "cd /root ; unzip /cert_scripts_base.zip"
+    shell: "cd /root ; unzip /cert_scripts_base.zip ; ls -la /root/*.zip"
+    register: cert_install_result
 
-    
+  - name: "install result"
+  debug:
+    msg: "zip installation resulted in this - {{cert_install_result.stdout }}"
+
 
