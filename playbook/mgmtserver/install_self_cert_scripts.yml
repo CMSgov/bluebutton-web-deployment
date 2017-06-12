@@ -44,6 +44,6 @@
 
   - name: "install result"
   debug:
-    msg: "zip installation - {{cert_install_result.stdout }}"
+    msg: "zip installation resulted in this - {{cert_install_result.stdout }}"
 
 
