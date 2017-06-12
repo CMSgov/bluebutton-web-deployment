@@ -31,7 +31,6 @@
     copy:
       src: "../../files/mgmtserver/cert_scripts_base.zip.download"
       dest: "/root/cert_scripts_base.zip"
-      state: present
       mode: "0660"
       owner: root
       group: root
