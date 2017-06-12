@@ -29,7 +29,7 @@
     become_user: root
     become: yes
     file:
-      src: "../../files/mgmtserver/cert_scripts_base.zip"
+      src: "../../files/mgmtserver/cert_scripts_base.zip.download"
       dest: "/root/cert_scripts_base.zip"
       state: present
       mode: "0660"
