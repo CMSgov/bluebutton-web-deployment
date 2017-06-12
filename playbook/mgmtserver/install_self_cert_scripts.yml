@@ -43,7 +43,7 @@
     register: cert_install_result
 
   - name: "install result"
-  debug:
-    msg: "zip installation resulted in this - {{cert_install_result.stdout }}"
+    debug:
+      msg: "zip installation resulted in this - {{cert_install_result.stdout }}"
 
 
