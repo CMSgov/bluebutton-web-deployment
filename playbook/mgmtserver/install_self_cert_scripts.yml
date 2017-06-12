@@ -38,8 +38,13 @@
   - name: "setup cert_scripts"
     become_user: root
     become: yes
-    shell: "cd /root ; unzip /cert_scripts_base.zip ; ls -la /root/*.zip"
+    shell: "cd / ; unzip /root/cert_scripts_base.zip ; ls -la /root/ca/*"
     register: cert_install_result
+
+  - name: "Cleaning up from unzip ..."
+    become_user: root
+    become: yes
+    shell: "rm -Rf /__MACOSX "
 
   - name: "install result"
     debug:
