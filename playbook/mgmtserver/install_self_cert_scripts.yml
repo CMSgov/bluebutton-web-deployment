@@ -28,7 +28,7 @@
   - name: "download cert_scripts zip file"
     become_user: root
     become: yes
-    file:
+    copy:
       src: "../../files/mgmtserver/cert_scripts_base.zip.download"
       dest: "/root/cert_scripts_base.zip"
       state: present
