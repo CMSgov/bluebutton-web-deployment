@@ -229,11 +229,12 @@
     group: "{{ db_server_account }}"
     mode: "u+rwx"
 
-- name: "Run db init sql script"
+- name: "Run db init sql script - set db_init=YES to run script"
   become_user: "{{ db_server_account}}"
   become: yes
   shell: "psql -p {{ db_host_port }} -f {{ db_server_data_dir }}/django_init.sql"
   register: django_db_init
+  when: "{{ (db_init=='YES') }}"
 
 - name: "Setup /etc/ld.so.conf"
   become_user: root
