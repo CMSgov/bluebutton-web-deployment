@@ -35,6 +35,8 @@
     env_cf_data_version: "20"
     splunk_client_name: "BBAPI-{{ env|upper }}-DATA"
     ansible_ssh_pipelining: no
+    # set db_init to 'YES' to run database initialization
+    db_init: "YES"
   vars_files:
     - "./../../vars/common.yml"
     - "./../../vault/env/{{ env }}/vault.yml"
