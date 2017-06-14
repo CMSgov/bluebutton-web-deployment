@@ -30,7 +30,7 @@ ident_file = '{{ db_server_data_dir }}/pg_ident.conf'
 # - Connection Settings -
 
 listen_addresses = '*'
-port = {{ common_db_type[cf_data_database_type]['DbHostPort'] }}
+port = {{ db_host_port }}
 max_connections = 100			# (change requires restart)
 
 
