@@ -35,6 +35,8 @@
   gather_facts: True
   vars:
     ansible_ssh_pipelining: no
+    db_init: "NO"
+    # Set to YES to run initialize database
   vars_files:
     - "./../../vars/common.yml"
     - "./../../vault/env/{{ env }}/vault.yml"
