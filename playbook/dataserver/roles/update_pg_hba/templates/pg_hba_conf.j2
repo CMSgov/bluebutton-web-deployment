@@ -1,6 +1,7 @@
 # PostgreSQL Client Authentication Configuration File
 # ===================================================
-# V1.1 Generated from hhs_ansible template
+# V1.2 Generated from hhs_ansible template
+# Added check for ssl = on to force ssl in host statement
 # /playbook/dataserver/roles/update_pg_hba/templates/pg_hba_conf.j2
 # Updated via:
 # /playbook/dataserver/roles/update_pg_hba/tasks/main.yml
@@ -22,11 +23,11 @@ host    all             all             ::1/128                 ident
 # Remote connections - use MD5
 # AppServer Subnet Access
 {% for sub_az_app in subnet_app%}
-host    all    all   {{ sub_az_app }}   md5
+host{% if cf_data_ssl == 'on' %}ssl{% endif %}    all    all   {{ sub_az_app }}   md5
 {% endfor %}
 
 # DataServer Subnet Access
 {% for sub_az_data in subnet_data %}
-host    all    all   {{ sub_az_data }}   md5
+host{% if cf_data_ssl == 'on' %}ssl{% endif %}    all    all   {{ sub_az_data }}   md5
 {% endfor %}
 

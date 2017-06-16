@@ -1,0 +1,21 @@
+---
+# File: playbook/dataserver/roles/server_cert/tasks/main.yml
+# Created: 6/15/17
+# Author: '@ekivemark'
+
+# Create Data Server Cert
+
+- name: "Create Data Server Key "
+  become_user: root
+  become: yes
+  shell: |
+    cd /root/ca
+    openssl genrsa -aes256 -out private/{{ env }}_db_server.key -passout file:/root/ca/{{ env }}_passphrase.txt 2048
+
+- name: "Create Certificate Signing Request for Data Server"
+  become_user: root
+  become: yes
+  shell: |
+    cd /root/ca
+    openssl req -config ./openssl.cnf -key private/{{ env }}_db_server.key -new -x509 -days 10950 -sha256 -extensions v3_ca -out certs/{{ env }}_db_server.cert.pem
+
