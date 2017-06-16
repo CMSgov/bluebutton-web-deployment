@@ -79,3 +79,6 @@
     - "openssl genrsa -out {{ ca_key }} 2048"
     - "openssl req -config {{ ca_certs_dir }}/ca.conf -new -key {{ ca_key }} -x509 -days 1825 -out {{ ca_cert }} -passin pass:{{ ca_rootca_password }} -subj \"{{ ca_subject }}\""
 
+  - name: "Check certs"
+    debug:
+      msg: "check certs"
