@@ -69,7 +69,7 @@
   - name: "set CA_SUBJECT var"
     set_fact:
       ca_subject: '/C={{ ca_country }}/ST={{ ca_state }}/L={{ ca_locality }}/O={{ ca_organization }}/OU={{ ca_organizationalunit }}/CN={{ ca_commonname }}/emailAddress={{ ca_email }}'
-     when: ca_subject is not defined
+    when: ca_subject is not defined
 
   - name: "Generate private key and Create root CA files"
     shell: "{{ item }}"
@@ -79,3 +79,6 @@
     - "openssl genrsa -out {{ ca_key }} 2048"
     - "openssl req -config {{ ca_certs_dir }}/ca.conf -new -key {{ ca_key }} -x509 -days 1825 -out {{ ca_cert }} -passin pass:{{ ca_rootca_password }} -subj \"{{ ca_subject }}\""
 
+  - name: "Check certs"
+    debug:
+      msg: "check certs"
