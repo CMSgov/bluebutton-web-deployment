@@ -1,0 +1,20 @@
+---
+# File: vars/env/prod/ca_env.yml
+# Created: 6/16/17
+# Author: '@ekivemark'
+
+# Values for the ca_certificate process
+
+# Certificate Settings
+ca_certs_dir: "/root/ca"
+
+ca_rootca_password: "{{ vault_env_ca_rootca_password }}"
+
+# Certificate values (loaded to CA_SUBJECT)
+ca_country: "US"
+ca_state: "Maryland"
+ca_locality: "Baltimore"
+ca_organization: "Centers for Medicare and Medicaid Services"
+ca_organizationalunit: "BlueButton {{ env }} API"
+ca_commonname: ""
+ca_email: "mark.scrimshire@cms.hhs.gov"
