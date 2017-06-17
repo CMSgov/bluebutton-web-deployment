@@ -16,6 +16,7 @@
     ans_group: "ansmgmt"
     ca_key: "server.key"
     ca_cert: "server.crt"
+    ca_commonname: "BlueButton\ {{env }}\ Root\ Certificate"
 
   vars_files:
     - "./../../vars/common.yml"
