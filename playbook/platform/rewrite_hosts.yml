@@ -1,0 +1,47 @@
+---
+# File: playbook/platform/rewrite_hosts.yml
+# Created: 5/17/17
+# Author: '@ekivemark'
+
+# Re-write the hosts file
+# Run this after building a dataserver or appserver
+# Assumptions:
+#   - ec2 instance has the following tags:
+#         -- "tag:Environment": "{{ env|upper }}"
+#         -- "tag:Managed": "BB-MANAGED-{{ env|upper }}"
+
+- name: get aws_region
+  connection: local
+  set_fact:
+      aws_region: "{{ lookup('ini', 'region section=default file=/root/.aws/config') }}"
+
+- name: get aws_key
+  connection: local
+  set_fact:
+      aws_access_id: "{{ lookup('ini', 'aws_access_key_id section=default file=/root/.aws/credentials') }}"
+
+- name: get aws_secret
+  connection: local
+  set_fact:
+      aws_secret_key_id: "{{ lookup('ini', 'aws_secret_access_key section=default file=/root/.aws/credentials') }}"
+
+- name: "Get remote facts for vpc {{ cf_vpc_id }}"
+  connection: local
+  ec2_remote_facts:
+    aws_access_key: "{{ aws_access_id }}"
+    aws_secret_key: "{{ aws_secret_key_id }}"
+    region: "{{ aws_region }}"
+    filters:
+      vpc_id: "{{ cf_vpc_id }}"
+      "tag:Environment": "{{ env|upper }}"
+      "tag:Managed": "BB-MANAGED-{{ env|upper }}"
+  register: ec2_remote_facts_info
+
+- name: "write hosts file"
+  connection: local
+  template:
+    src: ../../templates/environment/ansible_hosts.j2
+    dest: /etc/ansible/hosts
+
+
+

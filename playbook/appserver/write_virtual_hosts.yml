@@ -1,0 +1,70 @@
+---
+# File: write_virtual_hosts.yml 
+# Created: 5/12/17
+# Author: '@ekivemark'
+# Playbook to:
+#  - create create Virtualhosts.conf
+# Based on: http://odecee.com.au/cloudformation-and-ansible/
+# Vars file is relative to playbook file
+# vars_files:
+# Vars file is relative to playbook file
+# Sequence:
+# 1. Common variables
+# 2. encrypted vault file
+# 3. environment specific variables
+# 4. all_vars which reference the preceding three files.
+# common_ prefixes common variables
+# vault_env_ prefixes encrypted variables
+# env_ prefixes environment specific variables
+# all_var incorporates preceding variables and defines variables without prefixes.
+# use all_var variables in scripts.
+
+- name: Write Virtualhosts.conf
+  # hosts: appservers
+  hosts: "{{ build_target }}"
+  # connection: local
+  remote_user: ec2-user
+  # become_user: root
+  # become: yes
+  gather_facts: True
+  vars:
+    ansible_ssh_pipelining: no
+    env: "dev"
+    azone: "az1"
+    sub_zone: "app"
+    sg_zone: "appserver"
+    env_az: "{{ env }}-{{ azone }}"
+    env_cf_app_version: "01"
+    splunk_client_name: "BBAPI-{{ env|upper }}-{{ sub_zone|upper }}"
+  vars_files:
+    - "./../../vars/common.yml"
+    - "./../../vault/env/{{ env }}/vault.yml"
+    - "./../../vars/env/{{ env }}/env.yml"
+    - "./../../vars/all_var.yml"
+
+  tasks:
+#  - name: "Get a shortened variable"
+#    debug:
+#      msg: "This is a variable[{{ project_parent[:-1] }}]"
+
+  - name: "Set permissions for SELinux"
+    become_user: root
+    become: yes
+    shell: "semanage fcontext -a -t httpd_sys_content_t \"/var/pyapps(/.*)?\" "
+    # semanage fcontext -a -t httpd_sys_content_t "/var/virtualenv(/.*)?"
+
+
+  - name: "Create Virtualhosts file"
+    become_user: root
+    become: yes
+    template:
+      src: ./../../roles/app_env/templates/virtualhost_server_conf.j2
+      dest: "/etc/httpd/conf.d/virtualhost.conf"
+      owner: root
+      group: root
+      mode: "0644"
+    notify:
+      - restart apache
+
+  handlers:
+  - include: ./../../roles/apache/handlers/main.yml

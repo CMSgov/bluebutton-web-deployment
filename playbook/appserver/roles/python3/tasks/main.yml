@@ -1,0 +1,55 @@
+---
+# File: roles/python3/tasks/main.yml
+# Created: 5/10/17
+# Author: '@ekivemark'
+# download and install python3
+# Check for python version
+
+- name: "Check if Python {{ python_ver_full }} installed"
+  become_user: root
+  become: yes
+  shell: |
+    if [ "$(if [ -f /usr/local/bin/python{{ python_ver }} ]; then /usr/local/bin/python{{ python_ver }} --version ; fi )" = "Python {{ python_ver_full }}" ] ; then echo True; else  echo False; fi;
+  ignore_errors: true
+  register: python_ver_installed
+
+- name: "Make sure dev tools are installed to allow Python3 to compile"
+  include: ../app_tools/tasks/main.yml
+
+- name: "create download directory"
+  file:
+    dest: "/home/ec2-user/download"
+    state: directory
+    mode: 0600
+    owner: "ec2-user"
+    group: "ec2-user"
+  register: app_download_dir
+
+- name: "Download python {{ python_ver_full }}"
+  become_user: root
+  become: yes
+  unarchive:
+    src: "https://www.python.org/ftp/python/{{ python_ver_full }}/Python-{{ python_ver_full }}.tar.xz"
+    dest: "/home/ec2-user/download"
+    remote_src: True
+  when: python_ver_installed.stdout == "False"
+
+- name: "Running ./configure for Python {{ python_ver_full }}"
+  become_user: root
+  become: yes
+  shell: "cd /home/ec2-user/download/Python-{{ python_ver_full }} ; ./configure --prefix=/usr/local --enable-shared  LDFLAGS='-Wl,-rpath /usr/local/lib' "
+  when: python_ver_installed.stdout == "False"
+
+- name: "Running make for Python {{ python_ver_full }}"
+  become_user: root
+  become: yes
+  shell: "cd /home/ec2-user/download/Python-{{ python_ver_full }} ; make "
+  when: python_ver_installed.stdout == "False"
+
+- name: "Running make altinstall for Python {{ python_ver_full }}"
+  become_user: root
+  become: yes
+  shell: "cd /home/ec2-user/download/Python-{{ python_ver_full }} ; make altinstall "
+  register: py3_output
+  when: python_ver_installed.stdout == "False"
+

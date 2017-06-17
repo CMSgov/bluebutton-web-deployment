@@ -1,0 +1,38 @@
+---
+# File: roles/apache/main.yml
+# Created: 5/9/17
+# Author: '@ekivemark'
+# Revision 5/25/17
+
+- name: "Install supporting packages"
+  include: ../app_tools/tasks/main.yml
+
+- name: "Install Apache (httpd)"
+  become_user: root
+  become: yes
+  yum:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - httpd
+    - mod_ssl
+
+- name: "Setup docs directory for server"
+  become_user: root
+  become: yes
+  file:
+    dest: "/var/www/doc/{{ cf_app_pyserver_name|lower }}"
+    owner: root
+    group: root
+    state: directory
+    mode: "0755"
+
+- name: "Check Apache is running"
+  become_user: root
+  become: yes
+  service:
+    name: httpd
+    # state=running to be deprecated in 2.7. Switch to state=started
+    state: started
+    enabled: yes
+

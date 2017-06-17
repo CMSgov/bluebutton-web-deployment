@@ -1,0 +1,122 @@
+---
+# File: build_appserver.yml 
+# Created: 5/9/17
+# Author: '@ekivemark'
+
+# Playbook to:
+#  - create Python3/Django AppServer
+#
+# Based on: http://odecee.com.au/cloudformation-and-ansible/
+# Vars file is relative to playbook file
+# vars_files:
+# Vars file is relative to playbook file
+# Sequence:
+# 1. Common variables
+# 2. encrypted vault file
+# 3. environment specific variables
+# 4. all_vars which reference the preceding three files.
+# common_ prefixes common variables
+# vault_env_ prefixes encrypted variables
+# env_ prefixes environment specific variables
+# all_var incorporates preceding variables and defines variables without prefixes.
+# use all_var variables in scripts.
+
+- name: Build App Server
+  # hosts: appservers
+  hosts: "{{ build_target }}"
+  # connection: local
+  remote_user: ec2-user
+  # become_user: root
+  # become: yes
+  gather_facts: True
+  vars:
+    ansible_ssh_pipelining: no
+    env: "dev"
+    azone: "az1"
+    sub_zone: "app"
+    sg_zone: "appserver"
+    env_az: "{{ env }}-{{ azone }}"
+    env_cf_app_version: "01"
+    splunk_client_name: "BBAPI-{{ env|upper }}-{{ sub_zone|upper }}"
+    migrate: "yes"
+    collectstatic: "yes"
+  vars_files:
+    - "./../../vars/common.yml"
+    - "./../../vault/env/{{ env }}/vault.yml"
+    - "./../../vars/env/{{ env }}/env.yml"
+    - "./../../vars/all_var.yml"
+
+  roles:
+    # - ../../roles/
+    # - roles/
+    - ../../roles/base_patch
+    # Check SELINIUX set to permissive
+    - roles/selinux_state
+    # setup aws config and credentials
+    - roles/aws_config
+    # Install AppServer tools
+    - roles/app_tools
+    # Create the pyapps user
+    - roles/app_user
+    # Create the pyapps logs
+    - roles/app_logs
+    # Change Server ID for Splunk
+    - ../../roles/splunk
+    # Install Python3.x
+    - roles/python3
+    # Install Apache
+    - roles/apache
+    # install mod_wsgi
+    - roles/mod_wsgi
+    # Check engine light
+    - ../../roles/check_env
+    # Update application code and write virtualhosts file
+    - roles/app_update
+    # Update environment variable files
+    - roles/app_update_env
+    # django migrate and collectstatic
+    - roles/django_prep
+    # Set permissions for app under selinux
+    - roles/semanage_apps
+    # Set permissions for virtualenv under selinux
+    - roles/semanage_virtualenv
+
+
+  tasks:
+  - include: ../../roles/base_patch/tasks/fix_sudoers.yml
+  # Switch default ssl.conf off
+  - include: roles/apache/tasks/ssl_off.yml
+  - include: ../../roles/base_patch/tasks/update_packages.yml
+  - include: roles/create_superuser/tasks/main.yml
+  # - include: ../../roles/app_env/tasks/refresh_app.yml
+  - include: ../platform/rewrite_hosts.yml
+
+  - name: "Update Ansible hosts file"
+    connection: local
+    blockinfile:
+      dest: "/etc/ansible/hosts"
+      marker: "# {mark} ANSIBLE MANAGED BLOCK buildapp #"
+      content: ""
+
+  - name: make sure apache server is running
+    service:
+      name: httpd
+      state: started
+      enabled: yes
+
+  - name: "Restart Apache on {{ env }}"
+    action: shell /bin/echo $HOSTNAME
+    notify:
+      - restart apache
+
+  - name: "Add in to Load Balancer"
+    include: roles/attach_to_elb/tasks/main.yml
+
+  handlers:
+  - name: restart apache
+    service: name=httpd state=restarted
+
+
+  # Now We should have a working machine
+  # Apache / Mod_Wsgi / Python3
+

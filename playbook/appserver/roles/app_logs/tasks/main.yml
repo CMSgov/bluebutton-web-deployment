@@ -1,0 +1,61 @@
+---
+# File: playbook/appserver/roles/app_logs/tasks/main.yml
+# Created: 5/15/17
+# Author: '@ekivemark'
+# setup application logging
+
+# Create the App logging directory and touch the app logs
+# Set SELinux permissions
+
+- name: "Create the app log directory "
+  become_user: root
+  become: yes
+  file:
+    dest: "{{ cf_app_log_dir }}"
+    owner: root
+    group: logreader
+    state: directory
+    mode: 0775
+
+- name: "Create the logs"
+  become_user: root
+  become: yes
+  file:
+    dest: "{{ cf_app_log_dir }}/{{ item }}"
+    owner: "{{ cf_app_pyapps_user }}"
+    group: "{{ cf_app_pyapps_user }}"
+    state: touch
+    mode: 0776
+  with_items:
+    - debug.log
+    - error.log
+    - info.log
+
+
+- name: "Set permissions for SELinux"
+  become_user: root
+  become: yes
+  shell: "semanage fcontext -a -t httpd_sys_content_t \"{{ cf_app_log_dir }}(/.*)?\" "
+
+
+#- name: "Create the error log"
+#  become_user: root
+#  become: yes
+#  file:
+#    dest: "{{ cf_app_log_dir }}/error.log"
+#    owner: "{{ cf_app_pyapps_user }}"
+#    group: "{{ cf_app_pyapps_user }}"
+#    state: touch
+#    mode: 0766
+#
+#- name: "Create the info log"
+#  become_user: root
+#  become: yes
+#  file:
+#    dest: "{{ cf_app_log_dir }}/info.log"
+#    owner: "{{ cf_app_pyapps_user }}"
+#    group: "{{ cf_app_pyapps_user }}"
+#    state: touch
+#    mode: 0766
+
+

@@ -1,0 +1,41 @@
+---
+# File: roles/base_patch/tasks/install_dev_tools.yml
+# Created: 5/9/17
+# Author: '@ekivemark'
+
+- name: "Install Development Tools"
+  become_user: root
+  become: yes
+  yum:
+    name: '@Development Tools'
+    state: latest
+
+  # shell: "yum -y groupinstall 'Development Tools' "
+  ####
+  # Development Tools:
+  # bison
+  #byacc
+  #cscope
+  #ctags
+  #cvs
+  #diffstat
+  #doxygen
+  #flex
+  #gcc
+  #gcc-c++
+  #gcc-gfortran
+  #gettext
+  #git
+  #indent
+  #intltool
+  #libtool
+  #patch
+  #patchutils
+  #rcs
+  #redhat-rpm-config
+  #rpm-build
+  #subversion
+  #swig
+  #systemtap
+  ####
+

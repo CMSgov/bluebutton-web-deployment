@@ -53,21 +53,25 @@ all_zones]
 10.246.44.[224:239]
 
 [mgmt_server]
-
+10.246.44.217
 
 [dmz_server]
-
+10.246.44.155
 
 [app_prime_server]
-
+10.246.44.60
 
 [app_lead_server]
+10.246.44.60
 
 
 [app_follow_server]
+10.246.44.59
 
 
 [data_server]
+10.246.44.103
+
 
 
 

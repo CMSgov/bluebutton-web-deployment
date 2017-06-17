@@ -1,0 +1,26 @@
+---
+# File: main.yml 
+# Created: 6/7/17
+# Author: '@ekivemark'
+# Create/update pg_hba.conf file for Postgres 9.6
+# Version 1.0
+
+- name: "prepare facts for pg_hba.conf"
+  set_fact:
+    subnet_app:
+      - "{{ cf_env_layer[env]['az1']['app'] }}"
+      - "{{ cf_env_layer[env]['az2']['app'] }}"
+      - "{{ cf_env_layer[env]['az3']['app'] }}"
+    subnet_data:
+      - "{{ cf_env_layer[env]['az1']['data'] }}"
+      - "{{ cf_env_layer[env]['az2']['data'] }}"
+      - "{{ cf_env_layer[env]['az3']['data'] }}"
+
+- name: "write pg_hba.conf template"
+  template:
+    src: "../templates/pg_hba_conf.j2"
+    dest: "{{ db_server_data_dir }}/pg_hba.conf"
+    backup: yes
+    owner: "{{ db_server_account }}"
+    group: "{{ db_server_account }}"
+    mode: "u+rwx"

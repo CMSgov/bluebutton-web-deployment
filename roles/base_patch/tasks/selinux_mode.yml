@@ -1,0 +1,44 @@
+---
+# File: roles/base_patch/tasks/selinux_mode.yml
+# Created: 5/15/17
+# Author: '@ekivemark'
+# Set Selinux mode
+# selinux_policy maps to SELINUXTYPE targeted
+# selinux_state maps to SELINUX: enforcing | permissive | disabled
+
+## /etc/selinux/config
+## This file controls the state of SELinux on the system.
+## SELINUX= can take one of these three values:
+##     enforcing - SELinux security policy is enforced.
+##     permissive - SELinux prints warnings instead of enforcing.
+##     disabled - No SELinux policy is loaded.
+##SELINUX=enforcing
+#SELINUX=permissive
+## SELINUXTYPE= can take one of three two values:
+##     targeted - Targeted processes are protected,
+##     minimum - Modification of targeted policy. Only selected processes are protected.
+##     mls - Multi Level Security protection.
+#SELINUXTYPE=targeted
+
+- name: "Set selinux status"
+  become_user: root
+  become: yes
+  selinux:
+    policy: "{{ selinux_policy }}"
+    state: "{{ selinux_state }}"
+  register: check_selinux
+
+- name: "Reboot if selinux state changed"
+  become_user: root
+  become: yes
+  command: shutdown -r now "Reboot required for SELinux state change"
+  async: 0
+  poll: 0
+  sudo: true
+  ignore_errors: true
+  when: check_selinux.changed
+  register: rebooting
+
+- name: Wait for thing to reboot...
+  pause: seconds=45
+  when: rebooting|changed

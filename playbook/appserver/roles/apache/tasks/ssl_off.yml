@@ -1,0 +1,28 @@
+---
+# File: playbook/appserver/roles/apache/tasks/ssl_off.yml
+# Created: 5/24/17
+# Author: '@ekivemark'
+# Disable default ssl.conf
+# Release: Nessus Trace fix 2017-05-18
+
+
+- name: "check if ssl.conf exists for Apache (httpd)"
+  become_user: root
+  become: yes
+  stat: "path=/etc/httpd/conf.d/ssl.conf "
+  register: httpd_ssl_stat
+
+- name: result
+  debug:
+    msg: "{{ httpd_ssl_stat }}"
+
+- name: "Check for ssl.conf"
+  debug:
+    msg: "ssl.conf exists - {{ httpd_ssl_stat.stat.exists }}"
+
+- name: "Move ssl.conf to ssl.conf.disabled"
+  become_user: root
+  become: yes
+  command: creates="/etc/httpd/conf.d/ssl.conf.disabled" mv /etc/httpd/conf.d/ssl.conf /etc/httpd/conf.d/ssl.conf.disabled
+  when: httpd_ssl_stat.stat.exists
+
