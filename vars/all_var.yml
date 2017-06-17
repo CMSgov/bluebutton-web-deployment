@@ -231,6 +231,7 @@
   # role_db_table_name: "{{ cf_data_database_prefix }}{{ cf_data_tag_key_stack }}_{{ common_db_type[cf_data_database_type]['DbNameTable'] }}"
   # role_db_backup_pub_key: "backup_key.pem.pub"
 
+  # CA Certificate Root password
   ca_rootca_password: "{{ env_ca_rootca_password }}"
 
   mon_nessus_user: "{{ env_mon_nessus_user }}"
