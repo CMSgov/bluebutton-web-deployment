@@ -29,8 +29,8 @@ no_overwrite('DJANGO_SETTINGS_MODULE', '{{ django_settings_module }}')
 no_overwrite('DJANGO_ASSETS_ROOT', "{{ install_root }}/{{ project_name }}")
 no_overwrite('THS_FHIR_SERVER', '{{ ths_fhir_server }}')
 no_overwrite('THS_FHIR_PATH', '{{ ths_fhir_path }}')
-no_overwrite('THS_FHIR_RELEASE', '{{ ths_fhir_release }}')
-no_overwrite('THS_FHIR_REWRITE_FROM', '["{{ ths_fhir_server }}{{ ths_fhir_path }}{{ ths_fhir_release }}",]')
+no_overwrite('THS_FHIR_RELEASE', '{{ ths_fhir_rel }}')
+no_overwrite('THS_FHIR_REWRITE_FROM', '["{{ ths_fhir_server }}{{ ths_fhir_path }}{{ ths_fhir_rel }}",]')
 no_overwrite('THS_FHIR_REWRITE_TO', '{{ ths_fhir_rewrite_to }}')
 no_overwrite('DJANGO_SLS_USER', 'ben')
 no_overwrite('DJANGO_SLS_PASSWORD', 'pbkdf2_sha256$24000$V6XjGqYYNGY7$13tFC13aaTohxBgP2W3glTBz6PSbQN4l6HmUtxQrUys=')
@@ -59,6 +59,9 @@ no_overwrite('AWS_STORAGE_BUCKET_NAME', '{{ s3_storage_bucket_name }}')
 no_overwrite('DJANGO_ORGANIZATION_NAME', '{{ django_org_name }}')
 no_overwrite('DJANGO_APPLICATION_TITLE', '{{ django_app_title }}')
 
+# admin prepend url
+no_overwrite('DJANGO_ADMIN_PREPEND_URL', '{{ django_admin_redirector }}')
+
 # Database Settings - postgres - Start
 # postgres://USER:PASSWORD@HOST:PORT/NAME
 no_overwrite('RDS_DB_PLATFORM', '{{ db_platform_type }}')
@@ -69,10 +72,18 @@ no_overwrite('RDS_PASSWORD', '{{ db_user_pw }}')
 no_overwrite('RDS_HOSTNAME', '{{ db_host_address }}')
 no_overwrite('RDS_PORT', '{{ db_host_port }}')
 
+# Pass options in a url query string
+# e.g. '?key1=value1&key2=value2'
+no_overwrite('RDS_DB_OPTIONS', '{{ db_host_options }}')
+
 DEFAULT_DB_SET = "{{ db_platform_type }}://"
 DEFAULT_DB_SET += os.environ.get('RDS_USERNAME')  + ":"+ os.environ.get('RDS_PASSWORD') + "@"
 DEFAULT_DB_SET += os.environ.get('RDS_HOSTNAME') + ":" + os.environ.get('RDS_PORT') + "/"
 DEFAULT_DB_SET += os.environ.get('RDS_DB_NAME')
+
+# Switch ssl on
+DEFAULT_DB_SET += os.environ.get('RDS_DB_OPTIONS')
+
 
 # print("DEFAULT_DB_SET=%s" % DEFAULT_DB_SET)
 

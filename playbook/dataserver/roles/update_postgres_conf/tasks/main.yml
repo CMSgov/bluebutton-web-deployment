@@ -1,0 +1,17 @@
+---
+# File: main.yml 
+# Created: 6/7/17
+# Author: '@ekivemark'
+# Replace postgresql.conf with needed settings
+# Using template rather than editing default file
+# Version 1.0
+
+- name: "write postgresql.conf template"
+  template:
+    src: "../templates/postgresql_conf.j2"
+    dest: "{{ db_server_data_dir }}/postgresql.conf"
+    backup: yes
+    owner: "{{ db_server_account }}"
+    group: "{{ db_server_account }}"
+    mode: "u+rwx"
+

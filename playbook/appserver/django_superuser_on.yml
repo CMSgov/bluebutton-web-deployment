@@ -1,0 +1,45 @@
+---
+# File: playbook/appserver/django_superuser_on.yml
+# Created: 5/9/17
+# Author: '@ekivemark'
+
+# Playbook to:
+#  - setup django superuser
+#
+# Vars file is relative to playbook file
+# vars_files:
+# Vars file is relative to playbook file
+# Sequence:
+# 1. Common variables
+# 2. encrypted vault file
+# 3. environment specific variables
+# 4. all_vars which reference the preceding three files.
+# common_ prefixes common variables
+# vault_env_ prefixes encrypted variables
+# env_ prefixes environment specific variables
+# all_var incorporates preceding variables and defines variables without prefixes.
+# use all_var variables in scripts.
+
+- name: Create Django superuser
+  # hosts: appservers
+  hosts: "{{ build_target }}"
+  # connection: local
+  remote_user: ec2-user
+  # become_user: root
+  # become: yes
+  gather_facts: True
+  vars:
+    ansible_ssh_pipelining: no
+    env: "dev"
+    sub_zone: "app"
+  vars_files:
+    - "./../../vars/common.yml"
+    - "./../../vault/env/{{ env }}/vault.yml"
+    - "./../../vars/env/{{ env }}/env.yml"
+    - "./../../vars/all_var.yml"
+
+  tasks:
+  # Create django superuser
+  - include: roles/create_superuser/tasks/main.yml
+
+

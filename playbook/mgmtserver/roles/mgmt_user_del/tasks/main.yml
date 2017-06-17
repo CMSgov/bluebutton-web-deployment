@@ -1,0 +1,15 @@
+---
+# File: playbook/mgmtserver/roles/mgmt_user_del/tasks/main.yml
+# Created: 5/30/17
+# Author: '@ekivemark'
+
+# Remove a user
+
+- name: "Remove Management User"
+  become_user: root
+  become: yes
+  user:
+    name: "{{ mgmt_user_name }}"
+    state: absent
+    remove: yes
+

@@ -1,0 +1,243 @@
+---
+# File: main 
+# Created: 5/4/17
+# Author: @ekivemark
+
+- name: "Create pyapps user"
+  become_user: root
+  become: yes
+  shell: "pass=$(perl -e 'print crypt($ARGV[0], 'password')' ${{ cf_data_pgsql_password }})"
+  register: PgsqlPassword
+
+- name: "Create user account"
+  become_user: root
+  become: yes
+  user:
+    name: pyapps
+        password={{ PgsqlPassword }}
+        state=present
+        append=yes
+        groups=sudo
+        shell="/bin/bash"
+  when: new_user_name is defined and new_user_name in uids
+  register: user_created
+
+#- name: "Add pyapps to Sudoers file"
+#  become_user: root
+#  shell: "echo 'pyapps       ALL=(ALL)       NOPASSWD: ALL' >/etc/sudoers.d/pyapps.conf"
+
+- name: "Configure rhn for postgresql"
+  become_user: root
+  become: yes
+  shell: "echo 'exclude=postgresql*' >>/etc/yum/pluginconf.d/rhnplugin.conf"
+
+- name: "Update yum config-manager"
+  become_user: root
+  become: yes
+  shell: "yum-config-manager --enable {{ item }} ; echo Processed {{ item }}"
+  with_items:
+    - rhel-server-rhscl-6-rpms
+    - rhel-6-server-optional-rpms
+  register: yum_config
+
+#- name: "Update yum config-manager for optional RHEL channel"
+#  become_user: root
+#  become: yes
+#  shell: "yum-config-manager --enable rhel-6-server-optional-rpms"
+
+- name: "wait so that the yum lock is removed"
+  pause: seconds=90
+  when: yum_config|changed
+
+- name: "Add Postgres YUM repository for RHEL 6"
+  become_user: root
+  become: yes
+  yum:
+    name: "{{ item }}"
+    state: installed
+  with_items:
+    - https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-6-x86_64/pgdg-redhat96-9.6-3.noarch.rpm
+
+- name: "Download Postgres96 and supporting components for RHEL 6"
+  become_user: root
+  become: yes
+  yum:
+    name: "{{ item }}"
+    state: installed
+  with_items:
+    - postgresql96
+    - postgresql96-server
+    - postgresql96-contrib
+    - http://mirror.centos.org/centos/6/os/x86_64/Packages/libffi-devel-3.0.5-3.2.el6.x86_64.rpm
+
+
+#- name: "Add Postgres YUM repository for RHEL 7"
+#  become_user: root
+#  become: yes
+#  yum:
+#    name: https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-7-x86_64/pgdg-redhat96-9.6-3.noarch.rpm
+#    state: latest
+
+
+- name: "Install Development Tools"
+  become_user: root
+  become: yes
+  yum:
+    name: '@Development Tools'
+    state: latest
+
+  # shell: "yum -y groupinstall 'Development Tools' "
+  ####
+  # Development Tools:
+  # bison
+  #byacc
+  #cscope
+  #ctags
+  #cvs
+  #diffstat
+  #doxygen
+  #flex
+  #gcc
+  #gcc-c++
+  #gcc-gfortran
+  #gettext
+  #git
+  #indent
+  #intltool
+  #libtool
+  #patch
+  #patchutils
+  #rcs
+  #redhat-rpm-config
+  #rpm-build
+  #subversion
+  #swig
+  #systemtap
+  ####
+
+- name: "Install Postgresql components"
+  become_user: root
+  become: yes
+  yum:
+    pkg: "{{ item }}"
+    state: installed
+  with_items:
+    - postgresql96-server
+    - postgresql96-contrib
+    - python-psycopg2.x86_64
+
+#    - libxml2-devel
+#    - libxslt-devel
+#    # - gcc
+#    # - gcc-c++
+#    # - git
+#    - httpd-devel
+#    - zlib-devel
+#    - bzip2-devel
+#    - openssl-devel
+#    - ncurses-devel
+#    - sqlite-devel
+#    - readline-devel
+#    - tk-devel
+#    - gdbm-devel
+#    - db4-devel
+#    # - libpcap-devel
+#    - xz-devel
+#    - python-devel
+#    - postgresql-devel
+#    - libffi.x86_64
+#    - python-cffi
+
+- name: "Create Postgres data directory"
+  become_user: root
+  become: yes
+  file:
+    dest: "{{ db_server_data_dir }}"
+    owner: "{{ db_server_account }}"
+    group: "{{ db_server_account }}"
+    state: directory
+    recurse: yes
+
+- name: "Create Postgres temp directory"
+  become_user: root
+  become: yes
+  file:
+    dest: "{{ db_server_temp_dir }}"
+    owner: "{{ db_server_account }}"
+    group: "{{ db_server_account }}"
+    state: directory
+    recurse: yes
+
+# Startup script: /etc/init.d/postgresql-9.6
+# Default data location: /var/lib/postgresql/[version]/data/
+- name: "Change default PGDATA variable in startup script"
+  become_user: root
+  become: yes
+  lineinfile:
+    dest: "/etc/init.d/postgresql-9.6"
+    regexp: "^PGDATA="
+    line: "PGDATA={{ db_server_data_dir }}"
+
+- name: "Initialize Database Service"
+  become_user: root
+  become: yes
+  shell: "service postgresql-9.6 initdb"
+#  service:
+#    name: postgresql-9.6
+#    state: started
+#    args: initdb
+#  register: postgres_init_result
+
+- name: "Set database to start on OS Boot"
+  become_user: root
+  become: yes
+  service:
+    name: "{{ item }}"
+    enabled: yes
+  with_items:
+    - postgresql-9.6
+
+
+##########################
+# setup postgresql.conf
+# setup pg_hba.conf
+##########################
+# Switch from default port 5432.
+# - name: "Setup Database configuration"
+# replace line in replacements with a template copy
+- include: ../../update_postgres_conf/tasks/main.yml
+
+# replace line in replacements with a template copy
+- include: ../../update_pg_hba/tasks/main.yml
+
+- name: "Start Database"
+  become_user: root
+  become: yes
+  service:
+    name: postgresql-9.6
+    state: started
+  register: postgres_start_result
+
+- name: "Create db init sql script"
+  become_user: root
+  become: yes
+  template:
+    src: "../templates/db_init_script.j2"
+    dest: "{{ db_server_data_dir }}/django_init.sql"
+    backup: yes
+    owner: "{{ db_server_account }}"
+    group: "{{ db_server_account }}"
+    mode: "u+rwx"
+
+- name: "Run db init sql script - set db_init=YES to run script"
+  become_user: "{{ db_server_account}}"
+  become: yes
+  shell: "psql -p {{ db_host_port }} -f {{ db_server_data_dir }}/django_init.sql"
+  register: django_db_init
+  when: "{{ (db_init=='YES') }}"
+
+- name: "Setup /etc/ld.so.conf"
+  become_user: root
+  become: yes
+  shell: "echo '/usr/local/lib' >>/etc/ld.so.conf"
+

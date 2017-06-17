@@ -1,0 +1,78 @@
+---
+# File: roles/app_env/tasks/set_config_scripts.yml
+# Created: 5/10/17
+# Author: '@ekivemark'
+- name: "Install custom-envvars.py"
+  become_user: root
+  become: yes
+  template:
+    src: ../../templates/appserver/custom-envvars.j2
+    dest: "{{ install_root }}/custom-envvars.py"
+    backup: yes
+    owner: "{{ app_owner }}"
+    group: "{{ app_group }}"
+    mode: 0644
+
+#  - name: Get new custom-envar content.
+#    command: cat /var/pyapps/hhs_o_server/custom-envvars.py
+#    register: c_e_new_data
+#
+#  - debug:
+#      msg: "{{ c_e_new_data.stdout }}"
+
+- name: "Install django_settings.sh"
+  become_user: root
+  become: yes
+  template:
+    src: ../../templates/appserver/django_settings.j2
+    dest: "{{ install_root }}/django_settings.sh"
+    backup: yes
+    owner: "{{ app_owner }}"
+    group: "{{ app_group }}"
+    mode: 0644
+
+#  - name: Get new django_settings content.
+#    become: yes
+#    become_method: sudo
+#    become_user: root
+#    command: cat /var/pyapps/hhs_o_server/django_settings.sh
+#    register: d_j_new_data
+#
+#  - debug:
+#      msg: "{{ d_j_new_data.stdout }}"
+
+#  - file:
+#    path: /var/pyapps/hhs_o_server/django_settings.sh
+#    owner: "{{ app_owner }}"
+#    group: "{{ app_group }}"
+#    mode: 0644
+
+- name: display custom_env_vars.py
+  become_user: root
+  become: yes
+  action: "shell /bin/cat {{ install_root }}/custom-envvars.py"
+
+- name: display django_settings.sh
+  become_user: root
+  become: yes
+  action: "shell /bin/cat {{ install_root }}/django_settings.sh"
+
+- name: "Make new files executable"
+  become_user: root
+  become: yes
+  shell: "chmod +x {{ cf_app_pyapp_home }}"
+
+- name: "Check Apache"
+  become_user: root
+  become: yes
+  service:
+    name: httpd
+    state: restarted
+    enabled: yes
+
+- name: "Restart Apache on {{ env }}"
+  become_user: root
+  become: yes
+  action: "shell /bin/echo $HOSTNAME"
+  notify:
+    - restart apache

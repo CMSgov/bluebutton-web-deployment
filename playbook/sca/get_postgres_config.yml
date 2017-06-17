@@ -1,0 +1,121 @@
+---
+# File: playbook/sca/get_postgres_config.yml
+# Created: 5/17/17
+# Author: '@ekivemark'
+
+# compile the postgres configuration
+
+- name: "Postgresql configuration collector"
+  hosts: dbservers
+  remote_user: ec2-user
+  become_user: root
+  become: yes
+  gather_facts: True
+  vars:
+    ansible_ssh_pipelining: no
+    env: "impl"
+    azone: "az1"
+    sub_zone: "data"
+    sg_zone: "data"
+    env_az: "{{ env }}-{{ azone }}"
+    env_cf_app_version: "01"
+    local_dest: "/home/ec2-user/info_capture"
+    local_capture: "postgres_info.txt"
+    # used by roles/fetch_file/tasks/main.yml
+    fetch_path: "/data/pgsql/9.6/data"
+    fetch_content: 1
+    fetch_perms: 1
+    fetch_group_info: 1
+
+  vars_files:
+    - "./../../vars/common.yml"
+    - "./../../vault/env/{{ env }}/vault.yml"
+    - "./../../vars/env/{{ env }}/env.yml"
+    - "./../../vars/all_var.yml"
+
+  tasks:
+  - name: "Setup local data capture folder"
+    connection: local
+    become_user: root
+    become: yes
+    file:
+      dest: "{{ local_dest }}"
+      owner: "{{ remote_user_account }}"
+      group: "{{ remote_user_account }}"
+      mode: "0744"
+      state: directory
+      recurse: yes
+    delegate_to: localhost
+
+  - name: "setup remote data capture folder"
+    become_user: root
+    become: yes
+    file:
+      dest: "{{ local_dest }}"
+      owner: "{{ remote_user_account }}"
+      group: "{{ remote_user_account }}"
+      mode: "0744"
+      state: directory
+      recurse: yes
+
+  - name: "getting remote server Postgresql configuration"
+    become_user: root
+    become: yes
+    shell: "locate bin/psql | xargs -i xargs -t '{}' -V "
+    register: db_version_info
+
+  - debug:
+      msg: "DB_VERSION_INFO\n{{ db_version_info.stdout }}\n{{ db_version_info.stderr }}\n "
+
+  - name: "Postgresql configuration writer"
+    become_user: root
+    become: yes
+    blockinfile:
+      dest: "{{ local_dest }}/{{ local_capture }}"
+      create: yes
+      block: "\nResult:{{ db_version_info.stdout }}\nCommand:{{ db_version_info.stderr }}\n"
+      mode: "0755"
+      owner: "{{ remote_user_account }}"
+      group: "{{ remote_user_account }}"
+      insertafter: EOF
+      state: present
+
+  - name: "Fetch files"
+    become_user: root
+    become: yes
+    fetch:
+      src: "{{ local_dest }}/{{ local_capture }}"
+      dest: "{{ local_dest }}"
+
+  # See roles/fetch_file/tasks/main.yml
+  - name: "set facts for fetch_file 1"
+    become_user: root
+    become: yes
+    include:  ./roles/fetch_file/tasks/main.yml fetch_filename=postgresql.conf
+
+  - name: "set facts for fetch_file 2"
+    become_user: root
+    become: yes
+    include:  ./roles/fetch_file/tasks/main.yml fetch_filename=pg_hba.conf
+
+
+  - name: "set facts for fetch_file 3"
+    become_user: root
+    become: yes
+    include:  ./roles/fetch_file/tasks/main.yml fetch_filename=pg_ident.conf
+
+
+  - name: "set facts for fetch_file 4"
+    become_user: root
+    become: yes
+    include:  ./roles/fetch_file/tasks/main.yml fetch_filename=pgauthid
+
+  - name: "get the backup log"
+    become_user: root
+    become: yes
+    include: ./roles/fetch_file/tasks/main.yml fetch_filename=proc.log fetch_path=/data/pgbackup
+
+  - name: "get user audit"
+    become_user: root
+    become: yes
+    include: ./roles/postgres_get_user/tasks/main.yml fetch_filename=get_user_audit.txt

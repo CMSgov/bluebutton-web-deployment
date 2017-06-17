@@ -1,0 +1,91 @@
+---
+# File: playbook/sca/roles/fetch_file/main.yml
+# Created: 5/18/17
+# Author: '@ekivemark'
+# Fetch a file from remote machine
+
+# Uses the following variables:
+# fetch_path: path (without ending /)
+# fetch_filename: filename
+# fetch_content: true | false  ## Fetch file contents
+# fetch__perms: true | false  ## Fetch permissions for file
+# fetch_group_info: true | false  ## Fetch group ids for file
+
+- name: "Getting info for {{ fetch_path }}/{{ fetch_filename }} "
+  become_user: root
+  become: yes
+  fetch:
+    src: "{{ fetch_path }}/{{ fetch_filename }}"
+    dest: "{{ local_dest }}"
+  register: fetched_file_result
+  when: fetch_content == 1
+
+- name: "setting fact"
+  set_fact:
+    fetch_file_perms: {"stdout": "" }
+
+- name: "file permissions for {{ fetch_path }}/{{ fetch_filename }}"
+  become_user: root
+  become: yes
+  ignore_errors: yes
+  shell: "echo File permissions info for {{ fetch_path }}/{{ fetch_filename }}: ;ls -la {{ fetch_path }}/{{ fetch_filename }} "
+  register: fetch_file_perms
+  when: fetch_perms == 1
+
+- name: "setting fact"
+  set_fact:
+    fetch_user_id: {"stdout": "" }
+
+- name: "user id information for {{ fetch_path }}/{{ fetch_filename }}"
+  become_user: root
+  become: yes
+  ignore_errors: yes
+  shell: "echo User info related to {{ fetch_path }}/{{ fetch_filename }}: ; id $(ls -la {{ fetch_path }}/{{ fetch_filename }} | cut -d ' ' -f 3 )"
+  register: fetch_user_id
+  when: fetch_perms == 1
+
+- name:
+  set_fact:
+    fetch_group_id: {"stdout": "" }
+
+- name: "group id information for {{ fetch_path }}/{{ fetch_filename }}"
+  become_user: root
+  become: yes
+  ignore_errors: yes
+  shell: "echo Group info related to {{ fetch_path }}/{{ fetch_filename }}: ; id $(ls -la {{ fetch_path }}/{{ fetch_filename }} | cut -d ' ' -f 4 )"
+  register: fetch_group_id
+  when: fetch_group_info == 1
+
+- name: "Clear down info collector"
+  file:
+    dest: "{{ local_dest }}/{{ fetch_filename }}.FF_info"
+    state: absent
+
+- name: "Info collector"
+  become_user: root
+  become: yes
+  ignore_errors: yes
+  blockinfile:
+    dest: "{{ local_dest }}/{{ fetch_filename }}.FF_info"
+    create: yes
+    marker: "=== {mark} fetch_file: {{ fetch_filename }} ==============================="
+    block: |
+      ls {{ fetched_file_result.dest }}
+      {{ fetch_file_perms.stdout }}
+
+      {{ fetch_user_id.stdout }}
+
+      {{ fetch_group_id.stdout }}
+    mode: "0755"
+    owner: "{{ remote_user_account }}"
+    group: "{{ remote_user_account }}"
+    insertafter: EOF
+    state: present
+
+- name: "Fetch file"
+  become_user: root
+  become: yes
+  fetch:
+    src: "{{ local_dest }}/{{ fetch_filename }}.FF_info"
+    dest: "{{ local_dest }}"
+

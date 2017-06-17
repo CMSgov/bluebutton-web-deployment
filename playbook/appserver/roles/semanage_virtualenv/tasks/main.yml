@@ -1,0 +1,11 @@
+---
+# File: playbook/appserver/semanage_virtualenv/tasks/main.yml
+# Created: 5/15/17
+# Author: '@ekivemark'
+# set permissions for virtualenv under selinux
+
+- name: "Set permissions for virtualenv under SELinux"
+  become_user: root
+  become: yes
+  shell: "semanage fcontext -a -t httpd_sys_content_t \"{{ env_venv[:-1] }}(/.*)?\" "
+

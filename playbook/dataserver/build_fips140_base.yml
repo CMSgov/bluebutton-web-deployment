@@ -1,0 +1,36 @@
+---
+# File: build_fips140_database.yml
+# Created: 5/4/17
+# Author: @ekivemark
+
+- name: Provision FIPS 140.2 Server
+  hosts: dbservers
+  # connection: smart
+  gather_facts: False
+  user: ec2-user
+  become_user: root
+  become: yes
+  # become_method: sudo
+  vars:
+    env: "dev"
+    azone: "az1"
+    env_az: "{{ env }}-{{ azone }}"
+    env_cf_data_version: "20"
+    splunk_client_name: "BBAPI-{{ env }}-DATA"
+
+  vars_files:
+    - "./../../vars/common.yml"
+    - "./../../vault/env/{{ env }}/vault.yml"
+    - "./../../vars/env/{{ env }}/env.yml"
+    - "./../../vars/all_var.yml"
+
+  roles:
+    - ../../roles/base_patch
+    - ../../roles/fips140
+    - ../../roles/splunk
+
+  tasks:
+  - name: "pinging..."
+    become_user: root
+    ping:
+

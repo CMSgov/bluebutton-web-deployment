@@ -1,0 +1,74 @@
+
+# Copied to /etc/httpd/virtualhost/server.conf
+# Configured for Apache 2.4
+# From /hhs_ansible/hhs_ansible/roles/apache/templates/virtualhost_server_conf.j2
+    WSGISocketPrefix /var/run/modwsgi
+
+    WSGIApplicationGroup %{GLOBAL}
+    WSGIPythonHome {{ cf_app_py_virtual_env }}
+    WSGIPythonPath {{ cf_app_pyapp_home }}:{{ cf_app_py_virtual_env }}/bin:/usr/local/bin:{{ cf_app_py_virtual_env }}/lib/python{{ python_ver }}/site-packages
+
+    <VirtualHost *:80>
+        ServerAdmin webmaster@{{ cf_app_pyserver_name }}
+        DocumentRoot /var/www/doc/{{ cf_app_pyserver_name|lower }}
+        ErrorLog logs/{{ cf_app_pyserver_name|lower }}-error_log
+        CustomLog logs/{{ cf_app_pyserver_name|lower }}-access_log common
+        LogLevel warn
+        ServerName {{ cf_app_pyserver_name|lower }}
+        WSGIDaemonProcess apache user={{ env_cf_app_pyapps_user }} group=apache python-home={{ cf_app_py_virtual_env }} python-path={{ cf_app_py_virtual_env }}/bin:/usr/local/bin:{{ cf_app_py_virtual_env }}/lib/python{{ python_ver }}/site-packages
+
+        WSGIProcessGroup apache
+        WSGIScriptAlias / {{ cf_app_pyapp_home }}/hhs_oauth_server/hhs_oauth_server/wsgi.py
+
+        # Directory specification needed to allow apache to load wsgi.py
+        # Directory  to point to folder where wsgi.py stored
+        <Directory {{ cf_app_pyapp_home }}/hhs_oauth_server/hhs_oauth_server>
+            Order deny,allow
+            Allow from all
+        </Directory>
+
+        <Directory {{ cf_app_pyapp_home }}/hhs_oauth_server/hhs_oauth_server/settings>
+            Order deny,allow
+            Allow from all
+            <Files base.py >
+                Allow from all
+            </Files>
+
+            <Files production.py>
+                Allow from all
+            </Files>
+
+            <Files aws*.py>
+                Allow from all
+            </Files>
+        </Directory>
+
+        # Alias /static/ {{ cf_app_pyapp_home }}/hhs_oauth_server/collectedstatic/
+        # Alias /media/  {{ cf_app_pyapp_home }}/hhs_oauth_server/media/
+        <Directory {{ cf_app_pyapp_home }}/hhs_oauth_server/collectedstatic>
+            # Apache 2.4 command:
+            Require all granted
+            # Apache 2.2 commands:
+            # Allow from all
+            # Order deny,allow
+        </Directory>
+
+        <Directory {{ cf_app_pyapp_home }}/hhs_oauth_server/media>
+            # Apache 2.4 command:
+            Require all granted
+            # Apache 2.2 commands:
+            # Allow from all
+            # Order deny,allow
+
+        </Directory>
+
+        <Directory {{ cf_app_pyapp_home }}/hhs_oauth_server>
+            # Apache 2.4 command:
+            Require all granted
+            # Apache 2.2 commands:
+            # Order allow,deny
+            # Allow from all
+        </Directory>
+    </VirtualHost>
+
+

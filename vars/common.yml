@@ -6,6 +6,216 @@
 
 # a unix path-friendly name (IE, no spaces or special characters)
 common_project_name: "hhs_oauth_server"
+# defined in env.yml
 
 # Project directory for virtualenv and git clone
 common_project_dir: "hhs_o_server"
+
+common_cf_tags_business: "OEDA"
+common_cf_tags_application: "BlueButton"
+common_remote_user: "ec2-user"
+
+# Environment VPC Subnets
+
+common_repository: "https://github.com/transparenthealth/hhs_oauth_server"
+
+common_cf_subnet: {
+          "dev-az1": {
+              "dmz": "subnet-82ecfba8",
+              "web": "subnet-8decfba7",
+              "app": "subnet-80ecfbaa",
+              "data": "subnet-8cecfba6"
+          },
+          "dev-az2": {
+              "dmz": "subnet-228e486b",
+              "web": "subnet-208e4869",
+              "app": "subnet-2f8e4866",
+              "data": "subnet-2e8e4867"
+          },
+          "dev-az3": {
+              "dmz": "subnet-79bca821",
+              "web": "subnet-7cbca824",
+              "app": "subnet-47bca81f",
+              "data": "subnet-7bbca823"
+          },
+          "impl-az1": {
+              "dmz": "subnet-b8a17d95",
+              "web": "subnet-b9a17d94",
+              "app": "subnet-bfa17d92",
+              "data": "subnet-b4a17d99"
+          },
+          "impl-az2": {
+              "dmz": "subnet-5535b91c",
+              "web": "subnet-5e35b917",
+              "app": "subnet-5335b91a",
+              "data": "subnet-5c35b915"
+          },
+          "impl-az3": {
+              "dmz": "subnet-860adadd",
+              "web": "subnet-bb0adae0",
+              "app": "subnet-ba0adae1",
+              "data": "subnet-850adade"
+          },
+          "prod-az1": {
+              "dmz": "subnet-c8a91be5",
+              "web": "subnet-cea91be3",
+              "app": "subnet-cba91be6",
+              "data": "subnet-c9a91be4"
+          },
+          "prod-az2": {
+              "dmz": "subnet-a2305deb",
+              "web": "subnet-a3305dea",
+              "app": "subnet-af305de6",
+              "data": "subnet-a0305de9"
+          },
+          "prod-az3": {
+              "dmz": "subnet-1a219641",
+              "web": "subnet-1e219645",
+              "app": "subnet-1f219644",
+              "data": "subnet-19219642"
+          },
+          "test-az1": {
+              "dmz": "subnet-a3d9c289",
+              "web": "subnet-acd9c286",
+              "app": "subnet-a0d9c28a",
+              "data": "subnet-a1d9c28b"
+          },
+          "test-az2": {
+              "dmz": "subnet-9b69a2d2",
+              "web": "subnet-9a69a2d3",
+              "app": "subnet-9d69a2d4",
+              "data": "subnet-9e69a2d7"
+          },
+          "test-az3": {
+              "dmz": "subnet-ac667ef4",
+              "web": "subnet-ae667ef6",
+              "app": "subnet-ad667ef5",
+              "data": "subnet-af667ef7"
+          }
+      }
+common_cf_layer: {
+          "dev-az1": {
+              "dmz": "10.224.78.144/28",
+              "web": "10.224.78.0/28",
+              "app": "10.224.78.48/28",
+              "data": "10.224.78.96/28",
+              "mgmt": "10.224.78.192/26",
+              "ocss1": "10.128.11.0/24",
+              "ocss2": "10.128.111.0/24"
+          },
+          "dev-az2": {
+              "dmz": "10.224.78.160/28",
+              "web": "10.224.78.16/28",
+              "app": "10.224.78.64/28",
+              "data": "10.224.78.112/28",
+              "mgmt": "10.224.78.192/26",
+              "ocss1": "10.128.11.0/24",
+              "ocss2": "10.128.111.0/24"
+          },
+          "dev-az3": {
+              "dmz": "10.224.78.176/28",
+              "web": "10.224.78.32/28",
+              "app": "10.224.78.80/28",
+              "data": "10.224.78.128/28",
+              "mgmt": "10.224.78.192/26",
+              "ocss1": "10.128.11.0/24",
+              "ocss2": "10.128.111.0/24"
+          },
+          "impl-az1": {
+              "dmz": "10.246.44.144/28",
+              "web": "10.246.44.0/28",
+              "app": "10.246.44.48/28",
+              "data": "10.246.44.96/28",
+              "mgmt": "10.246.44.192/26",
+              "ocss1": "10.128.11.0/24",
+              "ocss2": "10.128.111.0/24"
+          },
+          "impl-az2": {
+              "dmz": "10.246.44.160/28",
+              "web": "10.246.44.16/28",
+              "app": "10.246.44.64/28",
+              "data": "10.246.44.112/28",
+              "mgmt": "10.246.44.192/26",
+              "ocss1": "10.128.11.0/24",
+              "ocss2": "10.128.111.0/24"
+          },
+          "impl-az3": {
+              "dmz": "10.246.44.176/28",
+              "web": "10.246.44.32/28",
+              "app": "10.246.44.80/28",
+              "data": "10.246.44.128/28",
+              "mgmt": "10.246.44.192/26",
+              "ocss1": "10.128.11.0/24",
+              "ocss2": "10.128.111.0/24"
+          },
+          "prod-az1": {
+              "dmz": "10.244.44.144/28",
+              "web": "10.244.44.0/28",
+              "app": "10.244.44.48/28",
+              "data": "10.244.44.96/28",
+              "mgmt": "10.244.44.192/26",
+              "ocss1": "10.128.11.0/24",
+              "ocss2": "10.128.111.0/24"
+          },
+          "prod-az2": {
+              "dmz": "10.244.44.160/28",
+              "web": "10.244.44.16/28",
+              "app": "10.244.44.64/28",
+              "data": "10.244.44.112/28",
+              "mgmt": "10.244.44.192/26",
+              "ocss1": "10.128.11.0/24",
+              "ocss2": "10.128.111.0/24"
+          },
+          "prod-az3": {
+              "dmz": "10.244.44.176/28",
+              "web": "10.244.44.32/28",
+              "app": "10.244.44.80/28",
+              "data": "10.244.44.128/28",
+              "mgmt": "10.244.44.192/26",
+              "ocss1": "10.128.11.0/24",
+              "ocss2": "10.128.111.0/24"
+          },
+          "test-az1": {
+              "dmz": "10.224.90.144/28",
+              "web": "10.224.90.0/28",
+              "app": "10.224.90.48/28",
+              "data": "10.224.90.96/28",
+              "mgmt": "10.224.90.192/26",
+              "ocss1": "10.128.11.0/24",
+              "ocss2": "10.128.111.0/24"
+          },
+          "test-az2": {
+              "dmz": "10.224.90.160/28",
+              "web": "10.224.90.16/28",
+              "app": "10.224.90.64/28",
+              "data": "10.224.90.112/28",
+              "mgmt": "10.224.90.192/26",
+              "ocss1": "10.128.11.0/24",
+              "ocss2": "10.128.111.0/24"
+          },
+          "test-az3": {
+              "dmz": "10.224.90.176/28",
+              "web": "10.224.90.32/28",
+              "app": "10.224.90.80/28",
+              "data": "10.224.90.128/28",
+              "mgmt": "10.224.90.192/26",
+              "ocss1": "10.128.11.0/24",
+              "ocss2": "10.128.111.0/24"
+          }
+      }
+
+common_db_type: {
+          "postgres": {
+              "DbLinkUrl": "postgres",
+              "DbEngineDriver": "django.db.backends.postgresql_psycopg2",
+              "DbNameTable": "pg_01",
+              "DbHostPort": "15432"
+              #"DbHostPort": "5432"
+          },
+          "mysql": {
+              "DbLinkUrl": "mysql",
+              "DbEngineDriver": "django.db.backends.mysql",
+              "DbNameTable": "mysql_01",
+              "DbHostPort": "13306"
+          }
+      }

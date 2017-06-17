@@ -1,0 +1,30 @@
+# This is the default ansible 'hosts' file.
+#
+# It should live in /etc/ansible/hosts
+#
+#   - Comments begin with the '#' character
+#   - Blank lines are ignored
+#   - Groups of hosts are delimited by [header] elements
+#   - You can enter hostnames or ip addresses
+#   - A hostname/ip can be a member of multiple groups
+
+######
+## Environment: {{ env|upper }}
+##
+#####
+#
+[mgmtservers]
+{% for host in ec2_remote_facts_info.instances %}{% if host.tags.Layer|upper=='MGMT' %}
+{{ host.private_ip_address }}
+{% endif %}{% endfor %}
+
+[appservers]
+{% for host in ec2_remote_facts_info.instances %}{% if host.tags.Layer|upper=='APP' %}
+{{ host.private_ip_address }}
+{% endif %}{% endfor %}
+
+[dbservers]
+{% for host in ec2_remote_facts_info.instances %}{% if host.tags.Layer|upper=='DATA' %}
+{{ host.private_ip_address }}
+{% endif %}{% endfor %}
+
