@@ -72,6 +72,7 @@
     when: ca_subject is not defined
 
 
+  # CA root ca password
   - name: "Generate private key and Create root CA files"
     shell: "{{ item }}"
     args:
