@@ -71,6 +71,7 @@
       ca_subject: '/C={{ ca_country }}/ST={{ ca_state }}/L={{ ca_locality }}/O={{ ca_organization }}/OU={{ ca_organizationalunit }}/CN={{ ca_commonname }}/emailAddress={{ ca_email }}'
     when: ca_subject is not defined
 
+
   - name: "Generate private key and Create root CA files"
     shell: "{{ item }}"
     args:
