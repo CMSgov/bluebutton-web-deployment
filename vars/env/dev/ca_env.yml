@@ -22,5 +22,8 @@ ca_state: "Maryland"
 ca_locality: "Baltimore"
 ca_organization: "Centers\ for\ Medicare\ and\ Medicaid\ Services"
 ca_organizationalunit: "BlueButton\ {{ env }}\ API"
-ca_commonname: ""
-ca_email: "mark.scrimshire@cms.hhs.gov"
+
+# Set commonname or email
+# ca_commonname: ""
+ca_commonname: "BlueButton\ {{env }}\ Root\ Certificate"
+# ca_email: "mark.scrimshire@cms.hhs.gov"
