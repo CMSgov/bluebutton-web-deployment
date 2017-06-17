@@ -26,4 +26,5 @@ ca_organizationalunit: "BlueButton\ {{ env }}\ API"
 # Set commonname or email
 # ca_commonname: ""
 ca_commonname: "BlueButton\ {{env }}\ Root\ Certificate"
+ca_email: ""
 # ca_email: "mark.scrimshire@cms.hhs.gov"
