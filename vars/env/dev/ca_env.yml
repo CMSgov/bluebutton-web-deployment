@@ -16,10 +16,11 @@ ca_default_ca: CA_default
 
 
 # Certificate values (loaded to CA_SUBJECT)
+# precede spaces with backslash
 ca_country: "US"
 ca_state: "Maryland"
 ca_locality: "Baltimore"
-ca_organization: "Centers_for_Medicare_and_Medicaid_Services"
-ca_organizationalunit: "BlueButton_{{ env }}_API"
+ca_organization: "Centers\ for\ Medicare\ and\ Medicaid\ Services"
+ca_organizationalunit: "BlueButton\ {{ env }}\ API"
 ca_commonname: ""
 ca_email: "mark.scrimshire@cms.hhs.gov"
