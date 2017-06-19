@@ -27,5 +27,5 @@
 - name: "restart postgresql"
   service :
     name: postgresql-9.6
-    status: restarted
+    state: restarted
 
