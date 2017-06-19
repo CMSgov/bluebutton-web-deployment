@@ -26,10 +26,15 @@
     - "./../../vars/all_var.yml"
     # - ../vars/all_vars.yml
     # - ../../vars/playbook/template_envvars.yml
+    # Load certificate values
+    # ca_commonname is empty - this needs to be set to server name
+    - "./../../vars/env/{{ env }}/ca_env.yml"
+
 
   roles:
     - ../../roles/splunk
     - ../appserver/roles/app_tools
+    - root_cert
 
   tasks:
   - debug:
