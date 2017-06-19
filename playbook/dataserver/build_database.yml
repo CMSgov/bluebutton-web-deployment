@@ -42,12 +42,16 @@
     - "./../../vault/env/{{ env }}/vault.yml"
     - "./../../vars/env/{{ env }}/env.yml"
     - "./../../vars/all_var.yml"
+    # Load certificate values
+    # ca_commonname is empty - this needs to be set to server name
+    - "./../../vars/env/{{ env }}/ca_env.yml"
 
   roles:
     - ../../roles/splunk
     # moved add_external_vol to its own playbook - attach_data_volume.yml
     # - ../../roles/add_external_vol
     - ./roles/postgres
+    - install_certs
 
   tasks:
   - include: ./set_backup_tasks.yml

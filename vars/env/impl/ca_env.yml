@@ -5,16 +5,26 @@
 
 # Values for the ca_certificate process
 
-# Certificate Settings
+# Certificate Settings - directory to build certs in
 ca_certs_dir: "/root/ca"
+# uses vault to store password
 
 ca_rootca_password: "{{ vault_env_ca_rootca_password }}"
 
+# used in openssl.cnf / ca.conf
+ca_default_ca: CA_default
+
+
 # Certificate values (loaded to CA_SUBJECT)
+# precede spaces with backslash
 ca_country: "US"
 ca_state: "Maryland"
 ca_locality: "Baltimore"
-ca_organization: "Centers for Medicare and Medicaid Services"
-ca_organizationalunit: "BlueButton {{ env }} API"
+ca_organization: "Centers\ for\ Medicare\ and\ Medicaid\ Services"
+ca_organizationalunit: "BlueButton\ {{ env }}\ API"
+
+# Set commonname or email
 ca_commonname: ""
+# ca_commonname: "BlueButton\ {{env }}\ Root\ Certificate"
+#ca_email: ""
 ca_email: "mark.scrimshire@cms.hhs.gov"
