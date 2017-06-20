@@ -58,3 +58,11 @@
     # Set permissions for virtualenv under selinux
     - roles/semanage_virtualenv
 
+
+  tasks:
+  - name: "restart apache"
+    service:
+      name: httpd
+      state: restart
+
+
