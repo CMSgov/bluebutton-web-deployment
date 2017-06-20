@@ -34,15 +34,21 @@
     state: directory
     mode: 0755
 
-- name: "Create the debug log"
+- name: "Create the log files"
   become_user: root
   become: yes
   file:
-    dest: "{{ cf_app_log_dir }}/debug.log"
+    dest: "{{ cf_app_log_dir }}/{{ item }}"
     owner: "{{ cf_app_pyapps_user }}"
     group: "{{ cf_app_pyapps_user }}"
     state: touch
     mode: 0766
+  with_items:
+    - debug.log
+    - error.log
+    - info.log
+    - login_failed.log
+    - admin_access.log
 
 - name: "Create Virtualenv"
   become_user: root
