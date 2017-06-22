@@ -1,14 +1,15 @@
 #!/bin/bash
 ##################################################
 # Secure Postgres Backup
-# v1.0.2 1/12/2017 @ekivemark
+# v1.0.3 6/21/2017 @ekivemark
+# v1.0.3: add $1 variable to filename record move in separate logs
 # v1.0.2: use export var for backup PG_TEMP_DIR
 # v1.0.1: add PGPASSFILE and .pgpass
 ##################################################
 # {{ db_server_data_dir }}/db_backup.sh
 # Via template hhs_ansible/roles/postgres/templates/db_backup.sh.j2
 # Source: s3://bb-config/all_env/db/db_backup.sh
-# Parameter: hourly, daily, weekly, monthly
+# Parameter 1: hourly, daily, weekly, monthly
 ##################################################
 NOW=$(date +"%Y%m%d_%H%M%S")
 export PG_TEMP_DIR={{ db_server_temp_dir }}
@@ -29,8 +30,11 @@ export PGPASSFILE=$PG_DATA_DIR/.pgpass
 echo "Postgres backup: $NOW $PG_ENVIRONMENT:$DB_TABLE_NAME on $HOST_IP:$PG_ACCESSPORT Mode:$1 for $DB_USER started:$NOW" >>$PG_TEMP_DIR/proc.log
 echo "Postgres backup: $NOW $PG_ENVIRONMENT:$DB_TABLE_NAME on $HOST_IP:$PG_ACCESSPORT Mode:$1 for $DB_USER started:$NOW" >$PG_TEMP_DIR/latest.log
 cd $PG_TEMP_DIR
-/usr/pgsql-9.6/bin/pg_dump -U $DB_USER -h $HOST_IP -p {{ db_host_port }} $DB_TABLE_NAME | /usr/bin/bzip2 | /usr/bin/openssl smime -encrypt -aes256 -binary -outform DEM -out $PG_TEMP_DIR/$DB_TABLE_NAME.$NOW.sql.bz2.ssl {{ db_server_data_dir }}/{{ db_server_backup_pub_key }}
-/usr/local/bin/aws s3 mv $PG_TEMP_DIR/$DB_TABLE_NAME.$NOW.sql.bz2.ssl s3://bb-dbback-$PG_ENVIRONMENT/$1/
+/usr/pgsql-9.6/bin/pg_dump -U $DB_USER -h $HOST_IP -p {{ db_host_port }} $DB_TABLE_NAME | /usr/bin/bzip2 | /usr/bin/openssl smime -encrypt -aes256 -binary -outform DEM -out $PG_TEMP_DIR/$DB_TABLE_NAME.$1_$NOW.sql.bz2.ssl {{ db_server_data_dir }}/{{ db_server_backup_pub_key }}
+/usr/local/bin/aws s3 mv $PG_TEMP_DIR/$DB_TABLE_NAME.$1_$NOW.sql.bz2.ssl s3://bb-dbback-$PG_ENVIRONMENT/$1/
+echo "Moved: $DB_TABLE_NAME.$1_$NOW.sql.bz2.ssl" >>$PG_TEMP_DIR/moved_$1.log
+echo "Transferred: $DB_TABLE_NAME.$1_$NOW.sql.bz2.ssl" >>$PG_TEMP_DIR/xfered_$1.log
+ls -la $DB_TABLE_NAME.$1_$NOW.sql.bz2.ssl >>$PG_TEMP_DIR/moved_$1.log
 NOW_ENDED=$(date +"%Y%m%d_%H%M%S")
 echo "Postgres backup: $NOW $PG_ENVIRONMENT:$DB_TABLE_NAME on $HOST_IP:$PG_ACCESSPORT Mode:$1 for $DB_USER completed:$NOW_ENDED" >>$PG_TEMP_DIR/proc.log
 echo "Postgres backup: $NOW $PG_ENVIRONMENT:$DB_TABLE_NAME on $HOST_IP:$PG_ACCESSPORT Mode:$1 for $DB_USER completed:$NOW_ENDED" >>$PG_TEMP_DIR/latest.log
