@@ -26,8 +26,8 @@ PG_DATA_DIR={{ db_server_data_dir }}
 
 # Patch to force folders to be created for $1 in S3
 FREQ_MODE="$1"
-echo "$FREQ_MODE" >$PG_TEMP_DIR/folder_$FREQ_MODE.txt
-/usr/local/bin/aws s3 cp $PG_TEMP_DIR/folder_$FREQ_MODE.txt s3://bb-dbback-impl/$FREQ_MODE/
+echo "$PG_ENVIRONMENT $FREQ_MODE" >$PG_TEMP_DIR/folder_$FREQ_MODE.txt
+/usr/local/bin/aws s3 cp $PG_TEMP_DIR/folder_$FREQ_MODE.txt s3://bb-dbback-$PG_ENVIRONMENT/$FREQ_MODE/
 
 # export PGPASSWORD="R3s3t_Th1s"
 export PGPASSFILE=$PG_DATA_DIR/.pgpass
