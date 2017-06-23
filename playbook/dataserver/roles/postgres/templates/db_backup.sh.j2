@@ -40,7 +40,7 @@ cd $PG_TEMP_DIR
 /usr/local/bin/aws s3 mv $PG_TEMP_DIR/$DB_TABLE_NAME.$1_$NOW.sql.bz2.ssl s3://bb-dbback-$PG_ENVIRONMENT/$1/
 
 # Add cleanup process in case move failed
-$PG_DATA_DIR/db_cleanup.sh $1
+( "$PG_DATA_DIR/db_cleanup.sh $1" )
 
 echo "Moved: $DB_TABLE_NAME.$1_$NOW.sql.bz2.ssl" >>$PG_TEMP_DIR/moved_$1.log
 echo "Transferred: $DB_TABLE_NAME.$1_$NOW.sql.bz2.ssl" >>$PG_TEMP_DIR/xfered_$1.log
