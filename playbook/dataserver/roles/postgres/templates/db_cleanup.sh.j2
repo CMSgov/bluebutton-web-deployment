@@ -22,7 +22,7 @@ cd $PG_TEMP_DIR
 /usr/local/bin/aws s3 ls  s3://bb-dbback-$PG_ENVIRONMENT/$1/ >$PG_TEMP_DIR/cleanup.s3.list.tmp
 
 # Get the local list of backups
-if compgen -G "$PG_TEMP_DIR/$DB_TABLE_NAME.*" > /dev/null; then
+if compgen -G "$PG_TEMP_DIR/$DB_TABLE_NAME.*" >/dev/null ; then
    ls -la *.ssl >$PG_TEMP_DIR/cleanup.local.list.tmp
 
    for mvfile in $PG_TEMP_DIR/$DB_TABLE_NAME.$1_*
