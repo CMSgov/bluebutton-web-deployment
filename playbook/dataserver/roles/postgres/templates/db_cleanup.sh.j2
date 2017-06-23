@@ -5,7 +5,8 @@
 ##################################################
 # /data/pgsql/9.6/data/db_cleanup.sh
 # Via template hhs_ansible/roles/postgres/templates/db_cleanup.sh.j2
-# Parameter: hourly daily weekly monthly
+# Parameter: 1 = hourly daily weekly monthly
+# Parameter: 2 = Null or [ script_called_from ]
 ##################################################
 CLEAN_NOW=$(date +"%Y%m%d_%H%M%S")
 export PG_CLEAN_TEMP_DIR={{ db_server_temp_dir }}
@@ -14,7 +15,7 @@ export PG_CLEAN_ENVIRONMENT={{ cf_data_tag_key_stack }}
 export CLEAN_DB_TABLE_NAME={{ db_server_table_name }}
 
 # Log that the cleanup process has started
-echo "Postgres cleanup: $CLEAN_NOW in $PG_CLEAN_TEMP_DIR started:$CLEAN_NOW " >>$PG_CLEAN_TEMP_DIR/cleanup.log
+echo "Postgres cleanup: $CLEAN_NOW in $PG_CLEAN_TEMP_DIR started:$1 $2 $CLEAN_NOW " >>$PG_CLEAN_TEMP_DIR/cleanup.log
 cd $PG_CLEAN_TEMP_DIR
 
 # Get the list from S3 for mode $1
@@ -46,5 +47,5 @@ fi
 
 # Log that Postgres cleanup process has completed
 CLEAN_NOW_ENDED=$(date +"%Y%m%d_%H%M%S")
-echo "Postgres cleanup: $CLEAN_NOW in $PG_CLEAN_TEMP_DIR ended:$CLEAN_NOW_ENDED "  >>$PG_CLEAN_TEMP_DIR/cleanup.log
+echo "Postgres cleanup: $CLEAN_NOW in $PG_CLEAN_TEMP_DIR ended:$1 $2 $CLEAN_NOW_ENDED "  >>$PG_CLEAN_TEMP_DIR/cleanup.log
 
