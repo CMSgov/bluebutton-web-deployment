@@ -24,17 +24,30 @@ HOST_IP={{ ansible_eth0.ipv4.address }}
 PG_ACCESSPORT={{ db_host_port }}
 PG_DATA_DIR={{ db_server_data_dir }}
 
+# Patch to force folders to be created for $1 in S3
+FREQ_MODE="$1"
+echo "$FREQ_MODE" >$PG_TEMP_DIR/folder_$FREQ_MODE.txt
+/usr/local/bin/aws s3 cp $PG_TEMP_DIR/folder_$FREQ_MODE.txt s3://bb-dbback-impl/$FREQ_MODE/
+
 # export PGPASSWORD="R3s3t_Th1s"
 export PGPASSFILE=$PG_DATA_DIR/.pgpass
 # Get password from .pgpass file
 echo "Postgres backup: $NOW $PG_ENVIRONMENT:$DB_TABLE_NAME on $HOST_IP:$PG_ACCESSPORT Mode:$1 for $DB_USER started:$NOW" >>$PG_TEMP_DIR/proc.log
 echo "Postgres backup: $NOW $PG_ENVIRONMENT:$DB_TABLE_NAME on $HOST_IP:$PG_ACCESSPORT Mode:$1 for $DB_USER started:$NOW" >$PG_TEMP_DIR/latest.log
+
 cd $PG_TEMP_DIR
 /usr/pgsql-9.6/bin/pg_dump -U $DB_USER -h $HOST_IP -p {{ db_host_port }} $DB_TABLE_NAME | /usr/bin/bzip2 | /usr/bin/openssl smime -encrypt -aes256 -binary -outform DEM -out $PG_TEMP_DIR/$DB_TABLE_NAME.$1_$NOW.sql.bz2.ssl {{ db_server_data_dir }}/{{ db_server_backup_pub_key }}
 /usr/local/bin/aws s3 mv $PG_TEMP_DIR/$DB_TABLE_NAME.$1_$NOW.sql.bz2.ssl s3://bb-dbback-$PG_ENVIRONMENT/$1/
+
+# Add cleanup process in case move failed
+$PG_DATA_DIR/db_cleanup.sh $1
+
 echo "Moved: $DB_TABLE_NAME.$1_$NOW.sql.bz2.ssl" >>$PG_TEMP_DIR/moved_$1.log
 echo "Transferred: $DB_TABLE_NAME.$1_$NOW.sql.bz2.ssl" >>$PG_TEMP_DIR/xfered_$1.log
+
+# If file was moved we should get a file not found message appended to moved_$1.log
 ls -la $DB_TABLE_NAME.$1_$NOW.sql.bz2.ssl >>$PG_TEMP_DIR/moved_$1.log
+
 NOW_ENDED=$(date +"%Y%m%d_%H%M%S")
 echo "Postgres backup: $NOW $PG_ENVIRONMENT:$DB_TABLE_NAME on $HOST_IP:$PG_ACCESSPORT Mode:$1 for $DB_USER completed:$NOW_ENDED" >>$PG_TEMP_DIR/proc.log
 echo "Postgres backup: $NOW $PG_ENVIRONMENT:$DB_TABLE_NAME on $HOST_IP:$PG_ACCESSPORT Mode:$1 for $DB_USER completed:$NOW_ENDED" >>$PG_TEMP_DIR/latest.log
