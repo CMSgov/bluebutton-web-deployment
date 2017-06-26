@@ -12,10 +12,10 @@
 
 # Install acme.sh from github
 - name: "Intall acme.sh from Github"
-  become_user: root
+  become_user: root/acme.sh
   become: yes
   git:
-    repo: "https://github.com/Neilpang/acme.sh"
+    repo: "https://github.com/neilpang/acme.sh"
     dest: "/root"
     clone: yes
     force: yes
