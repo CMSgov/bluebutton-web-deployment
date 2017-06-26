@@ -12,11 +12,11 @@
 
 # Install acme.sh from github
 - name: "Intall acme.sh from Github"
-  become_user: root/acme.sh
+  become_user: root
   become: yes
   git:
     repo: "https://github.com/neilpang/acme.sh"
-    dest: "/root"
+    dest: "/root/letsencrypt"
     clone: yes
     force: yes
 
