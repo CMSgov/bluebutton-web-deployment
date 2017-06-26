@@ -22,8 +22,8 @@
     export AWS_ACCESS_KEY_ID={{ r53_access_id }}
     export AWS_SECRET_ACCESS_KEY={{ r53_secret_key }}
 
-    echo "making certificate request for {{ cf_app_tag_key_layer|lower }}{{ app_ip_last_octet }}.{{ external_dns_name }}"
-    /root/letsencrypt/acme.sh --issue --dns dns_aws -d {{ cf_app_tag_key_layer|lower }}{{ app_ip_last_octet }}.{{ external_dns_name }}
+    echo "making certificate request for {{ cf_app_tag_key_layer|lower }}{{ app_ip_last_octet.stdout }}.{{ external_dns_name }}"
+    /root/letsencrypt/acme.sh --issue --dns dns_aws -d {{ cf_app_tag_key_layer|lower }}{{ app_ip_last_octet.stdout }}.{{ external_dns_name }}
   register: app_letsencrypt_result
 
 - name: "Lets encrypt Result"
