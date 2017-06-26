@@ -3,6 +3,12 @@
 # Created: 5/4/17
 # Author: '@ekivemark'
 
+- name: "Stop Splunk "
+  become_user: splunk
+  become: yes
+  command: "/opt/splunkforwarder/bin/splunk stop"
+  register: splunk_status
+
 - name: "Configure Splunk ..."
   become_user: root
   become: yes
@@ -14,17 +20,12 @@
     mode: "750"
     backup: yes
 
-# Replacing patch with template
-#  become_user: root
-#  become: yes
-#  lineinfile:
-#    dest: "/opt/splunkforwarder/etc/system/local/deploymentclient.conf"
-#    owner: splunk
-#    group: splunk
-#    mode: "750"
-#    regexp: "^clientName"
-#    line: "clientName = {{ splunk_client_name }}"
-#    backup: yes
+- name: "Initialize splunk configuration"
+  become_user: splunk
+  become: yes
+  shell: |
+    cd /opt/splunkforwarder/bin
+    ./splunk clone-prep-clear-config
 
 
 - name: "Restart Splunk "
