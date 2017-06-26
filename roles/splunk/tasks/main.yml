@@ -27,8 +27,7 @@
     cd /opt/splunkforwarder/bin
     ./splunk clone-prep-clear-config
 
-
-- name: "Restart Splunk "
+- name: "Restart Splunk - if this steps fails to complete Splunk may require license acceptance on host"
   become_user: root
   become: yes
   command: "/opt/splunkforwarder/bin/splunk restart"
