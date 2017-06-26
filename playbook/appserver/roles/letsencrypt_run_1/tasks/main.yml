@@ -7,8 +7,12 @@
 
 
 - name: "get last octet of ip address"
-  shell: "export last_ip_octect=$(ip route get 8.8.8.8 | awk -F. '{print $NF;exit}')"
+  shell: "export last_ip_octet=$(ip route get 8.8.8.8 | awk -F. '{print $NF;exit}') ; echo $last_ip_octet "
   register: app_ip_last_octet
+
+- name: "octect number"
+  debug:
+    msg: "app_ip_last_octet ={{ app_letsencrypt_result.stdout }}"
 
 - name: "run step 1 of letsencrpyt using AWS Route53 DNS - text record update takes at least 2 minutes"
   become_user: root
