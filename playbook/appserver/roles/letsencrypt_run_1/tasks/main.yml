@@ -11,6 +11,8 @@
   register: app_ip_last_octet
 
 - name: "run step 1 of letsencrpyt using AWS Route53 DNS - text record update takes at least 2 minutes"
+  become_user: root
+  become: yes
   shell:  |
     echo "setting Route53 permissions:{{ r53_account }}"
     export AWS_ACCESS_KEY_ID={{ r53_access_id }}
