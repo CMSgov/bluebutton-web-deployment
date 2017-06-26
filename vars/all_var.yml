@@ -125,7 +125,7 @@ s3_storage_bucket_name: "{{ env_s3_storage_bucket_name }}"
 ## {{ env|upper }}
 r53_account: "{{ env_r53_account }}"
 r53_access_id: "{{ env_r53_access_id }}"
-r53-secret_key: "{{ env_r53-secret_key }}"
+r53_secret_key: "{{ env_r53_secret_key }}"
 
 ### Django Settings:
 ##  DJANGO_ORGANIZATION_NAME='{{ django_org_name }}'
