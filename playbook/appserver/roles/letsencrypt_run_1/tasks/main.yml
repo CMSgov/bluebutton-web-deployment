@@ -1,0 +1,25 @@
+---
+# File: playbook/appserver/roles/letsencrypt_run_1/tasks/main.yml
+# Created: 6/26/17
+# Author: '@ekivemark'
+
+# Run letsencrypt phase 1
+
+
+- name: "get last octet of ip address"
+  shell: "export last_ip_octect=$(ip route get 8.8.8.8 | awk -F. '{print $NF;exit}')"
+  register: app_ip_last_octet
+
+- name: "run step 1 of letsencrpyt using AWS Route53 DNS - text record update takes at least 2 minutes"
+  shell:  |
+    echo "setting Route53 permissions:{{ r53_account }}"
+    export AWS_ACCESS_KEY_ID={{ r53_access_id }}
+    export AWS_SECRET_ACCESS_KEY={{ r53_secret_key }}
+
+    echo "making certificate request for {{ cf_app_tag_key_layer|lower }}{{ app_ip_last_octet }}.{{ external_dns_name }}"
+    /root/letsencrypt/acme.sh --issue --dns dns_aws -d {{ cf_app_tag_key_layer|lower }}{{ app_ip_last_octet }}.{{ external_dns_name }}
+  register: app_letsencrypt_result
+
+- name: "Lets encrypt Result"
+  debug:
+    msg: "{{ app_letsencrypt_result.stdout }}"
