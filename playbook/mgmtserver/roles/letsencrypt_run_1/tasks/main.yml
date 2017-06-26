@@ -12,6 +12,6 @@
     export AWS_SECRET_ACCESS_KEY={{ r53_secret_key }}
     # export last_ip_octect=$(ip route get 8.8.8.8 | awk -F. '{print $NF;exit}')
     echo "making certificate request for {{ cf_app_tag_key_layer|lower }}.{{ external_dns_name }}"
-    /root/letsencrypte/acme.sh --issue --dns dns_aws -d {{ cf_app_tag_key_layer|lower }}.{{ external_dns_name }}
+    /root/letsencrypt/acme.sh --issue --dns dns_aws -d {{ cf_app_tag_key_layer|lower }}.{{ external_dns_name }}
 
 
