@@ -9,6 +9,13 @@
     WSGIPythonPath {{ cf_app_pyapp_home }}:{{ cf_app_py_virtual_env }}/bin:/usr/local/bin:{{ cf_app_py_virtual_env }}/lib/python{{ python_ver }}/site-packages
 
     <VirtualHost *:80>
+        # Re-write rule to switch requests to https (port 443) on load balancer
+        # JIRA http://issues.hhsdevcloud.us/browse/CBBP-450
+        RewriteEngine On
+ 	    RewriteCond %{HTTP:X-Forwarded-Proto} =http
+	    RewriteRule . https://%{HTTP:Host}%{REQUEST_URI} [L,R=permanent]
+
+
         ServerAdmin webmaster@{{ cf_app_pyserver_name }}
         DocumentRoot /var/www/doc/{{ cf_app_pyserver_name|lower }}
         ErrorLog logs/{{ cf_app_pyserver_name|lower }}-error_log
