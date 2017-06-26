@@ -164,11 +164,13 @@
   become_user: root
   become: yes
   template:
-    src: ../templates/virtualhost_server_conf.j2
-    dest: "/etc/httpd/conf.d/virtualhost.conf"
+    src: "../templates/{{ item }}.j2"
+    dest: "/etc/httpd/conf.d/{{ item }}"
     owner: root
     group: root
     mode: "0644"
+  with_items:
+    -  virtualhost.conf
 
 
 # change ownership of files

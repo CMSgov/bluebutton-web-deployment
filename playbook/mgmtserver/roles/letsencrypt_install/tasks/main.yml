@@ -1,0 +1,22 @@
+---
+# File: playbook/mgmtserver/roles/letsencrypt_install/tasks/main.yml
+# Created: 6/26/17
+# Author: '@ekivemark'
+# Install neilpang acme.sh for Lets Encrypt
+
+
+- name: "install nc - required by acme.sh"
+  yum:
+    name: nc
+    state: latest
+
+# Install acme.sh from github
+- name: "Intall acme.sh from Github"
+  become_user: root
+  become: yes
+  git:
+    repo: "https://github.com/Neilpang/acme.sh"
+    dest: "/root"
+    clone: yes
+    force: yes
+
