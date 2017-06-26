@@ -6,6 +6,8 @@
 
 
 - name: "install nc - required by acme.sh"
+  become_user: root
+  become: yes
   yum:
     name: nc
     state: latest
