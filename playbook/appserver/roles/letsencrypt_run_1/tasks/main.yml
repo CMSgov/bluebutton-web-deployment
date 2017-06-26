@@ -12,7 +12,7 @@
 
 - name: "octect number"
   debug:
-    msg: "app_ip_last_octet ={{ app_letsencrypt_result.stdout }}"
+    msg: "app_ip_last_octet ={{ app_ip_last_octet.stdout }}"
 
 - name: "run step 1 of letsencrpyt using AWS Route53 DNS - text record update takes at least 2 minutes"
   become_user: root
