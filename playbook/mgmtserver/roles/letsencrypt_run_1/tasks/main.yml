@@ -7,9 +7,9 @@
 
 - name: "run step 1 of letsencrpyt using AWS Route53 DNS"
   shell:  |
-    echo "setting Rote53 permissions:{{ r53_account }}"
+    echo "setting Route53 permissions:{{ r53_account }}"
     export AWS_ACCESS_KEY_ID={{ r53_access_id }}
-    export AWS_SECRET_ACCESS_KEY={{ r53-secret_key }}
+    export AWS_SECRET_ACCESS_KEY={{ r53_secret_key }}
     export last_ip_octect=$(ip route get 8.8.8.8 | awk -F. '{print $NF;exit}')
     echo "making certificate request for {{ cf_data_tag_key_layer|lower }}$last_ip_octet.{{ external_dns_name }}"
     /root/letsencrypte/acme.sh --issue --dns dns_aws -d {{ cf_data_tag_key_layer|lower }}$last_ip_octet.{{ external_dns_name }}
