@@ -127,6 +127,8 @@ r53_account: "{{ env_r53_account }}"
 r53_access_id: "{{ env_r53_access_id }}"
 r53_secret_key: "{{ env_r53_secret_key }}"
 
+apache_cert_store: "{{ env_apache_cert_store }}"
+
 ### Django Settings:
 ##  DJANGO_ORGANIZATION_NAME='{{ django_org_name }}'
 ##  DJANGO_APPLICATION_TITLE='{{ django_app_title }}'
