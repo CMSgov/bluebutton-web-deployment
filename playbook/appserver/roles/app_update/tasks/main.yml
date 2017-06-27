@@ -175,6 +175,8 @@
     msg: "app_ip_last_octet ={{ app_ip_last_octet.stdout }}"
 
 # app_ip_last_octet is used in apache conf files.
+# Change conf file names to enable load in order
+# Apache loads alphabetically. use bb_nn_ prefix to force load sequence
 - name: "Create Virtualhosts file"
   become_user: root
   become: yes
@@ -185,8 +187,8 @@
     group: root
     mode: "0644"
   with_items:
-    - virtualhost.conf
-    - ssl.conf
+    - bb_01_virtualhost.conf
+    - bb_02_ssl.conf
 
 
 # change ownership of files
