@@ -17,10 +17,12 @@
   become_user: root
   become: yes
   file:
-    dest: "/etc/httpd/ssl/certs"
+    dest: "{{ apache_cert_store }}"
     state: directory
     recurse: yes
     mode: "0660"
     owner: root
     group: root
+
+
 
