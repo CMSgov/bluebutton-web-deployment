@@ -160,17 +160,31 @@
 #    group: "{{ app_group }}"
 #    state: directory
 
+# app_lb_app_protocol is https or http.
+# If using https copy https.j2 templates,
+# otherwise copy http.j2 templates to apache conf.d folder
+
+- name: "get last octet of appserver ip address"
+  shell: "export last_ip_octet=$(/usr/sbin/ip route get 8.8.8.8 | /usr/bin/awk -F. '{print $NF;exit}') ; echo $last_ip_octet "
+  register: app_ip_last_octet
+
+- name: "octect number"
+  debug:
+    msg: "app_ip_last_octet ={{ app_ip_last_octet.stdout }}"
+
+# app_ip_last_octet is used in apache conf files.
 - name: "Create Virtualhosts file"
   become_user: root
   become: yes
   template:
-    src: "../templates/{{ item }}.j2"
+    src: "../templates/{{ item }}.{{ app_lb_app_protocol }}.j2"
     dest: "/etc/httpd/conf.d/{{ item }}"
     owner: root
     group: root
     mode: "0644"
   with_items:
-    -  virtualhost.conf
+    - virtualhost.conf
+    - ssl.conf
 
 
 # change ownership of files
