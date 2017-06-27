@@ -5,6 +5,14 @@
 
 # Use acme.sh to copy certs into place
 
+- name: "get last octet of ip address"
+  shell: "export last_ip_octet=$(/usr/sbin/ip route get 8.8.8.8 | /usr/bin/awk -F. '{print $NF;exit}') ; echo $last_ip_octet "
+  register: app_ip_last_octet
+
+- name: "octect number"
+  debug:
+    msg: "app_ip_last_octet ={{ app_ip_last_octet.stdout }}"
+
 - name: "Copy apache certs into cert_store"
   become_user: root
   become: yes
