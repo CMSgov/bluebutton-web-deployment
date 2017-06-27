@@ -3,6 +3,7 @@
 # copied from hhs_ansible
 # playbook/appserver/roles/app_update/templates/ssl.conf.https.j2
 # SSL is ON. ie. https protocol used.
+# v.1.0.2 add ssl prefix to WSGIDaemonProcess to sslapache
 ######################################################
 #
 # When we also provide SSL we have to listen to the
@@ -137,9 +138,9 @@ SSLCryptoDevice builtin
     # Set ServerName to match letsencrypt certificate
     ServerName {{ cf_app_tag_key_layer|lower }}{{ app_ip_last_octet.stdout }}.{{ external_dns_name }}
 
-    WSGIDaemonProcess apache user={{ env_cf_app_pyapps_user }} group=apache python-home={{ cf_app_py_virtual_env }} python-path={{ cf_app_py_virtual_env }}/bin:/usr/local/bin:{{ cf_app_py_virtual_env }}/lib/python{{ python_ver }}/site-packages
+    WSGIDaemonProcess sslapache user={{ env_cf_app_pyapps_user }} group=apache python-home={{ cf_app_py_virtual_env }} python-path={{ cf_app_py_virtual_env }}/bin:/usr/local/bin:{{ cf_app_py_virtual_env }}/lib/python{{ python_ver }}/site-packages
 
-    WSGIProcessGroup apache
+    WSGIProcessGroup sslapache
     WSGIScriptAlias / {{ cf_app_pyapp_home }}/hhs_oauth_server/hhs_oauth_server/wsgi.py
 
     # Directory specification needed to allow apache to load wsgi.py
