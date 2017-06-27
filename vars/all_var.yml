@@ -248,6 +248,7 @@ mon_nessus_pwd: "{{ env_mon_nessus_pwd }}"
 mon_nessus_pub_key: "{{ env_mon_nessus_pub_key }}"
 
 app_lb_arn: "{{ env_app_lb_arn}}"
+app_ssl_lb_arn: "{{ env_app_ssl_lb_arn }}"
 # Port 80 or 443 from ALB to APPServer = http | https
 # Also used to define which set of apache conf files are copied to appserver
 # See playbook/appserver/roles/
