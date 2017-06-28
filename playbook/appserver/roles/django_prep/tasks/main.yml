@@ -13,7 +13,7 @@
     command: migrate
     app_path: "{{ install_root }}/{{ project_name }}/"
     virtualenv: "{{ venv }}"
-  when: (migrate == 'yes')
+  when: "( {{ migrate | default('yes') }} == 'yes' )"
 
 - name: "Add Group roles to database"
   become_user: root
@@ -22,7 +22,7 @@
     command: loaddata apps/accounts/fixtures/groups.json
     app_path: "{{ install_root }}/{{ project_name }}/"
     virtualenv: "{{ venv }}"
-  when: ( add_groups == 'yes' )
+  when: "( {{ add_groups | default('no') }} == 'yes' )"
 
 - name: "Add Scopes to database"
   become_user: root
@@ -31,7 +31,7 @@
     command: loaddata apps/accounts/fixtures/scopes.json
     app_path: "{{ install_root }}/{{ project_name }}/"
     virtualenv: "{{ venv }}"
-  when: ( add_scopes == 'yes' )
+  when: "( {{ add_scopes | default('no') }} == 'yes' )"
 
 - name: Django collectstatic
   become_user: root
@@ -40,5 +40,5 @@
     command: collectstatic
     app_path: "{{ install_root }}/{{ project_name }}/"
     virtualenv: "{{ venv }}"
-  when: (collectstatic == 'yes')
+  when: "( {{ collectstatic | default('yes') }} == 'yes' )"
 
