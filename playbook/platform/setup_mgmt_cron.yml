@@ -43,15 +43,16 @@
       dest: "/root/cron_script/yum_update_all.sh"
       content:  |
         #!\bin\bash
+        LOG_PATH=/var/ansible/log/ansible.log
         NOW=$(date +"%Y%m%d_%H%M%S")
-        echo "yum update:started $NOW playbook/platform/yum_update.yml env={{ env }} build_target=all ">>{{ log_path }}
+        echo "yum update:started $NOW playbook/platform/yum_update.yml env={{ env }} build_target=all ">>$LOG_PATH
         cd /hhs_ansible/hhs_ansible
         /usr/bin/ansible-playbook playbook/platform/yum_update.yml  \
              --vault-password-file /root/.ansible-vault/vault_pass.txt \
              --private-key /root/.ec2/cms_bluebutton_fe_dev.pem \
              --extra-vars 'env={{ env }} build_target=all '
         NOW_ENDED=$(date +"%Y%m%d_%H%M%S")
-        echo "yum update:ended $NOW_ENDED playbook/platform/yum_update.yml env={{ env }} build_target=all ">>{{ log_path }}
+        echo "yum update:ended $NOW_ENDED playbook/platform/yum_update.yml env={{ env }} build_target=all ">>$LOG_PATH
       owner: root
       group: root
       mode: "0760"
