@@ -31,7 +31,7 @@
     msg: "{{ app_letsencrypt_result }}"
 
 - name: "capture server_name"
-  set_facts:
+  set_fact:
     app_server_cert_name: "{{ cf_app_tag_key_layer|lower }}{{ app_ip_last_octet.stdout }}.{{ external_dns_name }}"
 
 ## Server Certificate:
