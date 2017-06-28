@@ -23,16 +23,17 @@
   pip:
     name: awscli
     state: latest
+    # extra_args: --upgrade
 
 
 - name: "attach server to Application LB - HTTP"
   connection: local
-  shell: " /usr/local/bin/aws elbv2 register-targets --target-group-arn {{ app_lb_arn }} --targets Id={{ ec2_facts_info['ansible_facts']['ansible_ec2_instance_id'] }} "
+  shell: " /usr/bin/aws elbv2 register-targets --target-group-arn {{ app_lb_arn }} --targets Id={{ ec2_facts_info['ansible_facts']['ansible_ec2_instance_id'] }} "
   register: app_lb_result
 
 # Adding port 443 to HTTPS Target Group
 - name: "attach server to Application LB - HTTPS"
   connection: local
-  shell: " /usr/local/bin/aws elbv2 register-targets --target-group-arn {{ app_ssl_lb_arn }} --targets Id={{ ec2_facts_info['ansible_facts']['ansible_ec2_instance_id'] }} "
+  shell: " /usr/bin/aws elbv2 register-targets --target-group-arn {{ app_ssl_lb_arn }} --targets Id={{ ec2_facts_info['ansible_facts']['ansible_ec2_instance_id'] }} "
   register: app_lb_result
 
