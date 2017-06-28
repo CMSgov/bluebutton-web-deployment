@@ -24,6 +24,34 @@
     - "./../../vars/all_var.yml"
 
   tasks:
+  # Create a folder for scripts under /root
+  - name: "create /root/cron_script"
+    become_user: root
+    become: yes
+    file:
+      dest: "/root/cron_script"
+      state: directory
+      recurse: yes
+      owner: root
+      group: root
+      mode: "0660"
+
+  - name: "create yum update script"
+    become_user: root
+    become: yes
+    copy:
+      dest: "/root/cron_script/yum_update_all.sh"
+      content:  |
+        #!\bin\bash
+        cd /hhs_ansible/hhs_ansible
+        /usr/bin/ansible-playbook playbook/platform/yum_update.yml  \
+             --vault-password-file /root/.ansible-vault/vault_pass.txt \
+             --private-key /root/.ec2/cms_bluebutton_fe_dev.pem \
+             --extra-vars 'env={{ env }} build_target=all '
+      owner: root
+      group: root
+      mode: "0760"
+
   - name: "Setup Cron for mgmtserver actions - get current cron jobs"
     become_user: root
     become: yes
@@ -46,8 +74,7 @@
       owner: root
       group: root
       dest: "/root/cron.txt"
-      line: "20 22 * * * * /bin/sh  \"cd / hhs_ansible/hhs_ansible ; /usr/bin/ansible-playbook playbook/platform/yum_update.yml  --vault-password-file /root/.ansible-vault/vault_pass.txt --private-key /root/.ec2/cms_bluebutton_fe_dev.pem --extra-vars 'env={{ env }} build_target=all ' \" "
-
+      line: "9 25 * * * *  /bin/sh  /root/cron_script/yum_update_all.sh"
 
   - name: "Check if cron source file exists"
     become_user: root
