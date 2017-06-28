@@ -70,6 +70,12 @@
     - roles/mod_wsgi
     # Check engine light
     - ../../roles/check_env
+    # Setup Lets encrypt
+    - roles/letsencrypt_install
+    # Run Letsencrypt
+    - roles/letsencrypt_run_1
+    # install the certs
+    - roles/letsencrypt_cert_copy
     # Update application code and write virtualhosts file
     - roles/app_update
     # Update environment variable files
@@ -84,8 +90,8 @@
 
   tasks:
   - include: ../../roles/base_patch/tasks/fix_sudoers.yml
-  # Switch default ssl.conf off
-  - include: roles/apache/tasks/ssl_off.yml
+  ## Switch default ssl.conf off
+  # - include: roles/apache/tasks/ssl_off.yml
   - include: ../../roles/base_patch/tasks/update_packages.yml
   - include: roles/create_superuser/tasks/main.yml
   # - include: ../../roles/app_env/tasks/refresh_app.yml
