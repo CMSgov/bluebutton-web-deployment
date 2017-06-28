@@ -3,7 +3,7 @@
 # Created: 6/27/17
 # Author: '@ekivemark'
 
-@ Setup cron jobs
+# Setup cron jobs
 
 # add crontab entry
 - name: "setup Environment cron jobs"
