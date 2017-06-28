@@ -43,11 +43,15 @@
       dest: "/root/cron_script/yum_update_all.sh"
       content:  |
         #!\bin\bash
+        NOW=$(date +"%Y%m%d_%H%M%S")
+        echo "yum update:started $NOW playbook/platform/yum_update.yml env={{ env }} build_target=all ">>{{ log_path }}
         cd /hhs_ansible/hhs_ansible
         /usr/bin/ansible-playbook playbook/platform/yum_update.yml  \
              --vault-password-file /root/.ansible-vault/vault_pass.txt \
              --private-key /root/.ec2/cms_bluebutton_fe_dev.pem \
              --extra-vars 'env={{ env }} build_target=all '
+        NOW_ENDED=$(date +"%Y%m%d_%H%M%S")
+        echo "yum update:ended $NOW_ENDED playbook/platform/yum_update.yml env={{ env }} build_target=all ">>{{ log_path }}
       owner: root
       group: root
       mode: "0760"
@@ -74,7 +78,7 @@
       owner: root
       group: root
       dest: "/root/cron.txt"
-      line: "9 45 * * * *  /bin/sh  /root/cron_script/yum_update_all.sh"
+      line: "25 22 * * *   /root/cron_script/yum_update_all.sh"
 
   - name: "Check if cron source file exists"
     become_user: root
