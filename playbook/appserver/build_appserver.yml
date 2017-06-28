@@ -70,6 +70,8 @@
     - roles/mod_wsgi
     # Check engine light
     - ../../roles/check_env
+    # Create apache cert_store
+    - roles/create_apache_cert_store
     # Setup Lets encrypt
     - roles/letsencrypt_install
     # Run Letsencrypt
