@@ -42,7 +42,7 @@
     copy:
       dest: "/root/cron_script/yum_update_all.sh"
       content:  |
-        #!\bin\bash
+        #!/bin/bash
         LOG_PATH=/var/ansible/log/ansible.log
         NOW=$(date +"%Y%m%d_%H%M%S")
         echo "yum update:started $NOW playbook/platform/yum_update.yml env={{ env }} build_target=all ">>$LOG_PATH
