@@ -74,7 +74,7 @@
       owner: root
       group: root
       dest: "/root/cron.txt"
-      line: "9 25 * * * *  /bin/sh  /root/cron_script/yum_update_all.sh"
+      line: "9 45 * * * *  /bin/sh  /root/cron_script/yum_update_all.sh"
 
   - name: "Check if cron source file exists"
     become_user: root
