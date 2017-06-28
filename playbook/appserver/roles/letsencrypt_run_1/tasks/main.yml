@@ -25,6 +25,12 @@
     echo "making certificate request for {{ cf_app_tag_key_layer|lower }}{{ app_ip_last_octet.stdout }}.{{ external_dns_name }}"
     /root/letsencrypt/acme.sh --issue --dns dns_aws -d {{ cf_app_tag_key_layer|lower }}{{ app_ip_last_octet.stdout }}.{{ external_dns_name }}
   register: app_letsencrypt_result
+  ignore_errors: yes
+
+- name: "check for fail with rc=2 - certs already issued"
+  debug:
+    msg: "RC=2 -  {{ app_letsencrypt_result.rc }}"
+  when: app_letsencrypt_result.rc == "2"
 
 - name: "Lets encrypt Result"
   debug:
