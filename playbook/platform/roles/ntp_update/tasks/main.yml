@@ -29,8 +29,8 @@
   become_user: root
   become: yes
   template:
-    src: "templates/ntp.conf.j2"
-    dest: /etc/ntp.conf"
+    src: "./roles/ntp_update/templates/ntp.conf.j2"
+    dest: "/etc/ntp.conf"
 
 - name: "restart ntp"
   become_user: root
