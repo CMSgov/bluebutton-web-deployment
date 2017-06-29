@@ -18,7 +18,7 @@
 # IF not present no error is reported.
 # Let's remove since it doesn't appear to be present in the gold image.
 
-- name: "touch driftfile"
+- name: "remove driftfile"
   become_user: root
   become: yes
   file:
