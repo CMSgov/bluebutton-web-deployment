@@ -45,3 +45,12 @@
   pip:
     name: pip
     extra_args: --upgrade
+
+- name: "install newer version of awscli - needed for elbv2"
+  become_user: root
+  become: yes
+  pip:
+    name: awscli
+    state: latest
+    extra_args: --upgrade
+
