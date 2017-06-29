@@ -116,15 +116,5 @@
 - name: "update SELinux for the app"
   include: ../../roles/app_env/tasks/semanage_apps.yml
 
-- name: "Create Virtualhosts file"
-  become_user: root
-  become: yes
-  template:
-    src: ../templates/virtualhost_server_conf.j2
-    dest: "/etc/httpd/conf.d/virtualhost.conf"
-    owner: root
-    group: root
-    mode: "0644"
-
 - name: "update SELinux for the virtualenv"
   include:  ../../roles/app_env/tasks/semanage_virtualenv.yml
