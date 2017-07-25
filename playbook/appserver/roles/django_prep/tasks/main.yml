@@ -33,6 +33,15 @@
     virtualenv: "{{ venv }}"
   when: ( add_scopes is defined ) and ( add_scopes|lower == 'yes' )
 
+- name: "Load ResourceRouter and SupportedResourceType tables"
+  become_user: root
+  become: yes
+  django_manage:
+    command: "loaddata apps/fhir/server/fixtures/{{ env|lower }}_install_fixture.json"
+    app_path: "{{ install_root }}/{{ project_name }}/"
+    virtualenv: "{{ venv }}"
+  when: ( add_back_end_resources == 'yes' )
+
 - name: Django collectstatic
   become_user: root
   become: yes
