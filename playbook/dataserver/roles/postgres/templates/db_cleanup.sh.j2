@@ -1,0 +1,51 @@
+#!/bin/bash
+##################################################
+# Cleanup local copies of Secure Postgres Backup files
+# v1.0.0 6/21/2017 @ekivemark
+##################################################
+# /data/pgsql/9.6/data/db_cleanup.sh
+# Via template hhs_ansible/roles/postgres/templates/db_cleanup.sh.j2
+# Parameter: 1 = hourly daily weekly monthly
+# Parameter: 2 = Null or [ script_called_from ]
+##################################################
+CLEAN_NOW=$(date +"%Y%m%d_%H%M%S")
+export PG_CLEAN_TEMP_DIR={{ db_server_temp_dir }}
+export AWS_CONFIG_FILE=/root/.aws/config
+export PG_CLEAN_ENVIRONMENT={{ cf_data_tag_key_stack }}
+export CLEAN_DB_TABLE_NAME={{ db_server_table_name }}
+
+# Log that the cleanup process has started
+echo "Postgres cleanup: $CLEAN_NOW in $PG_CLEAN_TEMP_DIR started:$1 $2 $CLEAN_NOW " >>$PG_CLEAN_TEMP_DIR/cleanup.log
+cd $PG_CLEAN_TEMP_DIR
+
+# Get the list from S3 for mode $1
+/usr/local/bin/aws s3 ls  s3://bb-dbback-$PG_CLEAN_ENVIRONMENT/$1/ >$PG_CLEAN_TEMP_DIR/cleanup.s3.list.tmp
+
+# Get the local list of backups
+if compgen -G "$PG_CLEAN_TEMP_DIR/$CLEAN_DB_TABLE_NAME.*" >/dev/null ; then
+   ls -la *.ssl >$PG_CLEAN_TEMP_DIR/cleanup.local.list.tmp
+
+   for mvfile in $PG_CLEAN_TEMP_DIR/$CLEAN_DB_TABLE_NAME.$1_*
+   do
+     # Move the file to S3
+     # echo "moving $mvfile to S3"
+     /usr/local/bin/aws s3 mv $mvfile  s3://bb-dbback-$PG_CLEAN_ENVIRONMENT/$1/
+     # echo "S3 Bucket content:"
+     # /usr/local/bin/aws s3 ls s3://bb-dbback-$PG_CLEAN_ENVIRONMENT/$1/
+     if [ -f "$mvfile" ]; then
+        echo "File $mvfile  move to S3 failed" >>$PG_CLEAN_TEMP_DIR/cleanup.log"
+        echo "$mvfile move failed"
+     else
+        echo "File $mvfile was moved to S3 OK" >>$PG_CLEAN_TEMP_DIR/cleanup.log"
+        echo "$mvfile moved."
+     fi
+   done
+
+else
+   echo "no backup files to process" >$PG_CLEAN_TEMP_DIR/cleanup.local.list.tmp
+fi
+
+# Log that Postgres cleanup process has completed
+CLEAN_NOW_ENDED=$(date +"%Y%m%d_%H%M%S")
+echo "Postgres cleanup: $CLEAN_NOW in $PG_CLEAN_TEMP_DIR ended:$1 $2 $CLEAN_NOW_ENDED "  >>$PG_CLEAN_TEMP_DIR/cleanup.log
+

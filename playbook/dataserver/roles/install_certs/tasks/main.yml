@@ -1,0 +1,31 @@
+---
+# File: main.yml 
+# Created: 6/18/17
+# Author: '@ekivemark'
+
+# Install certs created on mgmtserver
+
+- name: "install certs on dataserver"
+  copy:
+    src: "/root/ca/{{ item }}"
+    dest: "/data/pgsql/9.6/data/{{ item }}"
+    owner: postgres
+    group: postgres
+    mode: "0600"
+  with_items:
+    - "{{ ca_key }}"
+    - "{{ ca_cert }}"
+
+
+- name: "re-write postgresql.conf"
+  include: "./roles/update_postgres_conf/tasks/main.yml"
+
+- name: "re-write pg_hba.conf"
+  include: "./roles/update_pg_hba/tasks/main.yml"
+
+
+- name: "restart postgresql"
+  service :
+    name: postgresql-9.6
+    state: restarted
+

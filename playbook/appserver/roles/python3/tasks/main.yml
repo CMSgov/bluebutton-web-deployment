@@ -17,6 +17,8 @@
   include: ../app_tools/tasks/main.yml
 
 - name: "create download directory"
+  become_user: root
+  become: yes
   file:
     dest: "/home/ec2-user/download"
     state: directory

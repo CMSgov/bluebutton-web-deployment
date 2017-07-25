@@ -1,0 +1,47 @@
+---
+# File: playbook/platform/roles/ntp_update/main.yml
+# Created: 6/29/17
+# Author: '@ekivemark'
+# Start ntpd
+
+- name: "setup ntp drift directory"
+  become_user: root
+  become: yes
+  file:
+    dest: "/var/lib/ntp"
+    recurse: yes
+    state: directory
+    owner: root
+    group: root
+
+# driftfile has to be a special format.
+# IF not present no error is reported.
+# Let's remove since it doesn't appear to be present in the gold image.
+
+- name: "remove driftfile"
+  become_user: root
+  become: yes
+  file:
+    dest: "/var/lib/ntp/drift"
+    state: absent
+    owner: root
+    group: root
+
+
+- name: "setup ntp configuration"
+  become_user: root
+  become: yes
+  template:
+    src: "./roles/ntp_update/templates/ntp.conf.j2"
+    dest: "/etc/ntp.conf"
+
+- name: "restart ntp"
+  become_user: root
+  become: yes
+  service:
+    name: ntpd
+    state: restarted
+    enabled: yes
+
+
+

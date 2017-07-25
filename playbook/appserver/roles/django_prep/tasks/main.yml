@@ -13,7 +13,7 @@
     command: migrate
     app_path: "{{ install_root }}/{{ project_name }}/"
     virtualenv: "{{ venv }}"
-  when: (migrate == 'yes')
+  when: ( migrate is defined ) and ( migrate == 'yes' )
 
 - name: "Add Group roles to database"
   become_user: root
@@ -22,7 +22,7 @@
     command: loaddata apps/accounts/fixtures/groups.json
     app_path: "{{ install_root }}/{{ project_name }}/"
     virtualenv: "{{ venv }}"
-  when: ( add_groups == 'yes' )
+  when: ( add_groups is defined ) and ( add_groups|lower == 'yes' )
 
 - name: "Add Scopes to database"
   become_user: root
@@ -31,7 +31,7 @@
     command: loaddata apps/accounts/fixtures/scopes.json
     app_path: "{{ install_root }}/{{ project_name }}/"
     virtualenv: "{{ venv }}"
-  when: ( add_scopes == 'yes' )
+  when: ( add_scopes is defined ) and ( add_scopes|lower == 'yes' )
 
 - name: "Load ResourceRouter and SupportedResourceType tables"
   become_user: root
@@ -49,5 +49,6 @@
     command: collectstatic
     app_path: "{{ install_root }}/{{ project_name }}/"
     virtualenv: "{{ venv }}"
-  when: (collectstatic == 'yes')
+  when: ( collectstatic is undefined ) or
+        (( collectstatic is defined ) and ( collectstatic|lower == 'yes' ))
 

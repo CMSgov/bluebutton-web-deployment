@@ -13,7 +13,7 @@
   become: yes
   # connection: smart
   vars:
-    # det a default environment. We don't mind mucking with the dev environment
+    # set a default environment. We don't mind mucking with the dev or test environment
     env: "test"
     splunk_client_name: "BBAPI-{{ env|upper }}-MGMT"
     ansible_ssh_pipelining: no
@@ -26,10 +26,16 @@
     - "./../../vars/all_var.yml"
     # - ../vars/all_vars.yml
     # - ../../vars/playbook/template_envvars.yml
+    # Load certificate values
+    # ca_commonname is empty - this needs to be set to server name
+    - "./../../vars/env/{{ env }}/ca_env.yml"
+
 
   roles:
     - ../../roles/splunk
     - ../appserver/roles/app_tools
+    - root_cert
+    - letsencrypt_mgmt_certstore
 
   tasks:
   - debug:

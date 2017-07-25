@@ -34,15 +34,21 @@
     state: directory
     mode: 0755
 
-- name: "Create the debug log"
+- name: "Create the log files"
   become_user: root
   become: yes
   file:
-    dest: "{{ cf_app_log_dir }}/debug.log"
+    dest: "{{ cf_app_log_dir }}/{{ item }}"
     owner: "{{ cf_app_pyapps_user }}"
     group: "{{ cf_app_pyapps_user }}"
     state: touch
     mode: 0766
+  with_items:
+    - debug.log
+    - error.log
+    - info.log
+    - login_failed.log
+    - admin_access.log
 
 - name: "Create Virtualenv"
   become_user: root
@@ -143,7 +149,9 @@
     - install psycopg2
     - install -r {{ cf_app_pyapp_home }}/{{ common_project_name }}/requirements/requirements.txt
 
-- include: ../../create_certstore/tasks/main.yml
+# Relative reference from playbook/appserver
+- include: ./../appserver/roles/create_certstore/tasks/main.yml
+
 #- name: "Create a certstore"
 #  become_user: root
 #  become: yes
@@ -154,15 +162,33 @@
 #    group: "{{ app_group }}"
 #    state: directory
 
+# app_lb_app_protocol is https or http.
+# If using https copy https.j2 templates,
+# otherwise copy http.j2 templates to apache conf.d folder
+
+- name: "get last octet of appserver ip address"
+  shell: "export last_ip_octet=$(/usr/sbin/ip route get 8.8.8.8 | /usr/bin/awk -F. '{print $NF;exit}') ; echo $last_ip_octet "
+  register: app_ip_last_octet
+
+- name: "octect number"
+  debug:
+    msg: "app_ip_last_octet ={{ app_ip_last_octet.stdout }}"
+
+# app_ip_last_octet is used in apache conf files.
+# Change conf file names to enable load in order
+# Apache loads alphabetically. use bb_nn_ prefix to force load sequence
 - name: "Create Virtualhosts file"
   become_user: root
   become: yes
   template:
-    src: ../templates/virtualhost_server_conf.j2
-    dest: "/etc/httpd/conf.d/virtualhost.conf"
+    src: "../templates/{{ item }}.{{ app_lb_app_protocol }}.j2"
+    dest: "/etc/httpd/conf.d/{{ item }}"
     owner: root
     group: root
     mode: "0644"
+  with_items:
+    - bb_01_virtualhost.conf
+    - bb_02_ssl.conf
 
 
 # change ownership of files
