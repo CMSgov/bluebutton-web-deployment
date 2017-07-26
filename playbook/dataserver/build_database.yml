@@ -22,7 +22,7 @@
 # use all_var variables in scripts.
 
 - name: Provision Database
-  hosts: "{{ build_target }}"
+  hosts: "{{ build_target | default('dbservers') }}"
   # connection: local
   remote_user: ec2-user
   become_user: root
