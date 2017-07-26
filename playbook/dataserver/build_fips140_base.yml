@@ -4,7 +4,7 @@
 # Author: @ekivemark
 
 - name: Provision FIPS 140.2 Server
-  hosts: dbservers
+  hosts: "{{ build_target | default('ddbservers') }}"
   # connection: smart
   gather_facts: False
   user: ec2-user
