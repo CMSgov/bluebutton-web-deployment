@@ -1,10 +1,10 @@
 ---
-# File: playbook/appserver/group_vars/appservers.yml
+# File: playbook/mgmtservers/group_vars/mgmtservers.yml
 # Created: 7/28/17
 # Author: '@ekivemark'
 # This is an ansible 'group_vars' file.
 #
-# It should live in playbook/appservers/group_vars
+# It should live in /playbook/mgmtservers/group_vars
 # It should have a name.yml that matches a group in /etc/ansible/hosts
 #
 #   - Comments begin with the '#' character
@@ -19,9 +19,8 @@
 #####
 #
 
-[appservers:vars]
-sub_zone: "app"
-sg_zone: "app"
+sub_zone: "mgmt"
+sg_zone: "mgmt"
 # splunk_target_layer: "WEB | APP | DATA | MGMT"
-splunk_target_layer: "APP"
+splunk_target_layer: "MGMT"
 
