@@ -254,6 +254,12 @@ app_ssl_lb_arn: "{{ env_app_ssl_lb_arn }}"
 # See playbook/appserver/roles/
 app_lb_app_protocol: "{{ env_app_lb_app_protocol }}"
 
+# splunk configuration
+splunk_target_layer: "{{ env_splunk_target_layer }}"
+splunk_client_name: "{{ env_splunk_client_name }}"
+splunk_target_server: "{{ env_splunk_target_server }}"
+splunk_target_port: "{{ env_splunk_target_port }}"
+
 cf_env_layer: {
         "dev": {
           "az1": {

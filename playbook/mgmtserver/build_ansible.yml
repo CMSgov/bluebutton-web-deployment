@@ -15,7 +15,8 @@
   vars:
     # set a default environment. We don't mind mucking with the dev or test environment
     env: "test"
-    splunk_client_name: "BBAPI-{{ env|upper }}-MGMT"
+    # splunk_target_layer: "WEB | APP | DATA | MGMT"
+    splunk_target_layer: "MGMT"
     ansible_ssh_pipelining: no
     hhs_ansible_git_branch: master
     hhs_ansible_repo: "https://github.com/HHSIDEALab/hhs_ansible.git"
