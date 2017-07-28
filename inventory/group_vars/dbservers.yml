@@ -1,10 +1,10 @@
 ---
-# File: playbook/dataserver/group_vars/dbservers.yml
+# File: inventory/group_vars/dbservers.yml
 # Created: 7/28/17
 # Author: '@ekivemark'
 # This is an ansible 'group_vars' file.
 #
-# It should live in playbook/dataserver/group_vars
+# It should live in inventory/group_vars
 # It should have a filename that matches a group in /etc/ansible/hosts
 # It should have an extension of .yml
 #
