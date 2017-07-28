@@ -36,7 +36,9 @@
   become_user: root
   become: yes
   copy:
-    src: "../files/{{ db_server_backup_pub_key }}"
+    # src: "../files/{{ db_server_backup_pub_key }}"
+    # Switch to using vault content for better key synchronization
+    content: "{{ vault_env_db_backup_public_key_current }}"
     dest: "{{ db_server_data_dir }}/{{ db_server_backup_pub_key }}"
     owner: "{{ db_server_account }}"
     group: "{{ db_server_account }}"
