@@ -1,10 +1,10 @@
 ---
-# File: playbook/mgmtservers/group_vars/mgmtservers.yml
+# File: inventory/group_vars/mgmtservers.yml
 # Created: 7/28/17
 # Author: '@ekivemark'
 # This is an ansible 'group_vars' file.
 #
-# It should live in /playbook/mgmtservers/group_vars
+# It should live in inventory/group_vars
 # It should have a name.yml that matches a group in /etc/ansible/hosts
 #
 #   - Comments begin with the '#' character
