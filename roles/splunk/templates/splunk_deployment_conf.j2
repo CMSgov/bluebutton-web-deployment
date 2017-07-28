@@ -1,5 +1,6 @@
 [deployment-client]
-clientName = {{ splunk_client_name }}
+#clientName = {{ splunk_client_name }}
+clientName = {{ env_splunk_group_name }}-{{ env|upper }}-{{ splunk_name_mapper[hostvars[inventory_hostname].group_names[0]] }}
 
 [target-broker:deploymentServer]
 # V2 Splunk
