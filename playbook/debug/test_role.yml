@@ -32,8 +32,6 @@
     azone: "az1"
     env_az: "{{ env }}-{{ azone }}"
     env_cf_data_version: "20"
-    # splunk_target_layer: "WEB | APP | DATA | MGMT"
-    splunk_target_layer: "DATA"
     ansible_ssh_pipelining: no
 
   vars_files:
