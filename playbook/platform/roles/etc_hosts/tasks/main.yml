@@ -1,0 +1,13 @@
+---
+# File: playbook/platform/roles/etc_hosts/tasks/main.yml
+# Created: 7/31/17
+# Author: '@ekivemark'
+
+
+- name: Generate /etc/hosts file
+  become: yes
+  become_user: root
+  template:
+    src: "../templates/hosts.j2"
+    dest: "/etc/hosts.ansible"
+
