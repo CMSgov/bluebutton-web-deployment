@@ -6,7 +6,7 @@
 
 - name: "debugging"
   debug:
-    msg: "working with servers: {{ build_target }}"
+    msg: "working with servers: {% for host in build_target %}{{ host }}{% endfor %}"
 
 - name: Generate /etc/hosts file
   become: yes
