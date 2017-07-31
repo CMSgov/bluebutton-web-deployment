@@ -1,0 +1,18 @@
+# {{ ansible_managed }}
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+
+# The following lines are desirable for IPv6 capable hosts.
+fe00::0     ip6-localnet
+ff00::0     ip6-mcastprefix
+ff02::1     ip6-allnodes
+ff02::2     ip6-allrouters
+
+{% for host in build_target %}
+{% if 'ansible_eth0' in hostvars[host] %}
+{{ hostvars[host]['ansible_eth0']['ipv4']['address'] }}  {{ host }}
+{% set short_name = hostvars[host]['ansible_eth0']['ipv4']['address'] .split('.') %}
+{{ hostvars[item]['ansible_host'] }}  {{ host }} {{ tag_key_layer|lower }}{{ short_name[3] }}.{{ external_dns_name }}
+{% endif %}
+
+{% endfor %}
