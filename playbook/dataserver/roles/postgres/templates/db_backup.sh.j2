@@ -14,6 +14,9 @@
 NOW=$(date +"%Y%m%d_%H%M%S")
 export PG_TEMP_DIR={{ db_server_temp_dir }}
 export AWS_CONFIG_FILE=/root/.aws/config
+export AWS_ACCESS_KEY_ID={{ cf_data_db_backup_key_id  }}
+export AWS_SECRET_ACCESS_KEY={{ cf_data_db_backup_secret_key }}
+export AWS_DEFAULT_REGION={{ cf_region }}
 DB_USER={{ cf_data_pgsql_master }}
 PG_ENVIRONMENT={{ cf_data_tag_key_stack }}
 DB_TABLE_NAME={{ db_server_table_name }}
