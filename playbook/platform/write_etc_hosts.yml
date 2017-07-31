@@ -21,5 +21,6 @@
 # don't recurse infinitely or anything.  Note you can't use
 # any variables in the include path here.
 
-- include: roles/etc_hosts/tasks/main.yml
+  tasks:
+  - include: roles/etc_hosts/tasks/main.yml
 
