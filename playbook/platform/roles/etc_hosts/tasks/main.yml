@@ -4,6 +4,10 @@
 # Author: '@ekivemark'
 
 
+- name: "debugging"
+  debug:
+    msg: "working with servers: {{ build_target }}"
+
 - name: Generate /etc/hosts file
   become: yes
   become_user: root
