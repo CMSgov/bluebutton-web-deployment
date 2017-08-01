@@ -6,7 +6,7 @@
 # tasks/hosts.yml
 
 - name: write etc/hosts.ansible
-  hosts: localhost
+  hosts: all
   remote_user: root
   connection: local
   vars:
@@ -22,5 +22,8 @@
 # any variables in the include path here.
 
   tasks:
+  - name: Gather facts from servers
+    [ ]
+
   - include: roles/etc_hosts/tasks/main.yml
 
