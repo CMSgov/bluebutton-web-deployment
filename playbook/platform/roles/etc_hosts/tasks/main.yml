@@ -21,3 +21,16 @@
     group: root
     mode: 0644
 
+- name: "update mgmtserver hosts file"
+  connection: local
+  become_user: root
+  become: yes
+  copy:
+    src: "/etc/hosts.ansible"
+    dest: "/etc/hosts."
+    owner: root
+    group: root
+    mode: 0644
+
+
+
