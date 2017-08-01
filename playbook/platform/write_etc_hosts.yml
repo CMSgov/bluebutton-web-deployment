@@ -8,7 +8,7 @@
 - name: write etc/hosts.ansible
   hosts: all
   remote_user: root
-  connection: local
+  connection: smart
   gather_facts: true
   vars:
     env: "dev"

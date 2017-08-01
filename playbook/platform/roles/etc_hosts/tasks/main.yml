@@ -11,3 +11,13 @@
     src: "../templates/hosts.j2"
     dest: "/etc/hosts.ansible"
 
+- name: "copy /etc/hosts.ansible to remotes"
+  become: yes
+  become_user: root
+  file:
+    src: "/etc/hosts.ansible"
+    dest: "/etc/hosts"
+    owner: root
+    group: root
+    mode: 0644
+
