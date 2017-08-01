@@ -25,5 +25,6 @@
   - name: Gather facts from servers
     [ ]
 
-  - include: roles/etc_hosts/tasks/main.yml
+  - name: write etc/hosts
+    include: roles/etc_hosts/tasks/main.yml
 
