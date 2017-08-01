@@ -10,7 +10,8 @@ ff02::2     ip6-allrouters
 
 {% set ct = 0 %}
 {% set hv = hostvars %}
-{% for host in hv %}
+{% for host in hostvars %}
+    # {{ host }}
 
 {% set host_ipv4 = hv[host]['ansible_default_ipv4']['address'] %}
 {{ host_ipv4 }}   {{ hv[host]['ansible_env']['HOSTNAME'] }}
