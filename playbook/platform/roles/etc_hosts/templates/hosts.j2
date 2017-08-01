@@ -11,9 +11,11 @@ ff02::2     ip6-allrouters
 {% set ct = 0 %}
 {% for host in hostvars %}
 
-{% set host_ipv4 = hostvars[ct]['ansible_default_ipv4']['address'] %}
-{{ host_ipv4 }}   {{ hostvars[ct]['ansible_env']['HOSTNAME'] }}
+{% set host_ipv4 = hostvars[host]['ansible_default_ipv4']['address'] %}
+{{ host_ipv4 }}   {{ hostvars[host]['ansible_env']['HOSTNAME'] }}
 
-# {{  splunk_name_mapper[hostvars[ct]['group_names'][0]]|lower }}-{{ host_ipv4.split('.')[3] }}.{{ external_dns_name }}
+# {{  splunk_name_mapper[hostvars[host]['group_names'][0]]|lower }}-{{ host_ipv4.split('.')[3] }}.{{ external_dns_name }}
+
+    # HOST:{{ hostvars[host] }}
 {% set ct = ct + 1 %}
 {% endfor %}
