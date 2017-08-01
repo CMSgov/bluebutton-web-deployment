@@ -10,6 +10,7 @@
   remote_user: root
   connection: smart
   gather_facts: true
+  ansible_ssh_pipelining: no
   vars:
     env: "dev"
   vars_files:
