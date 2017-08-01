@@ -8,10 +8,7 @@ ff00::0     ip6-mcastprefix
 ff02::1     ip6-allnodes
 ff02::2     ip6-allrouters
 
-{% for group in hostvars[groups] %}
-    # GROUP: {{ group }}
-    {% for host in group %}
+{% for host in hostvars %}
         # HOST:{{  host }}
         # IP4: {{ host['ansible_eth0']['ipv4']['address'] }}
-    {% endfor %}
 {% endfor %}
