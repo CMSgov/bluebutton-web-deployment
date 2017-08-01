@@ -20,3 +20,5 @@ ff02::2     ip6-allrouters
 {% set host_ipv4_last_octet = host.split('.')[3] %}
 {{ host }}  {{  splunk_name_mapper[hostvars[host]['group_names'][0]]|lower }}-{{ host_ipv4_last_octet }}.{{ external_dns_name }}
 {% endfor %}
+
+
