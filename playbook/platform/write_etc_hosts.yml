@@ -9,6 +9,7 @@
   hosts: all
   remote_user: root
   connection: local
+  gather_facts: true
   vars:
     env: "dev"
   vars_files:
@@ -22,9 +23,5 @@
 # any variables in the include path here.
 
   tasks:
-  - name: Gather facts from servers
-    [ ]
-
-  - name: write etc/hosts
-    include: roles/etc_hosts/tasks/main.yml
+  - include: roles/etc_hosts/tasks/main.yml
 
