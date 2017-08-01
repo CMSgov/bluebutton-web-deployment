@@ -10,9 +10,9 @@
   remote_user: root
   connection: smart
   gather_facts: true
-  ansible_ssh_pipelining: no
   vars:
     env: "dev"
+    ansible_ssh_pipelining: no
   vars_files:
     - "./../../vars/common.yml"
     - "./../../vault/env/{{ env }}/vault.yml"
