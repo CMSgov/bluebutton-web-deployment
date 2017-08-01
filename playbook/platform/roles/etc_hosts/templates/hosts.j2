@@ -11,8 +11,8 @@ ff02::2     ip6-allrouters
 
 {% set group_name = '' %}
 {% for host in hostvars %}
-
 {% if hostvars[host]['group_names'][0] != group_name %}
+
 #
 # GROUP: {{ hostvars[host]['group_names'][0] }}
 #
