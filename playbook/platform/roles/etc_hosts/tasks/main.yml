@@ -14,9 +14,9 @@
 - name: "copy /etc/hosts.ansible to remotes"
   become: yes
   become_user: root
-  file:
+  copy:
     src: "/etc/hosts.ansible"
-    dest: "/etc/hosts"
+    dest: "/etc/hosts."
     owner: root
     group: root
     mode: 0644
