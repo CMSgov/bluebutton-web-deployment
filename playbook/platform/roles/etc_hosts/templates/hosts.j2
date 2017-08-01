@@ -8,12 +8,10 @@ ff00::0     ip6-mcastprefix
 ff02::1     ip6-allnodes
 ff02::2     ip6-allrouters
 
-{% for host in build_target %}
-    # {{ host }}
-{% if 'ansible_eth0' in host %}
-{{ host['ansible_eth0']['ipv4']['address'] }}  {{ host }}
-{% set short_name = host['ansible_eth0']['ipv4']['address'] .split('.') %}
-{{ host['ansible_host'] }}  {{ host }} {{ tag_key_layer|lower }}{{ short_name[3] }}.{{ external_dns_name }}
-{% endif %}
-
+{% for group in hostvars[groups] %}
+    # GROUP: {{ group }}
+    {% for host in group %}
+        # HOST:{{  host }}
+        # host['ansible_eth0']['ipv4']['address']
+    {% endfor %}
 {% endfor %}
