@@ -12,6 +12,6 @@ ff02::2     ip6-allrouters
     # GROUP: {{ group }}
     {% for host in group %}
         # HOST:{{  host }}
-        # host['ansible_eth0']['ipv4']['address']
+        # IP4: {{ host['ansible_eth0']['ipv4']['address'] }}
     {% endfor %}
 {% endfor %}
