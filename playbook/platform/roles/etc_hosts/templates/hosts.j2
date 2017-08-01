@@ -14,5 +14,5 @@ ff02::2     ip6-allrouters
         # HOST:{{ host }}
         # HOST NAME: {{ hostvars[host]['ansible_env']['HOSTNAME'] }}:
         # HOST IP4 ADDRESS: {{ hostvars[host]['ansible_default_ipv4']['address'] }}
-        # HOST FUNCTION NAME: {{ hostvars[host]['group_names'] }}
+        # HOST FUNCTION NAME: {{ hostvars[host]['group_names'][0] }}
 {% endfor %}
