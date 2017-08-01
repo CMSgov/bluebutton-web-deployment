@@ -8,13 +8,11 @@ ff00::0     ip6-mcastprefix
 ff02::1     ip6-allnodes
 ff02::2     ip6-allrouters
 
-# {{ hostvars }}
-
 {% for host in hostvars %}
-{{ hostvars[host]['ansible_default_ipv4']['address'] }}   {{ hostvars[host]['ansible_env']['HOSTNAME'] }}
 
-      # {{  splunk_name_mapper[hostvars[host]['group_names'][0]] }}-
-      # {{ hostvars[host]['ansible_default_ipv4']['address'].split('.')[3] }}
-      # .{{ external_dns_name }}
-    
+        {% set host_ipv4 = hostvars[host]['ansible_default_ipv4']['address'] %}
+{{ host_ipv4 }}   {{ hostvars[host]['ansible_env']['HOSTNAME'] }}
+
+# {{  splunk_name_mapper[hostvars[host]['group_names'][0]]|lower }}-{{ host_ipv4.split('.')[3] }}.{{ external_dns_name }}
+
 {% endfor %}
