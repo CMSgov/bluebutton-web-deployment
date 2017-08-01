@@ -11,13 +11,12 @@ ff02::2     ip6-allrouters
 
 {% set group_name = '' %}
 {% for host in hostvars %}
+
 {% if hostvars[host]['group_names'][0] != group_name %}
 #
 # GROUP: {{ hostvars[host]['group_names'][0] }}
 #
-    {% set group_name = hostvars[host]['group_names'][0] %}
-{% endif %}
+{% set group_name = hostvars[host]['group_names'][0] %}{% endif %}
 {% set host_ipv4_last_octet = host.split('.')[3] %}
 {{ host }}  {{  splunk_name_mapper[hostvars[host]['group_names'][0]]|lower }}-{{ host_ipv4_last_octet }}.{{ external_dns_name }}
-
 {% endfor %}
