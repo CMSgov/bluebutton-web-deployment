@@ -11,12 +11,19 @@
     src: "../templates/hosts.j2"
     dest: "/etc/hosts.ansible"
 
+- name: remove hosts. file
+  become: yes
+  become_user: root
+  file:
+    dest: "/etc/hosts."
+    state: absent
+
 - name: "copy /etc/hosts.ansible to remotes"
   become: yes
   become_user: root
   copy:
     src: "/etc/hosts.ansible"
-    dest: "/etc/hosts."
+    dest: "/etc/hosts"
     owner: root
     group: root
     mode: 0644
@@ -27,7 +34,7 @@
   become: yes
   copy:
     src: "/etc/hosts.ansible"
-    dest: "/etc/hosts."
+    dest: "/etc/hosts"
     owner: root
     group: root
     mode: 0644
