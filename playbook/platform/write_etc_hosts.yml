@@ -5,7 +5,7 @@
 
 # tasks/hosts.yml
 
-- name: write etc/hosts.ansible
+- name: "write etc/hosts.ansible"
   hosts: all
   remote_user: root
   connection: smart
