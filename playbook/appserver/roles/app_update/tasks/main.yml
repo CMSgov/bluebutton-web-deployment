@@ -174,6 +174,16 @@
   debug:
     msg: "app_ip_last_octet ={{ app_ip_last_octet.stdout }}"
 
+
+- name: "Remove the /etc/httpd/conf.d/ssl.conf file"
+  become_user: root
+  become: yes
+  file:
+    path: /etc/httpd/conf.d/ssl.conf
+    owner: root
+    group: root
+    state: absent
+
 # app_ip_last_octet is used in apache conf files.
 # Change conf file names to enable load in order
 # Apache loads alphabetically. use bb_nn_ prefix to force load sequence
@@ -181,7 +191,7 @@
   become_user: root
   become: yes
   template:
-    src: "../templates/{{ item }}.{{ app_lb_app_protocol }}.j2"
+    src: "../templates/{{ item }}.{{ app_lb_app_protocol|lower }}.j2"
     dest: "/etc/httpd/conf.d/{{ item }}"
     owner: root
     group: root
@@ -189,7 +199,6 @@
   with_items:
     - bb_01_virtualhost.conf
     - bb_02_ssl.conf
-
 
 # change ownership of files
 - name: "Update file ownership"

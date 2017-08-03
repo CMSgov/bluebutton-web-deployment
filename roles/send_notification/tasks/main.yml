@@ -1,0 +1,18 @@
+---
+# File: main.yml 
+# Created: 8/1/17
+# Author: '@ekivemark'
+
+
+- name: "create message directory"
+  file:
+    dest: "/root/messages"
+    owner: root
+    group: root
+    mode: 0600
+    state: directory
+
+- name: "build sns message"
+  template:
+    src: "../templates/sns_json.msg.j2"
+    dest: "/root/messages/sns_json.msg
