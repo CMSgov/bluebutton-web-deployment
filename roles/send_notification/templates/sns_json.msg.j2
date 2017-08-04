@@ -1,0 +1,9 @@
+
+Environment: {{ env}}
+Playbook: {{sns_playbook }}
+Server: {{ inventory_hostname }}
+Action: {{ sns_playbook_action }}
+
+# ============================
+{{ hostvars| to_nice_json }}
+# ============================
