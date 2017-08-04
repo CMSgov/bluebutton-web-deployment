@@ -5,6 +5,8 @@
 
 
 - name: "create message directory"
+  become_user: root
+  become: yes
   file:
     dest: "/root/messages"
     owner: root
@@ -12,7 +14,63 @@
     mode: 0600
     state: directory
 
+# set sns_message_file if undefined
+# This allows us to set the file name elsewhere and pass it
+# to sns
+- name: set message_file
+  set_fact:
+    sns_message_file: "/root/messages/sns_json.msg"
+  when: sns_message_file is undefined
+
+- name: set message subject
+  set_fact:
+    sns_subject: "{{ env|upper }}:{{ inventory_hostname }} "
+  when: sns_subject is undefined
+
+- name: set calling playbook
+  set_fact:
+    sns_playbook: "UNDEFINED: set *sns_playbook* in calling script"
+  when: sns_playbook is undefined
+
+- name: set calling playbook action
+  set_fact:
+    sns_playbook_action: "UNDEFINED: set *sns_playbook_action* in calling script"
+  when: sns_playbook_action is undefined
+
+
 - name: "build sns message"
-  template:
-    src: "../templates/sns_json.msg.j2"
-    dest: "/root/messages/sns_json.msg
+  become_user: root
+  become: yes
+  copy:
+    content: |
+      Environment: {{ env}}
+      Playbook: {{sns_playbook }}
+      Server: {{ inventory_hostname }}
+      Action: {{ sns_playbook_action }}
+      # ============================
+      {{ hostvars| to_nice_json }}
+      # ============================
+
+    dest: "{{ sns_message_file }}"
+    owner: root
+    group: root
+    mode: 0740
+
+
+- name: "Prepare a notification message"
+  become_user: root
+  become: yes
+  shell: |
+    /usr/local/bin/aws sns publish \
+       --topic-arn {{ sns_topic_arn }} \
+       --subject "{{ sns_subject }}" \
+       --message file://{{ sns_message_file }}
+
+#
+# topicARN=arn:aws:sns:us-east-1:501705132200:config-topic-BB
+
+#
+# /usr/local/bin/aws sns publish \
+#    --topic-arn $topicARN \
+#    --message "Deployment status is good" \
+#    --subject "Test from $HOSTNAME."

@@ -269,6 +269,9 @@ splunk_name_mapper: {
         "mgmtservers": "MGMT"
 }
 
+# AWS ARN for SNS messaging
+sns_topic_arn: "{{ env_sns_topic_arn }}"
+
 cf_env_layer: {
         "dev": {
           "az1": {
