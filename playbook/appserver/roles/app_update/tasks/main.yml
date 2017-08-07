@@ -65,7 +65,7 @@
     state: directory
     recurse: yes
     owner: "{{ cf_app_pyapps_user }}"
-    group: "apache"
+    group: "{{ app_group }}"
     mode: 0755
 
 
