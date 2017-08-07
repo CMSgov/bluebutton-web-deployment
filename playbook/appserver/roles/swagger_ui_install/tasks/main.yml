@@ -1,0 +1,48 @@
+---
+# File: playbook/appserver/roles/swagger_ui_install/tasks/main.yml
+# Created: 8/7/17
+# Author: '@ekivemark'
+
+- name: "Create swagger-ui directory"
+  become_user: root
+  become: yes
+  file:
+    dest: "{{ swagger_ui_parent_dir }}"
+    mode: 0644
+    owner: "{{ app_owner }}"
+    group: "{{ app_group }}"
+    state: directory
+
+########################################
+- name: "Check for git installation"
+  become_user: root
+  become: yes
+  stat:
+    path: "{{ swagger_ui_parent_dir }}/swagger-ui/.git/*"
+  register: swagger_installed
+
+- name: "Check result of git check"
+  debug:
+    msg: "swagger is installed [{{ swagger_installed.stat.exists }}]"
+  ignore_errors: yes
+
+- name: "install from git: {{ swagger_ui_repo_source }}"
+  become_user: root
+  become: yes
+  git:
+    repo: "{{ swagger_ui_repo_source }}"
+    dest: "{{ swagger_ui_parent_dir }}"
+    force: yes
+    clone: yes
+  when: not git_installed.stat.exists
+
+- name: "Set ownership of swagger_ui"
+  become_user: root
+  become: yes
+  file:
+    dest: "{{ swagger_ui_parent_dir }}"
+    owner: {{ app_owner }}
+    group: {{ app_group }}
+    mode: 0640
+    recurse: yes
+

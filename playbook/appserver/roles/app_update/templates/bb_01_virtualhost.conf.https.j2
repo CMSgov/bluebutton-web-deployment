@@ -99,10 +99,10 @@ WSGIPythonPath {{ cf_app_pyapp_home }}:{{ cf_app_py_virtual_env }}/bin:/usr/loca
     ##########################################################################
     # Adding Swagger-ui files
 
-    Alias /devdocs/ /var/www/doc/swagger/swagger-ui/dist/
+    Alias /devdocs/ {{ swagger_ui_parent_dir }}/swagger-ui/dist/
     Alias /devdocs_bbonfhirapi/ /var/www/doc/swagger_docs/
 
-    <Directory "/var/www/doc/swagger/swagger-ui/dist">
+    <Directory "{{ swagger_ui_parent_dir }}/swagger-ui/dist">
 	# Apache 2.4 command:
 	Require all granted
 
@@ -111,7 +111,7 @@ WSGIPythonPath {{ cf_app_pyapp_home }}:{{ cf_app_py_virtual_env }}/bin:/usr/loca
     # Adding swagger data for hhs_oauth_server api
 
     # Alias /devdocs_bbonfhirapi/ /var/www/doc/swagger_docs/
-    Alias /devdocs_bbonfhirapi/{{ cf_app_pyapp_home }}/hhs_oauth_server/apidocs/
+    Alias /devdocs_bbonfhirapi/ {{ cf_app_pyapp_home }}/hhs_oauth_server/apidocs/
 
     <Directory "{{ cf_app_pyapp_home }}/hhs_oauth_server/apidocs/">
 	# Apache 2.4 command:

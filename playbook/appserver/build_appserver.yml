@@ -79,6 +79,8 @@
     - roles/letsencrypt_run_1
     # install the certs
     - roles/letsencrypt_cert_copy
+    # install swagger-ui from git
+    - roles/swagger_ui_install
     # Update application code and write virtualhosts file
     - roles/app_update
     # Update environment variable files

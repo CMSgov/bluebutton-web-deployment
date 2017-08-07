@@ -272,6 +272,10 @@ splunk_name_mapper: {
 # AWS ARN for SNS messaging
 sns_topic_arn: "{{ env_sns_topic_arn }}"
 
+# Swagger ui parent directory
+swagger_ui_parent_dir: "/var/www/doc/swagger/"
+swagger_ui_repo_source: "https://github.com/alimate/swagger-ui.git"
+
 cf_env_layer: {
         "dev": {
           "az1": {
