@@ -37,6 +37,10 @@
     sns_playbook_action: "UNDEFINED: set *sns_playbook_action* in calling script"
   when: sns_playbook_action is undefined
 
+- name: set the debug mode
+  set_fact:
+    sns_playbook_debug: false
+  when: sns_playbook_debug is undefined
 
 - name: "build sns message"
   become_user: root
@@ -48,8 +52,11 @@
       Server: {{ inventory_hostname }}
       Action: {{ sns_playbook_action }}
       # ============================
+      {% if sns_playbook_debug %}
       {{ hostvars| to_nice_json }}
       # ============================
+      {% endif %}
+      
 
     dest: "{{ sns_message_file }}"
     owner: root
