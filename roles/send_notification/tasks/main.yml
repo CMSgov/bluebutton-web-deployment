@@ -51,12 +51,15 @@
       Playbook: {{sns_playbook }}
       Server: {{ inventory_hostname }}
       Action: {{ sns_playbook_action }}
-      # ============================
       {% if sns_playbook_debug %}
+      # ============================
       {{ hostvars| to_nice_json }}
       # ============================
+      {% else %}
+      Debug: *sns_playbook_debug* != true
+      # ============================
       {% endif %}
-      
+
 
     dest: "{{ sns_message_file }}"
     owner: root
