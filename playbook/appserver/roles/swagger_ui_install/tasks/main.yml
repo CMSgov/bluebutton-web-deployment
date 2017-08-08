@@ -14,7 +14,7 @@
     state: directory
 
 ########################################
-- name: "Check for git installation"
+- name: "Check for git installation - {{ swagger_ui_parent_dir }}/swagger-ui/.git"
   become_user: root
   become: yes
   stat:
