@@ -41,8 +41,8 @@
   become: yes
   file:
     dest: "{{ swagger_ui_parent_dir }}"
-    owner: {{ app_owner }}
-    group: {{ app_group }}
+    owner: "{{ app_owner }}"
+    group: "{{ app_group }}"
     mode: 0640
     recurse: yes
 

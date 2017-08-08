@@ -41,6 +41,11 @@
     splunk_target_layer: "{{ sub_zone|upper }}"
     migrate: "yes"
     collectstatic: "yes"
+    # Setting the playbook value for SNS Notifications
+    sns_playbook: "playbook/appserver/build_appserver.yml"
+    sns_subject: "rebuild appserver"
+    sns_playbook_action: "rebuild"
+    sns_debug: false
   vars_files:
     - "./../../vars/common.yml"
     - "./../../vault/env/{{ env }}/vault.yml"
@@ -122,6 +127,9 @@
 
   - name: "Add in to Load Balancer"
     include: roles/attach_to_elb/tasks/main.yml
+
+  - name: "Notify completion result"
+    include: "../../roles/send_notification/tasks/main.yml"
 
   handlers:
   - name: restart apache
