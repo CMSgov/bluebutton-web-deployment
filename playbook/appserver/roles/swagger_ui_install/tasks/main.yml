@@ -34,7 +34,7 @@
     dest: "{{ swagger_ui_parent_dir }}"
     force: yes
     clone: yes
-  when: not git_installed.stat.exists
+  when: not swagger_installed.stat.exists
 
 - name: "Set ownership of swagger_ui"
   become_user: root
