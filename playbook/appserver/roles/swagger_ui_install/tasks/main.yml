@@ -14,11 +14,11 @@
     state: directory
 
 ########################################
-- name: "Check for git installation - {{ swagger_ui_parent_dir }}/swagger-ui/.git/*"
+- name: "Check for git installation - {{ swagger_ui_parent_dir }}/swagger-ui/.git"
   become_user: root
   become: yes
   stat:
-    path: "{{ swagger_ui_parent_dir }}/swagger-ui/.git/*"
+    path: "{{ swagger_ui_parent_dir }}/swagger-ui/.git"
   register: swagger_installed
 
 - name: "Check result of git check"
