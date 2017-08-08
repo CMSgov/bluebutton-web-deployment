@@ -27,6 +27,13 @@
     state: directory
     mode: "0755"
 
+- name: remove ssl.conf it conflicts with our configuration
+  become_user: root
+  become: yes
+  command: "mv -f /etc/httpd/conf.d/ssl.conf /etc/httpd/conf.d/ssl.conf.disabled "
+  ignore_errors: yes
+
+
 - name: "Check Apache is running"
   become_user: root
   become: yes
