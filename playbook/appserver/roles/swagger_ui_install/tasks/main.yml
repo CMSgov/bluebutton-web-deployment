@@ -36,7 +36,7 @@
     clone: yes
   when: not swagger_installed.stat.exists
 
--name: "Update existing swagger install"
+- name: "Update existing swagger install"
   become_user: root
   become: yes
   git:
