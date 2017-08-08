@@ -31,7 +31,7 @@
   become: yes
   git:
     repo: "{{ swagger_ui_repo_source }}"
-    dest: "{{ swagger_ui_parent_dir }}"
+    dest: "{{ swagger_ui_parent_dir }}/"
     force: yes
     clone: yes
   when: not swagger_installed.stat.exists
