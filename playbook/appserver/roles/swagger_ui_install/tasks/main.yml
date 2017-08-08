@@ -31,7 +31,7 @@
   become: yes
   git:
     repo: "{{ swagger_ui_repo_source }}"
-    dest: "{{ swagger_ui_parent_dir }}/"
+    dest: "{{ swagger_ui_parent_dir }}/swagger-ui"
     force: yes
     clone: yes
   when: not swagger_installed.stat.exists
@@ -41,7 +41,7 @@
   become: yes
   git:
     repo: "{{ swagger_ui_repo_source }}"
-    dest: "{{ swagger_ui_parent_dir }}/"
+    dest: "{{ swagger_ui_parent_dir }}/swagger-ui"
     version: "master"
 
 - name: "Set ownership of swagger_ui"
