@@ -209,7 +209,6 @@ SSLCryptoDevice builtin
     # Adding Swagger-ui files
 
     Alias /devdocs/ {{ swagger_ui_parent_dir }}/swagger-ui/dist/
-    Alias /devdocs_bbonfhirapi/ /var/www/doc/swagger_docs/
 
     <Directory "{{ swagger_ui_parent_dir }}/swagger-ui/dist">
 	# Apache 2.4 command:
@@ -219,8 +218,8 @@ SSLCryptoDevice builtin
     ##########################################################################
     # Adding swagger data for hhs_oauth_server api
 
-    # Alias /devdocs_bbonfhirapi/ /var/www/doc/swagger_docs/
-    Alias /devdocs_bbonfhirapi/ {{ cf_app_pyapp_home }}/hhs_oauth_server/apidocs/
+    # Alias {{ swagger_external_path }} /var/www/doc/swagger_docs/
+    Alias {{ swagger_external_path }} {{ cf_app_pyapp_home }}/hhs_oauth_server/apidocs/
 
     <Directory "{{ cf_app_pyapp_home }}/hhs_oauth_server/apidocs/">
 	# Apache 2.4 command:
