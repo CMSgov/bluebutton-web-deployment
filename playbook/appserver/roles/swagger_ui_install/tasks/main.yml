@@ -14,7 +14,7 @@
     state: directory
 
 ########################################
-- name: "Check for git installation - {{ swagger_ui_parent_dir }}/swagger-ui/.git"
+- name: "Check for git installation - {{ swagger_ui_parent_dir }}/swagger-ui/.git/*"
   become_user: root
   become: yes
   stat:
@@ -35,6 +35,14 @@
     force: yes
     clone: yes
   when: not swagger_installed.stat.exists
+
+-name: "Update existing swagger install"
+  become_user: root
+  become: yes
+  git:
+    repo: "{{ swagger_ui_repo_source }}"
+    dest: "{{ swagger_ui_parent_dir }}/"
+    version: "master"
 
 - name: "Set ownership of swagger_ui"
   become_user: root
