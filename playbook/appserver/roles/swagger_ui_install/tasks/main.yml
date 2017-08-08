@@ -54,7 +54,7 @@
   become_user: root
   become: yes
   template:
-    src: "roles/swagger_ui_install/templates/index.html.j2"
+    src: "../templates/index.html.j2"
     dest: "{{ swagger_ui_parent_dir }}/swagger-ui/dist/index.html"
     owner: "{{ app_owner }}"
     group: "{{ app_group }}"
