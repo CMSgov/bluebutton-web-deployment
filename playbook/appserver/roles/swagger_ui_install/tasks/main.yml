@@ -23,7 +23,7 @@
 
 - name: "Check result of git check"
   debug:
-    msg: "swagger is installed [{{ swagger_installed.stat.exists }}]"
+    msg: "swagger is installed [{{ swagger_installed }}]"
   ignore_errors: yes
 
 - name: "install from git: {{ swagger_ui_repo_source }}"
