@@ -67,6 +67,6 @@
     dest: "{{ swagger_ui_parent_dir }}"
     owner: "{{ app_owner }}"
     group: "{{ app_group }}"
-    mode: 0640
+    mode: 0770
     recurse: yes
 
