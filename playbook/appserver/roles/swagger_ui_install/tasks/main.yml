@@ -48,7 +48,7 @@
 # Use apidocs reference in template in next step
 - name: Set apidocs location
   set_fact:
-    swagger_api_docs: "{{ app_lb_app_protocol }}://{{ external_dns_name }}{{ swagger_apidocs_location }}/{{ swagger_docs_file }}"
+    swagger_api_docs: "{{ app_lb_app_protocol }}://{{ external_dns_name }}{{ swagger_external_path }}/{{ swagger_docs_file }}"
 
 - name: "replace petstore with full apidocs location - {{ swagger_api_docs }}"
   become_user: root
