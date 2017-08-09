@@ -72,7 +72,7 @@
   become_user: root
   become: yes
   shell: |
-    AWS_DEFAULT_PROFILE= {{ s3_bucket_account }}
+    AWS_DEFAULT_PROFILE={{ s3_bucket_account }}
     AWS_DEFAULT_REGION={{ cf_region }}
     AWS_ACCESS_KEY_ID={{ aws_access_id }}
     AWS_SECRET_ACCESS_KEY={{ aws_secret_key }}
