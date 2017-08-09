@@ -73,7 +73,7 @@
   become: yes
   shell: |
     AWS_ACCESS_KEY_ID={{ aws_access_id }}
-    AWS_SECRET_ACCESS_KET={{ aws_secret_key }}
+    AWS_SECRET_ACCESS_KEY={{ aws_secret_key }}
     /usr/local/bin/aws sns publish \
        --topic-arn {{ sns_topic_arn }} \
        --subject "{{ sns_subject }}" \
