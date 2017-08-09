@@ -51,6 +51,7 @@
       Playbook: {{sns_playbook }}
       Server: {{ inventory_hostname }}
       Action: {{ sns_playbook_action }}
+      AWS User: {{ env_s3_bucket_account }}
       {% if sns_playbook_debug %}
       # ============================
       {{ hostvars| to_nice_json }}
@@ -71,6 +72,8 @@
   become_user: root
   become: yes
   shell: |
+    AWS_ACCESS_KEY_ID={{ aws_access_id }}
+    AWS_SECRET_ACCESS_KET={{ aws_secret_key }}
     /usr/local/bin/aws sns publish \
        --topic-arn {{ sns_topic_arn }} \
        --subject "{{ sns_subject }}" \
