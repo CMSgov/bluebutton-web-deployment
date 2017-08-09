@@ -33,6 +33,8 @@
     env_az: "{{ env }}-{{ azone }}"
     env_cf_data_version: "20"
     ansible_ssh_pipelining: no
+    sns_playbook: "playbook/debug/test_role.yml:{{ test_this_role }}"
+    sns_playbook_action: "build_target={{ build_target }}"
 
   vars_files:
     - "./../../vars/common.yml"
