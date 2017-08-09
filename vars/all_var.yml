@@ -271,6 +271,8 @@ splunk_name_mapper: {
 
 # AWS ARN for SNS messaging
 sns_topic_arn: "{{ env_sns_topic_arn }}"
+sns_access_key_id: "{{ env_sns_access_key_id }}"
+sns_secret_access_key: "{{ env_sns_secret_access_key }}"
 
 # Swagger ui parent directory
 swagger_ui_parent_dir: "/var/www/doc/swagger"
