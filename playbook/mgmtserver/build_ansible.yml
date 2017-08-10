@@ -6,6 +6,11 @@
 # take a new server in the mgmt zone and setup to use ansible
 # provide extra-vars 'env=[environment] build_target=[server_ip_address]'
 
+# CURRENT: EAST-RH 7-3 Gold Image V.1.13 (HVM) 07-19-17 - ami-10bdab06
+# Type: m3.medium
+# Subnet: Mgmt Zone AZ2
+# PROD Volume Size: 100GB
+
 - name: "Build Ansible Server"
   hosts: "{{ build_target }}"
   become_user: root
