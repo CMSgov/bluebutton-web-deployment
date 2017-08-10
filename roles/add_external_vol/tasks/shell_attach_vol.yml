@@ -11,7 +11,7 @@
 
 - name: "Create External Drive script"
   template:
-    src: "../templates/setup_ext_drive.j2"
+    src: "../templates/setup_ext_drive.sh.j2"
     dest: "/home/ec2-user/script/setup_ext_drive.sh"
     backup: yes
     mode: "u+rwx"
