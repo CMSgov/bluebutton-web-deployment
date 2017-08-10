@@ -16,7 +16,7 @@
   become_user: root
   remote_user: ec2-user
   become: yes
-  # connection: smart
+  connection: smart
   vars:
     # set a default environment. We don't mind mucking with the dev or test environment
     env: "test"
@@ -25,6 +25,10 @@
     ansible_ssh_pipelining: no
     hhs_ansible_git_branch: master
     hhs_ansible_repo: "https://github.com/HHSIDEALab/hhs_ansible.git"
+    # certificate files for certs process
+    ca_key: "server.key"
+    ca_cert: "server.crt"
+
   vars_files:
     - "./../../vars/common.yml"
     - "./../../vault/env/{{ env }}/vault.yml"

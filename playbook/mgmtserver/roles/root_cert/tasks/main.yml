@@ -48,13 +48,13 @@
 - name: "set CA_SUBJECT var using email"
   set_fact:
     ca_subject: '/C={{ ca_country }}/ST={{ ca_state }}/L={{ ca_locality }}/O={{ ca_organization }}/OU={{ ca_organizationalunit }}/CN={{ ca_commonname }}/emailAddress={{ ca_email }}'
-  when: ca_subject is not defined and ca_email is not ""
+  when: (ca_subject is undefined) and not((ca_email is undefined) or (ca_email is none) or (ca_email | trim == ''))
+
 
 - name: "set CA_SUBJECT var using commonname"
   set_fact:
     ca_subject: '/C={{ ca_country }}/ST={{ ca_state }}/L={{ ca_locality }}/O={{ ca_organization }}/OU={{ ca_organizationalunit }}/CN={{ ca_commonname }}'
-  when: ca_subject is not defined and ca_commonname is not ""
-
+  when: (ca_subject is undefined) and not((ca_commonname is undefined) or (ca_commonname is none) or (ca_commonname | trim == ''))
 
 
 # CA root ca password
