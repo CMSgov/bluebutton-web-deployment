@@ -51,7 +51,8 @@
     state: installed
   with_items:
    - dracut-fips
-   - "/root/fips140/{{ dracut_fips_aesni }}"
+   - dracut-fips-aesni
+   # - "/root/fips140/{{ dracut_fips_aesni }}"
 
 - name: "Initialize FIPS 140.2 Log"
   become_user: root
