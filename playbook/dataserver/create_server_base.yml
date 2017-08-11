@@ -59,7 +59,7 @@
       # CURRENT:  EAST-RH 6-9 Gold Image V.1.05 (PV) 07-19-17 - ami-17bdab01
       image: "ami-17bdab01" # Change the AMI, from which you want to launch the server
 
-      key_name: "{{ cf_data_key_name }}" # Change the keypair name
+      key_name: "{{ cf_data_key_name }}" # Change the key pair name
       region: "{{ cf_region }}"
       # tenancy must be "dedicated"
       tenancy: "dedicated"

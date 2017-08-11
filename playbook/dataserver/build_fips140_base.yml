@@ -13,7 +13,7 @@
   # become_method: sudo
   vars:
     env: "dev"
-    azone: "az1"
+    azone: "az2"
     env_az: "{{ env }}-{{ azone }}"
     env_cf_data_version: "20"
     # splunk_target_layer: "WEB | APP | DATA | MGMT"
