@@ -27,12 +27,13 @@
   register: reboot_hint
 
 - name: "Rebooting for updated kernel...{{ reboot_hint.stdout }}"
-  command: shutdown -r now "Reboot required for updated kernel"
+  become_user: root
+  become: yes
+  command: shutdown -r now "Reboot required for updated kernel" && sleep 2
   async: 0
   poll: 0
-  become_user: root
-  ignore_errors: true
   when: reboot_hint.stdout.find("reboot") != -1
+  ignore_errors: true
   register: rebooting
 
 
