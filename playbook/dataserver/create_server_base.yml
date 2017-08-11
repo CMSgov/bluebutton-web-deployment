@@ -56,8 +56,9 @@
       # This image should be updated monthly.
       # EAST-RH 6-9 Gold Image V.1.01 (PV) 04-21-17 - ami-3dda452b
       # PREVIOUS: EAST-RH 6-8 Gold Image V.3.17 (PV)Splunk-CFN-FIPS140-02-24-17 (ami-f070abe6)
-      # CURRENT:  EAST-RH 6-9 Gold Image V.1.05 (PV) 07-19-17 - ami-17bdab01
-      image: "ami-17bdab01" # Change the AMI, from which you want to launch the server
+      # PROBLEM:  EAST-RH 6-9 Gold Image V.1.05 (PV) 07-19-17 - ami-17bdab01
+      # CURRENT:  EAST-RH 7-3 Gold Image V.1.13 (HVM) 07-19-17 - ami-10bdab06
+      image: "ami-10bdab06" # Change the AMI, from which you want to launch the server
 
       key_name: "{{ cf_data_key_name }}" # Change the key pair name
       region: "{{ cf_region }}"
