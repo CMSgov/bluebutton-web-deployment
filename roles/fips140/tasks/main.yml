@@ -3,6 +3,9 @@
 # Created: 5/4/17
 # Author: @ekivemark
 
+- name: "check server version"
+  include: "../../check_rhel_version/tasks/main.yml"
+
 - name: "Create FIPS140 directory"
   file:
     path: /root/fips140
@@ -18,9 +21,16 @@
     src: "../files/fips_update.sh"
     dest: "/root/fips140/fips_update.sh"
 
+- name: "modify yum config for RHEL {{ rhel_version }} to add dracut-fips-aesni"
+  become_user: root
+  become: yes
+  shell: "yum-config-manager --enable rhel-{{ rhel_version }}-server-optional-rpms"
+
 # yum update run in base_patch
 # install fips modules
 - name: "FIPS 140.2 install step 2"
+  become_user: root
+  become: yes
   yum:
     pkg: "{{item}}"
     state: installed
@@ -30,10 +40,12 @@
 
 - name: "Initialize FIPS 140.2 Log"
   become_user: root
+  become: yes
   shell: "/root/fips140/fips_update.sh 0"
 
 - name: "FIPS 140.2 Update boot images"
   become_user: root
+  become: yes
   shell: "/root/fips140/fips_update.sh 2"
 
   #- name: "Backup initramfs"
@@ -53,6 +65,7 @@
   # async: 0
   # poll: 0
   become_user: root
+  become: yes
   ignore_errors: true
   when: reboot_hint.stdout.find("reboot") != -1
   register: rebooting_1
@@ -64,6 +77,7 @@
 
 - name: "FIPS setup step 3/4..."
   become_user: root
+  become: yes
   shell: "/root/fips140/fips_update.sh 3"
 
 - name: "Rebooting after step 3/4 ..."
@@ -71,6 +85,7 @@
   async: 0
   poll: 0
   become_user: root
+  become: yes
   ignore_errors: true
   when: reboot_hint.stdout.find("reboot") != -1
   register: rebooting_3
@@ -81,11 +96,13 @@
 
 - name: "FIPS setup step 4/4..."
   become_user: root
+  become: yes
   shell: "sysctl crypto.fips_enabled"
   register: fips_installed
 
 - name: "FIPS 140.2 install Log"
   become_user: root
+  become: yes
   shell: "cat /root/fips_140_2_update.log"
   register: fips_log
 
@@ -93,7 +110,7 @@
   debug:
     msg: "FIPS_140_2_update.log:\n{{ fips_log }}"
 
-- name: "Is FIPS installed?"
+- name: "Is FIPS installed? {{ fips_installed }}"
   debug:
     msg: "Is FIPS active? {{ fips_installed }}"
 
