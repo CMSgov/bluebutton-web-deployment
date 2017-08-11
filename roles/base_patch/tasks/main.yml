@@ -27,7 +27,7 @@
   shell:  /usr/sbin/sshd -t
   register: sshd_config_state
   failed_when: sshd_config_state.rc > 0
-  
+
 
 - name: Check for reboot hint.
   shell: LAST_KERNEL=$(rpm -q --last kernel | perl -pe 's/^kernel-(\S+).*/$1/' | head -1); CURRENT_KERNEL=$(uname -r); if [ $LAST_KERNEL != $CURRENT_KERNEL ]; then echo 'reboot'; else echo 'no'; fi
@@ -37,9 +37,7 @@
 - name: "Rebooting for updated kernel...{{ reboot_hint.stdout }}"
   become_user: root
   become: yes
-  command: shutdown -r now "Reboot required for updated kernel" && sleep 2
-  async: 0
-  poll: 0
+  shell: shutdown -r now "Reboot required for updated kernel" && sleep 3
   when: reboot_hint.stdout.find("reboot") != -1
   ignore_errors: true
   register: rebooting
