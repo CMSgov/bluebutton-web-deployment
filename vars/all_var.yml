@@ -194,10 +194,14 @@ cf_data_crl_file: "{{ env_cf_data_crl_file }}"
 cf_data_db_backup_key_id: "{{ env_cf_data_db_backup_key_id }}"
 cf_data_db_backup_secret_key: "{{ env_cf_data_db_backup_secret_key }}"
 
+selinux_policy: "targeted"
+selinux_state: "permissive"
+
+
 # cf_app_selinux_policy sets SELINUXTYPE=targeted
-cf_app_selinux_policy: "targeted"
+cf_app_selinux_policy: "{{ selinux_policy }}"
 # cf_app_selinux_state set SELINUX=permissive
-cf_app_selinux_state: "permissive"
+cf_app_selinux_state: "{{ selinux_state }}"
 
 cf_app_sg_app_zone_id: "{{ env_cf_app_sg_app_zone_id }}"
 cf_app_azone: "{{env_cf_app_azone }}"
