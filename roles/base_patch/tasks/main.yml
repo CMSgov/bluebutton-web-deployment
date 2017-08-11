@@ -21,6 +21,14 @@
     name: "*"
     state: latest
 
+- name: "check sshd config"
+  become_user: root
+  become: yes
+  shell:  /usr/sbin/sshd -t
+  register: sshd_config_state
+  failed_when: sshd_config_state.rc > 0
+  
+
 - name: Check for reboot hint.
   shell: LAST_KERNEL=$(rpm -q --last kernel | perl -pe 's/^kernel-(\S+).*/$1/' | head -1); CURRENT_KERNEL=$(uname -r); if [ $LAST_KERNEL != $CURRENT_KERNEL ]; then echo 'reboot'; else echo 'no'; fi
   ignore_errors: true
