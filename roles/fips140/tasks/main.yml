@@ -77,7 +77,7 @@
   #  shell: "grubby --update-kernel=$(grubby --default-kernel) --args=fips=1"
 
 - name: "Rebooting after dracut update ..."
-  command: shutdown -r now "Reboot required after initramfs and grubby changes"
+  command: shutdown -r now "Reboot required after initramfs and grubby changes" && sleep 2
   # async: 0
   # poll: 0
   become_user: root
@@ -97,7 +97,7 @@
   shell: "/root/fips140/fips_update.sh 3"
 
 - name: "Rebooting after step 3/4 ..."
-  command: shutdown -r now "Reboot required after FIPS Step 3 install"
+  command: shutdown -r now "Reboot required after FIPS Step 3 install" && sleep 2
   async: 0
   poll: 0
   become_user: root
