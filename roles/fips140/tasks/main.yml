@@ -1,5 +1,5 @@
 ---
-# File: main 
+# File: roles/fips140/tasks/main.yml
 # Created: 5/4/17
 # Author: @ekivemark
 
@@ -26,6 +26,21 @@
   become: yes
   shell: "yum-config-manager --enable rhel-{{ rhel_version }}-server-optional-rpms"
 
+- name: "Set the dracut-fips-aesni source"
+  set_fact:
+    dracut_fips_aesni: "dracut-fips-aesni-004-409.el6_8.2.noarch.rpm"
+
+- name: "copy {{ dracut_fips_aesni }}. Can't depend on server-optional-rpms"
+  become_user: root
+  become: yes
+  copy:
+    src: "../files/{{ dracut_fips_aesni }}"
+    dest: "/root/fips140/{{ dracut_fips_aesni }}"
+    mode: 0640
+    owner: root
+    group: root
+
+
 # yum update run in base_patch
 # install fips modules
 - name: "FIPS 140.2 install step 2"
@@ -36,7 +51,7 @@
     state: installed
   with_items:
    - dracut-fips
-   - dracut-fips-aesni
+   - "/root/fips140/{{ dracut_fips_aesni }}"
 
 - name: "Initialize FIPS 140.2 Log"
   become_user: root
