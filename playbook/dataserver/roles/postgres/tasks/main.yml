@@ -39,6 +39,7 @@
     - rhel-server-rhscl-6-rpms
     - rhel-6-server-optional-rpms
   register: yum_config
+  when: rhel_version == "6"
 
 #- name: "Update yum config-manager for optional RHEL channel"
 #  become_user: root
@@ -49,16 +50,16 @@
   pause: seconds=90
   when: yum_config|changed
 
-- name: "Add Postgres YUM repository for RHEL 6"
+- name: "Add Postgres YUM repository for RHEL {{ rhel_version }}"
   become_user: root
   become: yes
   yum:
     name: "{{ item }}"
     state: installed
   with_items:
-    - https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-6-x86_64/pgdg-redhat96-9.6-3.noarch.rpm
+    - https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-{{ rhel_version }}-x86_64/pgdg-redhat96-9.6-3.noarch.rpm
 
-- name: "Download Postgres96 and supporting components for RHEL 6"
+- name: "Download Postgres96 and supporting components for RHEL {{ rhel_version }}"
   become_user: root
   become: yes
   yum:
@@ -68,8 +69,8 @@
     - postgresql96
     - postgresql96-server
     - postgresql96-contrib
-    - http://mirror.centos.org/centos/6/os/x86_64/Packages/libffi-devel-3.0.5-3.2.el6.x86_64.rpm
-
+    - libffi-devel
+#     - http://mirror.centos.org/centos/6/os/x86_64/Packages/libffi-devel-3.0.5-3.2.el6.x86_64.rpm
 
 #- name: "Add Postgres YUM repository for RHEL 7"
 #  become_user: root
