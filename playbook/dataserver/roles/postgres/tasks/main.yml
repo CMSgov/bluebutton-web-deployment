@@ -212,10 +212,22 @@
     mode: 0644
   when: rhel_version == "7"
 
-- name: "Initialize Database Service"
+- name: "Initialize Database Service under RHEL V{{ rhel_version }}"
   become_user: root
   become: yes
   shell: "service postgresql-9.6 initdb"
+  when: rhel_version == "6"
+  register: postgres_init_result
+
+- name: "Initialize Database Service under RHEL V{{ rhel_version }}"
+  become_user: root
+  become: yes
+  shell: |
+    export PGDATA={{ db_server_data_dir }}
+    /usr/pgsql-9.6/bin/postgresql96-setup initdb
+  when: rhel_version == "7"
+  register: postgres_init_result
+
 #  service:
 #    name: postgresql-9.6
 #    state: started
