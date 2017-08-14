@@ -19,8 +19,6 @@
     # splunk_target_layer: "WEB | APP | DATA | MGMT"
     splunk_target_layer: "DATA"
     # SSL Cert and Key file names
-    ca_key: "server.key"
-    ca_cert: "server.crt"
 
   vars_files:
     - "./../../vars/common.yml"
