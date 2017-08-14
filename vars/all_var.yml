@@ -161,6 +161,11 @@ db_host_address: "{{ env_db_host_address }}"
 db_host_port: "{{ env_db_host_port }}"
 db_host_options: "{{ env_db_host_options }}"
 
+
+# Database SSL Certificate and Key Files:
+ca_key: "server.key"
+ca_cert: "server.crt"
+
 cf_region: "us-east-1"
 cf_vpc_id: "{{ env_cf_vpc_id }}"
 cf_platform_version: "{{ env_cf_platform_version }}"
