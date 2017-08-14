@@ -48,6 +48,8 @@
     - "./../../vars/env/{{ env }}/ca_env.yml"
 
   roles:
+    # get 6 or 7 returned for use when installing version specific packages
+    - ../../roles/check_rhel_version
     - ../../roles/splunk
     # moved add_external_vol to its own playbook - attach_data_volume.yml
     # - ../../roles/add_external_vol
