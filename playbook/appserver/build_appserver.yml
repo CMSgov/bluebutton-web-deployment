@@ -23,7 +23,7 @@
 
 - name: Build App Server
   # hosts: appservers
-  hosts: "{{ build_target }}"
+  hosts: "{{ build_target | default('appservers') }}"
   # connection: local
   remote_user: ec2-user
   # become_user: root
