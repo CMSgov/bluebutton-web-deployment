@@ -199,6 +199,18 @@
     dest: "/etc/init.d/postgresql-9.6"
     regexp: "^PGDATA="
     line: "PGDATA={{ db_server_data_dir }}"
+  when: rhel_version == "6"
+
+- name: "Change default PGDATA variable in systemd startup -  "
+  become_user: root
+  become: yes
+  template:
+    src: ../templates/postgresql-9.6.service.j2
+    dest: /etc/systemd/system/postgresql-9.6.service
+    owner: root
+    group: root
+    mode: 0644
+  when: rhel_version == "7"
 
 - name: "Initialize Database Service"
   become_user: root
