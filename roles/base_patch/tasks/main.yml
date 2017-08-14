@@ -7,6 +7,9 @@
 - name: "fix sudoers file"
   include: ./fix_sudoers.yml
 
+- name: "fix sshd_config file"
+  include: ./fix_sshd_config.yml
+
 - name: "clean up /root for dataservers"
   become_user: root
   become: yes
