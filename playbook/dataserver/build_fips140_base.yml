@@ -26,6 +26,7 @@
     - "./../../vars/all_var.yml"
 
   roles:
+    - ../../roles/base_patch/tasks/selinux_mode.yml
     - ../../roles/base_patch
     - ../../roles/fips140
     - ../../roles/splunk
