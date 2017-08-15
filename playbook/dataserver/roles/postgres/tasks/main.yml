@@ -169,14 +169,16 @@
     state: directory
     recurse: yes
 
-
-# Create database in the data dir while it is empty!
-- name: "Initialize Database Service under RHEL V{{ rhel_version }} in {{ db_server_data_dir }}"
+- name: "Check data dir ({{ db_server_data_dir }}) is empty"
   become_user: root
   become: yes
-  shell: "service postgresql-9.6 initdb"
-  when: rhel_version == "6"
-  register: postgres_init_result
+  find:
+    paths: "{{ db_server_data_dir }}/pg*"
+  register: dir_files
+
+- name: "result of directory content check - {{ dir_files.matched }}"
+  debug:
+    msg: "{{ db_server_data_dir }} contains {{ dir_files.matched }} postgres files."
 
 - name: "Initialize Database Service under RHEL V{{ rhel_version }} in {{ db_server_data_dir }}"
   become_user: "{{ db_server_account }}"
@@ -184,7 +186,7 @@
   shell: |
     export PGDATA={{ db_server_data_dir }}
     /usr/pgsql-9.6/bin/initdb -D {{ db_server_data_dir }}
-  when: rhel_version == "7"
+  when: dir_files.matched != 0
   register: postgres_init_result
 
 
