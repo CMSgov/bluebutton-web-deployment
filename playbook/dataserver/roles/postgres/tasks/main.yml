@@ -173,7 +173,7 @@
   become_user: root
   become: yes
   find:
-    paths: "{{ db_server_data_dir }}/pg*"
+    paths: "{{ db_server_data_dir }}"
   register: dir_files
 
 - name: "result of directory content check - {{ dir_files.matched }}"
