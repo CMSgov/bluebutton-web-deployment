@@ -186,7 +186,7 @@
   shell: |
     export PGDATA={{ db_server_data_dir }}
     /usr/pgsql-9.6/bin/initdb -D {{ db_server_data_dir }}
-  when: dir_files.matched != 0
+  when: dir_files.matched == 0
   register: postgres_init_result
 
 
