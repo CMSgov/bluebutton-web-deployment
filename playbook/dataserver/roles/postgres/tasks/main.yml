@@ -169,19 +169,24 @@
     state: directory
     recurse: yes
 
-## Add in the certs
-- name: "install certs on dataserver"
-  copy:
-    src: "/root/ca/{{ item }}"
-    dest: "/data/pgsql/9.6/data/{{ item }}"
-    owner: "{{ db_server_account }}"
-    group: "{{ db_server_account }}"
-    mode: "0600"
-  with_items:
-    - "{{ ca_key }}"
-    - "{{ ca_cert }}"
 
-# End of install_certs
+# Create database in the data dir while it is empty!
+- name: "Initialize Database Service under RHEL V{{ rhel_version }} in {{ db_server_data_dir }}"
+  become_user: root
+  become: yes
+  shell: "service postgresql-9.6 initdb"
+  when: rhel_version == "6"
+  register: postgres_init_result
+
+- name: "Initialize Database Service under RHEL V{{ rhel_version }} in {{ db_server_data_dir }}"
+  become_user: "{{ db_server_account }}"
+  become: yes
+  shell: |
+    export PGDATA={{ db_server_data_dir }}
+    /usr/pgsql-9.6/bin/initdb -D {{ db_server_data_dir }}
+  when: rhel_version == "7"
+  register: postgres_init_result
+
 
 ##########################
 # setup postgresql.conf
@@ -215,22 +220,6 @@
     mode: 0644
   when: rhel_version == "7"
 
-- name: "Initialize Database Service under RHEL V{{ rhel_version }}"
-  become_user: root
-  become: yes
-  shell: "service postgresql-9.6 initdb"
-  when: rhel_version == "6"
-  register: postgres_init_result
-
-- name: "Initialize Database Service under RHEL V{{ rhel_version }}"
-  become_user: "{{ db_server_account }}"
-  become: yes
-  shell: |
-    export PGDATA={{ db_server_data_dir }}
-    /usr/pgsql-9.6/bin/postgresql96-setup initdb -D {{ db_server_data_dir }}
-  when: rhel_version == "7"
-  register: postgres_init_result
-
 #  service:
 #    name: postgresql-9.6
 #    state: started
@@ -253,6 +242,21 @@
   shell:  |
     systemctl enable postgresql-9.6
   when: rhel_version == "7"
+
+## Add in the certs
+- name: "install certs on dataserver"
+  copy:
+    src: "/root/ca/{{ item }}"
+    dest: "/data/pgsql/9.6/data/{{ item }}"
+    owner: "{{ db_server_account }}"
+    group: "{{ db_server_account }}"
+    mode: "0600"
+  with_items:
+    - "{{ ca_key }}"
+    - "{{ ca_cert }}"
+
+# End of install_certs
+
 
 - name: "start database on RHEL {{ rhel_version }}"
   become_user: root
