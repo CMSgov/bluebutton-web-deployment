@@ -223,7 +223,7 @@
   register: postgres_init_result
 
 - name: "Initialize Database Service under RHEL V{{ rhel_version }}"
-  become_user: root
+  become_user: "{{ db_server_account }}"
   become: yes
   shell: |
     export PGDATA={{ db_server_data_dir }}
