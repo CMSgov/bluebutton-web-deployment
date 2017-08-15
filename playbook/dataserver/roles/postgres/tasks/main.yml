@@ -174,21 +174,24 @@
   copy:
     src: "/root/ca/{{ item }}"
     dest: "/data/pgsql/9.6/data/{{ item }}"
-    owner: postgres
-    group: postgres
+    owner: "{{ db_server_account }}"
+    group: "{{ db_server_account }}"
     mode: "0600"
   with_items:
     - "{{ ca_key }}"
     - "{{ ca_cert }}"
 
+# End of install_certs
 
+##########################
+# setup postgresql.conf
+# setup pg_hba.conf
+##########################
 - name: "re-write postgresql.conf"
   include: "./roles/update_postgres_conf/tasks/main.yml"
 
 - name: "re-write pg_hba.conf"
   include: "./roles/update_pg_hba/tasks/main.yml"
-
-## End of install_certs
 
 # Startup script: /etc/init.d/postgresql-9.6
 # Default data location: /var/lib/postgresql/[version]/data/
@@ -224,7 +227,7 @@
   become: yes
   shell: |
     export PGDATA={{ db_server_data_dir }}
-    /usr/pgsql-9.6/bin/postgresql96-setup initdb
+    /usr/pgsql-9.6/bin/postgresql96-setup initdb -D {{ db_server_data_dir }}
   when: rhel_version == "7"
   register: postgres_init_result
 
@@ -234,7 +237,7 @@
 #    args: initdb
 #  register: postgres_init_result
 
-- name: "Set database to start on OS Boot"
+- name: "Set database to start on OS Boot ({{ rhel_version }})"
   become_user: root
   become: yes
   service:
@@ -242,20 +245,22 @@
     enabled: yes
   with_items:
     - postgresql-9.6
+  when: rhel_version == "6"
 
+- name: "set database to start on OS boot (RHEL {{ rhel_version }})"
+  become_user: root
+  become: yes
+  shell:  |
+    systemctl enable postgresql-9.6
+  when: rhel_version == "7"
 
-
-##########################
-# setup postgresql.conf
-# setup pg_hba.conf
-##########################
-# Switch from default port 5432.
-# - name: "Setup Database configuration"
-# replace line in replacements with a template copy
-- include: ../../update_postgres_conf/tasks/main.yml
-
-# replace line in replacements with a template copy
-- include: ../../update_pg_hba/tasks/main.yml
+- name: "start database on RHEL {{ rhel_version }}"
+  become_user: root
+  become: yes
+  shell:
+    su - {{ db_server_account }} -c  '/usr/pgsql-9.6/bin/pg_ctl -D {{ db_server_data_dir }} -l logfile start '
+  when: rhel_version == "7"
+  register: postgres_7_start_result
 
 - name: "Start Database"
   become_user: root
@@ -276,7 +281,7 @@
     group: "{{ db_server_account }}"
     mode: "u+rwx"
 
-- name: "Run db init sql script - set db_init=YES to run script"
+- name: "Run Django db init sql script - set db_init=YES to run script"
   become_user: "{{ db_server_account}}"
   become: yes
   shell: "psql -p {{ db_host_port }} -f {{ db_server_data_dir }}/django_init.sql"
