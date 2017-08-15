@@ -227,7 +227,7 @@
   become: yes
   shell: |
     export PGDATA={{ db_server_data_dir }}
-    /usr/pgsql-9.6/bin/postgresql96-setup initdb -D $PGDATA
+    /usr/pgsql-9.6/bin/postgresql96-setup initdb -D {{ db_server_data_dir }}
   when: rhel_version == "7"
   register: postgres_init_result
 
