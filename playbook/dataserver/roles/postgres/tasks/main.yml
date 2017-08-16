@@ -192,7 +192,7 @@
 
 - name: display init result
   debug:
-    msg: "Init result - {{ postgres_init_result }}
+    msg: "Init result - {{ postgres_init_result }}"
 
 ##########################
 # setup postgresql.conf
