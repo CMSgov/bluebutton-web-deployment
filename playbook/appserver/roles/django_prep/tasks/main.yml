@@ -9,6 +9,8 @@
 - name: Django migrate
   become_user: root
   become: yes
+  # We only want to run migration on one server in the fleet
+  run_once: yes
   django_manage:
     command: migrate
     app_path: "{{ install_root }}/{{ project_name }}/"
@@ -18,6 +20,7 @@
 - name: "Add Group roles to database"
   become_user: root
   become: yes
+  run_once: yes
   django_manage:
     command: loaddata apps/accounts/fixtures/groups.json
     app_path: "{{ install_root }}/{{ project_name }}/"
@@ -27,6 +30,7 @@
 - name: "Add Scopes to database"
   become_user: root
   become: yes
+  run_once: yes
   django_manage:
     command: loaddata apps/accounts/fixtures/scopes.json
     app_path: "{{ install_root }}/{{ project_name }}/"
@@ -36,6 +40,7 @@
 - name: "Load ResourceRouter and SupportedResourceType tables"
   become_user: root
   become: yes
+  run_once: yes
   django_manage:
     command: "loaddata apps/fhir/server/fixtures/{{ env|lower }}_install_fixture.json"
     app_path: "{{ install_root }}/{{ project_name }}/"
@@ -45,6 +50,7 @@
 - name: Django collectstatic
   become_user: root
   become: yes
+  run_once: yes
   django_manage:
     command: collectstatic
     app_path: "{{ install_root }}/{{ project_name }}/"
