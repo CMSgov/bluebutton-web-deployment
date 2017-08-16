@@ -15,3 +15,15 @@
     group: "{{ db_server_account }}"
     mode: "u+rwx"
 
+- name: "Copy postgresql.auto.conf into place if not found"
+  file:
+    src: "/var/lib/pgsql/9.6/data/{{ item }}"
+    dest: "{{ db_server_data_dir }}/{{ item }}"
+    remote_src: yes
+    force: no
+    owner: "{{ db_server_account }}"
+    group: "{{ db_server_account }}"
+    mode: "u+rwx"
+  with_items:
+    - postgresql.auto.conf
+
