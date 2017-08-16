@@ -50,7 +50,7 @@
 - name: Django collectstatic
   become_user: root
   become: yes
-  run_once: yes
+  run_once: no
   django_manage:
     command: collectstatic
     app_path: "{{ install_root }}/{{ project_name }}/"
