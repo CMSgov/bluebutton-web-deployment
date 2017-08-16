@@ -185,10 +185,14 @@
   become: yes
   shell: |
     export PGDATA={{ db_server_data_dir }}
-    /usr/pgsql-9.6/bin/initdb -D {{ db_server_data_dir }}
+    /usr/pgsql-9.6//bin/pg_ctl -D {{ db_server_data_dir }} initdb
   when: dir_files.matched == 0
   register: postgres_init_result
 
+
+- name: display init result
+  debug:
+    msg: "Init result - {{ postgres_init_result }}
 
 ##########################
 # setup postgresql.conf
@@ -263,7 +267,9 @@
 - name: "start database on RHEL {{ rhel_version }}"
   become_user: "{{ db_server_account}}"
   become: yes
-  shell:
+  shell: |
+    export PGDATA={{db_server_data_dir }}
+    cd $PGDATA
     /usr/pgsql-9.6/bin/pg_ctl -D {{ db_server_data_dir }} -l logfile start
   when: rhel_version == "7"
   register: postgres_7_start_result
