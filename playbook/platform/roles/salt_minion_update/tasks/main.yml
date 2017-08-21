@@ -57,7 +57,7 @@
   become: yes
   service:
     name: "salt-minion"
-    state: stop
+    state: stopped
 
 # Clean up the salt/pki/minion directory of old keys
 - name: "clean up the salt/pki directory"
