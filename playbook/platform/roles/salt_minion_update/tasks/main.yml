@@ -63,9 +63,8 @@
 - name: "clean up the salt/pki directory"
   become_user: root
   become: yes
-  shell:  |
-    cd /etc/salt/pki/minion
-   	rm -f minion*
+  shell:  "rm -f /etc/salt/pki/minion/minion* "
+
 
 - name: "Re-starting salt-minion service"
   become_user: root
