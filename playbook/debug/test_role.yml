@@ -22,7 +22,7 @@
 # all_var incorporates preceding variables and defines variables without prefixes.
 # use all_var variables in scripts.
 
-- name: setup backups
+- name: "preparing role test for {{ test_this_role }} on {{ build_target }}"
   hosts: "{{ build_target }}"
   # connection: local
   remote_user: ec2-user

@@ -63,7 +63,7 @@
 - name: "clean up the salt/pki directory"
   become_user: root
   become: yes
-  shell: |
+  shell:  |
     cd /etc/salt/pki/minion
    	rm -f minion*
 
