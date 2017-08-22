@@ -78,9 +78,11 @@
   become_user: root
   become: yes
   shell: "service salt-minion status"
+  ignore_errors: yes
   register: minion_state
 
 
 - name: "Result of salt-minion changes"
   debug:
     msg: "salt-minion: {{ minion_state.stdout }}"
+  ignore_errors: yes
