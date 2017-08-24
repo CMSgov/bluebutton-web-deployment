@@ -115,6 +115,10 @@ django_email_region: "{{ env_django_email_region }}"
 django_email_ses_endpoint: "{{ env_django_email_ses_endpoint }}"
 django_from_email: "{{ env_django_from_email }}"
 
+# SALT and ITERATIONS
+django_userid_salt: "{{ env_django_user_id_salt }}"
+django_user_id_iterations: "{{ env_django_user_id_iterations }}"
+
 ### S3 Bucket Settings:
 s3_bucket_account: "{{ env_s3_bucket_account }}"
 aws_access_id: "{{ env_aws_access_id }}"

@@ -5,6 +5,6 @@ clientName = {{ env_splunk_group_name }}-{{ env|upper }}-{{ splunk_name_mapper[h
 [target-broker:deploymentServer]
 # V2 Splunk
 # targetUri=10.128.11.78:8089
-#v3 Splunk
+# v3 Splunk
 # targetUri=10.244.112.51
 targetUri={{ splunk_target_server }}:{{ splunk_target_port }}
