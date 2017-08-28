@@ -24,19 +24,19 @@ echo "Postgres cleanup: $CLEAN_NOW in $PG_CLEAN_TEMP_DIR started:$1 $2 $CLEAN_NO
 cd $PG_CLEAN_TEMP_DIR
 
 # Get the list from S3 for mode $1
-/usr/local/bin/aws s3 ls  s3://bb-dbback-$PG_CLEAN_ENVIRONMENT/$1/ >$PG_CLEAN_TEMP_DIR/cleanup.s3.list.tmp
+/usr/bin/aws s3 ls  s3://bb-dbback-$PG_CLEAN_ENVIRONMENT/$1/ >$PG_CLEAN_TEMP_DIR/cleanup.s3.list.tmp
 
 # Get the local list of backups
-if compgen -G "$PG_CLEAN_TEMP_DIR/$CLEAN_DB_TABLE_NAME.*" >/dev/null ; then
+if compgen -G "$PG_CLEAN_TEMP_DIR/$HOST_IP.$CLEAN_DB_TABLE_NAME.*" >/dev/null ; then
    ls -la *.ssl >$PG_CLEAN_TEMP_DIR/cleanup.local.list.tmp
 
    for mvfile in $PG_CLEAN_TEMP_DIR/$CLEAN_DB_TABLE_NAME.$1_*
    do
      # Move the file to S3
      # echo "moving $mvfile to S3"
-     /usr/local/bin/aws s3 mv $mvfile  s3://bb-dbback-$PG_CLEAN_ENVIRONMENT/$1/
+     /usr/bin/aws s3 mv $mvfile  s3://bb-dbback-$PG_CLEAN_ENVIRONMENT/$1/
      # echo "S3 Bucket content:"
-     # /usr/local/bin/aws s3 ls s3://bb-dbback-$PG_CLEAN_ENVIRONMENT/$1/
+     # /usr/bin/aws s3 ls s3://bb-dbback-$PG_CLEAN_ENVIRONMENT/$1/
      if [ -f "$mvfile" ]; then
         echo "File $mvfile  move to S3 failed" >>$PG_CLEAN_TEMP_DIR/cleanup.log"
         echo "$mvfile move failed"

@@ -31,7 +31,7 @@ PG_DATA_DIR={{ db_server_data_dir }}
 # Patch to force folders to be created for $1 in S3
 FREQ_MODE="$1"
 echo "$PG_ENVIRONMENT $FREQ_MODE" >$PG_TEMP_DIR/folder_$FREQ_MODE.txt
-/usr/local/bin/aws s3 cp $PG_TEMP_DIR/folder_$FREQ_MODE.txt s3://bb-dbback-$PG_ENVIRONMENT/$FREQ_MODE/
+/usr/bin/aws s3 cp $PG_TEMP_DIR/folder_$FREQ_MODE.txt s3://bb-dbback-$PG_ENVIRONMENT/$FREQ_MODE/
 
 # export PGPASSWORD="R3s3t_Th1s"
 export PGPASSFILE=$PG_DATA_DIR/.pgpass
@@ -41,7 +41,7 @@ echo "Postgres backup: $NOW $PG_ENVIRONMENT:$DB_TABLE_NAME on $HOST_IP:$PG_ACCES
 
 cd $PG_TEMP_DIR
 /usr/pgsql-9.6/bin/pg_dump -U $DB_USER -h $HOST_IP -p {{ db_host_port }} $DB_TABLE_NAME | /usr/bin/bzip2 | /usr/bin/openssl smime -encrypt -aes256 -binary -outform DEM -out $PG_TEMP_DIR/$HOST_IP.$DB_TABLE_NAME.$1_$NOW.sql.bz2.ssl {{ db_server_data_dir }}/{{ db_server_backup_pub_key }}
-/usr/local/bin/aws s3 mv $PG_TEMP_DIR/$HOST_IP.$DB_TABLE_NAME.$1_$NOW.sql.bz2.ssl s3://bb-dbback-$PG_ENVIRONMENT/$1/
+/usr/bin/aws s3 mv $PG_TEMP_DIR/$HOST_IP.$DB_TABLE_NAME.$1_$NOW.sql.bz2.ssl s3://bb-dbback-$PG_ENVIRONMENT/$1/
 
 # Add cleanup process in case move failed
 ( "$PG_DATA_DIR/db_cleanup.sh" "$1" "db_backup" )
