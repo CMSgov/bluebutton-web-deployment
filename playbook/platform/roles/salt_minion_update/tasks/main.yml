@@ -36,6 +36,14 @@
     regexp: '^master:'
     line: 'master: 10.128.11.102'
 
+- name: "Comment out the id value"
+  become_user: root
+  become: yes
+  replace:
+    dest: "/etc/salt/minion.new"
+    regexp: '^id: '
+    replace: '#id: '
+
 # now copy the new file over the original
 - name: "Update the etc/salt/minion file with the new version"
   become_user: root
