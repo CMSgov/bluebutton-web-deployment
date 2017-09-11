@@ -36,6 +36,7 @@
   become_user: root
   become: yes
   shell: "semanage fcontext -a -t httpd_sys_content_t \"{{ cf_app_log_dir }}(/.*)?\" "
+  ignore_errors: yes
 
 
 #- name: "Create the error log"
