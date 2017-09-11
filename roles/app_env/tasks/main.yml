@@ -48,6 +48,7 @@
   become_user: root
   become: yes
   # Python3.6 replaces pyvenv-(ver) with python3.6 -m venv
+  # Installing {{ python_ver }}
   # shell: "cd /var/virtualenv ; /usr/local/bin/pyvenv-{{ python_ver }} hhs_o_server "
   shell: "cd /var/virtualenv ; /usr/local/bin/python{{ python_ver }} -m  venv {{ project_dir }} "
 
