@@ -33,15 +33,15 @@
     env: "dev"
     sub_zone: "app"
     # use extra-vars to define:
-    # local directory containing key and cert pair
-    src_cert_dir: ''
-    # target sub-dir under certstore/
-    # to avoid key conflicts
-    cert_sub_dir: ''
-    # source certificate.pem file - name will be retained on target
-    src_cert: ''
-    # source key.pem file - name will be retained on target
-    src_key: ''
+
+    # AppServer cert and key for communication with FHIR Server
+    # app_fhir_cert: "{{ env_app_fhir_cert }}"
+    # app_fhir_key: "{{ env_app_fhir_key }}"
+    # app_fhir_cert_subdir: "{{ env_app_fhir_cert_subdir }}"
+    # app_fhir_cert_name: "{{ env_app_fhir_cert_name }}"
+    # app_fhir_key_name: "{{ env_app_fhir_key_name }}"
+
+
 
   vars_files:
     - "./../../vars/common.yml"
@@ -63,30 +63,40 @@
       recurse: yes
       state: directory
 
-  - name: "copy cert({{ src_cert }}) to certstore [{{ cert_sub_dir }}]"
-    copy:
-      src: "{{ src_cert_dir }}/{{ src_cert }}"
-      dest: "{{ cf_app_pyapp_home }}/certstore/{{ cert_sub_dir }}/{{ src_cert }}"
-      mode: 0755
-      owner: "{{ cf_app_pyapps_user }}"
-      group: "{{ app_group }}"
-    when: "src_cert_dir != '' and src_cert != '' "
+#  - name: "copy cert({{ src_cert }}) to certstore [{{ app_fhir_cert_subdir }}]"
+#    copy:
+#      src: "{{ src_cert_dir }}/{{ src_cert }}"
+#      dest: "{{ cf_app_pyapp_home }}/certstore/{{ app_fhir_cert_subdir }}/{{ src_cert }}"
+#      mode: 0755
+#      owner: "{{ cf_app_pyapps_user }}"
+#      group: "{{ app_group }}"
+#    when: "src_cert_dir != '' and src_cert != '' "
 
-  - name: "copy key({{ src_key }}) to certstore [{{ cert_sub_dir }}]"
+  - name: "copy cert({{ app_fhir_cert_name }}) to certstore [{{ app_fhir_cert_subdir }}]"
     copy:
-      src: "{{ src_cert_dir }}/{{ src_key }}"
-      dest: "{{ cf_app_pyapp_home }}/certstore/{{ cert_sub_dir }}/{{ src_key }}"
+      content: "{{ app_fhir_cert }}"
+      dest: "{{ cf_app_pyapp_home }}/certstore/{{ app_fhir_cert_subdir }}/{{ app_fhir_cert_name }}"
       mode: 0755
       owner: "{{ cf_app_pyapps_user }}"
       group: "{{ app_group }}"
-    when: "src_cert_dir != '' and src_key != '' "
+    when: "app_fhir_cert_name != '' and app_fhir_cert != '' "
+
+
+  - name: "copy key({{ app_fhir_key_name }}) to certstore [{{ app_fhir_cert_subdir }}]"
+    copy:
+      content: "{{ app_fhir_key }}"
+      dest: "{{ cf_app_pyapp_home }}/certstore/{{ app_fhir_cert_subdir }}/{{ app_fhir_key_name }}"
+      mode: 0755
+      owner: "{{ cf_app_pyapps_user }}"
+      group: "{{ app_group }}"
+    when: "app_fhir_key_name != '' and app_fhir_key != '' "
 
 
 
     # mkdir -p /var/pyapps/certs/bb-sandbox
     #cd /
     #unzip /home/ec2-user/download/certs.zip
-    #cp /home/ec2-user/download/certs/* /var/pyapps/cets/bb-sandbox/
+    #cp /home/ec2-user/download/certs/* /var/pyapps/certs/bb-sandbox/
     #
     ##cp /root/ca/certs/ca.cert* /var/pyapps/certs/bb-sandbox/
     ##cp /root/ca/private/ca.key* /var/pyapps/certs/bb-sandbox/
