@@ -54,9 +54,9 @@
   tasks:
   - include: roles/create_certstore/tasks/main.yml
 
-  - name: "Add {{ cert_sub_dir }} to certstore"
+  - name: "Add {{ app_fhir_cert_subdir }} to certstore"
     file:
-      dest: "{{ cf_app_pyapp_home }}/certstore/{{ cert_sub_dir }}"
+      dest: "{{ cf_app_pyapp_home }}/certstore/{{ app_fhir_cert_subdir }}"
       mode: 0755
       owner: "{{ cf_app_pyapps_user }}"
       group: "{{ app_group }}"
