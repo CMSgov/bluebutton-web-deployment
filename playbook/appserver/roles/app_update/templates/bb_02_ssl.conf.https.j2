@@ -142,7 +142,8 @@ SSLCryptoDevice builtin
 
     WSGIProcessGroup sslapache
     WSGIScriptAlias / {{ cf_app_pyapp_home }}/hhs_oauth_server/hhs_oauth_server/wsgi.py
-
+    WSGIPassAuthorization on
+    
     # Directory specification needed to allow apache to load wsgi.py
     # Directory  to point to folder where wsgi.py stored
     <Directory {{ cf_app_pyapp_home }}/hhs_oauth_server/hhs_oauth_server>
