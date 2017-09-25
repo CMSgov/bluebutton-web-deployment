@@ -11,6 +11,15 @@
   become: yes
   command: "cp -f /etc/ssh/sshd_config /etc/ssh_sshd_config.tmp"
 
+# On mgmt machine connect as ec2-user and run following commands:
+# cd ~/.ssh
+# ssh-keygen -t rsa -b 4096 -C "ansible-control-host"
+# press enter to bypass passphrase entry
+# press enter to bypass confirm passphrase entry
+# ssh-keygen -t ecdsa -b 521 -C "ansible-control-host"
+# press enter to bypass passphrase entry
+# press enter to bypass confirm passphrase entry
+
 - name: push new rsa keys to ec2-user on remote
   become_user: root
   become: yes
