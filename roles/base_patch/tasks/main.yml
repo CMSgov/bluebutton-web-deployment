@@ -20,9 +20,10 @@
 - name: "upgrade all packages"
   become_user: root
   become: yes
-  yum:
-    name: "*"
-    state: latest
+#  yum:
+#    name: "*"
+#    state: latest
+  shell: yum upgrade --skip-broken
 
 - name: "check sshd config"
   become_user: root
