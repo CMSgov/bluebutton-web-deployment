@@ -23,7 +23,7 @@
 #  yum:
 #    name: "*"
 #    state: latest
-  shell: yum upgrade --skip-broken
+  shell: yum upgrade -y  --skip-broken
 
 - name: "check sshd config"
   become_user: root
