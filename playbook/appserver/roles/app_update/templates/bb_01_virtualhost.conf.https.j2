@@ -1,13 +1,13 @@
-######################################################
-# virtualhost.conf
+###############################################################################
+# bb_01_virtualhost.conf
 # copied from hhs_ansible
-# playbook/appserver/roles/app_update/templates/virtualhost.conf.https.j2
+# playbook/appserver/roles/app_update/templates/bb_01_virtualhost.conf.https.j2
 # SSL is ON. ie. https protocol used.
-######################################################
+###############################################################################
 
-# Copied to /etc/httpd/virtualhost/server.conf
+# Copied to /etc/httpd/conf.d/bb_01_virtualhost.conf
 # Configured for Apache 2.4
-# From /hhs_ansible/hhs_ansible/roles/apache/templates/virtualhost_server_conf.j2
+
 WSGISocketPrefix /var/run/modwsgi
 
 WSGIApplicationGroup %{GLOBAL}

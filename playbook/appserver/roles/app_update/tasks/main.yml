@@ -245,21 +245,3 @@
 ## Add the create variable files here before running Migrate and Collectstatic
 ## Break Migrate and collectstatic out to separate role: django_prep
 #####
-
-- name: setup log rotation for pyapps logs
-  become_user: root
-  become: yes
-  copy:
-    dest: "/etc/logrotate.d/pyapps"
-    content: |
-      /var/log/pyapps/*.log {
-      missingok
-      notifempty
-      compress
-      size 20k
-      daily
-      create 0600 root root
-      }
-    owner: root
-    group: root
-    mode: 0600
