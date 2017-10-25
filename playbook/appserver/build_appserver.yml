@@ -88,6 +88,8 @@
     - roles/swagger_ui_install
     # Update application code and write virtualhosts file
     - roles/app_update
+    # Setup logrotate rules for pyapps
+    - roles/log_rotate
     # Update environment variable files
     - roles/app_update_env
     # django migrate and collectstatic

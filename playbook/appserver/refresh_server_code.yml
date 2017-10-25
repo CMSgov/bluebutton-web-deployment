@@ -51,6 +51,8 @@
     - roles/app_update
     # Update environment variable files
     - roles/app_update_env
+    # setup logrotate for pyapps
+    - roles/log_rotate
     # django migrate and collectstatic
     - roles/django_prep
     # Set permissions for app under selinux

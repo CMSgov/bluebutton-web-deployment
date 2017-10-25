@@ -1,6 +1,7 @@
 ---
 # File: playbook/appserver/roles/app_env/tasks/main.yml
 # Created: 5/10/17
+# last modified: 10/25/17
 # Author: '@ekivemark'
 # Create the application environment
 
@@ -199,6 +200,8 @@
   with_items:
     - bb_01_virtualhost.conf
     - bb_02_ssl.conf
+    - ssl.conf
+    # ssl.conf is an empty file to avoid yum update re-installing ssl.conf
 
 # change ownership of files
 - name: "Update file ownership"
@@ -242,4 +245,3 @@
 ## Add the create variable files here before running Migrate and Collectstatic
 ## Break Migrate and collectstatic out to separate role: django_prep
 #####
-
