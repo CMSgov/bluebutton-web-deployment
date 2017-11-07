@@ -11,7 +11,7 @@
     state: directory
     recurse: yes
     owner: root
-    group: root
+    group: logreader
     mode: "0600"
 
 - name: "touch logfile"
@@ -19,7 +19,7 @@
     dest: "/var/ansible/log/ansible.log"
     state: touch
     owner: root
-    group: root
+    group: logreader
     mode: "0640"
 
 
