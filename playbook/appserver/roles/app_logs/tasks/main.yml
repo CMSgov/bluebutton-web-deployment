@@ -23,7 +23,7 @@
   file:
     dest: "{{ cf_app_log_dir }}/{{ item }}"
     owner: "{{ cf_app_pyapps_user }}"
-    group: "{{ cf_app_pyapps_user }}"
+    group: logreader
     state: touch
     mode: 0776
   with_items:
