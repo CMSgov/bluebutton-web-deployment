@@ -296,8 +296,9 @@ sns_access_key_id: "{{ env_sns_access_key_id }}"
 sns_secret_access_key: "{{ env_sns_secret_access_key }}"
 
 # Swagger ui parent directory
-swagger_ui_parent_dir: "/var/www/doc/swagger"
-swagger_ui_repo_source: "https://github.com/alimate/swagger-ui.git"
+swagger_ui_parent_dir: "/var/www/doc/swagger-3-4-2"
+# swagger_ui_repo_source: "https://github.com/alimate/swagger-ui.git"
+swagger_ui_repo_source: "https://github.com/swagger-api/swagger-ui.git"
 swagger_apidocs_location: "{{ install_root }}{{ common_project_name }}/apidocs"
 swagger_external_path: "/devdocs_bbonfhirapi/"
 swagger_docs_file: "bbonfhir_swagger.yaml"

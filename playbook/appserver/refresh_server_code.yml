@@ -55,6 +55,8 @@
     - roles/log_rotate
     # django migrate and collectstatic
     - roles/django_prep
+    # install swagger-ui from git
+    - roles/swagger_ui_install
     # Set permissions for app under selinux
     - roles/semanage_apps
     # Set permissions for virtualenv under selinux
