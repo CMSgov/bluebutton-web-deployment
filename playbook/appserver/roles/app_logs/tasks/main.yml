@@ -30,6 +30,7 @@
     - debug.log
     - error.log
     - info.log
+    - perf_mon.log
 
 
 - name: "Set permissions for SELinux"
