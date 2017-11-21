@@ -69,6 +69,16 @@
     group: "{{ app_group }}"
     mode: 0755
 
+- name: "set python in virtualenv to {{ python_ver }}"
+  become_user: root
+  become: yes
+  file:
+    src: "/var/virtualenv/{{ project_dir }}/bin/{{ item.source }}"
+    dest: "/var/virtualenv/{{ project_dir }}/bin/{{ item.dest }}"
+    state: link
+  with items:
+    - { source: "python{{ python_ver }}", dest: "python" }
+    - { source: "python{{ python_ver }}", dest: "python3" }
 
 - name: "Set ownership to pyapps:apache"
   become_user: root
