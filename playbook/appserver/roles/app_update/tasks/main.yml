@@ -73,12 +73,12 @@
   become_user: root
   become: yes
   file:
-    src: "/var/virtualenv/{{ project_dir }}/bin/{{ item.source }}"
-    dest: "/var/virtualenv/{{ project_dir }}/bin/{{ item.dest }}"
+    src: "/var/virtualenv/{{ project_dir }}/bin/python{{ python_ver }}"
+    dest: "/var/virtualenv/{{ project_dir }}/bin/{{ item }}"
     state: link
   with items:
-    - { source: "python{{ python_ver }}", dest: "python" }
-    - { source: "python{{ python_ver }}", dest: "python3" }
+    - python
+    - python3
 
 - name: "Set ownership to pyapps:apache"
   become_user: root
