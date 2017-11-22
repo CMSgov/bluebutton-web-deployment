@@ -20,7 +20,7 @@
   pip:
     name: "{{ item }}"
     umask: 0022
-    extra_args: "-- upgrade -i https://pypi.org/simple/ "
+    extra_args: "-- upgrade {{ pip_extra_args }} "
   with_items:
     - pip
     - awscli
