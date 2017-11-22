@@ -36,6 +36,25 @@ the Appserver playbook has many of the necessary elements. They will be copied
 in to this playbook as the modules are defined.
 
 
+Fixes to apply:
+
+When changing versions of Python if installed from source go to source 
+directory. run: 
+
+    make clean
+    make uninstall
+    make -n install
+    
+Then go to mod_wsgi source:
+
+    make clean
+    .configure \
+    --with-python=/usr/local/bin/python{{ python_ver }} \
+    --with-apxs=/usr/bin/apxs 
+
+    make
+    make install
+    
 
 
 
