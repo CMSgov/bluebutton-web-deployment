@@ -12,7 +12,10 @@ Postgres database instance to Postgres running in AWS RDS.
 * Connect to the APPServer via SSH
 * sudo /bin/bash
 * Check version of postgres client utilities
-    - psql --version
+    
+        
+    psql --version
+    
 * upgrade postgres client tools to 9.6 to match server
 
     
@@ -78,7 +81,8 @@ Gather information for the script from:
 
     /root/migration/dump_n_restore.sh
     
-* update the hhs_ansible var/env.yml and env/vault.yml files with thesettings used to connect to the RDS instance.
+* update the hhs_ansible var/env.yml and env/vault.yml files with the settings 
+used to connect to the RDS instance.
 * run the ansible refresh_code script to update the appserver with new settings.
 
 

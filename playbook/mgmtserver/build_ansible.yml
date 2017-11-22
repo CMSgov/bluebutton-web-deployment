@@ -47,10 +47,6 @@
     - root_cert
     - letsencrypt_mgmt_certstore
 
-  roles:
-    - ../../roles/splunk
-    - ../appserver/roles/app_tools
-
   tasks:
   - debug:
       msg: "Environment = {{ env }}, Target = {{ build_target }}"
