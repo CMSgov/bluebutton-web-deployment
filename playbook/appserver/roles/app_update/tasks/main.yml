@@ -156,9 +156,9 @@
     export PATH={{ cf_app_py_virtual_env }}/bin:$PATH
     {{ cf_app_py_virtual_env }}/bin/pip{{ python_ver }} {{ item }}
   with_items:
-    - install --upgrade pip
-    - install psycopg2
-    - install -r {{ cf_app_pyapp_home }}/{{ common_project_name }}/requirements/requirements.txt
+    - "install --upgrade pip {{ pip_extra_args }} "
+    - "install psycopg2 {{ pip_extra_args }} "
+    - "install -r {{ cf_app_pyapp_home }}/{{ common_project_name }}/requirements/requirements.txt {{ pip_extra_args }} "
 
 # Relative reference from playbook/appserver
 - include: ./../appserver/roles/create_certstore/tasks/main.yml
@@ -231,6 +231,7 @@
 #  pip:
 #    requirements: "{{ install_root }}/{{ project_name }}/requirements/requirements.txt"
 #    virtualenv: "{{ venv }}"
+#    extra_args: " {{ pip_extra_args }} "
 
 # Change ownership for libraries
 - name: "Change ownership for libraries"

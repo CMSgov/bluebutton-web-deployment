@@ -28,7 +28,31 @@ Features to include:
 
 - Take Snapshot of operational server
 - Clone from Snapshot and add to fleet
+- improved ability to allocate servers across zones
+- improved ability to increment launch version and include in name
 
+FIXES:
+
+- Newer RHEL 7.4 images appear to have enabled FIPS 140-2 encryption. 
+This disables MD5 checksums which is used by ALL python packages.
+We therefore need to update ALL pip commands to add the following parameter:
+
+
+    -i https://pypi.org/simple/
+
+The above parameter will have to be added using the following change to 
+ansible:
+
+
+    extra_args: "-i https://pypi.org/simple/"
+ 
+This is best performed using a variable to allow consistent implementation
+across all commands. 
+
+eg. pip_extra_args added to all_var.yml
+
+
+    extra_args: "{{ pip_extra_args }}"    
  
 Approach:
 
