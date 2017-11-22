@@ -44,7 +44,7 @@
   become: yes
   pip:
     name: pip
-    extra_args: --upgrade
+    extra_args: " --upgrade {{ pip_extra_args }} "
 
 - name: "install newer version of awscli - needed for elbv2"
   become_user: root
@@ -52,5 +52,5 @@
   pip:
     name: awscli
     state: latest
-    extra_args: --upgrade
+    extra_args: " --upgrade {{ pip_extra_args }} "
 
