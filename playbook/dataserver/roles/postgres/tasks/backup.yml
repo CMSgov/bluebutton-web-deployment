@@ -2,6 +2,15 @@
 # File: backup.yml 
 # Created: 5/7/17
 # Author: '@ekivemark'
+# download cleanup routines
+# Add monthly backup to db_backup cron jobs
+# Add Yearly backup to db_backup cron jobs
+# Added cleanup routines to run daily at
+# hourly - 1:30am
+# daily - 2:30am
+# weekly - 3:30am
+# monthly - 4:30am
+# yearly - 5:30am
 
 - name: "setup Backup script"
   become_user: root
@@ -13,11 +22,23 @@
     group: "{{ db_server_account }}"
     mode: "0755"
 
+- name: "setup Cleanup script"
+  become_user: root
+  become: yes
+  template:
+    src: "../templates/db_cleanup.sh.j2"
+    dest: "{{ db_server_data_dir }}/db_cleanup.sh"
+    owner: "{{ db_server_account }}"
+    group: "{{ db_server_account }}"
+    mode: "0755"
+
 - name: "Setup Postgres Backup"
   become_user: root
   become: yes
   copy:
-    src: "../files/{{ db_server_backup_pub_key }}"
+    # src: "../files/{{ db_server_backup_pub_key }}"
+    # Switch to using vault content for better key synchronization
+    content: "{{ vault_env_db_backup_public_key_current }}"
     dest: "{{ db_server_data_dir }}/{{ db_server_backup_pub_key }}"
     owner: "{{ db_server_account }}"
     group: "{{ db_server_account }}"
@@ -63,6 +84,79 @@
     group: root
     dest: "/root/cron.txt"
     line: "@weekly /bin/sh {{ db_server_data_dir }}/db_backup.sh weekly "
+
+- name: "Add monthly job"
+  become_user: root
+  become: yes
+  lineinfile:
+    owner: root
+    group: root
+    dest: "/root/cron.txt"
+    line: "@monthly /bin/sh {{ db_server_data_dir }}/db_backup.sh monthly "
+
+- name: "Add yearly job"
+  become_user: root
+  become: yes
+  lineinfile:
+    owner: root
+    group: root
+    dest: "/root/cron.txt"
+    line: "@yearly /bin/sh {{ db_server_data_dir }}/db_backup.sh yearly "
+
+
+- name: "Add cleanup backups to S3 Cron jobs"
+  become_user: root
+  become: yes
+  lineinfile:
+    owner: root
+    group: root
+    dest: "/root/cron.txt"
+    line: "# S3 db backup cleanup"
+
+- name: "Add daily cleanup jobs - hourly files at 1:30am"
+  become_user: root
+  become: yes
+  lineinfile:
+    owner: root
+    group: root
+    dest: "/root/cron.txt"
+    line: "30 1 * * * /bin/sh {{ db_server_data_dir }}/db_cleanup.sh hourly "
+
+- name: "Add daily cleanup jobs - daily files at 2:30am"
+  become_user: root
+  become: yes
+  lineinfile:
+    owner: root
+    group: root
+    dest: "/root/cron.txt"
+    line: "30 2 * * * /bin/sh {{ db_server_data_dir }}/db_cleanup.sh daily "
+
+- name: "Add daily cleanup jobs - weekly files at 3:30am"
+  become_user: root
+  become: yes
+  lineinfile:
+    owner: root
+    group: root
+    dest: "/root/cron.txt"
+    line: "30 3 * * * /bin/sh {{ db_server_data_dir }}/db_cleanup.sh weekly "
+
+- name: "Add daily cleanup jobs - monthly files at 4:30am"
+  become_user: root
+  become: yes
+  lineinfile:
+    owner: root
+    group: root
+    dest: "/root/cron.txt"
+    line: "30 4 * * * /bin/sh {{ db_server_data_dir }}/db_cleanup.sh monthly "
+
+- name: "Add daily cleanup jobs - yearly files at 5:30am"
+  become_user: root
+  become: yes
+  lineinfile:
+    owner: root
+    group: root
+    dest: "/root/cron.txt"
+    line: "30 5 * * * /bin/sh {{ db_server_data_dir }}/db_cleanup.sh yearly "
 
 
 - name: "Check if cron source file exists"

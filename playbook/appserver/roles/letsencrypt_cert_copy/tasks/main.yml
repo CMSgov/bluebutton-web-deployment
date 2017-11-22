@@ -1,0 +1,39 @@
+---
+# File: playbook/appserver/roles/lestencrypt_cert_copy/tasks/main.yml
+# Created: 6/26/17
+# Author: '@ekivemark'
+
+# Use acme.sh to copy certs into place
+
+- name: "get last octet of ip address"
+  shell: "export last_ip_octet=$(/usr/sbin/ip route get 8.8.8.8 | /usr/bin/awk -F. '{print $NF;exit}') ; echo $last_ip_octet "
+  register: app_ip_last_octet
+
+- name: "octet number"
+  debug:
+    msg: "app_ip_last_octet ={{ app_ip_last_octet.stdout }}"
+
+- name: "Copy apache certs into cert_store"
+  become_user: root
+  become: yes
+  shell:  |
+    /root/letsencrypt/acme.sh --install-cert -d {{ cf_app_tag_key_layer|lower }}{{ app_ip_last_octet.stdout }}.{{ external_dns_name }} \
+         --cert-file      {{ apache_cert_store }}/cert.pem  \
+         --key-file       {{ apache_cert_store }}/key.pem  \
+         --fullchain-file {{ apache_cert_store }}/fullchain.pem \
+         --reloadcmd     "service httpd force-reload"
+
+- name: "Fetch copy of certs to Mgmt Server"
+  become_user: root
+  become: yes
+  fetch:
+    src: "{{ apache_cert_store }}/{{ item }}"
+    dest: "/root/certstore/{{ env }}/{{ cf_app_tag_key_layer|lower }}{{ app_ip_last_octet.stdout }}.{{ external_dns_name }}/{{ apache_cert_store }}/{{ item }}"
+    flat: yes
+    fail_on_missing: no
+  with_items:
+    - "cert.pem"
+    - "key.pem"
+    - "fullchain.pem"
+
+

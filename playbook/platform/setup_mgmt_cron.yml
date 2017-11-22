@@ -1,0 +1,95 @@
+---
+# File: playbook/platform/setup_mgmt_cron.yml
+# Created: 6/27/17
+# Author: '@ekivemark'
+
+# Setup cron jobs
+
+# add crontab entry
+- name: "setup Environment cron jobs"
+  hosts: "localhost"
+  remote_user: ec2-user
+  become_user: root
+  become: yes
+  gather_facts: True
+  vars:
+    ansible_ssh_pipelining: no
+    env: "dev"
+    env_cf_app_version: "01"
+
+  vars_files:
+    - "./../../vars/common.yml"
+    - "./../../vault/env/{{ env }}/vault.yml"
+    - "./../../vars/env/{{ env }}/env.yml"
+    - "./../../vars/all_var.yml"
+
+  tasks:
+  # Create a folder for scripts under /root
+  - name: "create /root/cron_script"
+    become_user: root
+    become: yes
+    file:
+      dest: "/root/cron_script"
+      state: directory
+      recurse: yes
+      owner: root
+      group: root
+      mode: "0660"
+
+  - name: "create yum update script"
+    become_user: root
+    become: yes
+    copy:
+      dest: "/root/cron_script/yum_update_all.sh"
+      content:  |
+        #!/bin/bash
+        LOG_PATH=/var/ansible/log/ansible.log
+        NOW=$(date +"%Y%m%d_%H%M%S")
+        echo "yum update:started $NOW playbook/platform/yum_update.yml env={{ env }} build_target=all ">>$LOG_PATH
+        cd /hhs_ansible/hhs_ansible
+        /usr/bin/ansible-playbook playbook/platform/yum_update.yml  \
+             --vault-password-file /root/.ansible-vault/vault_pass.txt \
+             --private-key /root/.ec2/cms_bluebutton_fe_dev.pem \
+             --extra-vars 'env={{ env }} build_target=all '
+        NOW_ENDED=$(date +"%Y%m%d_%H%M%S")
+        echo "yum update:ended $NOW_ENDED playbook/platform/yum_update.yml env={{ env }} build_target=all ">>$LOG_PATH
+      owner: root
+      group: root
+      mode: "0760"
+
+  - name: "Setup Cron for mgmtserver actions - get current cron jobs"
+    become_user: root
+    become: yes
+    shell: "cat /etc/crontab >/root/cron.txt "
+
+  - name: "Add mgmtserver Cron jobs"
+    become_user: root
+    become: yes
+    lineinfile:
+      owner: root
+      group: root
+      dest: "/root/cron.txt"
+      line: "# Ansible MGMTServer"
+
+  # DAILY YUM UPDATES
+  - name: "Run yum updates"
+    become_user: root
+    become: yes
+    lineinfile:
+      owner: root
+      group: root
+      dest: "/root/cron.txt"
+      line: "25 22 * * *   /root/cron_script/yum_update_all.sh"
+
+  - name: "Check if cron source file exists"
+    become_user: root
+    become: yes
+    stat:
+      path: "/root/cron.txt"
+    register: cron_file
+
+  - name: "Copy crontab if exists"
+    become_user: root
+    become: yes
+    shell: "crontab /root/cron.txt"
+    when: cron_file.stat.exists is defined and cron_file.stat.exists

@@ -9,36 +9,72 @@
 - name: Django migrate
   become_user: root
   become: yes
+  # We only want to run migration on one server in the fleet
+  run_once: yes
   django_manage:
     command: migrate
     app_path: "{{ install_root }}/{{ project_name }}/"
     virtualenv: "{{ venv }}"
-  when: (migrate == 'yes')
+  when: ( migrate is defined ) and ( migrate == 'yes' )
 
 - name: "Add Group roles to database"
   become_user: root
   become: yes
+  run_once: yes
   django_manage:
     command: loaddata apps/accounts/fixtures/groups.json
     app_path: "{{ install_root }}/{{ project_name }}/"
     virtualenv: "{{ venv }}"
-  when: ( add_groups == 'yes' )
+  when: ( add_groups is defined ) and ( add_groups|lower == 'yes' )
 
-- name: "Add Scopes to database"
+#- name: "Add Scopes to database"
+#  become_user: root
+#  become: yes
+#  run_once: yes
+#  django_manage:
+#    command: loaddata apps/accounts/fixtures/scopes.json
+#    app_path: "{{ install_root }}/{{ project_name }}/"
+#    virtualenv: "{{ venv }}"
+#  when: ( add_scopes is defined ) and ( add_scopes|lower == 'yes' )
+
+
+############################################################
+#
+# If you re-run the create_blue_button_scopes command
+# first go into the admin console and remove the scopes
+# this will create: Patient, ExplanationOfBenefit, Coverage
+#
+############################################################
+
+- name: "MGMT Command to Add BlueButton Scopes to database"
   become_user: root
   become: yes
+  run_once: yes
   django_manage:
-    command: loaddata apps/accounts/fixtures/scopes.json
+    command:  create_blue_button_scopes
     app_path: "{{ install_root }}/{{ project_name }}/"
     virtualenv: "{{ venv }}"
-  when: ( add_scopes == 'yes' )
+  when: ( add_scopes is defined ) and ( add_scopes|lower == 'yes' )
+
+
+- name: "Load ResourceRouter and SupportedResourceType tables"
+  become_user: root
+  become: yes
+  run_once: yes
+  django_manage:
+    command: "loaddata apps/fhir/server/fixtures/{{ env|lower }}_install_fixture.json"
+    app_path: "{{ install_root }}/{{ project_name }}/"
+    virtualenv: "{{ venv }}"
+  when: ( add_back_end_resources is defined ) and ( add_back_end_resources == 'yes' )
 
 - name: Django collectstatic
   become_user: root
   become: yes
+  run_once: yes
   django_manage:
     command: collectstatic
     app_path: "{{ install_root }}/{{ project_name }}/"
     virtualenv: "{{ venv }}"
-  when: (collectstatic == 'yes')
+  when: ( collectstatic is undefined ) or
+        (( collectstatic is defined ) and ( collectstatic|lower == 'yes' ))
 

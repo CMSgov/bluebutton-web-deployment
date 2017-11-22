@@ -22,7 +22,7 @@
 # use all_var variables in scripts.
 
 - name: Provision Database
-  hosts: "{{ build_target }}"
+  hosts: "{{ build_target | default('dbservers') }}"
   # connection: local
   remote_user: ec2-user
   become_user: root
@@ -33,7 +33,8 @@
     azone: "az1"
     env_az: "{{ env }}-{{ azone }}"
     env_cf_data_version: "20"
-    splunk_client_name: "BBAPI-{{ env|upper }}-DATA"
+    # splunk_target_layer: "WEB | APP | DATA | MGMT"
+    splunk_target_layer: "DATA"
     ansible_ssh_pipelining: no
     # set db_init to 'YES' to run database initialization
     db_init: "YES"
@@ -42,12 +43,18 @@
     - "./../../vault/env/{{ env }}/vault.yml"
     - "./../../vars/env/{{ env }}/env.yml"
     - "./../../vars/all_var.yml"
+    # Load certificate values
+    # ca_commonname is empty - this needs to be set to server name
+    - "./../../vars/env/{{ env }}/ca_env.yml"
 
   roles:
+    # get 6 or 7 returned for use when installing version specific packages
+    - ../../roles/check_rhel_version
     - ../../roles/splunk
     # moved add_external_vol to its own playbook - attach_data_volume.yml
     # - ../../roles/add_external_vol
     - ./roles/postgres
+    - install_certs
 
   tasks:
   - include: ./set_backup_tasks.yml

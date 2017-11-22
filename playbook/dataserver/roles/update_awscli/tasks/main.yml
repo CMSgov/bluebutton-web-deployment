@@ -1,0 +1,28 @@
+---
+# File: playbook/datasever/roles/update_awscli/tasks/main.yml
+# Created: 8/28/17
+# Author: '@ekivemark'
+
+# update pip and awscli
+# needs latest version of awscli for copy with fips enabled.
+
+
+- name: "Install pip via yum"
+  become_user: root
+  become: yes
+  yum:
+    name: "python-pip"
+    state: present
+
+- name: "upgrade pip and awscli with -i option"
+  become_user: root
+  become: yes
+  pip:
+    name: "{{ item }}"
+    umask: 0022
+    extra_args: "-- upgrade -i https://pypi.org/simple/ "
+  with_items:
+    - pip
+    - awscli
+
+

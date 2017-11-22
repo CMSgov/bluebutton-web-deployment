@@ -19,6 +19,7 @@
 - name: "Check for ssl.conf"
   debug:
     msg: "ssl.conf exists - {{ httpd_ssl_stat.stat.exists }}"
+    verbosity: 3
 
 - name: "Move ssl.conf to ssl.conf.disabled"
   become_user: root

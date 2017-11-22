@@ -23,7 +23,7 @@
 
 - name: Build App Server
   # hosts: appservers
-  hosts: "{{ build_target }}"
+  hosts: "{{ build_target | default('appservers') }}"
   # connection: local
   remote_user: ec2-user
   # become_user: root
@@ -37,9 +37,15 @@
     sg_zone: "appserver"
     env_az: "{{ env }}-{{ azone }}"
     env_cf_app_version: "01"
-    splunk_client_name: "BBAPI-{{ env|upper }}-{{ sub_zone|upper }}"
+    # splunk_target_layer: "WEB | APP | DATA | MGMT"
+    splunk_target_layer: "{{ sub_zone|upper }}"
     migrate: "yes"
     collectstatic: "yes"
+    # Setting the playbook value for SNS Notifications
+    sns_playbook: "playbook/appserver/build_appserver.yml"
+    sns_subject: "rebuild appserver"
+    sns_playbook_action: "rebuild"
+    sns_debug: false
   vars_files:
     - "./../../vars/common.yml"
     - "./../../vault/env/{{ env }}/vault.yml"
@@ -70,8 +76,20 @@
     - roles/mod_wsgi
     # Check engine light
     - ../../roles/check_env
+    # Create apache cert_store
+    - roles/create_apache_cert_store
+    # Setup Lets encrypt
+    - roles/letsencrypt_install
+    # Run Letsencrypt
+    - roles/letsencrypt_run_1
+    # install the certs
+    - roles/letsencrypt_cert_copy
+    # install swagger-ui from git
+    - roles/swagger_ui_install
     # Update application code and write virtualhosts file
     - roles/app_update
+    # Setup logrotate rules for pyapps
+    - roles/log_rotate
     # Update environment variable files
     - roles/app_update_env
     # django migrate and collectstatic
@@ -84,8 +102,8 @@
 
   tasks:
   - include: ../../roles/base_patch/tasks/fix_sudoers.yml
-  # Switch default ssl.conf off
-  - include: roles/apache/tasks/ssl_off.yml
+  ## Switch default ssl.conf off
+  # - include: roles/apache/tasks/ssl_off.yml
   - include: ../../roles/base_patch/tasks/update_packages.yml
   - include: roles/create_superuser/tasks/main.yml
   # - include: ../../roles/app_env/tasks/refresh_app.yml
@@ -111,6 +129,9 @@
 
   - name: "Add in to Load Balancer"
     include: roles/attach_to_elb/tasks/main.yml
+
+  - name: "Notify completion result"
+    include: "../../roles/send_notification/tasks/main.yml"
 
   handlers:
   - name: restart apache

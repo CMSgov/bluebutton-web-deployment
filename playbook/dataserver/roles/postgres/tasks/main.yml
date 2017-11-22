@@ -39,6 +39,7 @@
     - rhel-server-rhscl-6-rpms
     - rhel-6-server-optional-rpms
   register: yum_config
+  when: rhel_version == "6"
 
 #- name: "Update yum config-manager for optional RHEL channel"
 #  become_user: root
@@ -49,16 +50,16 @@
   pause: seconds=90
   when: yum_config|changed
 
-- name: "Add Postgres YUM repository for RHEL 6"
+- name: "Add Postgres YUM repository for RHEL {{ rhel_version }}"
   become_user: root
   become: yes
   yum:
     name: "{{ item }}"
     state: installed
   with_items:
-    - https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-6-x86_64/pgdg-redhat96-9.6-3.noarch.rpm
+    - https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-{{ rhel_version }}-x86_64/pgdg-redhat96-9.6-3.noarch.rpm
 
-- name: "Download Postgres96 and supporting components for RHEL 6"
+- name: "Download Postgres96 and supporting components for RHEL {{ rhel_version }}"
   become_user: root
   become: yes
   yum:
@@ -68,8 +69,8 @@
     - postgresql96
     - postgresql96-server
     - postgresql96-contrib
-    - http://mirror.centos.org/centos/6/os/x86_64/Packages/libffi-devel-3.0.5-3.2.el6.x86_64.rpm
-
+    - libffi-devel
+#     - http://mirror.centos.org/centos/6/os/x86_64/Packages/libffi-devel-3.0.5-3.2.el6.x86_64.rpm
 
 #- name: "Add Postgres YUM repository for RHEL 7"
 #  become_user: root
@@ -168,6 +169,41 @@
     state: directory
     recurse: yes
 
+- name: "Check data dir ({{ db_server_data_dir }}) is empty"
+  become_user: root
+  become: yes
+  find:
+    paths: "{{ db_server_data_dir }}"
+  register: dir_files
+
+- name: "result of directory content check - {{ dir_files.matched }}"
+  debug:
+    msg: "{{ db_server_data_dir }} contains {{ dir_files.matched }} postgres files."
+
+- name: "Initialize Database Service under RHEL V{{ rhel_version }} in {{ db_server_data_dir }}"
+  become_user: "{{ db_server_account }}"
+  become: yes
+  shell: |
+    export PGDATA={{ db_server_data_dir }}
+    /usr/pgsql-9.6//bin/pg_ctl -D {{ db_server_data_dir }} initdb
+  when: dir_files.matched == 0
+  register: postgres_init_result
+
+
+- name: display init result
+  debug:
+    msg: "Init result - {{ postgres_init_result }}"
+
+##########################
+# setup postgresql.conf
+# setup pg_hba.conf
+##########################
+- name: "re-write postgresql.conf"
+  include: "./roles/update_postgres_conf/tasks/main.yml"
+
+- name: "re-write pg_hba.conf"
+  include: "./roles/update_pg_hba/tasks/main.yml"
+
 # Startup script: /etc/init.d/postgresql-9.6
 # Default data location: /var/lib/postgresql/[version]/data/
 - name: "Change default PGDATA variable in startup script"
@@ -177,18 +213,26 @@
     dest: "/etc/init.d/postgresql-9.6"
     regexp: "^PGDATA="
     line: "PGDATA={{ db_server_data_dir }}"
+  when: rhel_version == "6"
 
-- name: "Initialize Database Service"
+- name: "Change default PGDATA variable in systemd startup -  "
   become_user: root
   become: yes
-  shell: "service postgresql-9.6 initdb"
+  template:
+    src: ../templates/postgresql-9.6.service.j2
+    dest: /etc/systemd/system/postgresql-9.6.service
+    owner: root
+    group: root
+    mode: 0644
+  when: rhel_version == "7"
+
 #  service:
 #    name: postgresql-9.6
 #    state: started
 #    args: initdb
 #  register: postgres_init_result
 
-- name: "Set database to start on OS Boot"
+- name: "Set database to start on OS Boot ({{ rhel_version }})"
   become_user: root
   become: yes
   service:
@@ -196,19 +240,39 @@
     enabled: yes
   with_items:
     - postgresql-9.6
+  when: rhel_version == "6"
+
+- name: "set database to start on OS boot (RHEL {{ rhel_version }})"
+  become_user: root
+  become: yes
+  shell:  |
+    systemctl enable postgresql-9.6
+  when: rhel_version == "7"
+
+## Add in the certs
+- name: "install certs on dataserver"
+  copy:
+    src: "/root/ca/{{ item }}"
+    dest: "/data/pgsql/9.6/data/{{ item }}"
+    owner: "{{ db_server_account }}"
+    group: "{{ db_server_account }}"
+    mode: "0600"
+  with_items:
+    - "{{ ca_key }}"
+    - "{{ ca_cert }}"
+
+# End of install_certs
 
 
-##########################
-# setup postgresql.conf
-# setup pg_hba.conf
-##########################
-# Switch from default port 5432.
-# - name: "Setup Database configuration"
-# replace line in replacements with a template copy
-- include: ../../update_postgres_conf/tasks/main.yml
-
-# replace line in replacements with a template copy
-- include: ../../update_pg_hba/tasks/main.yml
+- name: "start database on RHEL {{ rhel_version }}"
+  become_user: "{{ db_server_account}}"
+  become: yes
+  shell: |
+    export PGDATA={{db_server_data_dir }}
+    cd $PGDATA
+    /usr/pgsql-9.6/bin/pg_ctl -D {{ db_server_data_dir }} -l logfile start
+  when: rhel_version == "7"
+  register: postgres_7_start_result
 
 - name: "Start Database"
   become_user: root
@@ -216,6 +280,7 @@
   service:
     name: postgresql-9.6
     state: started
+  when: rhel_version == "6"
   register: postgres_start_result
 
 - name: "Create db init sql script"
@@ -229,7 +294,7 @@
     group: "{{ db_server_account }}"
     mode: "u+rwx"
 
-- name: "Run db init sql script - set db_init=YES to run script"
+- name: "Run Django db init sql script - set db_init=YES to run script"
   become_user: "{{ db_server_account}}"
   become: yes
   shell: "psql -p {{ db_host_port }} -f {{ db_server_data_dir }}/django_init.sql"

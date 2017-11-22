@@ -4,7 +4,7 @@
 # Author: @ekivemark
 
 - name: Provision FIPS 140.2 Server
-  hosts: dbservers
+  hosts: "{{ build_target | default('dbservers') }}"
   # connection: smart
   gather_facts: False
   user: ec2-user
@@ -13,10 +13,12 @@
   # become_method: sudo
   vars:
     env: "dev"
-    azone: "az1"
+    azone: "az2"
     env_az: "{{ env }}-{{ azone }}"
     env_cf_data_version: "20"
-    splunk_client_name: "BBAPI-{{ env }}-DATA"
+    # splunk_target_layer: "WEB | APP | DATA | MGMT"
+    splunk_target_layer: "DATA"
+    # SSL Cert and Key file names
 
   vars_files:
     - "./../../vars/common.yml"
@@ -25,6 +27,7 @@
     - "./../../vars/all_var.yml"
 
   roles:
+    - ../../roles/base_patch/tasks/selinux_mode.yml
     - ../../roles/base_patch
     - ../../roles/fips140
     - ../../roles/splunk

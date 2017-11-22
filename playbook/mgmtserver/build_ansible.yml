@@ -6,19 +6,29 @@
 # take a new server in the mgmt zone and setup to use ansible
 # provide extra-vars 'env=[environment] build_target=[server_ip_address]'
 
+# CURRENT: EAST-RH 7-3 Gold Image V.1.13 (HVM) 07-19-17 - ami-10bdab06
+# Type: m3.medium
+# Subnet: Mgmt Zone AZ2
+# PROD Volume Size: 100GB
+
 - name: "Build Ansible Server"
   hosts: "{{ build_target }}"
   become_user: root
   remote_user: ec2-user
   become: yes
-  # connection: smart
+  connection: smart
   vars:
-    # det a default environment. We don't mind mucking with the dev environment
+    # set a default environment. We don't mind mucking with the dev or test environment
     env: "test"
-    splunk_client_name: "BBAPI-{{ env|upper }}-MGMT"
+    # splunk_target_layer: "WEB | APP | DATA | MGMT"
+    splunk_target_layer: "MGMT"
     ansible_ssh_pipelining: no
     hhs_ansible_git_branch: master
     hhs_ansible_repo: "https://github.com/HHSIDEALab/hhs_ansible.git"
+    # certificate files for certs process
+    ca_key: "server.key"
+    ca_cert: "server.crt"
+
   vars_files:
     - "./../../vars/common.yml"
     - "./../../vault/env/{{ env }}/vault.yml"
@@ -26,10 +36,16 @@
     - "./../../vars/all_var.yml"
     # - ../vars/all_vars.yml
     # - ../../vars/playbook/template_envvars.yml
+    # Load certificate values
+    # ca_commonname is empty - this needs to be set to server name
+    - "./../../vars/env/{{ env }}/ca_env.yml"
+
 
   roles:
     - ../../roles/splunk
     - ../appserver/roles/app_tools
+    - root_cert
+    - letsencrypt_mgmt_certstore
 
   tasks:
   - debug:

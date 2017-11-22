@@ -31,7 +31,8 @@
     sg_zone: "appserver"
     env_az: "{{ env }}-{{ azone }}"
     env_cf_data_version: "20"
-    splunk_client_name: "BBAPI-{{ env|upper }}-APP"
+    # splunk_target_layer: "WEB | APP | DATA | MGMT"
+    splunk_target_layer: "{{ sub_zone|upper }}"
     ami_release: "2017-05-11"
   vars_files:
     - "./../../vars/common.yml"
@@ -60,7 +61,6 @@
       # EAST-RH 7-3 Gold Image V.1.10 (HVM) 05-18-17 - ami-3aff872c (previous)
       # EAST-RH 7-4 Gold Image V.1.15 (HVM) 11-2-17 - ami-5a6ac120
       image: "ami-5a6ac120" # Change the AMI, from which you want to launch the server
-
       key_name: "{{ cf_app_key_name }}" # Change the keypair name
       region: "{{ cf_region }}"
       # tenancy must be "dedicated"

@@ -1,5 +1,5 @@
 ---
-# File: roles/base_patch/taska/app_server_tools.yml
+# File: roles/base_patch/tasks/app_server_tools.yml
 # Created: 5/9/17
 # Author: '@ekivemark'
 
@@ -14,6 +14,7 @@
     - gcc
     - gcc-c++
     - git
+    - python-pip
     - python-psycopg2
     - httpd
     - httpd-devel
@@ -36,4 +37,20 @@
     # - libpcap-devel
     - xz-devel
     - zlib-devel
+
+- name: "upgrade pip"
+  remote_user: ec2-user
+  become_user: root
+  become: yes
+  pip:
+    name: pip
+    extra_args: --upgrade
+
+- name: "install newer version of awscli - needed for elbv2"
+  become_user: root
+  become: yes
+  pip:
+    name: awscli
+    state: latest
+    extra_args: --upgrade
 

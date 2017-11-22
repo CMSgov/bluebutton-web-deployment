@@ -47,6 +47,11 @@ export DJANGO_EMAIL_BACKEND='{{ django_email_backend }}'
 export DJANGO_REGION_SES_NAME='{{ django_email_region }}'
 export DJANGO_REGION_SES_ENDPOINT='{{ django_email_ses_endpoint }}'
 export DJANGO_FROM_EMAIL='{{ django_from_email }}'
+export DJANGO_ADMIN_EMAIL='{{ django_admin_email }}'
+
+# SALT and ITERATIONS
+export DJANGO_USER_ID_SALT='{{ django_user_id_salt }}'
+export DJANGO_USER_ID_ITERATIONS='{{ django_user_id_iterations }}'
 
 # AWS SETTINGS - account: {{ s3_bucket_account }}
 export AWS_ACCESS_KEY_ID='{{ aws_access_id }}'
@@ -74,7 +79,7 @@ export RDS_DB_OPTIONS='{{ db_host_options }}'
 
 # postgres://USER:PASSWORD@HOST:PORT/NAME
 export DEFAULT_DB_SET="$RDS_DB_PLATFORM://$RDS_USERNAME:$RDS_PASSWORD@$RDS_HOSTNAME:$RDS_PORT/$RDS_DB_NAME"
-export DEFAULT_DB_SET=$DEFAULT_DB_SET+$RDS_DB_OPTIONS
+export DEFAULT_DB_SET="$DEFAULT_DB_SET$RDS_DB_OPTIONS"
 # Using dj_database_url in settings
 export DATABASES_CUSTOM="$DEFAULT_DB_SET"
 
