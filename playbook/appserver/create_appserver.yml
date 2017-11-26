@@ -60,7 +60,8 @@
       # EAST-RH 6-8 Gold Image V.3.17 (PV)Splunk-CFN-FIPS140-02-24-17 (ami-f070abe6)
       # EAST-RH 7-3 Gold Image V.1.10 (HVM) 05-18-17 - ami-3aff872c (previous)
       # EAST-RH 7-4 Gold Image V.1.15 (HVM) 11-2-17 - ami-5a6ac120
-      image: "ami-5a6ac120" # Change the AMI, from which you want to launch the server
+
+      image: "{{ ami_app_gold_image }}" # Change the AMI, from which you want to launch the server
       key_name: "{{ cf_app_key_name }}" # Change the keypair name
       region: "{{ cf_region }}"
       # tenancy must be "dedicated"
