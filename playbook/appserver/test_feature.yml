@@ -23,7 +23,8 @@
     sg_zone: "appserver"
     env_az: "{{ env }}-{{ azone }}"
     env_cf_app_version: "01"
-    splunk_client_name: "BBAPI-{{ env|upper }}-{{ sub_zone|upper }}"
+    # splunk_target_layer: "WEB | APP | DATA | MGMT"
+    splunk_target_layer: "{{ sub_zone|upper }}"
   vars_files:
     - "./../../vars/common.yml"
     - "./../../vault/env/{{ env }}/vault.yml"

@@ -7,3 +7,4 @@
   become_user: root
   become: yes
   shell: "semanage fcontext -a -t httpd_sys_content_t \"{{ project_parent[:-1] }}(/.*)?\" "
+  ignore_errors: yes

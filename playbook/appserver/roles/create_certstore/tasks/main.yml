@@ -5,7 +5,7 @@
 
 # create a certificate store folder
 
-- name: "Create a certstore"
+- name: "Create a back-end app certstore"
   become_user: root
   become: yes
   file:
@@ -13,4 +13,5 @@
     mode: 0755
     owner: "{{ cf_app_pyapps_user }}"
     group: "{{ app_group }}"
+    recurse: yes
     state: directory

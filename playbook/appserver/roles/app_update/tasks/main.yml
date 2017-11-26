@@ -1,6 +1,7 @@
 ---
 # File: playbook/appserver/roles/app_env/tasks/main.yml
 # Created: 5/10/17
+# last modified: 10/25/17
 # Author: '@ekivemark'
 # Create the application environment
 
@@ -34,15 +35,21 @@
     state: directory
     mode: 0755
 
-- name: "Create the debug log"
+- name: "Create the log files"
   become_user: root
   become: yes
   file:
-    dest: "{{ cf_app_log_dir }}/debug.log"
+    dest: "{{ cf_app_log_dir }}/{{ item }}"
     owner: "{{ cf_app_pyapps_user }}"
     group: "{{ cf_app_pyapps_user }}"
     state: touch
     mode: 0766
+  with_items:
+    - debug.log
+    - error.log
+    - info.log
+    - login_failed.log
+    - admin_access.log
 
 - name: "Create Virtualenv"
   become_user: root
@@ -59,9 +66,19 @@
     state: directory
     recurse: yes
     owner: "{{ cf_app_pyapps_user }}"
-    group: "apache"
+    group: "{{ app_group }}"
     mode: 0755
 
+- name: "set python in virtualenv to {{ python_ver }} for default python"
+  become_user: root
+  become: yes
+  file:
+    src: "/var/virtualenv/{{ project_dir }}/bin/python{{ python_ver }}"
+    dest: "/var/virtualenv/{{ project_dir }}/bin/{{ item }}"
+    state: link
+  with_items:
+    - python
+    - python3
 
 - name: "Set ownership to pyapps:apache"
   become_user: root
@@ -139,11 +156,13 @@
     export PATH={{ cf_app_py_virtual_env }}/bin:$PATH
     {{ cf_app_py_virtual_env }}/bin/pip{{ python_ver }} {{ item }}
   with_items:
-    - install --upgrade pip
-    - install psycopg2
-    - install -r {{ cf_app_pyapp_home }}/{{ common_project_name }}/requirements/requirements.txt
+    - "install --upgrade pip {{ pip_extra_args }} "
+    - "install psycopg2 {{ pip_extra_args }} --allow-external psycopg2 "
+    - "install -r {{ cf_app_pyapp_home }}/{{ common_project_name }}/requirements/requirements.txt {{ pip_extra_args }} "
 
-- include: ../../create_certstore/tasks/main.yml
+# Relative reference from playbook/appserver
+- include: ./../appserver/roles/create_certstore/tasks/main.yml
+
 #- name: "Create a certstore"
 #  become_user: root
 #  become: yes
@@ -154,16 +173,45 @@
 #    group: "{{ app_group }}"
 #    state: directory
 
+# app_lb_app_protocol is https or http.
+# If using https copy https.j2 templates,
+# otherwise copy http.j2 templates to apache conf.d folder
+
+- name: "get last octet of appserver ip address"
+  shell: "export last_ip_octet=$(/usr/sbin/ip route get 8.8.8.8 | /usr/bin/awk -F. '{print $NF;exit}') ; echo $last_ip_octet "
+  register: app_ip_last_octet
+
+- name: "octect number"
+  debug:
+    msg: "app_ip_last_octet ={{ app_ip_last_octet.stdout }}"
+
+
+- name: "Remove the /etc/httpd/conf.d/ssl.conf file"
+  become_user: root
+  become: yes
+  file:
+    path: /etc/httpd/conf.d/ssl.conf
+    owner: root
+    group: root
+    state: absent
+
+# app_ip_last_octet is used in apache conf files.
+# Change conf file names to enable load in order
+# Apache loads alphabetically. use bb_nn_ prefix to force load sequence
 - name: "Create Virtualhosts file"
   become_user: root
   become: yes
   template:
-    src: ../templates/virtualhost_server_conf.j2
-    dest: "/etc/httpd/conf.d/virtualhost.conf"
+    src: "../templates/{{ item }}.{{ app_lb_app_protocol|lower }}.j2"
+    dest: "/etc/httpd/conf.d/{{ item }}"
     owner: root
     group: root
     mode: "0644"
-
+  with_items:
+    - bb_01_virtualhost.conf
+    - bb_02_ssl.conf
+    - ssl.conf
+    # ssl.conf is an empty file to avoid yum update re-installing ssl.conf
 
 # change ownership of files
 - name: "Update file ownership"
@@ -183,6 +231,7 @@
 #  pip:
 #    requirements: "{{ install_root }}/{{ project_name }}/requirements/requirements.txt"
 #    virtualenv: "{{ venv }}"
+#    extra_args: " {{ pip_extra_args }} "
 
 # Change ownership for libraries
 - name: "Change ownership for libraries"
@@ -207,4 +256,3 @@
 ## Add the create variable files here before running Migrate and Collectstatic
 ## Break Migrate and collectstatic out to separate role: django_prep
 #####
-

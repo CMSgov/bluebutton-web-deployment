@@ -23,19 +23,21 @@
   file:
     dest: "{{ cf_app_log_dir }}/{{ item }}"
     owner: "{{ cf_app_pyapps_user }}"
-    group: "{{ cf_app_pyapps_user }}"
+    group: logreader
     state: touch
     mode: 0776
   with_items:
     - debug.log
     - error.log
     - info.log
+    - perf_mon.log
 
 
 - name: "Set permissions for SELinux"
   become_user: root
   become: yes
   shell: "semanage fcontext -a -t httpd_sys_content_t \"{{ cf_app_log_dir }}(/.*)?\" "
+  ignore_errors: yes
 
 
 #- name: "Create the error log"

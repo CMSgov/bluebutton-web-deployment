@@ -1,0 +1,31 @@
+---
+# File: activate_ssl.yml 
+# Created: 6/18/17
+# Author: '@ekivemark'
+
+- name: "Apply Certificates on DataServer"
+  hosts: "{{ build_target }}"
+  become_user: root
+  remote_user: ec2-user
+  become: yes
+  connection: smart
+  vars:
+    # det a default environment. We don't mind mucking with the dev environment
+    env: "dev"
+    ansible_ssh_pipelining: no
+    ans_group: "ansmgmt"
+    ca_key: "server.key"
+    ca_cert: "server.crt"
+
+  vars_files:
+    - "./../../vars/common.yml"
+    - "./../../vault/env/{{ env }}/vault.yml"
+    - "./../../vars/env/{{ env }}/env.yml"
+    - "./../../vars/all_var.yml"
+    # Load certificate values
+    # ca_commonname is empty - this needs to be set to server name
+    - "./../../vars/env/{{ env }}/ca_env.yml"
+
+
+  roles:
+  - install_certs

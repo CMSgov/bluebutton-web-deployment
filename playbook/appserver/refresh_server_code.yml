@@ -51,10 +51,24 @@
     - roles/app_update
     # Update environment variable files
     - roles/app_update_env
+    # setup logrotate for pyapps
+    - roles/log_rotate
     # django migrate and collectstatic
     - roles/django_prep
+    # install swagger-ui from git
+    - roles/swagger_ui_install
     # Set permissions for app under selinux
     - roles/semanage_apps
     # Set permissions for virtualenv under selinux
     - roles/semanage_virtualenv
+
+
+  tasks:
+  - name: "restart apache"
+    become_user: root
+    become: yes
+    service:
+      name: httpd
+      state: restarted
+
 

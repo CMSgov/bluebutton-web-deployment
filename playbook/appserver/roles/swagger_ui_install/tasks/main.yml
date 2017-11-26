@@ -1,0 +1,72 @@
+---
+# File: playbook/appserver/roles/swagger_ui_install/tasks/main.yml
+# Created: 8/7/17
+# Author: '@ekivemark'
+
+- name: "Create swagger-ui directory"
+  become_user: root
+  become: yes
+  file:
+    dest: "{{ swagger_ui_parent_dir }}"
+    mode: 0644
+    owner: "{{ app_owner }}"
+    group: "{{ app_group }}"
+    state: directory
+
+########################################
+- name: "Check for git installation - {{ swagger_ui_parent_dir }}/swagger-ui/.git"
+  become_user: root
+  become: yes
+  stat:
+    path: "{{ swagger_ui_parent_dir }}/swagger-ui/.git"
+  register: swagger_installed
+
+- name: "Check result of git check"
+  debug:
+    msg: "swagger is installed [{{ swagger_installed }}]"
+  ignore_errors: yes
+
+- name: "install from git: {{ swagger_ui_repo_source }}"
+  become_user: root
+  become: yes
+  git:
+    repo: "{{ swagger_ui_repo_source }}"
+    dest: "{{ swagger_ui_parent_dir }}/swagger-ui"
+    force: yes
+    clone: yes
+  when: not swagger_installed.stat.exists
+
+- name: "Update existing swagger install"
+  become_user: root
+  become: yes
+  git:
+    repo: "{{ swagger_ui_repo_source }}"
+    dest: "{{ swagger_ui_parent_dir }}/swagger-ui"
+    force: yes
+    version: "master"
+
+# Use apidocs reference in template in next step
+- name: Set apidocs location
+  set_fact:
+    swagger_api_docs: "{{ app_lb_app_protocol }}://{{ external_dns_name }}{{ swagger_external_path }}{{ swagger_docs_file }}"
+
+- name: "replace petstore with full apidocs location - {{ swagger_api_docs }}"
+  become_user: root
+  become: yes
+  template:
+    src: "../templates/index.html.j2"
+    dest: "{{ swagger_ui_parent_dir }}/swagger-ui/dist/index.html"
+    owner: "{{ app_owner }}"
+    group: "{{ app_group }}"
+    mode: 0640
+
+- name: "Set ownership of swagger_ui"
+  become_user: root
+  become: yes
+  file:
+    dest: "{{ swagger_ui_parent_dir }}"
+    owner: "{{ app_owner }}"
+    group: "{{ app_group }}"
+    mode: 0770
+    recurse: yes
+

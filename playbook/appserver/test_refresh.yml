@@ -58,6 +58,7 @@
   - pip:
       requirements: "{{ install_root }}/{{ project_name }}/requirements/requirements.txt"
       virtualenv: "{{ venv }}"
+      extra_args: "{{ pip_extra_args }}"
 
   # Change ownership for libraries
   - file:

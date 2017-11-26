@@ -43,6 +43,7 @@ if [ $1 -eq 1 ]
   yum -y update >> $LOG_FILE 2>&1
   echo "Rebooting now" >> $LOG_FILE
   echo "" >> $LOG_FILE
+  # Call shutdown in Ansible after this script completes
   # shutdown -r now
   echo "step 1 completed" >>$LOG_FILE.1done
   exit 0
@@ -83,6 +84,7 @@ if [ $1 -eq 2 ]
   echo "" >> $LOG_FILE
   echo "Rebooting now" >> $LOG_FILE
   echo "" >> $LOG_FILE
+  # Call shutdown in Ansible after this script completes
   # shutdown -r now
   echo "step 2 completed" >>$LOG_FILE.2done
   exit 0
@@ -102,6 +104,7 @@ if [ $1 -eq 3 ]
   echo "Rebooting now" >> $LOG_FILE
   echo "" >> $LOG_FILE
   # shutdown -r now
+  # Call shutdown in Ansible after this script completes
   echo "step 3 completed" >>$LOG_FILE.3done
   exit 0
   fi

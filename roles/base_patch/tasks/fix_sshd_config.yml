@@ -1,0 +1,70 @@
+---
+# File: roles/base_patch/tasks/fix_sshd_config.yml
+# Created: 8/14/17
+# Author: '@ekivemark'
+# rhel uses HostKey /etc/ssh/ssh_host_dsa_key but it is not defined.
+# use host_rsa_key
+
+
+- name: Copy ssshd_config file for safety
+  become_user: root
+  become: yes
+  command: "cp -f /etc/ssh/sshd_config /etc/ssh_sshd_config.tmp"
+
+# On mgmt machine connect as ec2-user and run following commands:
+# cd ~/.ssh
+# ssh-keygen -t rsa -b 4096 -C "ansible-control-host"
+# press enter to bypass passphrase entry
+# press enter to bypass confirm passphrase entry
+# ssh-keygen -t ecdsa -b 521 -C "ansible-control-host"
+# press enter to bypass passphrase entry
+# press enter to bypass confirm passphrase entry
+
+- name: push new rsa keys to ec2-user on remote
+  become_user: root
+  become: yes
+  copy:
+    src: /home/ec2-user/.ssh/id_rsa.pub
+    dest: "/home/ec2-user/.ssh/{{ env }}_id_rsa.pub"
+    mode: 0600
+    owner: ec2-user
+    group: ec2-user
+
+- name: push new ecdsa keys to ec2-user on remote
+  become_user: root
+  become: yes
+  copy:
+    src: /home/ec2-user/.ssh/id_ecdsa.pub
+    dest: "/home/ec2-user/.ssh/{{ env }}_id_ecdsa.pub"
+    mode: 0600
+    owner: ec2-user
+    group: ec2-user
+
+- name: add to authorized_keys file
+  become_user: root
+  become: yes
+  shell: |
+    cat /home/ec2-user/.ssh/{{ env }}_id_rsa.pub >> /home/ec2-user/authorized_keys
+    cat /home/ec2-user/.ssh/{{ env }}_id_ecdsa.pub >> /home/ec2-user/authorized_keys
+
+- name: Create sshd_config file backup
+  become_user: root
+  become: yes
+  command: "cp -f /etc/ssh/sshd_config /etc/ssh/sshd_config.${date}.bak"
+
+- name: "replace sshd_config with template"
+  become_user: root
+  become: yes
+  template:
+    src: ../templates/sshd_config.j2
+    dest: /etc/ssh/sshd_config
+
+- name: Final sshd_config file check
+  become_user: root
+  become: yes
+  shell: "/usr/sbin/sshd -t"
+  register: sshd_config_error
+
+
+
+

@@ -1,0 +1,30 @@
+---
+# File: playbook/platform/write_etc_hosts.yml
+# Created: 7/31/17
+# Author: '@ekivemark'
+
+# tasks/hosts.yml
+
+- name: "write etc/hosts.ansible"
+  hosts: all
+  remote_user: root
+  # connection: smart
+  gather_facts: true
+  vars:
+    env: "dev"
+    ansible_ssh_pipelining: no
+  vars_files:
+    - "./../../vars/common.yml"
+    - "./../../vault/env/{{ env }}/vault.yml"
+    - "./../../vars/env/{{ env }}/env.yml"
+    - "./../../vars/all_var.yml"
+
+  remote_user: "{{ remote_user_account }}"
+
+# and this is how we include another playbook, be careful and
+# don't recurse infinitely or anything.  Note you can't use
+# any variables in the include path here.
+
+  tasks:
+  - include: roles/etc_hosts/tasks/main.yml
+

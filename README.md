@@ -68,6 +68,9 @@ To enable ec2 support you must install python-boto:
     sudo yum -y install ansible
     sudo yum -y install python-boto 
 
+NOTE: if FIPS is enabled add an additional parameter to pip command:
+-i https://pypi.org/simple/
+
 Install hhs_ansible:
 
     mkdir /hhs_ansible
@@ -79,7 +82,7 @@ Install updated version as follows:
 
     sudo /bin/bash
     cd /root
-    pip install --upgrade --user awscli
+    pip install --upgrade --user awscli -i https://pypi.org/simple/
    
 this will install the updated version to 
 
@@ -92,6 +95,18 @@ Then add your hosts to
 Edit the config file:
 
     /etc/ansible/ansible.cfg
+    
+The public keys from ec2-user (id_rsa.pub and id_ecdsa.pub) need to be
+generated on the Management Server so that they can be copied to the 
+remote machines in the base_patch role. As the **ec2-user** on the Management
+Server generate two sets of keys with no passphrase:
+
+    ssh-keygen -t rsa
+    ssh-keygen -t ecdsa
+
+- Do not enter a passphrase. Hit enter to step pass the prompt
+- Do not change the default filenames id_rsa and id_ecdsa.
+
 
 As a minimum, if you are using AWS you will probably want to change:
     ' #remote_user = root'
