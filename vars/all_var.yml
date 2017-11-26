@@ -41,6 +41,19 @@
   python_ver_full: "{{ env_python_ver_full }}"
   mod_wsgi_ver_full: "{{ env_mod_wsgi_ver_full }}"
 
+
+# pip install extra arguments needed:
+# when FIPS-140.2 is enabled MD5 checksums are not supported.
+# This causes pip to fail.
+# check file: /proc/sys/crypto/fips_enabled
+# 1 = Enabled | 0 = disabled
+# If enabled we need to pass -i https://pypi.org/simple/ to extra_args
+# in ansible pip command
+pip_extra_args: "-i https://pypi.org/simple/"
+
+
+# Remote user access account
+remote_user_account: "{{ env_remote_user_account }}"
   # Remote user access account
   remote_user_account: "{{ env_remote_user_account }}"
 
