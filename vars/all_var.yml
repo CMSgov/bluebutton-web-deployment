@@ -16,21 +16,30 @@
 #  - include: "./env/{{ env }}/env.yml"
 #  - include: "../vault/env/{{ env }}/vault.yml"
 
-ami_release: "{{ env_ami_release }}"
+  ami_release: "{{ env_ami_release }}"
 
-### Environment:
-env: "{{ env_env }}"
+      # This image should be updated monthly.
+      # Current version is: EAST-RH 7-3 Gold Image V.1.09 (HVM) 04-21-2017 - ami-fdde41eb
+      # EAST-RH 6-9 Gold Image V.1.01 (PV) 04-21-17 - ami-3dda452b
+      # EAST-RH 6-8 Gold Image V.3.17 (PV)Splunk-CFN-FIPS140-02-24-17 (ami-f070abe6)
+      # EAST-RH 7-3 Gold Image V.1.10 (HVM) 05-18-17 - ami-3aff872c (previous)
+      # EAST-RH 7-4 Gold Image V.1.15 (HVM) 11-2-17 - ami-5a6ac120
+
+  ami_app_gold_image: "{{ env_ami_app_gold_image }}" # Change the AMI, from which you want to launch the server
+
+  ### Environment:
+  env: "{{ env_env }}"
 
 
-### Cloud Formation Tags:
-cf_tags_business: "{{ common_cf_tags_business }}"
-cf_tags_application: "{{ common_cf_tags_application }}"
+  ### Cloud Formation Tags:
+  cf_tags_business: "{{ common_cf_tags_business }}"
+  cf_tags_application: "{{ common_cf_tags_application }}"
 
 
-# Make Python and mod_wsgi version parameters
-python_ver: "{{ env_python_ver }}"
-python_ver_full: "{{ env_python_ver_full }}"
-mod_wsgi_ver_full: "{{ env_mod_wsgi_ver_full }}"
+  # Make Python and mod_wsgi version parameters
+  python_ver: "{{ env_python_ver }}"
+  python_ver_full: "{{ env_python_ver_full }}"
+  mod_wsgi_ver_full: "{{ env_mod_wsgi_ver_full }}"
 
 
 # pip install extra arguments needed:
@@ -45,392 +54,328 @@ pip_extra_args: "-i https://pypi.org/simple/"
 
 # Remote user access account
 remote_user_account: "{{ env_remote_user_account }}"
+  # Remote user access account
+  remote_user_account: "{{ env_remote_user_account }}"
 
-### DJANGO_SECRET_KEY:
-# 8 Character Prefix and Suffix
-# Relate Suffix to Deployment Environment
-secret_pfx: "{{ env_secret_pfx }}"
-secret_sfx: "{{ env_secret_sfx }}"
-# 50 character Random Key
-# http://www.miniwebtool.com/django-secret-key-generator/
-rand_secret: "{{ env_rand_secret }}"
-django_secret_key: "{{ env_django_secret_key }}"
+  ### DJANGO_SECRET_KEY:
+  # 8 Character Prefix and Suffix
+  # Relate Suffix to Deployment Environment
+  secret_pfx: "{{ env_secret_pfx }}"
+  secret_sfx: "{{ env_secret_sfx }}"
+  # 50 character Random Key
+  # http://www.miniwebtool.com/django-secret-key-generator/
+  rand_secret: "{{ env_rand_secret }}"
+  django_secret_key: "{{ env_django_secret_key }}"
 
-# a unix path-friendly name (IE, no spaces or special characters)
-project_name: "{{ common_project_name }}"
+  # a unix path-friendly name (IE, no spaces or special characters)
+  project_name: "{{ common_project_name }}"
 
-# Virtual Environment location
-venv: "{{ env_venv }}{{ common_project_dir }}"
+  # Virtual Environment location
+  venv: "{{ env_venv }}{{ common_project_dir }}"
 
-# git branch to deploy
-git_branch: "{{ env_git_branch }}"
+  # git branch to deploy
+  git_branch: "{{ env_git_branch }}"
 
-# Project Parent Dir
-# the base path to install to. You should not need to change this.
-# git installs the repo in a folder beneath this path
-project_parent: "{{ env_project_parent }}"
-# Set to hhs_o_server
-# The directory that virtualenv is created in and git is cloned into
-# eg. /var/virtualenv/hhs_o_server and /var/pyapps/hhs_o_server
-project_dir: "{{ env_project_dir }}"
+  # Project Parent Dir
+  # the base path to install to. You should not need to change this.
+  # git installs the repo in a folder beneath this path
+  project_parent: "{{ env_project_parent }}"
+  # Set to hhs_o_server
+  # The directory that virtualenv is created in and git is cloned into
+  # eg. /var/virtualenv/hhs_o_server and /var/pyapps/hhs_o_server
+  project_dir: "{{ env_project_dir }}"
 
-# the base path to install to. You should not need to change this.
-# git installs the repo in a folder beneath this path
-# files and folders excluded from the repository can be installed here
-# in files and folders alongside the repo.
-install_root: "{{ env_project_parent }}{{ common_project_dir }}"
+  # the base path to install to. You should not need to change this.
+  # git installs the repo in a folder beneath this path
+  # files and folders excluded from the repository can be installed here
+  # in files and folders alongside the repo.
+  install_root: "{{ env_project_parent }}{{ common_project_dir }}"
 
-# the git repository URL for the project
-# project_repo: git@github.com:transparenthealth/hhs_oauth_server.git
-project_repo: "{{ env_project_repo }}"
+  # the git repository URL for the project
+  # project_repo: git@github.com:transparenthealth/hhs_oauth_server.git
+  project_repo: "{{ env_project_repo }}"
 
-# The value of your django project's STATIC_ROOT settings.
-# This will be the directory that django's `collectstatic` management command
-# copies static files to, and it must be an absolute path. The default value
-# here assumes that STATIC_ROOT is set in your settings.py like so:
-# STATIC_ROOT = os.path.abspath(os.path.join(BASE_DIR, 'static'))
-static_root: "{{ install_root }}/{{ project_name }}/{{ env_static_root_dir }}"
+  # The value of your django project's STATIC_ROOT settings.
+  # This will be the directory that django's `collectstatic` management command
+  # copies static files to, and it must be an absolute path. The default value
+  # here assumes that STATIC_ROOT is set in your settings.py like so:
+  # STATIC_ROOT = os.path.abspath(os.path.join(BASE_DIR, 'static'))
+  static_root: "{{ install_root }}/{{ project_name }}/{{ env_static_root_dir }}"
 
-# application owner: pyapps
-app_owner: "pyapps"
-# application group: apache
-app_group: "apache"
+  # application owner: pyapps
+  app_owner: "pyapps"
+  # application group: apache
+  app_group: "apache"
 
-### External Internet Domain Name for the platform
-external_dns_name: "{{ env_external_dns_name }}"
+  ### External Internet Domain Name for the platform
+  external_dns_name: "{{ env_external_dns_name }}"
 
-# settings module
-django_settings_module: "{{ env_django_settings_module }}"
+  # settings module
+  django_settings_module: "{{ env_django_settings_module }}"
 
-### TransparentHealthServer default settings:
-ths_fhir_server: "{{ env_ths_fhir_server }}"
-ths_fhir_path: "{{ env_ths_fhir_path }}"
-ths_fhir_rel: "{{ env_ths_fhir_rel }}"
-ths_fhir_rewrite_to: "{{ env_ths_fhir_rewrite_to }}"
-ths_fhir_rewrite_from: "{{ env_ths_fhir_rewrite_from }}"
+  ### TransparentHealthServer default settings:
+  ths_fhir_server: "{{ env_ths_fhir_server }}"
+  ths_fhir_path: "{{ env_ths_fhir_path }}"
+  ths_fhir_rel: "{{ env_ths_fhir_rel }}"
+  ths_fhir_rewrite_to: "{{ env_ths_fhir_rewrite_to }}"
+  ths_fhir_rewrite_from: "{{ env_ths_fhir_rewrite_from }}"
 
-### HOSTNAME_URL:
-host_url: "{{ env_external_dns_name }}"
+  ### HOSTNAME_URL:
+  host_url: "{{ env_external_dns_name }}"
 
-### Email configuration - AWS SES
-# email backend options are:
-# django_email_backend:  'django.core.mail.backends.smtp.EmailBackend'
-# django_email_backend:  'django.core.mail.backends.filebased.EmailBackend'
-# django_email_backend:  'django.core.mail.backends.locmem.EmailBackend'
-# django_email_backend:  'django.core.mail.backends.dummy.EmailBackend'
-# django_email_backend:  'django_ses.SESBackend'
+  ### Email configuration - AWS SES
+  # email backend options are:
+  # django_email_backend:  'django.core.mail.backends.smtp.EmailBackend'
+  # django_email_backend:  'django.core.mail.backends.filebased.EmailBackend'
+  # django_email_backend:  'django.core.mail.backends.locmem.EmailBackend'
+  # django_email_backend:  'django.core.mail.backends.dummy.EmailBackend'
+  # django_email_backend:  'django_ses.SESBackend'
 
-django_email_backend: "{{ env_django_email_backend }}"
+  django_email_backend: "{{ env_django_email_backend }}"
 
-django_email_region: "{{ env_django_email_region }}"
-django_email_ses_endpoint: "{{ env_django_email_ses_endpoint }}"
-django_from_email: "{{ env_django_from_email }}"
-django_admin_email: "{{ env_django_admin_email }}"
+  django_email_region: "{{ env_django_email_region }}"
+  django_email_ses_endpoint: "{{ env_django_email_ses_endpoint }}"
+  django_from_email: "{{ env_django_from_email }}"
 
-# SALT and ITERATIONS
-django_user_id_salt: "{{ env_django_user_id_salt }}"
-django_user_id_iterations: "{{ env_django_user_id_iterations }}"
+  ### S3 Bucket Settings:
+  s3_bucket_account: "{{ env_s3_bucket_account }}"
+  aws_access_id: "{{ env_aws_access_id }}"
+  aws_secret_key: "{{ env_aws_secret_key }}"
+  s3_storage_bucket_name: "{{ env_s3_storage_bucket_name }}"
 
-### S3 Bucket Settings:
-s3_bucket_account: "{{ env_s3_bucket_account }}"
-aws_access_id: "{{ env_aws_access_id }}"
-aws_secret_key: "{{ env_aws_secret_key }}"
-s3_storage_bucket_name: "{{ env_s3_storage_bucket_name }}"
+  ### Django Settings:
+  ##  DJANGO_ORGANIZATION_NAME='{{ django_org_name }}'
+  ##  DJANGO_APPLICATION_TITLE='{{ django_app_title }}'
+  django_org_name: "{{ env_django_org_name }}"
+  django_app_title: "{{ env_django_app_title }}"
 
-### Route53 Settings
-## {{ env|upper }}
-r53_account: "{{ env_r53_account }}"
-r53_access_id: "{{ env_r53_access_id }}"
-r53_secret_key: "{{ env_r53_secret_key }}"
+  # Add a variable endpoint for admin/
+  # eg. To move from /admin/ to /secret/admin/
+  #     set redirector to 'secret/'
+  django_admin_redirector: "{{ env_django_admin_redirector }}"
 
-apache_cert_store: "{{ env_apache_cert_store }}"
+  ### Database Settings:
+  ## Postgresql 9.6
+  ## export RDS_DB_PLATFORM='postgres'
+  ## export RDS_DB_ENGINE='django.db.backends.postgresql_psycopg2'
+  ## export RDS_DB_NAME='something_secret'
+  ## export RDS_DB_OPTIONS='?sslmode=require'
+  ## export RDS_USERNAME='some_user'
+  ## export RDS_PASSWORD='super_secret_password'
+  ## export RDS_HOSTNAME='some.ip.or.dns.name'
+  ## export RDS_PORT='5432'
+  ### Database Access String Construction: postgres://USER:PASSWORD@HOST:PORT/NAME
+  ## export DEFAULT_DB_SET="$RDS_DB_PLATFORM://$RDS_USERNAME:$RDS_PASSWORD@$RDS_HOSTNAME:$RDS_PORT/$RDS_DB_NAME"
+  db_platform_type: "{{ env_db_platform_type }}"
+  db_engine_driver: "{{ env_db_engine_driver }}"
+  db_name: "{{ env_db_name }}"
+  db_user_name: "{{ env_db_user_name }}"
+  db_user_pw: "{{ env_db_user_pw }}"
+  db_host_address: "{{ env_db_host_address }}"
+  db_host_port: "{{ env_db_host_port }}"
+  db_host_options: "{{ env_db_host_options }}"
 
-### Django Settings:
-##  DJANGO_ORGANIZATION_NAME='{{ django_org_name }}'
-##  DJANGO_APPLICATION_TITLE='{{ django_app_title }}'
-django_org_name: "{{ env_django_org_name }}"
-django_app_title: "{{ env_django_app_title }}"
+  cf_region: "us-east-1"
+  cf_vpc_id: "{{ env_cf_vpc_id }}"
+  cf_platform_version: "{{ env_cf_platform_version }}"
+  cf_data_sg_data_zone_id: "{{ env_cf_data_sg_data_zone_id }}"
+  cf_data_azone: "{{ env_cf_data_azone }}"
+  cf_data_build_image_id: "{{ env_cf_data_build_image_id }}"
+  cf_data_instance_name: "{{ env_cf_data_instance_name }}"
+  cf_data_database_type: "{{ env_cf_data_database_type }}"
+  cf_data_database_prefix: "{{ env_cf_data_database_prefix }}"
+  cf_data_tag_key_stack: "{{ env_cf_data_tag_key_stack }}"
+  cf_data_tag_key_layer: "{{ env_cf_data_tag_key_layer }}"
+  cf_data_key_name: "{{ env_cf_data_key_name }}"
+  cf_data_instance_type: "{{ env_cf_data_instance_type }}"
+  cf_data_pgsql_server_name: "{{ env_cf_data_pgsql_server_name }}"
+  cf_data_pyapps_home: "{{ env_cf_data_pyapps_home }}"
+  cf_data_pgsql_master: "{{ env_cf_data_pgsql_master }}"
+  cf_data_pyapps_email: "{{ env_cf_data_pyapps_email }}"
+  cf_data_pgsql_password: "{{ env_cf_data_pgsql_password }}"
+  cf_data_vpc_id: "{{ cf_vpc_id }}"
+  cf_data_vol_size: "{{ env_cf_data_vol_size }}"
+  cf_data_vol_id: "{{ env_cf_data_vol_id }}"
+  cf_data_device: "xvdb"
 
-# Add a variable endpoint for admin/
-# eg. To move from /admin/ to /secret/admin/
-#     set redirector to 'secret/'
-django_admin_redirector: "{{ env_django_admin_redirector }}"
+  # ssl settings: on | off
+  cf_data_ssl: "{{ env_cf_data_ssl }}"
+  cf_data_cert_file: "{{ env_cf_data_cert_file }}"
+  cf_data_key_file: "{{ env_cf_data_key_file }}"
+  cf_data_ca_file: "{{ env_cf_data_ca_file }}"
+  cf_data_crl_file: "{{ env_cf_data_crl_file }}"
 
-### Database Settings:
-## Postgresql 9.6
-## export RDS_DB_PLATFORM='postgres'
-## export RDS_DB_ENGINE='django.db.backends.postgresql_psycopg2'
-## export RDS_DB_NAME='something_secret'
-## export RDS_DB_OPTIONS='?sslmode=require'
-## export RDS_USERNAME='some_user'
-## export RDS_PASSWORD='super_secret_password'
-## export RDS_HOSTNAME='some.ip.or.dns.name'
-## export RDS_PORT='5432'
-### Database Access String Construction: postgres://USER:PASSWORD@HOST:PORT/NAME
-## export DEFAULT_DB_SET="$RDS_DB_PLATFORM://$RDS_USERNAME:$RDS_PASSWORD@$RDS_HOSTNAME:$RDS_PORT/$RDS_DB_NAME"
-db_platform_type: "{{ env_db_platform_type }}"
-db_engine_driver: "{{ env_db_engine_driver }}"
-db_name: "{{ env_db_name }}"
-db_user_name: "{{ env_db_user_name }}"
-db_user_pw: "{{ env_db_user_pw }}"
-db_host_address: "{{ env_db_host_address }}"
-db_host_port: "{{ env_db_host_port }}"
-db_host_options: "{{ env_db_host_options }}"
+  cf_data_db_backup_key_id: "{{ env_cf_data_db_backup_key_id }}"
+  cf_data_db_backup_secret_key: "{{ env_cf_data_db_backup_secret_key }}"
 
+  # cf_app_selinux_policy sets SELINUXTYPE=targeted
+  cf_app_selinux_policy: "targeted"
+  # cf_app_selinux_state set SELINUX=permissive
+  cf_app_selinux_state: "permissive"
 
-# Database SSL Certificate and Key Files:
-ca_key: "server.key"
-ca_cert: "server.crt"
+  cf_app_sg_app_zone_id: "{{ env_cf_app_sg_app_zone_id }}"
+  cf_app_azone: "{{env_cf_app_azone }}"
+  cf_app_build_image_id: "{{ env_cf_app_build_image_id }}"
+  cf_app_instance_name: "{{ env_cf_app_instance_name }}"
+  cf_app_tag_key_stack: "{{ env_cf_app_tag_key_stack }}"
+  cf_app_tag_key_layer: "{{ env_cf_app_tag_key_layer }}"
+  cf_app_key_name: "{{ env_cf_app_key_name }}"
+  cf_app_instance_type: "{{ env_cf_app_instance_type }}"
+  cf_app_public_server_name: "{{ env_cf_app_public_server_name }}"
+  cf_app_pyserver_name: "{{ env_cf_app_pyserver_name }}"
+  cf_app_py_virtual_env: "{{ env_cf_app_py_virtual_env }}"
+  cf_app_pyapp_home: "{{ env_cf_app_pyapp_home }}"
+  cf_app_pyapp_settings: "{{ env_cf_app_pyapp_settings }}"
+  cf_app_repo_branch: "{{ env_cf_app_repo_branch }}"
+  cf_app_pyapps_user: "{{ env_cf_app_pyapps_user }}"
+  cf_app_db_user: "{{ env_cf_app_db_user }}"
+  cf_app_db_pwd: "{{ env_cf_app_db_pwd }}"
+  cf_app_pyapps_email: "{{ env_cf_app_pyapps_email }}"
+  cf_app_pyapps_pwd: "{{ env_cf_app_pyapps_pwd }}"
+  cf_app_herd_member: "{{ env_cf_app_herd_member }}"
+  cf_app_db_type: "{{ env_cf_app_db_type }}"
+  cf_app_db_prefix: "{{ env_cf_app_db_prefix }}"
+  cf_app_db_host_address: "{{ env_cf_db_host_address }}"
+  cf_app_aws_content_key_id: "{{ env_cf_app_aws_content_key_id }}"
+  cf_app_aws_content_access_key: "{{ env_cf_app_aws_content_access_key }}"
+  cf_app_target_vpc_id: "{{ cf_vpc_id }}"
+  cf_app_log_dir: "{{ env_cf_app_log_dir }}"
 
-cf_region: "us-east-1"
-cf_vpc_id: "{{ env_cf_vpc_id }}"
-cf_platform_version: "{{ env_cf_platform_version }}"
-cf_data_sg_data_zone_id: "{{ env_cf_data_sg_data_zone_id }}"
-cf_data_azone: "{{ env_cf_data_azone }}"
-cf_data_build_image_id: "{{ env_cf_data_build_image_id }}"
-cf_data_instance_name: "{{ env_cf_data_instance_name }}"
-cf_data_database_type: "{{ env_cf_data_database_type }}"
-cf_data_database_prefix: "{{ env_cf_data_database_prefix }}"
-cf_data_tag_key_stack: "{{ env_cf_data_tag_key_stack }}"
-cf_data_tag_key_layer: "{{ env_cf_data_tag_key_layer }}"
-cf_data_key_name: "{{ env_cf_data_key_name }}"
-cf_data_instance_type: "{{ env_cf_data_instance_type }}"
-cf_data_pgsql_server_name: "{{ env_cf_data_pgsql_server_name }}"
-cf_data_pyapps_home: "{{ env_cf_data_pyapps_home }}"
-cf_data_pgsql_master: "{{ env_cf_data_pgsql_master }}"
-cf_data_pyapps_email: "{{ env_cf_data_pyapps_email }}"
-cf_data_pgsql_password: "{{ env_cf_data_pgsql_password }}"
-cf_data_vpc_id: "{{ cf_vpc_id }}"
-cf_data_vol_size: "{{ env_cf_data_vol_size }}"
-cf_data_vol_id: "{{ env_cf_data_vol_id }}"
-cf_data_device: "xvdb"
+  # Postgres Role related settings
+  db_server_account: "postgres"
+  db_server_data_dir: "/data/pgsql/9.6/data"
+  db_server_temp_dir: "/data/pgbackup"
+  db_server_table_name: "{{ cf_data_database_prefix }}{{ cf_data_tag_key_stack }}_{{ common_db_type[cf_data_database_type]['DbNameTable'] }}"
+  db_server_backup_pub_key: "backup_key.pem.pub"
+  # role_ db_user: "postgres"
+  # role_db_data_dir: "/data/pgsql/9.6/data"
+  # role_db_temp_dir: "/data/pgbackup"
+  # role_db_table_name: "{{ cf_data_database_prefix }}{{ cf_data_tag_key_stack }}_{{ common_db_type[cf_data_database_type]['DbNameTable'] }}"
+  # role_db_backup_pub_key: "backup_key.pem.pub"
 
-# ssl settings: on | off
-cf_data_ssl: "{{ env_cf_data_ssl }}"
-cf_data_cert_file: "{{ env_cf_data_cert_file }}"
-cf_data_key_file: "{{ env_cf_data_key_file }}"
-cf_data_ca_file: "{{ env_cf_data_ca_file }}"
-cf_data_crl_file: "{{ env_cf_data_crl_file }}"
+  ca_rootca_password: "{{ env_ca_rootca_password }}"
 
-cf_data_db_backup_key_id: "{{ env_cf_data_db_backup_key_id }}"
-cf_data_db_backup_secret_key: "{{ env_cf_data_db_backup_secret_key }}"
+  mon_nessus_user: "{{ env_mon_nessus_user }}"
+  mon_nessus_pwd: "{{ env_mon_nessus_pwd }}"
+  mon_nessus_pub_key: "{{ env_mon_nessus_pub_key }}"
 
-selinux_policy: "targeted"
-# selinux_state: "permissive"
-selinux_state: "disabled"
+  app_lb_arn: "{{ env_app_lb_arn}}"
 
-# AppServer cert and key for communication with FHIR Server
-app_fhir_cert: "{{ env_app_fhir_cert }}"
-app_fhir_key: "{{ env_app_fhir_key }}"
-app_fhir_cert_subdir: "{{ env_app_fhir_cert_subdir }}"
-app_fhir_cert_name: "{{ env_app_fhir_cert_name }}"
-app_fhir_key_name: "{{ env_app_fhir_key_name }}"
-
-# cf_app_selinux_policy sets SELINUXTYPE=targeted
-cf_app_selinux_policy: "{{ selinux_policy }}"
-# cf_app_selinux_state set SELINUX=permissive
-cf_app_selinux_state: "{{ selinux_state }}"
-
-cf_app_sg_app_zone_id: "{{ env_cf_app_sg_app_zone_id }}"
-cf_app_azone: "{{env_cf_app_azone }}"
-cf_app_build_image_id: "{{ env_cf_app_build_image_id }}"
-cf_app_instance_name: "{{ env_cf_app_instance_name }}"
-cf_app_tag_key_stack: "{{ env_cf_app_tag_key_stack }}"
-cf_app_tag_key_layer: "{{ env_cf_app_tag_key_layer }}"
-cf_app_key_name: "{{ env_cf_app_key_name }}"
-cf_app_instance_type: "{{ env_cf_app_instance_type }}"
-cf_app_public_server_name: "{{ env_cf_app_public_server_name }}"
-cf_app_pyserver_name: "{{ env_cf_app_pyserver_name }}"
-cf_app_py_virtual_env: "{{ env_cf_app_py_virtual_env }}"
-cf_app_pyapp_home: "{{ env_cf_app_pyapp_home }}"
-cf_app_pyapp_settings: "{{ env_cf_app_pyapp_settings }}"
-cf_app_repo_branch: "{{ env_cf_app_repo_branch }}"
-cf_app_pyapps_user: "{{ env_cf_app_pyapps_user }}"
-cf_app_db_user: "{{ env_cf_app_db_user }}"
-cf_app_db_pwd: "{{ env_cf_app_db_pwd }}"
-cf_app_pyapps_email: "{{ env_cf_app_pyapps_email }}"
-cf_app_pyapps_pwd: "{{ env_cf_app_pyapps_pwd }}"
-# Removing Herd Member designation
-# cf_app_herd_member: "{{ env_cf_app_herd_member }}"
-cf_app_db_type: "{{ env_cf_app_db_type }}"
-cf_app_db_prefix: "{{ env_cf_app_db_prefix }}"
-cf_app_db_host_address: "{{ env_cf_db_host_address }}"
-cf_app_aws_content_key_id: "{{ env_cf_app_aws_content_key_id }}"
-cf_app_aws_content_access_key: "{{ env_cf_app_aws_content_access_key }}"
-cf_app_target_vpc_id: "{{ cf_vpc_id }}"
-cf_app_log_dir: "{{ env_cf_app_log_dir }}"
-
-# Postgres Role related settings
-db_server_account: "postgres"
-db_server_data_dir: "/data/pgsql/9.6/data"
-db_server_temp_dir: "/data/pgbackup"
-db_server_table_name: "{{ cf_data_database_prefix }}{{ cf_data_tag_key_stack }}_{{ common_db_type[cf_data_database_type]['DbNameTable'] }}"
-db_server_backup_pub_key: "backup_key.pem.pub"
-# role_ db_user: "postgres"
-# role_db_data_dir: "/data/pgsql/9.6/data"
-# role_db_temp_dir: "/data/pgbackup"
-# role_db_table_name: "{{ cf_data_database_prefix }}{{ cf_data_tag_key_stack }}_{{ common_db_type[cf_data_database_type]['DbNameTable'] }}"
-# role_db_backup_pub_key: "backup_key.pem.pub"
-
-# CA Certificate Root password
-ca_rootca_password: "{{ env_ca_rootca_password }}"
-
-mon_nessus_user: "{{ env_mon_nessus_user }}"
-mon_nessus_pwd: "{{ env_mon_nessus_pwd }}"
-mon_nessus_pub_key: "{{ env_mon_nessus_pub_key }}"
-
-app_lb_arn: "{{ env_app_lb_arn}}"
-app_ssl_lb_arn: "{{ env_app_ssl_lb_arn }}"
-# Port 80 or 443 from ALB to APPServer = http | https
-# Also used to define which set of apache conf files are copied to appserver
-# See playbook/appserver/roles/
-app_lb_app_protocol: "{{ env_app_lb_app_protocol }}"
-
-# splunk configuration
-# Group name = BBAPI
-splunk_group_name: "{{ env_splunk_group_name }}"
-splunk_target_layer: "{{ env_splunk_target_layer }}"
-splunk_client_name: "{{ env_splunk_client_name }}"
-splunk_target_server: "{{ env_splunk_target_server }}"
-splunk_target_port: "{{ env_splunk_target_port }}"
-
-# attempt to map groups to SPLUNK type
-splunk_name_mapper: {
-        "appservers": "APP",
-        "dbservers": "DATA",
-        "mgmtservers": "MGMT"
-}
-
-# AWS ARN for SNS messaging
-sns_topic_arn: "{{ env_sns_topic_arn }}"
-sns_access_key_id: "{{ env_sns_access_key_id }}"
-sns_secret_access_key: "{{ env_sns_secret_access_key }}"
-
-# Swagger ui parent directory
-swagger_ui_parent_dir: "/var/www/doc/swagger-3-4-2"
-# swagger_ui_repo_source: "https://github.com/alimate/swagger-ui.git"
-swagger_ui_repo_source: "https://github.com/swagger-api/swagger-ui.git"
-swagger_apidocs_location: "{{ install_root }}{{ common_project_name }}/apidocs"
-swagger_external_path: "/devdocs_bbonfhirapi/"
-swagger_docs_file: "bbonfhir_swagger.yaml"
-# swagger_docs_file: "bbonfhir_swagger.json"
-
-
-cf_env_layer: {
-        "dev": {
-          "az1": {
-            "dmz": "10.224.78.144/28",
-            "web": "10.224.78.0/28",
-            "app": "10.224.78.48/28",
-            "data": "10.224.78.96/28",
-            "mgmt": "10.224.78.192/26",
-            "ocss1": "10.128.11.0/24",
-            "ocss2": "10.128.111.0/24"
-            },
-          "az2": {
-            "dmz": "10.224.78.160/28",
-            "web": "10.224.78.16/28",
-            "app": "10.224.78.64/28",
-            "data": "10.224.78.112/28",
-            "mgmt": "10.224.78.192/26",
-            "ocss1": "10.128.11.0/24",
-            "ocss2": "10.128.111.0/24"
-            },
-          "az3": {
-            "dmz": "10.224.78.176/28",
-            "web": "10.224.78.32/28",
-            "app": "10.224.78.80/28",
-            "data": "10.224.78.128/28",
-            "mgmt": "10.224.78.192/26",
-            "ocss1": "10.128.11.0/24",
-            "ocss2": "10.128.111.0/24"
-            }
-        },
-        "impl": {
-           "az1": {
-            "dmz": "10.246.44.144/28",
-            "web": "10.246.44.0/28",
-            "app": "10.246.44.48/28",
-            "data": "10.246.44.96/28",
-            "mgmt": "10.246.44.192/26",
-            "ocss1": "10.128.11.0/24",
-            "ocss2": "10.128.111.0/24"
-            },
-          "az2": {
-            "dmz": "10.246.44.160/28",
-            "web": "10.246.44.16/28",
-            "app": "10.246.44.64/28",
-            "data": "10.246.44.112/28",
-            "mgmt": "10.246.44.192/26",
-            "ocss1": "10.128.11.0/24",
-            "ocss2": "10.128.111.0/24"
-            },
-          "az3": {
-            "dmz": "10.246.44.176/28",
-            "web": "10.246.44.32/28",
-            "app": "10.246.44.80/28",
-            "data": "10.246.44.128/28",
-            "mgmt": "10.246.44.192/26",
-            "ocss1": "10.128.11.0/24",
-            "ocss2": "10.128.111.0/24"
-            }
-        },
-        "prod": {
-          "az1": {
-            "dmz": "10.244.140.144/28",
-            "web": "10.244.140.0/28",
-            "app": "10.244.140.48/28",
-            "data": "10.244.140.96/28",
-            "mgmt": "10.244.140.192/26",
-            "ocss1": "10.128.11.0/24",
-            "ocss2": "10.128.111.0/24"
-            },
-          "az2": {
-            "dmz": "10.244.140.160/28",
-            "web": "10.244.140.16/28",
-            "app": "10.244.140.64/28",
-            "data": "10.244.140.112/28",
-            "mgmt": "10.244.140.192/26",
-            "ocss1": "10.128.11.0/24",
-            "ocss2": "10.128.111.0/24"
-            },
-          "az3": {
-            "dmz": "10.244.140.176/28",
-            "web": "10.244.140.32/28",
-            "app": "10.244.140.80/28",
-            "data": "10.244.140.128/28",
-            "mgmt": "10.244.140.192/26",
-            "ocss1": "10.128.11.0/24",
-            "ocss2": "10.128.111.0/24"
-            }
-        },
-        "test": {
-          "az1": {
-            "dmz": "10.224.90.144/28",
-            "web": "10.224.90.0/28",
-            "app": "10.224.90.48/28",
-            "data": "10.224.90.96/28",
-            "mgmt": "10.224.90.192/26",
-            "ocss1": "10.128.11.0/24",
-            "ocss2": "10.128.111.0/24"
-            },
-          "az2": {
-            "dmz": "10.224.90.160/28",
-            "web": "10.224.90.16/28",
-            "app": "10.224.90.64/28",
-            "data": "10.224.90.112/28",
-            "mgmt": "10.224.90.192/26",
-            "ocss1": "10.128.11.0/24",
-            "ocss2": "10.128.111.0/24"
-            },
-          "az3": {
-            "dmz": "10.224.90.176/28",
-            "web": "10.224.90.32/28",
-            "app": "10.224.90.80/28",
-            "data": "10.224.90.128/28",
-            "mgmt": "10.224.90.192/26",
-            "ocss1": "10.128.11.0/24",
-            "ocss2": "10.128.111.0/24"
-            }
-        }
-    }
+  cf_env_layer: {
+          "dev": {
+            "az1": {
+              "dmz": "10.224.78.144/28",
+              "web": "10.224.78.0/28",
+              "app": "10.224.78.48/28",
+              "data": "10.224.78.96/28",
+              "mgmt": "10.224.78.192/26",
+              "ocss1": "10.128.11.0/24",
+              "ocss2": "10.128.111.0/24"
+              },
+            "az2": {
+              "dmz": "10.224.78.160/28",
+              "web": "10.224.78.16/28",
+              "app": "10.224.78.64/28",
+              "data": "10.224.78.112/28",
+              "mgmt": "10.224.78.192/26",
+              "ocss1": "10.128.11.0/24",
+              "ocss2": "10.128.111.0/24"
+              },
+            "az3": {
+              "dmz": "10.224.78.176/28",
+              "web": "10.224.78.32/28",
+              "app": "10.224.78.80/28",
+              "data": "10.224.78.128/28",
+              "mgmt": "10.224.78.192/26",
+              "ocss1": "10.128.11.0/24",
+              "ocss2": "10.128.111.0/24"
+              }
+          },
+          "impl": {
+             "az1": {
+              "dmz": "10.246.44.144/28",
+              "web": "10.246.44.0/28",
+              "app": "10.246.44.48/28",
+              "data": "10.246.44.96/28",
+              "mgmt": "10.246.44.192/26",
+              "ocss1": "10.128.11.0/24",
+              "ocss2": "10.128.111.0/24"
+              },
+            "az2": {
+              "dmz": "10.246.44.160/28",
+              "web": "10.246.44.16/28",
+              "app": "10.246.44.64/28",
+              "data": "10.246.44.112/28",
+              "mgmt": "10.246.44.192/26",
+              "ocss1": "10.128.11.0/24",
+              "ocss2": "10.128.111.0/24"
+              },
+            "az3": {
+              "dmz": "10.246.44.176/28",
+              "web": "10.246.44.32/28",
+              "app": "10.246.44.80/28",
+              "data": "10.246.44.128/28",
+              "mgmt": "10.246.44.192/26",
+              "ocss1": "10.128.11.0/24",
+              "ocss2": "10.128.111.0/24"
+              }
+          },
+          "prod": {
+            "az1": {
+              "dmz": "10.244.44.144/28",
+              "web": "10.244.44.0/28",
+              "app": "10.244.44.48/28",
+              "data": "10.244.44.96/28",
+              "mgmt": "10.244.44.192/26",
+              "ocss1": "10.128.11.0/24",
+              "ocss2": "10.128.111.0/24"
+              },
+            "az2": {
+              "dmz": "10.244.44.160/28",
+              "web": "10.244.44.16/28",
+              "app": "10.244.44.64/28",
+              "data": "10.244.44.112/28",
+              "mgmt": "10.244.44.192/26",
+              "ocss1": "10.128.11.0/24",
+              "ocss2": "10.128.111.0/24"
+              },
+            "az3": {
+              "dmz": "10.244.44.176/28",
+              "web": "10.244.44.32/28",
+              "app": "10.244.44.80/28",
+              "data": "10.244.44.128/28",
+              "mgmt": "10.244.44.192/26",
+              "ocss1": "10.128.11.0/24",
+              "ocss2": "10.128.111.0/24"
+              }
+          },
+          "test": {
+            "az1": {
+              "dmz": "10.224.90.144/28",
+              "web": "10.224.90.0/28",
+              "app": "10.224.90.48/28",
+              "data": "10.224.90.96/28",
+              "mgmt": "10.224.90.192/26",
+              "ocss1": "10.128.11.0/24",
+              "ocss2": "10.128.111.0/24"
+              },
+            "az2": {
+              "dmz": "10.224.90.160/28",
+              "web": "10.224.90.16/28",
+              "app": "10.224.90.64/28",
+              "data": "10.224.90.112/28",
+              "mgmt": "10.224.90.192/26",
+              "ocss1": "10.128.11.0/24",
+              "ocss2": "10.128.111.0/24"
+              },
+            "az3": {
+              "dmz": "10.224.90.176/28",
+              "web": "10.224.90.32/28",
+              "app": "10.224.90.80/28",
+              "data": "10.224.90.128/28",
+              "mgmt": "10.224.90.192/26",
+              "ocss1": "10.128.11.0/24",
+              "ocss2": "10.128.111.0/24"
+              }
+          }
+      }
