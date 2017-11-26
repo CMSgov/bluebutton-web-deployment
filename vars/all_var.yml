@@ -18,6 +18,15 @@
 
   ami_release: "{{ env_ami_release }}"
 
+      # This image should be updated monthly.
+      # Current version is: EAST-RH 7-3 Gold Image V.1.09 (HVM) 04-21-2017 - ami-fdde41eb
+      # EAST-RH 6-9 Gold Image V.1.01 (PV) 04-21-17 - ami-3dda452b
+      # EAST-RH 6-8 Gold Image V.3.17 (PV)Splunk-CFN-FIPS140-02-24-17 (ami-f070abe6)
+      # EAST-RH 7-3 Gold Image V.1.10 (HVM) 05-18-17 - ami-3aff872c (previous)
+      # EAST-RH 7-4 Gold Image V.1.15 (HVM) 11-2-17 - ami-5a6ac120
+
+  ami_app_gold_image: "{{ env_ami_app_gold_image }}" # Change the AMI, from which you want to launch the server
+
   ### Environment:
   env: "{{ env_env }}"
 
