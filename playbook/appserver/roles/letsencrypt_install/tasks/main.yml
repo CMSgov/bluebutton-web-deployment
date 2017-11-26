@@ -22,3 +22,11 @@
     clone: yes
     force: yes
 
+- name: "run acme.sh install"
+  become_user: root
+  become: yes
+  shell: |
+    cd /root/letsencrypt
+    ./acme.sh --install
+
+
