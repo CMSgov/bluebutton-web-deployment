@@ -49,7 +49,7 @@
 # 1 = Enabled | 0 = disabled
 # If enabled we need to pass -i https://pypi.org/simple/ to extra_args
 # in ansible pip command
-pip_extra_args: "-i https://pypi.org/simple/"
+pip_extra_args: " -i https://pypi.org/simple/ "
 
 
 # Remote user access account
