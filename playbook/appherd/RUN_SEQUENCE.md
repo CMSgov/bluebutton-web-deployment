@@ -9,7 +9,7 @@
 
 ## Build a base virtual machine
 
-ansible-playbook playbook/appserver/1_create_appserver.yml \
+ansible-playbook playbook/appherd/1_create_appserver.yml \
     --vault-password-file { vault password file } \
     --private-key { pem file } \
     --extra-vars 'env={ dev | test | impl | prod } \
