@@ -134,12 +134,25 @@
   django_email_region: "{{ env_django_email_region }}"
   django_email_ses_endpoint: "{{ env_django_email_ses_endpoint }}"
   django_from_email: "{{ env_django_from_email }}"
+  django_admin_email: "{{ env_django_admin_email }}"
+
+  # SALT and ITERATIONS
+  django_user_id_salt: "{{ env_django_user_id_salt }}"
+  django_user_id_iterations: "{{ env_django_user_id_iterations }}"
 
   ### S3 Bucket Settings:
   s3_bucket_account: "{{ env_s3_bucket_account }}"
   aws_access_id: "{{ env_aws_access_id }}"
   aws_secret_key: "{{ env_aws_secret_key }}"
   s3_storage_bucket_name: "{{ env_s3_storage_bucket_name }}"
+
+  ### Route53 Settings
+  ## {{ env|upper }}
+  r53_account: "{{ env_r53_account }}"
+  r53_access_id: "{{ env_r53_access_id }}"
+  r53_secret_key: "{{ env_r53_secret_key }}"
+
+  apache_cert_store: "{{ env_apache_cert_store }}"
 
   ### Django Settings:
   ##  DJANGO_ORGANIZATION_NAME='{{ django_org_name }}'
@@ -172,6 +185,10 @@
   db_host_address: "{{ env_db_host_address }}"
   db_host_port: "{{ env_db_host_port }}"
   db_host_options: "{{ env_db_host_options }}"
+
+  # Database SSL Certificate and Key Files:
+  ca_key: "server.key"
+  ca_cert: "server.crt"
 
   cf_region: "us-east-1"
   cf_vpc_id: "{{ env_cf_vpc_id }}"
@@ -209,7 +226,20 @@
   # cf_app_selinux_policy sets SELINUXTYPE=targeted
   cf_app_selinux_policy: "targeted"
   # cf_app_selinux_state set SELINUX=permissive
-  cf_app_selinux_state: "permissive"
+  # cf_app_selinux_state: "permissive"
+  selinux_state: "disabled"
+
+  # AppServer cert and key for communication with FHIR Server
+  app_fhir_cert: "{{ env_app_fhir_cert }}"
+  app_fhir_key: "{{ env_app_fhir_key }}"
+  app_fhir_cert_subdir: "{{ env_app_fhir_cert_subdir }}"
+  app_fhir_cert_name: "{{ env_app_fhir_cert_name }}"
+  app_fhir_key_name: "{{ env_app_fhir_key_name }}"
+
+  # cf_app_selinux_policy sets SELINUXTYPE=targeted
+  cf_app_selinux_policy: "{{ selinux_policy }}"
+  # cf_app_selinux_state set SELINUX=permissive
+  cf_app_selinux_state: "{{ selinux_state }}"
 
   cf_app_sg_app_zone_id: "{{ env_cf_app_sg_app_zone_id }}"
   cf_app_azone: "{{env_cf_app_azone }}"
@@ -230,7 +260,8 @@
   cf_app_db_pwd: "{{ env_cf_app_db_pwd }}"
   cf_app_pyapps_email: "{{ env_cf_app_pyapps_email }}"
   cf_app_pyapps_pwd: "{{ env_cf_app_pyapps_pwd }}"
-  cf_app_herd_member: "{{ env_cf_app_herd_member }}"
+  # Removing Herd Member designation
+  # cf_app_herd_member: "{{ env_cf_app_herd_member }}"
   cf_app_db_type: "{{ env_cf_app_db_type }}"
   cf_app_db_prefix: "{{ env_cf_app_db_prefix }}"
   cf_app_db_host_address: "{{ env_cf_db_host_address }}"
@@ -251,6 +282,7 @@
   # role_db_table_name: "{{ cf_data_database_prefix }}{{ cf_data_tag_key_stack }}_{{ common_db_type[cf_data_database_type]['DbNameTable'] }}"
   # role_db_backup_pub_key: "backup_key.pem.pub"
 
+  # CA Certificate Root password
   ca_rootca_password: "{{ env_ca_rootca_password }}"
 
   mon_nessus_user: "{{ env_mon_nessus_user }}"
@@ -258,6 +290,42 @@
   mon_nessus_pub_key: "{{ env_mon_nessus_pub_key }}"
 
   app_lb_arn: "{{ env_app_lb_arn}}"
+  app_ssl_lb_arn: "{{ env_app_ssl_lb_arn }}"
+  # Port 80 or 443 from ALB to APPServer = http | https
+  # Also used to define which set of apache conf files are copied to appserver
+  # See playbook/appserver/roles/
+  app_lb_app_protocol: "{{ env_app_lb_app_protocol }}"
+
+  # splunk configuration
+  # Group name = BBAPI
+  splunk_group_name: "{{ env_splunk_group_name }}"
+  splunk_target_layer: "{{ env_splunk_target_layer }}"
+  splunk_client_name: "{{ env_splunk_client_name }}"
+  splunk_target_server: "{{ env_splunk_target_server }}"
+  splunk_target_port: "{{ env_splunk_target_port }}"
+
+  # attempt to map groups to SPLUNK type
+  splunk_name_mapper: {
+          "appservers": "APP",
+          "dbservers": "DATA",
+          "mgmtservers": "MGMT"
+  }
+
+  # AWS ARN for SNS messaging
+  sns_topic_arn: "{{ env_sns_topic_arn }}"
+  sns_access_key_id: "{{ env_sns_access_key_id }}"
+  sns_secret_access_key: "{{ env_sns_secret_access_key }}"
+
+  # Swagger ui parent directory
+  swagger_ui_parent_dir: "/var/www/doc/swagger-3-4-2"
+  # swagger_ui_repo_source: "https://github.com/alimate/swagger-ui.git"
+  swagger_ui_repo_source: "https://github.com/swagger-api/swagger-ui.git"
+  swagger_apidocs_location: "{{ install_root }}{{ common_project_name }}/apidocs"
+  swagger_external_path: "/devdocs_bbonfhirapi/"
+  swagger_docs_file: "bbonfhir_swagger.yaml"
+  # swagger_docs_file: "bbonfhir_swagger.json"
+
+
 
   cf_env_layer: {
           "dev": {
@@ -378,17 +446,4 @@
           }
       }
 
-  # splunk configuration
-  # Layer = WEB | APP | DATA | MGMT
-  # set the next line in the vars section of the playbook
-  # Group name = BBAPI
-  splunk_group_name: "{{ env_splunk_group_name}}"
-  # splunk_target_layer: "WEB | APP | DATA | MGMT"
-  splunk_target_layer: "{{ env_splunk_target_layer }}"
-  splunk_client_name: "{{ env_splunk_client_name }}"
-  # V2 Splunk
-  # targetUri=10.128.11.78:8089
-  # v3 Splunk
-  # targetUri=10.244.112.51:8089
-  splunk_target_server: "{{ env_splunk_target_server }}"
-  splunk_target_port: "{{ env_splunk_target_port }}"
+ 
