@@ -223,10 +223,8 @@
   cf_data_db_backup_key_id: "{{ env_cf_data_db_backup_key_id }}"
   cf_data_db_backup_secret_key: "{{ env_cf_data_db_backup_secret_key }}"
 
-  # cf_app_selinux_policy sets SELINUXTYPE=targeted
-  cf_app_selinux_policy: "targeted"
-  # cf_app_selinux_state set SELINUX=permissive
-  # cf_app_selinux_state: "permissive"
+  selinux_policy: "targeted"
+  # selinux_state: "permissive"
   selinux_state: "disabled"
 
   # AppServer cert and key for communication with FHIR Server
@@ -446,4 +444,3 @@
           }
       }
 
- 
