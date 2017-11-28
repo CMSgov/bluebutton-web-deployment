@@ -40,7 +40,10 @@
   become_user: root
   become: yes
   connection: local
-  shell: "openssl genrsa 4096 > {{ letsencrypt_account_store }}/account.key "
+  shell: "openssl genrsa 4096 > {{ item }} "
+  with_items:
+    - "{{ letsencrypt_account_store }}/account.key"
+    - "{{ letsencrypt_account_store }}/domain.key"
 
 - name: "Create a letsencrypt account key store on REMOTE in {{ letsencrypt_account_store }} "
   become_user: root
@@ -58,8 +61,13 @@
   become_user: root
   become: yes
   copy:
-    src: "{{ letsencrypt_account_store }}/account.key"
-    dest: "{{ letsencrypt_account_store }}/account.key"
+    src: "{{ letsencrypt_account_store }}/{{ item }}"
+    dest: "{{ letsencrypt_account_store }}/{{ item }}"
     owner: root
     group: root
+    mode: 0755
     force: no
+  with_items:
+    - account.key
+    - domain.key
+
