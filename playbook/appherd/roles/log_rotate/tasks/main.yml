@@ -1,0 +1,23 @@
+---
+# File: playbook/appherd/roles/log_rotate/tasks/main.yml
+# Created: 10/25/17
+# Author: '@ekivemark'
+
+
+- name: setup log rotation for pyapps logs
+  become_user: root
+  become: yes
+  copy:
+    dest: "/etc/logrotate.d/pyapps"
+    content: |
+      {{ cf_app_log_dir }}/*.log {
+      missingok
+      notifempty
+      compress
+      size 20k
+      daily
+      create 0776 {{ cf_app_pyapps_user }} logreader
+      }
+    owner: root
+    group: logreader
+    mode: 0600

@@ -1,0 +1,18 @@
+##################################################################
+# ssl.conf
+# copied from hhs_ansible
+# playbook/appserver/roles/app_update/templates/ssl.conf.http.j2
+# SSL is OFF. ie. http protocol only used.
+# v.1.0.2 add ssl prefix to WSGIDaemonProcess to sslapache
+##################################################################
+#
+# IMPORTANT: The default ssl.conf is copied to ssl.conf.disabled.
+# All ssl functions are loaded via: bb_02_ssl.conf
+#
+# This file is installed in an attempt to prevent an apache
+# update re-installing ssl.conf and causing a conflict on
+# port 443
+#
+##################################################################
+
+# END OF FILE

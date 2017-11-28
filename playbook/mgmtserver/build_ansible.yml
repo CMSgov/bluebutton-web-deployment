@@ -87,18 +87,26 @@
   - name: "pip installs with optional version"
     become_user: root
     become: yes
-    # ansible==2.2.1.0
-    # awsccli==1.11.86
+    # ansible==2.2.1.0 (previous)
+    # ansible==2.4.1.0
+    # awscli==1.11.86 (previous)
+    # awscli==1.12.1
     pip:
       name: "{{ item.name }}"
       version: "{{ item.version | default(omit) }}"
+      # extra_args needed if FIPS is enabled
+      extra_args: " {{ pip_extra_args }} "
     with_items:
       - name: ansible
-        version: 2.2.1.0
+        version: 2.4.1.0
       - name: awscli
-        version: 1.11.86
+        version: 1.12.1
       - name: setuptools
         version: 35.0.2
+      - name: pyOpenSSL
+        version: 17.4.0
+      - name: acme-tiny
+        version: 2.0.0
 
 #  - name: "install hhs_ansible"
 #    shell: "mkdir -p /hhs_ansible ; cd /hhs_ansible ; git clone https://github.com/HHSIDEALab/hhs_ansible "

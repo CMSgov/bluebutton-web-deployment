@@ -108,28 +108,49 @@
     - roles/python34
 
     # Install Apache
-
+    # set /var/log/httpd to group ownership = logreader
     - roles/apache
-    # install mod_wsgi
-    - roles/mod_wsgi
-    # Check engine light
-    - ../../roles/check_env
+
     # Create apache cert_store
+    # create directory in /etc/httpd/ssl/certs
     - roles/create_apache_cert_store
-    # Setup Lets encrypt
-    - roles/letsencrypt_install
-    # Run Letsencrypt
-    - roles/letsencrypt_run_1
-    # install the certs
-    - roles/letsencrypt_cert_copy
+
+
+    # Letsencrypt is not working in FIPS Enabled environment
+
+    #    # Setup Lets encrypt
+    #    - roles/letsencrypt_install
+    #    # Run Letsencrypt
+    #    - roles/letsencrypt_run_1
+    #    # install the certs
+    #    - roles/letsencrypt_cert_copy
+
     # install swagger-ui from git
+    # Used to present api documentation
     - roles/swagger_ui_install
+
+    # prepare the folders for app install and log files
+    - roles/app_prep
+
+    ###################################
     # Update application code and write virtualhosts file
     - roles/app_update
+
     # Setup logrotate rules for pyapps
+    # Ensure logs belong to group: logreader
     - roles/log_rotate
+
     # Update environment variable files
     - roles/app_update_env
+
+    ################################################
+    ################################################
+    ################################################
+
+    # # install mod_wsgi
+    # See if we can move mod_wsgi to pip install into virtual env
+    # - roles/mod_wsgi
+
     # django migrate and collectstatic
     - roles/django_prep
     # Set permissions for app under selinux

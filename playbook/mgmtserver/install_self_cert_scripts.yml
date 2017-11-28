@@ -13,8 +13,8 @@
   become: yes
   connection: local
   vars:
-    # det a default environment. We don't mind mucking with the dev environment
-    env: "dev"
+    # det a default environment. We don't mind mucking with the test environment
+    env: "test"
     ansible_ssh_pipelining: no
   vars_files:
     - "./../../vars/common.yml"
@@ -48,6 +48,6 @@
 
   - name: "install result"
     debug:
-      msg: "zip installation resulted in this - {{cert_install_result.stdout }}"
+      msg: "zip installation resulted in this - {{ cert_install_result.stdout }}"
 
 
