@@ -305,6 +305,7 @@
   # attempt to map groups to SPLUNK type
   splunk_name_mapper: {
           "appservers": "APP",
+          "appservers-base": "APP",
           "dbservers": "DATA",
           "mgmtservers": "MGMT"
   }

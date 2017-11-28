@@ -1,0 +1,14 @@
+---
+# File: playbook/appserver/roles/app_user/tasks/main.yml
+# Created: 5/10/17
+# Author: '@ekivemark'
+# Create the pyapps user on the appserver.
+
+
+- name: "Creating Appserver User"
+  become_user: root
+  become: yes
+  user:
+    name: "{{ cf_app_pyapps_user }}"
+    password: "{{ cf_app_pyapps_pwd | password_hash('sha512') }}"
+
