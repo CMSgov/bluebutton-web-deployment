@@ -19,4 +19,7 @@ ansible-playbook playbook/appherd/1_create_appserver.yml \
                   build_target=appservers \
                   cf_platform_version={ nn }'
                   
+This should create a new server that is added to the 
+
+                  
                   
