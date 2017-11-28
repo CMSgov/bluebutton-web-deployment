@@ -119,7 +119,7 @@
       name: "{{ app_ec2_output.instances[0]['private_ip'] }}"
       groups: "just_created"
 
-- name: "add private_ip to /etc/ansible/hosts"
+  - name: "add private_ip to /etc/ansible/hosts"
     lineinfile:
       dest: "/etc/ansible/hosts"
       regexp: '\[appservers-base\]'
