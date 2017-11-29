@@ -40,6 +40,7 @@
   - name: "get list of suitable images"
     ec2_ami_find:
       owner: self
+      region: "useast-1"
       # value of sort must be one of:
       #   name,description,tag,architecture,block_device_mapping,creationDate,
       #   hypervisor,is_public,location,owner_id,platform,root_device_name,
