@@ -24,11 +24,11 @@
 - name: "Generate key, csr and cert pem for {{ external_dns_name }} in {{ apache_cert_store }}"
   become_user: root
   become: yes
-  shell: |
-    # create key
-    openssl genrsa -out {{ apache_cert_store }}/key.pem
-    # create certificate signing request file
-    openssl req  -sha256  -new  -key {{ apache_cert_store }}/key.pem  -out {{ apache_cert_store }}/fullchain.pem
-    # create x509 certificate
-    openssl x509 -req  -days 3650  -in {{ apache_cert_store }}/fullchain.pem  -signkey {{ apache_cert_store }}/key.pem -out {{ apache_cert_store }}/cert.pem
-
+  command: |
+    openssl req -new -nodes -x509 \
+      -subj "/C=US/ST=Maryland/L=Baltimore`/O=OEDA/CN=${ansible_fqdn}" \
+      -days 3650 \
+      -keyout {{ apache_cert_store }}/key.pem \
+      -out {{ apache_cert_store }}/cert.pem \
+      -extensions v3_ca creates={{ apache_server_crt }}/cert.pem
+      
