@@ -56,7 +56,7 @@
 
   - set_fact:
       build_from_ami: "{{ latest_ami.results[0].ami_id }}"
-      build_new_ami:  current_app_ami_source ==  build_from_ami 
+      build_new_ami:  "{{ current_app_ami_source ==  build_from_ami }}"
       cacheable: true
 
   - name: "Save the ami variable - currently undefined"
