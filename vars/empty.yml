@@ -1,0 +1,15 @@
+---
+# File: empty.yml.yml 
+# Created: 11/29/17
+# Author: '@ekivemark'
+
+# This is an empty file. Used when loading vars_files that might not exist.
+
+
+# Do not remove ths file!
+# use in vars_files:
+# vars_files:
+#  - [ "file/that/does/not/exist.yml", "empty.yml" ]
+#
+
+empty_variable: ""

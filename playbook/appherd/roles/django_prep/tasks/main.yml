@@ -6,7 +6,7 @@
 # Perform django migrate and django collectstatic
 # add in group create for first run only.
 
-- name: Django migrate
+- name: "Django migrate "
   become_user: root
   become: yes
   # We only want to run migration on one server in the fleet
