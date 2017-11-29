@@ -23,6 +23,7 @@
   # gather_facts: False
   vars:
     region: "us-east-1"
+    ami_image_name: "EAST?RH?7?4*"
     env: "test"
     azone: "az2"
     sub_zone: "app"
@@ -40,7 +41,7 @@
   tasks:
   - name: "get list of suitable images"
     ec2_ami_find:
-      owner: self
+      name: "{{ ami_image_name }}"
       region: "{{ region }}"
       # value of sort must be one of:
       #   name,description,tag,architecture,block_device_mapping,creationDate,
