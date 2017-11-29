@@ -166,7 +166,7 @@
   - name: "remove server address ({{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}) from appservers-base in /etc/ansible/hosts file"
     lineinfile:
       path: /etc/ansible/hosts
-      regexp: '{{ hostvars[inventory_hostname][\'ansible_default_ipv4\'][\'address\'] }}'
+      regexp: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
       state: absent
       backup: yes
 
