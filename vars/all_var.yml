@@ -40,6 +40,7 @@
   python_ver: "{{ env_python_ver }}"
   python_ver_full: "{{ env_python_ver_full }}"
   mod_wsgi_ver_full: "{{ env_mod_wsgi_ver_full }}"
+  python_bin_dir: "{{ env_python_bin_dir }}"
 
 
   # pip install extra arguments needed:
@@ -325,7 +326,6 @@
   swagger_external_path: "/devdocs_bbonfhirapi/"
   swagger_docs_file: "bbonfhir_swagger.yaml"
   # swagger_docs_file: "bbonfhir_swagger.json"
-
 
 
   cf_env_layer: {

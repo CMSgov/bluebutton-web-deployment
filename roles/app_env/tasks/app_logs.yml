@@ -20,33 +20,13 @@
   file:
     dest: "{{ cf_app_log_dir }}/{{ item }}"
     owner: "{{ cf_app_pyapps_user }}"
-    group: "{{ cf_app_pyapps_user }}"
+    group: "logreader"
     state: touch
     mode: 0776
   with_items:
     - debug.log
     - error.log
     - info.log
-
-
-#- name: "Create the error log"
-#  become_user: root
-#  become: yes
-#  file:
-#    dest: "{{ cf_app_log_dir }}/error.log"
-#    owner: "{{ cf_app_pyapps_user }}"
-#    group: "{{ cf_app_pyapps_user }}"
-#    state: touch
-#    mode: 0766
-#
-#- name: "Create the info log"
-#  become_user: root
-#  become: yes
-#  file:
-#    dest: "{{ cf_app_log_dir }}/info.log"
-#    owner: "{{ cf_app_pyapps_user }}"
-#    group: "{{ cf_app_pyapps_user }}"
-#    state: touch
-#    mode: 0766
+    - perf_mon.log
 
 
