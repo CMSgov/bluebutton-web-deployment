@@ -89,7 +89,7 @@
   with_items:
     - "install --upgrade pip {{ pip_extra_args }} "
     - "install psycopg2 {{ pip_extra_args }} --allow-external psycopg2 "
-    - "install -r {{ cf_app_pyapp_home }}/{{ common_project_name }}/requirements/requirements.txt {{ pip_extra_args }} "
+    - "install -r {{ cf_app_pyapp_home }}/{{ common_project_name }}/requirements/requirements{{ python_ver }}.txt {{ pip_extra_args }} "
 
 # Relative reference from playbook/appserver
 - include: ./../appherd/roles/create_certstore/tasks/main.yml
