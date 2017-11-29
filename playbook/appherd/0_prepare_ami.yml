@@ -56,7 +56,8 @@
 
   - set_fact:
       build_from_ami: "{{ latest_ami.results[0].ami_id }}"
-      build_new_ami:  "{{ build_from_ami == ( current_app_ami_source | 'not_defined' ) }}"
+      existing_source_ami: "{{ current_app_ami_source | default('not_defined') }}"
+      build_new_ami:  "{{ build_from_ami ==  existing_source_ami }}"
       cacheable: true
 
   - name: "Save the ami variable - currently undefined"
