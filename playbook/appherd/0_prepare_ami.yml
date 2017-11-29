@@ -66,7 +66,7 @@
     when: ( current_app_ami_source is undefined )
 
   - name: "switch off fips and save new image"
-      include: ../../roles/fips140_off
+      include_tasks: ../../roles/fips140_off/tasks/main.yml
     when: ( current_app_ami_source is undefined ) or ( current_app_ami_source != build_from_ami )
 
 
