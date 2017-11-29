@@ -51,6 +51,10 @@
       sort_order: descending
     register: latest_ami
 
+  - set_fact:
+      build_from_ami: "{{ latest_ami.results[0].ami_id }}"
+      cacheable: true
+
   - debug:
       msg: "{{ latest_ami.results[0] }}"
 
