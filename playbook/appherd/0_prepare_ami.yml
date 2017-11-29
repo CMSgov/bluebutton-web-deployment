@@ -17,13 +17,33 @@
 # 6. Save the ami image id to use in 1_create_appserver.yml
 
 
-- name: "get list of suitable images"
-  ec2_ami_find:
-    owner: self
-    sort: creationDate, name
-    sort_order: descending
-  register: latest_ami
+- name: Provision Server
+  hosts: localhost
+  connection: local
+  # gather_facts: False
+  vars:
+    env: "test"
+    azone: "az2"
+    sub_zone: "app"
+    sg_zone: "app"
+    env_az: "{{ env }}-{{ azone }}"
+    env_cf_data_version: "01"
+    # splunk_target_layer: "WEB | APP | DATA | MGMT"
+    splunk_target_layer: "{{ sub_zone|upper }}"
+  vars_files:
+    - "./../../vars/common.yml"
+    - "./../../vault/env/{{ env }}/vault.yml"
+    - "./../../vars/env/{{ env }}/env.yml"
+    - "./../../vars/all_var.yml"
 
-- debug:
-    msg: "{{ latest_ami }}"
+  tasks:
+  - name: "get list of suitable images"
+    ec2_ami_find:
+      owner: self
+      sort: creationDate, name
+      sort_order: descending
+    register: latest_ami
+
+  - debug:
+      msg: "{{ latest_ami }}"
 
