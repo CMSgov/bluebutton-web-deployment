@@ -59,10 +59,7 @@
       cacheable: true
 
   - name: "Save the ami variable - currently undefined"
-    local_action:
-      copy content: |
-        current_app_ami_source: {{ build_from_ami }}
-      path: "/root/.ansible_app_ami.yml"
+      shell: echo "current_app_ami_source: {{ build_from_ami }}" > /root/.ansible_app_ami.yml
     when: ( current_app_ami_source is undefined )
 
   # switch off fips and save new image
