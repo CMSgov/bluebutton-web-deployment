@@ -1,0 +1,34 @@
+---
+# File: playbook/appherd/0b_check_ami.yml
+# Created: 11/29/17
+# Author: '@ekivemark'
+
+# Check if a variable persists
+
+
+- name: Check latest Image for Server build
+  hosts: localhost
+  connection: local
+  # gather_facts: False
+  vars:
+    region: "us-east-1"
+    ami_image_name: "EAST?RH?7?4*"
+    env: "test"
+    azone: "az2"
+    sub_zone: "app"
+    sg_zone: "app"
+    env_az: "{{ env }}-{{ azone }}"
+    env_cf_data_version: "01"
+    # splunk_target_layer: "WEB | APP | DATA | MGMT"
+    splunk_target_layer: "{{ sub_zone|upper }}"
+  vars_files:
+    - "./../../vars/common.yml"
+    - "./../../vault/env/{{ env }}/vault.yml"
+    - "./../../vars/env/{{ env }}/env.yml"
+    - "./../../vars/all_var.yml"
+
+  tasks:
+
+  - debug:
+      msg: "this was the ami: {{ build_from_ami }}"
+
