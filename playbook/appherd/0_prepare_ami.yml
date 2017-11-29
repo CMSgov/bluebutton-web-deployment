@@ -25,5 +25,5 @@
   register: latest_ami
 
 - debug:
-    msg: "{{ latest_ami }}
-  
+    msg: "{{ latest_ami }}"
+
