@@ -37,6 +37,9 @@
     - "./../../vault/env/{{ env }}/vault.yml"
     - "./../../vars/env/{{ env }}/env.yml"
     - "./../../vars/all_var.yml"
+    # write the ami image information to a file in /root
+    # variable will be: current_app_ami_source
+    - "/root/.ansible_app_ami.yml"
 
   tasks:
   - name: "get list of suitable images"
@@ -55,6 +58,15 @@
       build_from_ami: "{{ latest_ami.results[0].ami_id }}"
       cacheable: true
 
-  - debug:
-      msg: "{{ latest_ami.results[0] }}"
+  - name: "Save the ami variable - currently undefined"
+    local_action:
+      copy:
+      content: "current_app_ami_source: {{ build_from_ami }}"
+      path: "/root/.ansible_app_ami.yml"
+    when: ( current_app_ami_source is undefined )
+
+  - name: "switch off fips and save new image"
+      include: ../../roles/fips140_off
+    when: ( current_app_ami_source is undefined ) or ( current_app_ami_source != build_from_ami )
+
 
