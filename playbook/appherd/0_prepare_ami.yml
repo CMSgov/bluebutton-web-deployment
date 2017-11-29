@@ -39,7 +39,7 @@
     - "./../../vars/all_var.yml"
     # write the ami image information to a file in /root
     # variable will be: current_app_ami_source
-    - "/root/.ansible_app_ami.yml"
+    - ["/root/.ansible_app_ami.yml"]
 
   tasks:
   - name: "get list of suitable images"
