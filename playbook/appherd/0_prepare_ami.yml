@@ -61,8 +61,10 @@
   - name: "Save the ami variable - currently undefined"
     shell: |
       echo current_app_ami_source: {{ build_from_ami }} > /root/.ansible_app_ami.yml
-
     when: ( current_app_ami_source is undefined )
+
+  - debug:
+      msg: "app_ami_source: {{ current_app_ami_source }} / build_from_ami: {{ build_from_ami }}"
 
   # switch off fips and save new image
   - include_tasks: ../../roles/fips140_off/tasks/main.yml
