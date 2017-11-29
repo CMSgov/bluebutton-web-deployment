@@ -30,5 +30,4 @@
       -days 3650 \
       -keyout {{ apache_cert_store }}/key.pem \
       -out {{ apache_cert_store }}/cert.pem \
-      -extensions v3_ca creates={{ apache_server_crt }}/cert.pem
-      
+      -extensions v3_ca creates={{ apache_cert_store }}/cert.pem
