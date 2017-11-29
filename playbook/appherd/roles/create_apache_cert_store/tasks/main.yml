@@ -1,0 +1,26 @@
+---
+# File: playbook/appherd/roles/create_apache_cert_store/tasks/main.yml
+# Created: 6/26/17
+# Author: '@ekivemark'
+
+# Create the directory to store the ssl certificates
+
+# export CERT_STORE=/etc/httpd/ssl/certs
+## Server Certificate:
+# SSLCertificateFile $CERT_STORE/cert.pem
+## Server Private Key:
+# SSLCertificateKeyFile $CERT_STORE/key.pem
+## Server Certificate Chain:
+#SSLCertificateChainFile $CERT_STORE/fullchain.pem
+
+- name: "Create Certificate directory for Apache"
+  become_user: root
+  become: yes
+  file:
+    dest: "{{ apache_cert_store }}"
+    state: directory
+    recurse: yes
+    mode: "0660"
+    owner: root
+    group: root
+

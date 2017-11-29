@@ -73,7 +73,7 @@ Then go to mod_wsgi source:
 
     make clean
     .configure \
-    --with-python=/usr/local/bin/python{{ python_ver }} \
+    --with-python={{ python_bin_dir }}/python{{ python_ver }} \
     --with-apxs=/usr/bin/apxs 
 
     make

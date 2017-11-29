@@ -153,6 +153,8 @@
   r53_secret_key: "{{ env_r53_secret_key }}"
 
   apache_cert_store: "{{ env_apache_cert_store }}"
+  letsencrypt_cert_store: "/root/certstore"
+  letsencrypt_account_store: "{{ letsencrypt_cert_store }}/account"
 
   ### Django Settings:
   ##  DJANGO_ORGANIZATION_NAME='{{ django_org_name }}'

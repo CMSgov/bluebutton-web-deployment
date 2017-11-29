@@ -108,30 +108,45 @@
     - roles/python34
 
     # Install Apache
-
+    # set /var/log/httpd to group ownership = logreader
     - roles/apache
-    # install mod_wsgi
-    - roles/mod_wsgi
-    # Check engine light
-    - ../../roles/check_env
+
     # Create apache cert_store
+    # create directory in /etc/httpd/ssl/certs
     - roles/create_apache_cert_store
-    # Setup Lets encrypt
-    - roles/letsencrypt_install
-    # Run Letsencrypt
-    - roles/letsencrypt_run_1
-    # install the certs
-    - roles/letsencrypt_cert_copy
+
+
+    # Letsencrypt is not working in FIPS Enabled environment
+    # create self-signed certificates for secure communication with ELB
+    - roles/create_self_signed_cert
+
     # install swagger-ui from git
+    # Used to present api documentation
     - roles/swagger_ui_install
+
+    # prepare the folders for app install and log files
+    - roles/app_prep
+
     # Update application code and write virtualhosts file
+    # Download from github
+    # install requirements
     - roles/app_update
+
     # Setup logrotate rules for pyapps
+    # Ensure logs belong to group: logreader
     - roles/log_rotate
+
     # Update environment variable files
     - roles/app_update_env
+
+    # # install mod_wsgi
+    # See if we can move mod_wsgi to pip install into virtual env
+    - roles/mod_wsgi
+
+
     # django migrate and collectstatic
     - roles/django_prep
+
     # Set permissions for app under selinux
     - roles/semanage_apps
     # Set permissions for virtualenv under selinux
@@ -139,20 +154,28 @@
 
 
   tasks:
+  # Make sure sudoers is working correctly
   - include: ../../roles/base_patch/tasks/fix_sudoers.yml
-  ## Switch default ssl.conf off
-  # - include: roles/apache/tasks/ssl_off.yml
-  - include: ../../roles/base_patch/tasks/update_packages.yml
-  - include: roles/create_superuser/tasks/main.yml
-  # - include: ../../roles/app_env/tasks/refresh_app.yml
-  - include: ../platform/rewrite_hosts.yml
 
-  - name: "Update Ansible hosts file"
-    connection: local
-    blockinfile:
-      dest: "/etc/ansible/hosts"
-      marker: "# {mark} ANSIBLE MANAGED BLOCK buildapp #"
-      content: ""
+  # yum upgrade all packages
+  - include: ../../roles/base_patch/tasks/update_packages.yml
+
+  # Create a super user for the python/django application
+  - include: roles/create_superuser/tasks/main.yml
+
+  - name: "remove server address ({{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}) from appservers-base in /etc/ansible/hosts file"
+    lineinfile:
+      path: /etc/ansible/hosts
+      regexp: '{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}'
+      state: absent
+      backup: yes
+
+  - name: "Add server address ({{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}) to appservers section of /etc/ansible/hosts file"
+    lineinfile:
+      path: /etc/ansible/hosts
+      regexp: '\[appservers\]'
+      line: "[appservers]\n{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
+      backup: yes
 
   - name: make sure apache server is running
     service:
@@ -165,7 +188,17 @@
     notify:
       - restart apache
 
-  - name: "Add in to Load Balancer"
+  # Check if server is responding
+  - name: "call with curl to localhost"
+    shell: "curl https://localhost/"
+    register: curl_output
+
+  - name: "Result of curl was..."
+    debug:
+      msg: "{{ curl_output.stdout }}"
+
+
+  - name: "Add in to Loadbalancer"
     include: roles/attach_to_elb/tasks/main.yml
 
   - name: "Notify completion result"

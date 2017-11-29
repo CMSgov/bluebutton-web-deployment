@@ -1,0 +1,34 @@
+---
+# File: /playbook/appherd/roles/create_self_signed_cert/tasks/main.yml
+# Created: 11/28/17
+# Author: '@ekivemark'
+
+# Create a self signed certificate on appserver
+# {{ apache_cert_store }} is typically set to  /etc/httpd/ssl/certs
+# export CERT_STORE=/etc/httpd/ssl/certs
+
+# based on: https://stackoverflow.com/questions/36182242/aws-elb-backend-server-over-https-with-self-signed-certificate
+
+
+- name: "Self-Signed-Cert: Create {{ apache_cert_store }} "
+  become_user: root
+  become: yes
+  file:
+    dest: "{{ apache_cert_store }}"
+    mode: 0755
+    owner: "root"
+    group: "root"
+    recurse: yes
+    state: directory
+
+- name: "Generate key, csr and cert pem for {{ external_dns_name }} in {{ apache_cert_store }}"
+  become_user: root
+  become: yes
+  shell: |
+    # create key
+    openssl genrsa -out {{ apache_cert_store }}/key.pem
+    # create certificate signing request file
+    openssl req  -sha256  -new  -key {{ apache_cert_store }}/key.pem  -out {{ apache_cert_store }}/fullchain.pem
+    # create x509 certificate
+    openssl x509 -req  -days 3650  -in {{ apache_cert_store }}/fullchain.pem  -signkey {{ apache_cert_store }}/key.pem -out {{ apache_cert_store }}/cert.pem
+

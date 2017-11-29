@@ -1,0 +1,73 @@
+---
+# File: /playbook/appherd/roles/setup_letsencrypt_account/tasks/main.yml
+# Created: 11/28/17
+# Author: '@ekivemark'
+
+# create an account key
+# {{ apache_cert_store }} is typically set to  /etc/httpd/ssl/certs
+# export CERT_STORE=/etc/httpd/ssl/certs
+
+# based on: https://stackoverflow.com/questions/36182242/aws-elb-backend-server-over-https-with-self-signed-certificate
+# openssl genrsa \
+#  -out /path/to/ssl.key 2048
+#$ openssl req \
+#  -sha256 \
+#  -new \
+#  -key /path/to/ssl.key \
+#  -out /path/to/ssl.csr
+#$ openssl x509 \
+#  -req \
+#  -days 365 \
+#  -in /path/to/ssl.csr \
+#  -signkey /path/to/ssl.key \
+#  -out /path/to/ssl.crt
+#$ openssl dhparam -out /path/to/dhparam.pem 2048
+
+
+- name: "Create a letsencrypt account key store on MGMT Server in {{ letsencrypt_account_store }} "
+  become_user: root
+  become: yes
+  connection: local
+  file:
+    dest: "{{ letsencrypt_account_store }}"
+    mode: 0755
+    owner: "root"
+    group: "root"
+    recurse: yes
+    state: directory
+
+- name: "Create an account.key for letsencrypt on local MGMT Server "
+  become_user: root
+  become: yes
+  connection: local
+  shell: "openssl genrsa 4096 > {{ item }} "
+  with_items:
+    - "{{ letsencrypt_account_store }}/account.key"
+    - "{{ letsencrypt_account_store }}/domain.key"
+
+- name: "Create a letsencrypt account key store on REMOTE in {{ letsencrypt_account_store }} "
+  become_user: root
+  become: yes
+  file:
+    dest: "{{ letsencrypt_account_store }}"
+    mode: 0755
+    owner: "root"
+    group: "root"
+    recurse: yes
+    state: directory
+
+
+- name: "copy account.key to remote machine"
+  become_user: root
+  become: yes
+  copy:
+    src: "{{ letsencrypt_account_store }}/{{ item }}"
+    dest: "{{ letsencrypt_account_store }}/{{ item }}"
+    owner: root
+    group: root
+    mode: 0755
+    force: no
+  with_items:
+    - account.key
+    - domain.key
+
