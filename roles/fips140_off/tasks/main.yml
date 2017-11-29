@@ -23,12 +23,13 @@
 - name: "backup boot file (intramfs)"
   become_user: root
   become: yes
-  command: "mv -v /boot/initramfs-$(uname -r).img{,.FIPS-bak}"
+  shell: "mv -v /boot/initramfs-$(uname -r).img{,.FIPS-bak}"
+
 
 - name: "rebuild intramfs"
   become_user: root
   become: yes
-  command: "dracut"
+  shell: "dracut"
 
 - name: "remove fips=1 from kernel command line"
   become_user: root
