@@ -65,8 +65,8 @@
       path: "/root/.ansible_app_ami.yml"
     when: ( current_app_ami_source is undefined )
 
-  - name: "switch off fips and save new image"
-      include_tasks: ../../roles/fips140_off/tasks/main.yml
+  # switch off fips and save new image
+  - include_tasks: ../../roles/fips140_off/tasks/main.yml
     when: ( current_app_ami_source is undefined ) or ( current_app_ami_source != build_from_ami )
 
 
