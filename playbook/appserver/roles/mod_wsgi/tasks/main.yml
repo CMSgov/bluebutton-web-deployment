@@ -30,7 +30,7 @@
 - name: "Running configure for mod_wsgi"
   become_user: root
   become: yes
-  shell: "cd /home/ec2-user/download/mod_wsgi-{{ mod_wsgi_ver_full }} ; make clean ; make uninstall ; make -n install ; ./configure --with-python=/usr/local/bin/python{{ python_ver }} --with-apxs=/usr/bin/apxs "
+  shell: "cd /home/ec2-user/download/mod_wsgi-{{ mod_wsgi_ver_full }} ; make clean ; make uninstall ; make -n install ; ./configure --with-python={{ python_bin_dir }}/python{{ python_ver }} --with-apxs=/usr/bin/apxs "
 
 - name: "Prepare to refresh ld cache"
   become_user: root
