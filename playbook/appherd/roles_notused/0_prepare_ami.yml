@@ -1,0 +1,29 @@
+---
+# File: /playbook/appherd/0_prepare_ami.yml
+# Created: 11/29/17
+# Author: '@ekivemark'
+
+# AMI Images are updated every month
+# We need to make sure we build from the latest image
+# On the Appserver we need to switch off the fips setting to avoid problems
+# with installation and configuration.
+
+# The process here is:
+# 1. Get the latest Gold Image AMI
+# 2. determine if image has been updated
+# 3. Launch the image
+# 4. Switch off FIPS and reboot the server
+# 5. Create an AMI from the image
+# 6. Save the ami image id to use in 1_create_appserver.yml
+
+
+- name: "get list of suitable images"
+  ec2_ami_find:
+    owner: self
+    sort: creationDate, name
+    sort_order: descending
+  register: latest_ami
+
+- debug:
+    msg: "{{ latest_ami }}
+  
