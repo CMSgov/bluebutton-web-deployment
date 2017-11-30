@@ -164,6 +164,7 @@
   - import_tasks: roles/create_superuser/tasks/main.yml
 
   - name: "remove server address ({{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}) from appservers-base in /etc/ansible/hosts file"
+    connection: local
     lineinfile:
       path: /etc/ansible/hosts
       regexp: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
@@ -171,6 +172,7 @@
       backup: yes
 
   - name: "Add server address ({{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}) to appservers section of /etc/ansible/hosts file"
+    connection: local
     lineinfile:
       path: /etc/ansible/hosts
       regexp: '\[appservers\]'
