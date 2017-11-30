@@ -115,7 +115,7 @@
     state: directory
 
 - name: "update SELinux for the app"
-  include: ../../roles/app_env/tasks/semanage_apps.yml
+  import_tasks: ../../roles/app_env/tasks/semanage_apps.yml
 
 - name: "update SELinux for the virtualenv"
-  include:  ../../roles/app_env/tasks/semanage_virtualenv.yml
+  import_tasks:  ../../roles/app_env/tasks/semanage_virtualenv.yml

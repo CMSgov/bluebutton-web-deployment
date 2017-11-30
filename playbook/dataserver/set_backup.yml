@@ -42,11 +42,11 @@
     - "./../../vars/all_var.yml"
 
   tasks:
-#  - include: ../../roles/base_patch/tasks/set_db_aws_credentials.yml
+#  - import_tasks: ../../roles/base_patch/tasks/set_db_aws_credentials.yml
 #
-#  - include: ../../roles/postgres/tasks/pgpass.yml
+#  - import_tasks: ../../roles/postgres/tasks/pgpass.yml
 #
-#  - include: ../../roles/postgres/tasks/backup.yml
+#  - import_tasks: ../../roles/postgres/tasks/backup.yml
 #
 
-   - include: ./set_backup_tasks.yml
+   - import_tasks: ./set_backup_tasks.yml

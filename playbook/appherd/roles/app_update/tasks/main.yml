@@ -92,7 +92,7 @@
     - "install -r {{ cf_app_pyapp_home }}/{{ common_project_name }}/requirements/requirements.txt {{ pip_extra_args }} "
 
 # Relative reference from playbook/appserver
-- include: ./../appherd/roles/create_certstore/tasks/main.yml
+- import_tasks: ./../appherd/roles/create_certstore/tasks/main.yml
 
 # app_lb_app_protocol is https or http.
 # If using https copy https.j2 templates,

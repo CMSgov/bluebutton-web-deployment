@@ -5,7 +5,7 @@
 # Revision 5/25/17
 
 - name: "Install supporting packages"
-  include: ../app_tools/tasks/main.yml
+  import_tasks: ../app_tools/tasks/main.yml
 
 - name: "Install Apache (httpd)"
   become_user: root

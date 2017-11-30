@@ -155,15 +155,16 @@
 
   tasks:
   # Make sure sudoers is working correctly
-  - include: ../../roles/base_patch/tasks/fix_sudoers.yml
+  - import_tasks: ../../roles/base_patch/tasks/fix_sudoers.yml
 
   # yum upgrade all packages
-  - include: ../../roles/base_patch/tasks/update_packages.yml
+  - import_tasks: ../../roles/base_patch/tasks/update_packages.yml
 
   # Create a super user for the python/django application
-  - include: roles/create_superuser/tasks/main.yml
+  - import_tasks: roles/create_superuser/tasks/main.yml
 
   - name: "remove server address ({{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}) from appservers-base in /etc/ansible/hosts file"
+    connection: local
     lineinfile:
       path: /etc/ansible/hosts
       regexp: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
@@ -171,6 +172,7 @@
       backup: yes
 
   - name: "Add server address ({{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}) to appservers section of /etc/ansible/hosts file"
+    connection: local
     lineinfile:
       path: /etc/ansible/hosts
       regexp: '\[appservers\]'
@@ -199,10 +201,10 @@
 
 
   - name: "Add in to Loadbalancer"
-    include: roles/attach_to_elb/tasks/main.yml
+    import_tasks: roles/attach_to_elb/tasks/main.yml
 
   - name: "Notify completion result"
-    include: "../../roles/send_notification/tasks/main.yml"
+    import_tasks: "../../roles/send_notification/tasks/main.yml"
 
   handlers:
   - name: restart apache

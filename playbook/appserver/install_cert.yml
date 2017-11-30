@@ -52,7 +52,7 @@
 
 
   tasks:
-  - include: roles/create_certstore/tasks/main.yml
+  - import_tasks: roles/create_certstore/tasks/main.yml
 
   - name: "Add {{ app_fhir_cert_subdir }} to certstore"
     file:

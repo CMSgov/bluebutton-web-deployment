@@ -4,7 +4,7 @@
 # Author: @ekivemark
 
 - name: "check server version"
-  include: "../../check_rhel_version/tasks/main.yml"
+  import_tasks: "../../check_rhel_version/tasks/main.yml"
 
 - name: "Create FIPS140 directory"
   file:

@@ -3,11 +3,11 @@
 # Created: 5/25/17
 # Author: '@ekivemark'
 
-- include: ../../roles/base_patch/tasks/set_db_aws_credentials.yml
+- import_tasks: ../../roles/base_patch/tasks/set_db_aws_credentials.yml
 
-- include: ./roles/update_awscli/tasks/main.yml
+- import_tasks: ./roles/update_awscli/tasks/main.yml
 
-- include: ./roles/postgres/tasks/pgpass.yml
+- import_tasks: ./roles/postgres/tasks/pgpass.yml
 
-- include: ./roles/postgres/tasks/backup.yml
+- import_tasks: ./roles/postgres/tasks/backup.yml
 

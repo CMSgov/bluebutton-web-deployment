@@ -131,7 +131,7 @@
 #  - name: " Attach server to ec2_elb"
 #    vars:
 #      instance_to_attach: "{{ ec2_facts_info['ansible_facts']['ansible_ec2_instance_id']}}"
-#    include: roles/attach_to_elb/tasks/main.yml
+#    import_tasks: roles/attach_to_elb/tasks/main.yml
 #
 
   - name: "write hosts file"

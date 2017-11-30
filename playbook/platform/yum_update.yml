@@ -24,4 +24,4 @@
     - "./../../vars/all_var.yml"
 
   tasks:
-  - include: "../../roles/base_patch/tasks/update_packages.yml"
+  - import_tasks: "../../roles/base_patch/tasks/update_packages.yml"

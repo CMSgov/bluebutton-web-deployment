@@ -12,9 +12,9 @@
 # VARS Files can't be loaded inside vars files.
 # So the following files need to be included in each playbook
 #  var_files:
-#  - include: "./common.yml"
-#  - include: "./env/{{ env }}/env.yml"
-#  - include: "../vault/env/{{ env }}/vault.yml"
+#  - import_tasks: "./common.yml"
+#  - import_tasks: "./env/{{ env }}/env.yml"
+#  - import_tasks: "../vault/env/{{ env }}/vault.yml"
 
   ami_release: "{{ env_ami_release }}"
 

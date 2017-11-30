@@ -100,7 +100,7 @@
     shell: "chmod +x {{ cf_app_pyapp_home }}"
 
 #  - name: "reset SELinux app permissions"
-#    include: ./../../roles/app_env/semanage_apps.yml
+#    import_tasks: ./../../roles/app_env/semanage_apps.yml
 
 #  - name: make sure apache server is running
 #    service: name=httpd state=started enabled=yes

@@ -18,9 +18,9 @@
 # don't recurse infinitely or anything.  Note you can't use
 # any variables in the include path here.
 
-- include: ../dataserver/create_database.yml
+- import_tasks: ../dataserver/create_database.yml
 
 
 
-- include: ../appserver/create_appserver.yml
+- import_tasks: ../appserver/create_appserver.yml
 

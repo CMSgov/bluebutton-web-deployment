@@ -88,11 +88,11 @@
       mode: 0766
 
 
-  - include: ../../roles/app_env/tasks/set_config_scripts.yml
-  - include: ../../roles/app_env/tasks/refresh_app.yml
+  - import_tasks: ../../roles/app_env/tasks/set_config_scripts.yml
+  - import_tasks: ../../roles/app_env/tasks/refresh_app.yml
 
   # Now We should have a working machine
   # Apache / Mod_Wsgi / Python3
 
   handlers:
-  - include: ../../roles/apache/handlers/main.yml
+  - import_tasks: ../../roles/apache/handlers/main.yml
