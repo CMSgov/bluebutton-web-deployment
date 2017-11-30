@@ -1,5 +1,5 @@
 ---
-# File: /playbook/appherd/0_prepare_ami.yml
+# File: /playbook/appherd/050_prepare_ami.yml
 # Created: 11/29/17
 # Author: '@ekivemark'
 
@@ -45,7 +45,7 @@
   - name: "get list of suitable images"
     ec2_ami_find:
       name: "{{ ami_image_name }}"
-      region: "{{ region }}"
+      region: "{{ cf_region }}"
       # value of sort must be one of:
       #   name,description,tag,architecture,block_device_mapping,creationDate,
       #   hypervisor,is_public,location,owner_id,platform,root_device_name,
@@ -72,8 +72,31 @@
   - debug:
       msg: "app_ami_source: {{ current_app_ami_source }} / build_from_ami: {{ build_from_ami }}\n build_new_ami: {{ build_new_ami }}"
 
-  # switch off fips and save new image
+  # Now we create an instance using the image
+  - include_tasks: ./roles/create_instance/tasks/main.yml
+    when: ( current_app_ami_source is undefined ) or ( current_app_ami_source != build_from_ami )
+
+  # We need to check if FIPS is enabled. If it is we need to disable
+  # if we disable we need to create a new image
+
+  # switch off fips and reboot
   - include_tasks: ../../roles/fips140_off/tasks/main.yml
     when: ( current_app_ami_source is undefined ) or ( current_app_ami_source != build_from_ami )
+
+  # Then we save the image as a new ami
+
+  # set_fact for appserver_ami_id to ami_id
+
+  # Then we update the /root/.ansible_app_build_from_ami.yml file
+  # which will be referenced in the 100_create_appserver.yml
+  - name: "write the base ami to use to /root/.ansible_app_build_from_ami.yml"
+    shell: |
+      echo app_build_ami_source: {{ appserver_ami_id }} > /root/.ansible_app_build_from_ami.yml
+
+  # then we save a new variable file that has the new image in it
+  # this will then be loaded in the create_appserver.yml and used to build a new machine
+
+
+
 
 

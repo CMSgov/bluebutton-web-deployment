@@ -1,0 +1,38 @@
+---
+# File: /playbook/roles/create_instance/taskss/main.yml
+# Created: 11/29/17
+# Author: '@ekivemark'
+
+# create an instance
+
+- name: "launch base server for appserver"
+  ec2:
+    instance_type: "{{ cf_app_instance_type }}"
+    group: "BB-SG-{{ env|upper }}-{{ sub_zone|upper }}-ALLZONE" # Change the security group name here
+    image: "{{ build_from_ami }}"
+
+    key_name: "{{ cf_app_key_name }}" # Change the key pair name
+    region: "{{ cf_region }}"
+    # tenancy must be "dedicated"
+    tenancy: "dedicated"
+    # TEST AZ1 APP
+    vpc_subnet_id: "{{ common_cf_subnet[env_az][env_cf_app_tag_key_layer] }}"  # "subnet-8cecfba6"
+    count: 1
+    # state: present
+    termination_protection: no
+    # tags to instance_tags
+    # Wait for desired state - so we can attach a volume
+    wait: yes
+    instance_tags:
+      Name: "bb-{{ env }}-{{ cf_app_azone }}-{{ env_cf_app_tag_key_layer }}-{{ cf_platform_version }}"
+      Stack: "BB-{{ env }}-{{ cf_app_azone }}-{{ env_cf_app_tag_key_layer }}-ansible"
+      Business: "{{ cf_tags_business }}"
+      Application: "{{ cf_tags_application }}"
+      Environment: "{{ env|upper }}"
+      ami_name: "BB-{{ env|upper }}-{{ cf_app_tag_key_layer|upper }}"
+      region: "{{ cf_region }}"
+      Layer:  "{{ cf_app_tag_key_layer|upper }}"
+      Function: "{{ cf_app_tag_key_layer }}"
+      Managed: "BB-SOURCE-{{ env|upper }}"
+  register: apps_fips_output
+
