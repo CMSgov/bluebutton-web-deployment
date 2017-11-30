@@ -14,7 +14,7 @@
   register: python_ver_installed
 
 - name: "Make sure dev tools are installed to allow Python3 to compile"
-  include: ../app_tools/tasks/main.yml
+  import_tasks: ../app_tools/tasks/main.yml
 
 - name: "create download directory"
   become_user: root

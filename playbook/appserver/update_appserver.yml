@@ -51,10 +51,10 @@
     - "./../../vars/all_var.yml"
 
   tasks:
-  - include: ../../roles/base_patch/tasks/update_packages.yml
+  - import_tasks: ../../roles/base_patch/tasks/update_packages.yml
     # Switch default ssl.conf off
-  - include: roles/apache/tasks/ssl_off.yml
-  - include: ./write_virtual_hosts.yml
+  - import_tasks: roles/apache/tasks/ssl_off.yml
+  - import_tasks: ./write_virtual_hosts.yml
 
   - name: make sure apache server is running
     service:

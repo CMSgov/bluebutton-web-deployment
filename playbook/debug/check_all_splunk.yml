@@ -34,7 +34,7 @@
     - "./../../vars/all_var.yml"
 
   tasks:
-  - include: ./check_splunk_config.yml
+  - import_tasks: ./check_splunk_config.yml
 
 - name: "Check mgmtservers for splunk config"
   hosts: mgmtservers
@@ -42,7 +42,7 @@
     build_target: "mgmtservers"
     sub_zone: "mgmt"
   tasks:
-   - include: ./check_splunk_config.yml
+   - import_tasks: ./check_splunk_config.yml
 
 - name: "Check dataservers for splunk config"
   hosts: dataservers
@@ -50,5 +50,5 @@
     build_target: "dbservers"
     sub_zone: "data"
   tasks:
-  - include: ./check_splunk_config.yml
+  - import_tasks: ./check_splunk_config.yml
 

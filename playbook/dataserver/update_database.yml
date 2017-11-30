@@ -44,7 +44,7 @@
     - "./../../vars/all_var.yml"
 
   tasks:
-  - include: ./roles/postgres/tasks/main.yml
+  - import_tasks: ./roles/postgres/tasks/main.yml
 
   - name: Start PostgreSQL and enable at boot
     service:
@@ -52,6 +52,6 @@
       enabled: yes
       state: restarted
 
-  - include: roles/alter_user/tasks/main.yml
+  - import_tasks: roles/alter_user/tasks/main.yml
 
-  - include: ./roles/postgres/tasks/pgpass.yml
+  - import_tasks: ./roles/postgres/tasks/pgpass.yml

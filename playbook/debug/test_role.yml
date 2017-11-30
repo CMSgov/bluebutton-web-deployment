@@ -45,4 +45,4 @@
   tasks:
 # pass in test_this_role variable
 
-   - include: "{{ test_this_role }}"
+   - import_tasks: "{{ test_this_role }}"

@@ -57,7 +57,7 @@
     - install_certs
 
   tasks:
-  - include: ./set_backup_tasks.yml
+  - import_tasks: ./set_backup_tasks.yml
 
   - name: "Update Ansible hosts file"
     connection: local
@@ -67,7 +67,7 @@
       content: ""
 
   - name: "rewrite hosts_file"
-    include: ./../platform/rewrite_hosts.yml
+    import_tasks: ./../platform/rewrite_hosts.yml
 
   - name: "Set Hostname to {{ cf_data_pgsql_server_name }} "
     remote_user: ec2-user

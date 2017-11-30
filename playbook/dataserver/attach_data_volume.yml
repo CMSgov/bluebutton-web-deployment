@@ -23,7 +23,7 @@
 
   tasks:
 
-  - include: ../../roles/add_external_vol/tasks/shell_attach_vol.yml
+  - import_tasks: ../../roles/add_external_vol/tasks/shell_attach_vol.yml
 
 #  - name: "Attach ec2_vol to /data"
 #    mount:

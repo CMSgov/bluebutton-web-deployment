@@ -47,5 +47,5 @@
 
   tasks:
   # Delete the superuser account
-  - include: roles/delete_superuser/tasks/main.yml
+  - import_tasks: roles/delete_superuser/tasks/main.yml
     when: ( delete_superuser == 'YES'  )

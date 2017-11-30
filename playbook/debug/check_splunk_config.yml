@@ -31,7 +31,7 @@
     - "./../../vars/all_var.yml"
 
   tasks:
-  - include: "../../roles/splunk/tasks/main.yml"
+  - import_tasks: "../../roles/splunk/tasks/main.yml"
 
   - name: "Check Splunk Configuration..."
     become_user: root

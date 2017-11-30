@@ -93,31 +93,31 @@
   - name: "set facts for fetch_file 1"
     become_user: root
     become: yes
-    include:  ./roles/fetch_file/tasks/main.yml fetch_filename=postgresql.conf
+    import_tasks:  ./roles/fetch_file/tasks/main.yml fetch_filename=postgresql.conf
 
   - name: "set facts for fetch_file 2"
     become_user: root
     become: yes
-    include:  ./roles/fetch_file/tasks/main.yml fetch_filename=pg_hba.conf
+    import_tasks:  ./roles/fetch_file/tasks/main.yml fetch_filename=pg_hba.conf
 
 
   - name: "set facts for fetch_file 3"
     become_user: root
     become: yes
-    include:  ./roles/fetch_file/tasks/main.yml fetch_filename=pg_ident.conf
+    import_tasks:  ./roles/fetch_file/tasks/main.yml fetch_filename=pg_ident.conf
 
 
   - name: "set facts for fetch_file 4"
     become_user: root
     become: yes
-    include:  ./roles/fetch_file/tasks/main.yml fetch_filename=pgauthid
+    import_tasks:  ./roles/fetch_file/tasks/main.yml fetch_filename=pgauthid
 
   - name: "get the backup log"
     become_user: root
     become: yes
-    include: ./roles/fetch_file/tasks/main.yml fetch_filename=proc.log fetch_path=/data/pgbackup
+    import_tasks: ./roles/fetch_file/tasks/main.yml fetch_filename=proc.log fetch_path=/data/pgbackup
 
   - name: "get user audit"
     become_user: root
     become: yes
-    include: ./roles/postgres_get_user/tasks/main.yml fetch_filename=get_user_audit.txt
+    import_tasks: ./roles/postgres_get_user/tasks/main.yml fetch_filename=get_user_audit.txt

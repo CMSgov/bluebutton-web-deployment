@@ -24,4 +24,4 @@
     - "./../../vars/all_var.yml"
 
   tasks:
-  - include: "./roles/ntp_update/tasks/main.yml"
+  - import_tasks: "./roles/ntp_update/tasks/main.yml"

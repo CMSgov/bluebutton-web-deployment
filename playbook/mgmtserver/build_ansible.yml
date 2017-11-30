@@ -52,7 +52,7 @@
       msg: "Environment = {{ env }}, Target = {{ build_target }}"
 
   # Setup logging
-  - include: "roles/add_logging/tasks/main.yml"
+  - import_tasks: "roles/add_logging/tasks/main.yml"
 
   - name: "setup folders"
     become_user: root

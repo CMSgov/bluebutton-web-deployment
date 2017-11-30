@@ -33,4 +33,4 @@
     - "./../../vars/all_var.yml"
 
   tasks:
-   - include: roles/postgres/tasks/restore_setup.yml
+   - import_tasks: roles/postgres/tasks/restore_setup.yml

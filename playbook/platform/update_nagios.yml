@@ -41,4 +41,4 @@
   become_user: "{{ mon_nessus_user }}"
 
   tasks:
-  - include: roles/nagios_update/tasks/main.yml
+  - import_tasks: roles/nagios_update/tasks/main.yml

@@ -18,10 +18,10 @@
 
 
 - name: "re-write postgresql.conf"
-  include: "./roles/update_postgres_conf/tasks/main.yml"
+  import_tasks: "./roles/update_postgres_conf/tasks/main.yml"
 
 - name: "re-write pg_hba.conf"
-  include: "./roles/update_pg_hba/tasks/main.yml"
+  import_tasks: "./roles/update_pg_hba/tasks/main.yml"
 
 
 #- name: "restart postgresql"

@@ -161,7 +161,7 @@
     - "install -r {{ cf_app_pyapp_home }}/{{ common_project_name }}/requirements/requirements.txt {{ pip_extra_args }} "
 
 # Relative reference from playbook/appserver
-- include: ./../appserver/roles/create_certstore/tasks/main.yml
+- import_tasks: ./../appserver/roles/create_certstore/tasks/main.yml
 
 #- name: "Create a certstore"
 #  become_user: root

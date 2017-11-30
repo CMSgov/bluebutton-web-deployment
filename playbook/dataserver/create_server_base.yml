@@ -126,9 +126,9 @@
       backup: yes
 
 ## Install postgresql
-#- include: build_database.yml build_target=just_created
+#- import_tasks: build_database.yml build_target=just_created
 ## Setup backups
-#- include: ./set_backup.yml build_target=just_created
+#- import_tasks: ./set_backup.yml build_target=just_created
 
 #- hosts: localhost
 #  vars_files:
@@ -175,5 +175,5 @@
 #
 ## Configure server to use attached volume
 #  # attach_ext_drive moved to separate task in roles/prostgres/task
-#  - include: ../../roles/postgres/tasks/attach_ext_drive.yml
+#  - import_tasks: ../../roles/postgres/tasks/attach_ext_drive.yml
 #

@@ -101,13 +101,13 @@
 
 
   tasks:
-  - include: ../../roles/base_patch/tasks/fix_sudoers.yml
+  - import_tasks: ../../roles/base_patch/tasks/fix_sudoers.yml
   ## Switch default ssl.conf off
-  # - include: roles/apache/tasks/ssl_off.yml
-  - include: ../../roles/base_patch/tasks/update_packages.yml
-  - include: roles/create_superuser/tasks/main.yml
-  # - include: ../../roles/app_env/tasks/refresh_app.yml
-  - include: ../platform/rewrite_hosts.yml
+  # - import_tasks: roles/apache/tasks/ssl_off.yml
+  - import_tasks: ../../roles/base_patch/tasks/update_packages.yml
+  - import_tasks: roles/create_superuser/tasks/main.yml
+  # - import_tasks: ../../roles/app_env/tasks/refresh_app.yml
+  - import_tasks: ../platform/rewrite_hosts.yml
 
   - name: "Update Ansible hosts file"
     connection: local
@@ -128,10 +128,10 @@
       - restart apache
 
   - name: "Add in to Load Balancer"
-    include: roles/attach_to_elb/tasks/main.yml
+    import_tasks: roles/attach_to_elb/tasks/main.yml
 
   - name: "Notify completion result"
-    include: "../../roles/send_notification/tasks/main.yml"
+    import_tasks: "../../roles/send_notification/tasks/main.yml"
 
   handlers:
   - name: restart apache

@@ -36,7 +36,7 @@
       name: "{{ ans_group }}"
       state: present
 
-  - include: roles/mgmt_user_add/tasks/main.yml
+  - import_tasks: roles/mgmt_user_add/tasks/main.yml
 
   - name: "display the authorized_key"
     become_user: root

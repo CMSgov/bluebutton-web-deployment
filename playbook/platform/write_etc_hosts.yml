@@ -26,5 +26,5 @@
 # any variables in the include path here.
 
   tasks:
-  - include: roles/etc_hosts/tasks/main.yml
+  - import_tasks: roles/etc_hosts/tasks/main.yml
 

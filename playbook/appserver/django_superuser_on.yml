@@ -40,6 +40,6 @@
 
   tasks:
   # Create django superuser
-  - include: roles/create_superuser/tasks/main.yml
+  - import_tasks: roles/create_superuser/tasks/main.yml
 
 

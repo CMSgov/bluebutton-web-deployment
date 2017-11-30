@@ -29,5 +29,5 @@
 
 
   tasks:
-  - include: roles/mgmt_user_del/tasks/main.yml
+  - import_tasks: roles/mgmt_user_del/tasks/main.yml
     when: ( delete_manager_user == 'YES'  )

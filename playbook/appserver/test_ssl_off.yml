@@ -16,5 +16,5 @@
   gather_facts: True
 
   tasks:
-  - include: ./roles/apache/tasks/ssl_off.yml
+  - import_tasks: ./roles/apache/tasks/ssl_off.yml
 
