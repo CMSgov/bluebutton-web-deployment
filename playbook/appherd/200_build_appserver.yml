@@ -194,6 +194,7 @@
   - name: "call with curl to localhost"
     shell: "curl https://localhost/"
     register: curl_output
+    ignore_errors: yes
 
   - name: "Result of curl was..."
     debug:
