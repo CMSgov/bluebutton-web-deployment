@@ -35,15 +35,15 @@
     ignore_errors: yes
 
   - name: "test for community string = public"
-    lineinfile:
-      path: "/etc/snmp/snmpd.conf"
-      line: "com2sec notConfigUser  default       public"
-    check_mode: yes
+      shell: "cat /etc/snmp/snmpd.conf | grep com2sec"
     register: presence
+    ignore_errors: yes
+
+  - name: "restart snmp"
+    service:
+      name: snmpd
+      state: restarted
+    ignore_errors: yes
 
   - debug:
-      msg: "Change FAILED: {{ presence }}"
-
-
-
-
+      msg: "outcome of snmp community string update:\n {{ presence.stdout }}"
