@@ -35,7 +35,7 @@
     ignore_errors: yes
 
   - name: "test for community string = public"
-      shell: "cat /etc/snmp/snmpd.conf | grep com2sec"
+    shell: "cat /etc/snmp/snmpd.conf | grep com2sec"
     register: presence
     ignore_errors: yes
 
