@@ -39,5 +39,11 @@
     register: presence
     ignore_errors: yes
 
+  - name: "restart snmp"
+    service:
+      name: snmpd
+      state: restarted
+    ignore_errors: yes
+
   - debug:
       msg: "outcome of snmp community string update:\n {{ presence.stdout }}"
