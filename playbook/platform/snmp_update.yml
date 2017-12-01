@@ -39,11 +39,11 @@
       path: "/etc/snmp/snmpd.conf"
       line: "com2sec notConfigUser  default       public"
     check_mode: yes
-    register: presence.changed
+    register: presence
 
   - debug:
-      msg: "Change FAILED: {{ presence.changed }}"
-      
+      msg: "Change FAILED: {{ presence }}"
+
 
 
 
