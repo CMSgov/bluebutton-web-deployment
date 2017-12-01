@@ -327,6 +327,8 @@
   swagger_docs_file: "bbonfhir_swagger.yaml"
   # swagger_docs_file: "bbonfhir_swagger.json"
 
+  # snmp community string
+  snmp_community_string: "oedabluebuttonsnmpcommunity"
 
   cf_env_layer: {
           "dev": {

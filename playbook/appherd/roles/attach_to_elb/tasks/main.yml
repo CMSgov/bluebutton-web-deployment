@@ -7,7 +7,7 @@
 - name: "Get facts"
   become_user: root
   become: yes
-  ec2_facts:
+  ec2_metadata_facts:
   register: ec2_facts_info
 
 # elbv2 command requires newer version of awscli (>1.11)
@@ -23,12 +23,13 @@
     name: pip
     extra_args: "--upgrade  {{ pip_extra_args }} "
 
-- name: "install newer version of awscli on mgmtserver - needed for elbv2"
-  connection: local
-  pip:
-    name: awscli
-    state: latest
-    extra_args: "--upgrade  {{ pip_extra_args }} "
+#- name: "install newer version of awscli on mgmtserver - needed for elbv2"
+#  connection: local
+#  pip:
+#    name: awscli
+#    state: latest
+#    extra_args: "--upgrade  {{ pip_extra_args }} "
+#  ignore_errors: yes
 
 - name: "attach server to Application LB - HTTP"
   connection: local

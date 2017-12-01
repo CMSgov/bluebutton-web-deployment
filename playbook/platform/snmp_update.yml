@@ -1,0 +1,49 @@
+---
+# File: playbook/platform/snmp_update.yml
+# Created: 12/1/17
+# Author: '@ekivemark'
+# change snmp community string from default of public
+
+- name: "change snmp community string from public to"
+  hosts: "{{ build_target }}"
+  # hosts: appservers
+  # connection: local
+  remote_user: ec2-user
+  become_user: root
+  become: yes
+  gather_facts: True
+  vars:
+    ansible_ssh_pipelining: no
+    env: "test"
+    env_cf_app_version: "01"
+    snmp_community_string: "oedabluebuttonsnmpcommunity"
+
+  vars_files:
+    - "./../../vars/common.yml"
+    - "./../../vault/env/{{ env }}/vault.yml"
+    - "./../../vars/env/{{ env }}/env.yml"
+    - "./../../vars/all_var.yml"
+
+  tasks:
+  - name: "edit /etc/snmp/snmpd.conf file if community string = public"
+    lineinfile:
+      path: "/etc/snmp/snmpd.conf"
+      state: present
+      backrefs: yes
+      regexp: 'com2sec notConfigUser  default       public'
+      line: 'com2sec notConfigUser  default       {{ snmp_community_string }}'
+    ignore_errors: yes
+
+  - name: "test for community string = public"
+    lineinfile:
+      path: "/etc/snmp/snmpd.conf"
+      line: "com2sec notConfigUser  default       public"
+    check_mode: yes
+    register: presence.changed
+
+  - debug:
+      msg: "Change FAILED: {{ presence.changed }}"
+      
+
+
+
