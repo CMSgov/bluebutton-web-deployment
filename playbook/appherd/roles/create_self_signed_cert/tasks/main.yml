@@ -34,5 +34,6 @@
   register: cert_create_result
 
 
-- debug:
-  msg: "result of cert create:\n {{ cert_create_result.stdout }}"
+- name: checkoing results of self-cert creation:
+  debug:
+    msg: "result of cert create:\n {{ cert_create_result.stdout }}"
