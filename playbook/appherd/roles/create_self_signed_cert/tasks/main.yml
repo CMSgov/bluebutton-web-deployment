@@ -21,6 +21,15 @@
     recurse: yes
     state: directory
 
+- name: "check .pem file is not zero  length. If so, move to .pem.old"
+  become_user: root
+  become: yes
+  shell: "find {{ apache_cert_store }}/{{ item }} -empty  | xargs -I '{}' mv {} {}.old ; "
+  with_items:
+    - cert.pem
+    - key.pem
+    - fullchain.pem
+  
 - name: "Generate key, csr and cert pem for {{ external_dns_name }} in {{ apache_cert_store }}"
   become_user: root
   become: yes
