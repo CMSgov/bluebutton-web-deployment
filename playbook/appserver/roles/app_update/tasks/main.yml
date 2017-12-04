@@ -50,6 +50,7 @@
     - info.log
     - login_failed.log
     - admin_access.log
+    - perf_mon.log
 
 - name: "Create Virtualenv"
   become_user: root
