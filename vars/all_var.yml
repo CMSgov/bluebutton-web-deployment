@@ -91,7 +91,13 @@
   install_root: "{{ env_project_parent }}{{ common_project_dir }}"
 
   # the git repository URL for the project
+  # Original source forked from work done for ONC:
   # project_repo: git@github.com:transparenthealth/hhs_oauth_server.git
+  # Forked to:
+  # project_repo: "https://github.com/hhsidealab/hhs_oauth_server.git"
+  # Moved to:
+  # project_repo: "https://github.com/CMSgov/bluebutton-web-server.git"
+
   project_repo: "{{ env_project_repo }}"
 
   # The value of your django project's STATIC_ROOT settings.
