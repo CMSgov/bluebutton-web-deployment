@@ -29,7 +29,7 @@
     - cert.pem
     - key.pem
     - fullchain.pem
-  
+
 - name: "Generate key, csr and cert pem for {{ external_dns_name }} in {{ apache_cert_store }}"
   become_user: root
   become: yes
@@ -41,6 +41,14 @@
       -out {{ apache_cert_store }}/cert.pem \
       -extensions v3_ca creates={{ apache_cert_store }}/cert.pem
   register: cert_create_result
+
+- name: "Copy {{ apache_cert_store }}/cert.pem to fullchain.pem"
+  become_user: root
+  become: yes
+  copy:
+    remote_src: true
+    src: "{{ apache_cert_store }}/cert.pem"
+    path: "{{ apache_cert_store }}/fullchain.pem"
 
 
 - name: "checking results of self-cert creation "
