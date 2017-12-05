@@ -1,6 +1,6 @@
-# hhs_ansible: Install/Update hhs_oauth_server in AWS
+# bluebutton-web-deployment: Install/Update bluebutton-web-server in AWS
 ## Features
-*  Install Database Server 
+*  Install Database Server
 * Update App Server
 * Update App Server configuration scripts
 
@@ -19,7 +19,7 @@ supplies variables from:
 
 ### Update App Servers
 Runs Ansible script to get latest git branch (defined in {{ env }}/env.yml.
-Performs: 
+Performs:
 	* manage.py migrate
 	* manage.py collect static
 	* restart apache server
@@ -28,5 +28,3 @@ Performs:
 Runs Ansible script to apply:
 	* templates/appserver/*.j2
 Restarts Apache Server to load configuration settings.
-
-	
