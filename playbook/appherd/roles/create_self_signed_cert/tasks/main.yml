@@ -42,6 +42,7 @@
       -extensions v3_ca creates={{ apache_cert_store }}/cert.pem
   register: cert_create_result
 
+# avoid an error launching apache by copying cert.pem to fullchain.pem
 - name: "Copy {{ apache_cert_store }}/cert.pem to fullchain.pem"
   become_user: root
   become: yes
