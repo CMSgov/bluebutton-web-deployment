@@ -49,7 +49,7 @@
   copy:
     remote_src: true
     src: "{{ apache_cert_store }}/cert.pem"
-    path: "{{ apache_cert_store }}/fullchain.pem"
+    dest: "{{ apache_cert_store }}/fullchain.pem"
 
 
 - name: "checking results of self-cert creation "
