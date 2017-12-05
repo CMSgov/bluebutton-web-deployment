@@ -35,7 +35,7 @@
   become: yes
   command: |
     openssl req -new -nodes -x509 \
-      -subj "/C=US/ST=Maryland/L=Baltimore`/O=OEDA/CN=${ansible_fqdn}" \
+      -subj "/C=US/ST=Maryland/L=Baltimore`/O=OEDA/CN=$HOSTNAME" \
       -days 3650 \
       -keyout {{ apache_cert_store }}/key.pem \
       -out {{ apache_cert_store }}/cert.pem \
