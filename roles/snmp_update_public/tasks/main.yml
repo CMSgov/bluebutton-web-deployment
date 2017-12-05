@@ -1,0 +1,30 @@
+---
+# File: roles/snmp_update_public/tasks/main.yml
+# Created: 12/5/17
+# Author: '@ekivemark'
+
+# Set snmp community string to custom value if it is equal to value: public
+
+
+- name: "edit /etc/snmp/snmpd.conf file if community string = public"
+  lineinfile:
+    path: "/etc/snmp/snmpd.conf"
+    state: present
+    backrefs: yes
+    regexp: 'com2sec notConfigUser  default       public'
+    line: 'com2sec notConfigUser  default       {{ snmp_community_string }}'
+  ignore_errors: yes
+
+- name: "test for community string = public"
+  shell: "cat /etc/snmp/snmpd.conf | grep com2sec"
+  register: presence
+  ignore_errors: yes
+
+- name: "restart snmp"
+  service:
+    name: snmpd
+    state: restarted
+  ignore_errors: yes
+
+- debug:
+    msg: "outcome of snmp community string update:\n {{ presence.stdout }}"
