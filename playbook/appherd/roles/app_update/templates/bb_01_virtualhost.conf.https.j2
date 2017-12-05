@@ -21,6 +21,11 @@ WSGIPythonPath {{ cf_app_pyapp_home }}:{{ cf_app_py_virtual_env }}/bin:/usr/loca
     RewriteCond %{HTTP:X-Forwarded-Proto} =http
     RewriteRule . https://%{HTTP:Host}%{REQUEST_URI} [L,R=permanent]
 
+    # disable apache debugging
+    RewriteEngine On
+    RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK)
+    RewriteRule .* - [F]
+
     ServerAdmin webmaster@{{ cf_app_pyserver_name }}
     DocumentRoot /var/www/doc/{{ cf_app_pyserver_name|lower }}
     ErrorLog logs/{{ cf_app_pyserver_name|lower }}-error_log
