@@ -65,9 +65,9 @@ SSLCryptoDevice builtin
     RewriteCond %{HTTP:X-Forwarded-Proto} =http
 	RewriteRule . https://%{HTTP:Host}%{REQUEST_URI} [L,R=permanent]
 
+    RewriteEngine On
 	RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK)
 	RewriteRule .* - [F]
-
 
     # General setup for the virtual host, inherited from global configuration
     #   SSL Engine Switch:
