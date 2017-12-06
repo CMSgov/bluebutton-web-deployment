@@ -1,0 +1,36 @@
+---
+# File: playbook/platform/update_ssh_auth_keys.yml
+# Created: 12/5/17
+# Author: '@ekivemark'
+
+# Apply public keys from vault file to use/.ssh/authorized_keys
+
+#  - name: "setting authorized_keys for user: {{ ssh_user }}"
+#    authorized_key:
+#      user: "{{ ssh_user }}"
+#      state: present
+#      exclusive: "{{ ssh_key_replace }}"
+#      key: "{{ ssh_auth_keys }}"
+
+- name: "update .ssh/authorized_keys file"
+  hosts: "{{ build_target }}"
+  # hosts: appservers
+  # connection: local
+  remote_user: ec2-user
+  become_user: root
+  become: yes
+  gather_facts: True
+  vars:
+    ansible_ssh_pipelining: no
+    env: "test"
+    env_cf_app_version: "01"
+
+  vars_files:
+    - "./../../vars/common.yml"
+    - "./../../vault/env/{{ env }}/vault.yml"
+    - "./../../vars/env/{{ env }}/env.yml"
+    - "./../../vars/all_var.yml"
+
+  tasks:
+
+  - import_tasks: "./../roles/add_authorized_keys/tasks/main.yml"
