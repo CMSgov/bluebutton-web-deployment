@@ -35,3 +35,5 @@
   tasks:
 
   - import_tasks: "./../roles/add_authorized_keys/tasks/main.yml"
+    ignore_erros: yes
+    
