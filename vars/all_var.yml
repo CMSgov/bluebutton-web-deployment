@@ -343,7 +343,7 @@
   #      key: "{{ ssh_auth_keys }}"
   ssh_user: "{{ env_ssh_user }}"
   ssh_key_replace: "{{ env_ssh_key_replace }}"
-  ssh_auth_keys: "{{ env_auth_keys }}"
+  ssh_auth_keys: "{{ env_ssh_auth_keys }}"
 
   cf_env_layer: {
           "dev": {
