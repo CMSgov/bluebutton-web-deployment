@@ -336,6 +336,15 @@
   # snmp community string
   snmp_community_string: "oedabluebuttonsnmpcommunity"
 
+  # ssh authorized_keys settings:
+  #      user: "{{ ssh_user }}"
+  #      state: present
+  #      exclusive: "{{ ssh_key_replace }}"  # "yes" or "no"
+  #      key: "{{ ssh_auth_keys }}"
+  ssh_user: "{{ env_ssh_user }}"
+  ssh_key_replace: "{{ env_ssh_key_replace }}"
+  ssh_auth_keys: "{{ env_auth_keys }}"
+
   cf_env_layer: {
           "dev": {
             "az1": {
