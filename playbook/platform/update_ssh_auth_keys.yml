@@ -33,6 +33,6 @@
     - "./../../vars/all_var.yml"
 
   tasks:
-
-  - import_tasks: "./../roles/add_authorized_keys/tasks/main.yml"
+  - name: "updating authorized keys file for user: {{ ssh_user }}"
+    import_tasks: "./../roles/add_authorized_keys/tasks/main.yml"
     ignore_errors: yes
