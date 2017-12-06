@@ -47,7 +47,7 @@
   register: rebooting
 
 
-- name: "Wait for thing to reboot..."
-  pause: seconds=45
+- name: "Waiting 120 seconds for instance to reboot..."
+  pause: seconds=120
   when: rebooting|changed
 
