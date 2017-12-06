@@ -42,4 +42,3 @@
 
   tasks:
   - import_tasks: "./../roles/nessus_update_key/tasks/main.yml"
-  
