@@ -8,6 +8,8 @@
 # future enhancement will be to pass in user and keys as variables.
 
 - name: "setting authorized_keys for user: {{ ssh_user }}"
+  become_user: root
+  become: yes
   authorized_key:
     user: "{{ ssh_user }}"
     state: present
