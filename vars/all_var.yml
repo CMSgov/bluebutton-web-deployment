@@ -240,6 +240,7 @@
   # Appserver extra volumes
   # /tmp  /var
   #
+  app_extra_volume_0: "{{ env_app_extra_volume_0 }}"
   app_extra_volume_1: "{{ env_app_extra_volume_1 }}"
   app_extra_volume_2: "{{ env_app_extra_volume_2 }}"
 
