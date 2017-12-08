@@ -118,23 +118,45 @@
         Managed: "BB-MANAGED-{{ env|upper }}"
     register: app_ec2_output
 
-  - name: "mount {{ app_extra_volume_1.path }}"
-    mount:
+  - name: "Add ec2 volume {{ app_extra_volume_1.src }}"
+    ec2_vol:
       instance: "{{ item.id }}"
-      path: "{{ app_extra_volume_1.path }}"
-      src: "{{ app_extra_volume_1.src }}"
-      fstype: "{{ app_extra_volume_1.fstype }}"
-      state: present
+      device_name: "{{ app_extra_volume_1.src }}"
+      volume_size: "{{ app_extra_volume_1.size }}"
+      volume_type: "{{ app_extra_volume_1.vol_type }}"
+      encrypted: "{{ app_extra_volume_1.encrypted }}"
+      name: "BB-{{ env }}-{{ cf_app_azone }}-{{ env_cf_app_tag_key_layer }}-{{ cf_platform_version }}-VOL-{{ app_ec2_output.instances[0]['private_ip'] }}-{{ app_extra_volume_2.path }}"
     with_items: "{{ app_ec2_output.instances }}"
+    register: ec2_vol
 
-  - name: "mount {{ app_extra_volume_2.path }}"
-    mount:
+  - name: "Add ec2 volume {{ app_extra_volume_2.src }}"
+    ec2_vol:
       instance: "{{ item.id }}"
-      path: "{{ app_extra_volume_2.path }}"
-      src: "{{ app_extra_volume_2.src }}"
-      fstype: "{{ app_extra_volume_2.fstype }}"
-      state: present
+      device_name: "{{ app_extra_volume_2.src }}"
+      volume_size: "{{ app_extra_volume_2.size }}"
+      volume_type: "{{ app_extra_volume_2.vol_type }}"
+      encrypted: "{{ app_extra_volume_2.encrypted }}"
+      name: "BB-{{ env }}-{{ cf_app_azone }}-{{ env_cf_app_tag_key_layer }}-{{ cf_platform_version }}-VOL-{{ app_ec2_output.instances[0]['private_ip'] }}-{{ app_extra_volume_2.path }}"
     with_items: "{{ app_ec2_output.instances }}"
+    register: ec2_vol
+
+#  - name: "mount {{ app_extra_volume_1.path }}"
+#    mount:
+#      instance: "{{ item.id }}"
+#      path: "{{ app_extra_volume_1.path }}"
+#      src: "{{ app_extra_volume_1.src }}"
+#      fstype: "{{ app_extra_volume_1.fstype }}"
+#      state: present
+#    with_items: "{{ app_ec2_output.instances }}"
+#
+#  - name: "mount {{ app_extra_volume_2.path }}"
+#    mount:
+#      instance: "{{ item.id }}"
+#      path: "{{ app_extra_volume_2.path }}"
+#      src: "{{ app_extra_volume_2.src }}"
+#      fstype: "{{ app_extra_volume_2.fstype }}"
+#      state: present
+#    with_items: "{{ app_ec2_output.instances }}"
 
   - name: waiting for ssh to start
     wait_for:
