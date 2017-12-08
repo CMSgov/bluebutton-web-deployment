@@ -77,7 +77,7 @@
       # We are using a common key name across all appservers at this time.
       # This could be a future enhancement to the inventory capability
       key_name: "{{ cf_app_key_name }}" # Change the keypair name
-      region: "{{ cf_region }}"
+      region: "{{ aws_region }}"
       # tenancy must be "dedicated"
       tenancy: "dedicated"
       # Map the vpc_subnet_id in common.yml using
@@ -121,6 +121,7 @@
   - name: "Add ec2 volume {{ app_extra_volume_1.src }}"
     ec2_vol:
       instance: "{{ item.id }}"
+      region: "{{ aws_region }}"
       device_name: "{{ app_extra_volume_1.src }}"
       volume_size: "{{ app_extra_volume_1.size }}"
       volume_type: "{{ app_extra_volume_1.vol_type }}"
@@ -132,6 +133,7 @@
   - name: "Add ec2 volume {{ app_extra_volume_2.src }}"
     ec2_vol:
       instance: "{{ item.id }}"
+      region: "{{ aws_region }}"
       device_name: "{{ app_extra_volume_2.src }}"
       volume_size: "{{ app_extra_volume_2.size }}"
       volume_type: "{{ app_extra_volume_2.vol_type }}"

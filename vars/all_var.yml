@@ -30,6 +30,8 @@
   ### Environment:
   env: "{{ env_env }}"
 
+  ### AWS Region
+  aws_region: "{{ env_aws_region }}"
 
   ### Cloud Formation Tags:
   cf_tags_business: "{{ common_cf_tags_business }}"
@@ -199,7 +201,7 @@
   ca_key: "server.key"
   ca_cert: "server.crt"
 
-  cf_region: "us-east-1"
+  cf_region: "{{ aws_region }}"
   cf_vpc_id: "{{ env_cf_vpc_id }}"
   cf_platform_version: "{{ env_cf_platform_version }}"
   cf_data_sg_data_zone_id: "{{ env_cf_data_sg_data_zone_id }}"
