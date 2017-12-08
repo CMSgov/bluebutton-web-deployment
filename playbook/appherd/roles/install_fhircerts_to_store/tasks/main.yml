@@ -6,6 +6,8 @@
 # Install fhir certs to certstore for use in call to back-end FHIR Server
 
 - name: "Add {{ app_fhir_cert_subdir }} to certstore"
+  become_user: root
+  become: yes
   file:
     dest: "{{ cf_app_pyapp_home }}/certstore/{{ app_fhir_cert_subdir }}"
     mode: 0755
@@ -24,6 +26,8 @@
 #    when: "src_cert_dir != '' and src_cert != '' "
 
 - name: "copy cert({{ app_fhir_cert_name }}) to certstore [{{ app_fhir_cert_subdir }}]"
+  become_user: root
+  become: yes
   copy:
     content: "{{ app_fhir_cert }}"
     dest: "{{ cf_app_pyapp_home }}/certstore/{{ app_fhir_cert_subdir }}/{{ app_fhir_cert_name }}"
@@ -34,6 +38,8 @@
 
 
 - name: "copy key({{ app_fhir_key_name }}) to certstore [{{ app_fhir_cert_subdir }}]"
+  become_user: root
+  become: yes
   copy:
     content: "{{ app_fhir_key }}"
     dest: "{{ cf_app_pyapp_home }}/certstore/{{ app_fhir_cert_subdir }}/{{ app_fhir_key_name }}"
