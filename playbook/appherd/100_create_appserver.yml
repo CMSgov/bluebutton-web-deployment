@@ -118,6 +118,16 @@
         Managed: "BB-MANAGED-{{ env|upper }}"
     register: app_ec2_output
 
+  - name: "Create filesystem on {{ app_extra_volume_1.src }} "
+    - filesystem:
+      fstype: "{{ app_extra_volume_1.fstype }}"
+      dev: "{{ app_extra_volume_1.src }}"
+
+  - name: "Create filesystem on {{ app_extra_volume_2.src }} "
+    - filesystem:
+      fstype: "{{ app_extra_volume_2.fstype }}"
+      dev: "{{ app_extra_volume_2.src }}"
+
   - name: "mount {{ app_extra_volume_1.path }}"
     mount:
       path: "{{ app_extra_volume_1.path }}"
