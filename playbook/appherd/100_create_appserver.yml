@@ -95,10 +95,6 @@
       wait: yes
       wait_timeout: 500
       volumes:
-        - device_name: "{{ app_extra_volume_0.src }}"
-          volume_size: "{{ app_extra_volume_0.size }}"
-          volume_type: "{{ app_extra_volume_0.vol_type }}"
-          encrypted: "{{ app_extra_volume_0.encrypted }}"
         - device_name: "{{ app_extra_volume_1.src }}"
           volume_size: "{{ app_extra_volume_1.size }}"
           volume_type: "{{ app_extra_volume_1.vol_type }}"
