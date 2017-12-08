@@ -236,6 +236,14 @@
   # selinux_state: "permissive"
   selinux_state: "disabled"
 
+  #
+  # Appserver extra volumes
+  # /tmp  /var
+  #
+  app_extra_volume_1: "{{ env_app_extra_volume_1 }}"
+  app_extra_volume_2: "{{ env_app_extra_volume_2 }}"
+
+
   # AppServer cert and key for communication with FHIR Server
   app_fhir_cert: "{{ env_app_fhir_cert }}"
   app_fhir_key: "{{ env_app_fhir_key }}"

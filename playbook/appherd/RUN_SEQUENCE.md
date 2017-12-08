@@ -9,7 +9,7 @@
 
 ## Build a base virtual machine
 
-ansible-playbook playbook/appherd/1_create_appserver.yml \
+ansible-playbook playbook/appherd/100_create_appserver.yml \
     --vault-password-file { vault password file } \
     --private-key { pem file } \
     --extra-vars 'env={ dev | test | impl | prod } \
@@ -19,7 +19,21 @@ ansible-playbook playbook/appherd/1_create_appserver.yml \
                   build_target=appservers \
                   cf_platform_version={ nn }'
                   
-This should create a new server that is added to the 
+This should create a new server that is added to the appservers-base group in 
+/etc/ansible/hosts
+
+Then run:
+ansible-playbook playbook/appherd/200_build_appserver.yml \
+    --vault-password-file { vault password file } \
+    --private-key { pem file } \
+    --extra-vars 'env={ dev | test | impl | prod } \
+                  azone={ az1| az2 | az3 } \
+                  build_target=appservers-base \
+                  cf_platform_version={ nn }'
+                  
+
+
+
 
                   
                   
