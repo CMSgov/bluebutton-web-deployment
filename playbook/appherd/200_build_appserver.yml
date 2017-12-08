@@ -126,6 +126,9 @@
     # create directory in /etc/httpd/ssl/certs
     - roles/create_apache_cert_store
 
+    # Install the certs to the cert_store for FHIR Backend requests
+    - roles/install_fhircerts_to_store
+
     # Letsencrypt is not working in FIPS Enabled environment
     # create self-signed certificates for secure communication with ELB
     - roles/create_self_signed_cert
