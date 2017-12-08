@@ -120,27 +120,21 @@
 
   - name: "mount {{ app_extra_volume_1.path }}"
     mount:
+      instance: "{{ item.id }}"
       path: "{{ app_extra_volume_1.path }}"
       src: "{{ app_extra_volume_1.src }}"
       fstype: "{{ app_extra_volume_1.fstype }}"
       state: present
+    with_items: "{{ app_ec2_output.instances }}"
 
   - name: "mount {{ app_extra_volume_2.path }}"
     mount:
+      instance: "{{ item.id }}"
       path: "{{ app_extra_volume_2.path }}"
       src: "{{ app_extra_volume_2.src }}"
       fstype: "{{ app_extra_volume_2.fstype }}"
       state: present
-
-  - name: "Create filesystem on {{ app_extra_volume_1.src }} "
-    filesystem:
-      fstype: "{{ app_extra_volume_1.fstype }}"
-      dev: "{{ app_extra_volume_1.src }}"
-
-  - name: "Create filesystem on {{ app_extra_volume_2.src }} "
-    filesystem:
-      fstype: "{{ app_extra_volume_2.fstype }}"
-      dev: "{{ app_extra_volume_2.src }}"
+    with_items: "{{ app_ec2_output.instances }}"
 
   - name: waiting for ssh to start
     wait_for:
@@ -148,6 +142,25 @@
       host: "{{ app_ec2_output.instances[0]['private_ip'] }}"
       timeout: 300
       search_regex: OpenSSH
+
+  - name: "Create filesystem on {{ app_extra_volume_1.src }} "
+    connect: "{{ app_ec2_output.instances[0]['private_ip'] }}"
+    remote_user: ec2-user
+    become_user: root
+    become: yes
+    filesystem:
+      fstype: "{{ app_extra_volume_1.fstype }}"
+      dev: "{{ app_extra_volume_1.src }}"
+
+  - name: "Create filesystem on {{ app_extra_volume_2.src }} "
+    connect: "{{ app_ec2_output.instances[0]['private_ip'] }}"
+    remote_user: ec2-user
+    become_user: root
+    become: yes
+    filesystem:
+      fstype: "{{ app_extra_volume_2.fstype }}"
+      dev: "{{ app_extra_volume_2.src }}"
+
 
   - name: "add host to group: just_created ( {{ app_ec2_output.instances[0]['private_ip'] }} ) "
     add_host:
