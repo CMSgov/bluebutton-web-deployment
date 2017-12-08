@@ -1,0 +1,56 @@
+---
+# File: playbook/appherd/install_fhir_certs_to_store/tasks/main.yml
+# Created: 12/8/17
+# Author: '@ekivemark'
+
+# Install fhir certs to certstore for use in call to back-end FHIR Server
+
+- name: "Add {{ app_fhir_cert_subdir }} to certstore"
+  file:
+    dest: "{{ cf_app_pyapp_home }}/certstore/{{ app_fhir_cert_subdir }}"
+    mode: 0755
+    owner: "{{ cf_app_pyapps_user }}"
+    group: "{{ app_group }}"
+    recurse: yes
+    state: directory
+
+#  - name: "copy cert({{ src_cert }}) to certstore [{{ app_fhir_cert_subdir }}]"
+#    copy:
+#      src: "{{ src_cert_dir }}/{{ src_cert }}"
+#      dest: "{{ cf_app_pyapp_home }}/certstore/{{ app_fhir_cert_subdir }}/{{ src_cert }}"
+#      mode: 0755
+#      owner: "{{ cf_app_pyapps_user }}"
+#      group: "{{ app_group }}"
+#    when: "src_cert_dir != '' and src_cert != '' "
+
+- name: "copy cert({{ app_fhir_cert_name }}) to certstore [{{ app_fhir_cert_subdir }}]"
+  copy:
+    content: "{{ app_fhir_cert }}"
+    dest: "{{ cf_app_pyapp_home }}/certstore/{{ app_fhir_cert_subdir }}/{{ app_fhir_cert_name }}"
+    mode: 0755
+    owner: "{{ cf_app_pyapps_user }}"
+    group: "{{ app_group }}"
+  when: "app_fhir_cert_name != '' and app_fhir_cert != '' "
+
+
+- name: "copy key({{ app_fhir_key_name }}) to certstore [{{ app_fhir_cert_subdir }}]"
+  copy:
+    content: "{{ app_fhir_key }}"
+    dest: "{{ cf_app_pyapp_home }}/certstore/{{ app_fhir_cert_subdir }}/{{ app_fhir_key_name }}"
+    mode: 0755
+    owner: "{{ cf_app_pyapps_user }}"
+    group: "{{ app_group }}"
+  when: "app_fhir_key_name != '' and app_fhir_key != '' "
+
+
+
+# mkdir -p /var/pyapps/certs/bb-sandbox
+#cd /
+#unzip /home/ec2-user/download/certs.zip
+#cp /home/ec2-user/download/certs/* /var/pyapps/certs/bb-sandbox/
+#
+##cp /root/ca/certs/ca.cert* /var/pyapps/certs/bb-sandbox/
+##cp /root/ca/private/ca.key* /var/pyapps/certs/bb-sandbox/
+#chown -Rf pyapps:apache /var/pyapps/certs
+#ls -la /var/pyapps/certs/bb-sandbox
+
