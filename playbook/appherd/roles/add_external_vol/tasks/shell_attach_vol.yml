@@ -70,8 +70,6 @@
     mkdir tmp
     umount /dev/xvdf
     mount /dev/xvdf /tmp
-    grep -v "/tmp2 " /etc/fstab > /etc/fstab.new1
-    echo /dev/xvdf       /tmp     ext4    defaults    0 0 >> /etc/fstab.new1
   register: app_external_drive_move_1
 
 
@@ -86,9 +84,6 @@
     mkdir var
     umount /dev/xvdg
     mount /dev/xvdg /var
-    grep -v "/var2 " /etc/fstab.new1 > /etc/fstab.new2
-    echo /dev/xvdg       /var     ext4    defaults    0 0 >> /etc/fstab.new2
-
   register: app_external_drive_move_2
 
 
