@@ -57,5 +57,4 @@
     debug:
       msg: "Volumes:\n{{ app_external_drives }}"
 
-  
 
