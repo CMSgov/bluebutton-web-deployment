@@ -53,5 +53,9 @@
     become: yes
     import_tasks: roles/add_external_vol/tasks/shell_attach_vol.yml
 
-  - name:
+  - name: See results of volume changes
+    debug:
+      msg: "Volumes:\n{{ app_external_drives }}"
+
+  
 
