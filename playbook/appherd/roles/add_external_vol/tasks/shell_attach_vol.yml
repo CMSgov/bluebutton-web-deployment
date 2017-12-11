@@ -1,0 +1,44 @@
+---
+# File: shell_attach_vol.yml 
+# Created: 5/8/17
+# Author: '@ekivemark'
+
+- name: "Create a script directory for root account"
+  file:
+    dest: "/home/ec2-user/script"
+    state: directory
+    mode: 0755
+
+- name: "Setup first volume {{ app_extra_volume_1.path }}"
+  set fact:
+    app_extra_volume: "{{ app_extra_volume_1 }}"
+
+- name: "Create External Drive script"
+  template:
+    src: "../templates/setup_ext_drive.sh.j2"
+    dest: "/home/ec2-user/script/setup_ext_drive.sh"
+    backup: yes
+    mode: "u+rwx"
+
+- name: "Execute External Drive Script"
+  become_user: root
+  become: yes
+  shell: "/home/ec2-user/script/setup_ext_drive.sh"
+  register: external_drive_setup
+
+- name: "Setup first volume {{ app_extra_volume_2.path }}"
+  set fact:
+    app_extra_volume: "{{ app_extra_volume_2 }}"
+
+- name: "Create External Drive script"
+  template:
+    src: "../templates/setup_ext_drive.sh.j2"
+    dest: "/home/ec2-user/script/setup_ext_drive.sh"
+    backup: yes
+    mode: "u+rwx"
+
+- name: "Execute External Drive Script"
+  become_user: root
+  become: yes
+  shell: "/home/ec2-user/script/setup_ext_drive.sh"
+  register: external_drive_setup
