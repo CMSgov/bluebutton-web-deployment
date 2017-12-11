@@ -25,7 +25,7 @@
 - name: Provision volumes for Appserver
   hosts: "{{ build_target | default('appservers-base') }}"
   connection: smart
-  # gather_facts: False
+  gather_facts: False
   vars:
     env: "test"
     azone: "az1"
