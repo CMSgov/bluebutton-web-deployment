@@ -45,38 +45,8 @@
     # reflect script release iteration
 
   tasks:
-  - name: Setup extra volume 1
-    set_fact:
-      extra_volume: app_extra_volume_1
-
-  - name: "Copy current {{ extra_volume.path }} to {{ extra_volume.path  }}.old"
-    become_user: root
-    become: yes
-    copy:
-      remote_src: yes
-      src: "{{ extra_volume.path }}"
-      path: "{{ extra_volume.path }}.old"
-
-  - name: "add and format volume to {{ extra_volume.path }}  mount point"
+  - name: "add and format volumes ({{ app_extra_volume_1.path }} , {{ app_extra_volume_1.path }}) to mountpoints"
     become_user: root
     become: yes
     import_task: roles/add_external_vol/tasks/shell_attach_vol.yml
-
-
-  - name: "copy{{ extra_volume.path }}.old contents  to new {{ extra_volume.path }} "
-    beome_user: root
-    become: yes
-    copy:
-      remote_src: yes
-      src: "{{ extra_volume.path }}.old"
-      path: "{{ extra_volume.path }}"
-
-
-
-
-  - name: "copy current /tmp to /tmp/old"
-
-  - name: "copy /tmp.old contents  to new /tmp"
-
-
 
