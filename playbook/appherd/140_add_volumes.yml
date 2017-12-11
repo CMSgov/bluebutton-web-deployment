@@ -48,5 +48,5 @@
   - name: "add and format volumes ({{ app_extra_volume_1.path }} , {{ app_extra_volume_1.path }}) to mountpoints"
     become_user: root
     become: yes
-    import_task: roles/add_external_vol/tasks/shell_attach_vol.yml
+    import_tasks: roles/add_external_vol/tasks/shell_attach_vol.yml
 
