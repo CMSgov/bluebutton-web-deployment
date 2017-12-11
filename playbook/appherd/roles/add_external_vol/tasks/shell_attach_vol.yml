@@ -10,7 +10,7 @@
     mode: 0755
 
 - name: "Setup first volume {{ app_extra_volume_1.path }}"
-  set fact:
+  set facts:
     app_extra_volume: "{{ app_extra_volume_1 }}"
 
 - name: "Create External Drive script"
@@ -27,7 +27,7 @@
   register: external_drive_setup
 
 - name: "Setup first volume {{ app_extra_volume_2.path }}"
-  set fact:
+  set facts:
     app_extra_volume: "{{ app_extra_volume_2 }}"
 
 - name: "Create External Drive script"
