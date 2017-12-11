@@ -29,7 +29,7 @@
 - name: "save results for volume 1"
   set_fact:
     app_external_drive1:
-      - {{ external_drive_setup }}
+      - "{{ external_drive_setup }}"
 
 - name: setup volume 2
   set_fact:
@@ -51,11 +51,11 @@
 - name: "save results for volume 2"
   set_fact:
     app_external_drive2:
-      - {{ external_drive_setup }}
+      - "{{ external_drive_setup }}"
 
 - name: "save results for both volumes"
   set_fact:
     app_external_drives:
-      - {{ app_external_drive1 }}
-      - {{ app_external_drive2 }}
+      - "{{ app_external_drive1 }}"
+      - "{{ app_external_drive2 }}"
 
