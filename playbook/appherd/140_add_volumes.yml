@@ -1,0 +1,82 @@
+---
+# File: playbook/appherd/140_add_volumes.yml
+# Created: 12/10/17
+# Author: '@ekivemark'
+
+# Playbook to:
+#  - Add volumes to ec2 instance
+#
+
+# Based on: http://odecee.com.au/cloudformation-and-ansible/
+# Vars file is relative to playbook file
+# vars_files:
+# Vars file is relative to playbook file
+# Sequence:
+# 1. Common variables
+# 2. encrypted vault file
+# 3. environment specific variables
+# 4. all_vars which reference the preceding three files.
+# common_ prefixes common variables
+# vault_env_ prefixes encrypted variables
+# env_ prefixes environment specific variables
+# all_var incorporates preceding variables and defines variables without prefixes.
+# use all_var variables in scripts.
+
+- name: Provision volumes for Appserver
+  hosts: "{{ build_target | default('appservers-base') }}"
+  connection: smart
+  # gather_facts: False
+  vars:
+    env: "test"
+    azone: "az1"
+    sub_zone: "app"
+    sg_zone: "appserver"
+    env_az: "{{ env }}-{{ azone }}"
+    env_cf_data_version: "20"
+    # splunk_target_layer: "WEB | APP | DATA | MGMT"
+    splunk_target_layer: "{{ sub_zone|upper }}"
+  vars_files:
+    - "./../../vars/common.yml"
+    - "./../../vault/env/{{ env }}/vault.yml"
+    - "./../../vars/env/{{ env }}/env.yml"
+    - "./../../vars/all_var.yml"
+    # - "./../../var/{{ env }}-{{ sub_zone }}-ami-{{ ami_release }}.yml"
+    # cf_platform_version is used in name: update in env.yml to
+    # reflect script release iteration
+
+  tasks:
+  - name: Setup extra volume 1
+    set_fact:
+      extra_volume: app_extra_volume_1
+
+  - name: "Copy current {{ extra_volume.path }} to {{ extra_volume.path  }}.old"
+    become_user: root
+    become: yes
+    copy:
+      remote_src: yes
+      src: "{{ extra_volume.path }}"
+      path: "{{ extra_volume.path }}.old"
+
+  - name: "add and format volume to {{ extra_volume.path }}  mount point"
+    become_user: root
+    become: yes
+    import_task: roles/add_external_vol/tasks/shell_attach_vol.yml
+
+
+  - name: "copy{{ extra_volume.path }}.old contents  to new {{ extra_volume.path }} "
+    beome_user: root
+    become: yes
+    copy:
+      remote_src: yes
+      src: "{{ extra_volume.path }}.old"
+      path: "{{ extra_volume.path }}"
+
+
+
+
+  - name: "copy current /tmp to /tmp/old"
+
+  - name: "copy /tmp.old contents  to new /tmp"
+
+
+

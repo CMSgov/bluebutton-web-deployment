@@ -167,24 +167,24 @@
       timeout: 300
       search_regex: OpenSSH
 
-  - name: "Create filesystem on {{ app_extra_volume_1.src }} "
-    connect: "{{ app_ec2_output.instances[0]['private_ip'] }}"
-    remote_user: ec2-user
-    become_user: root
-    become: yes
-    filesystem:
-      fstype: "{{ app_extra_volume_1.fstype }}"
-      dev: "{{ app_extra_volume_1.src }}"
-
-  - name: "Create filesystem on {{ app_extra_volume_2.src }} "
-    connect: "{{ app_ec2_output.instances[0]['private_ip'] }}"
-    remote_user: ec2-user
-    become_user: root
-    become: yes
-    filesystem:
-      fstype: "{{ app_extra_volume_2.fstype }}"
-      dev: "{{ app_extra_volume_2.src }}"
-
+#  - name: "Create filesystem on {{ app_extra_volume_1.src }} "
+#    connect: "{{ app_ec2_output.instances[0]['private_ip'] }}"
+#    remote_user: ec2-user
+#    become_user: root
+#    become: yes
+#    filesystem:
+#      fstype: "{{ app_extra_volume_1.fstype }}"
+#      dev: "{{ app_extra_volume_1.src }}"
+#
+#  - name: "Create filesystem on {{ app_extra_volume_2.src }} "
+#    connect: "{{ app_ec2_output.instances[0]['private_ip'] }}"
+#    remote_user: ec2-user
+#    become_user: root
+#    become: yes
+#    filesystem:
+#      fstype: "{{ app_extra_volume_2.fstype }}"
+#      dev: "{{ app_extra_volume_2.src }}"
+#
 
   - name: "add host to group: just_created ( {{ app_ec2_output.instances[0]['private_ip'] }} ) "
     add_host:
@@ -195,7 +195,7 @@
     lineinfile:
       dest: "/etc/ansible/hosts"
       regexp: '\[appservers-base\]'
-      line: "[appservers-base]\n{{ app_ec2_output.instances[0]['private_ip'] }}"
+      line: "[appservers-base]\n{{ app_ec2_output.instances[0]['private_ip'] }}\n"
       backup: yes
 
 #  - name: "add private_ip to /etc/ansible/hosts"
