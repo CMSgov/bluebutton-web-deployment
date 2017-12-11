@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+echo "This is sourced from hhs_ansible playbook/appherd/roles/add_external-vol/templates/setup_ext_drive.j2"
+# Prepare the external drive
+
+# EXT_AWS_BLK={{ app_extra_volume.app_device }}
+mkfs -t ext4 /dev/{{ app_extra_volume.app_device }}
+mkdir -p /{{ app_extra_volume.path }}2
+mount /dev/{{ app_extra_volume.app_device }} /{{ app_extra_volume.path }}2
+rm -f /etc/fstab.orig
+cp /etc/fstab /etc/fstab.saved_{{ app_extra_volume.path }}
+file -s /dev/{{ app_extra_volume.path }}2
+# Replace uuid with correct value
+# Mount the data block device
+export EXT_AWS_UUID=$(ls -al /dev/disk/by-uuid/ | grep {{ app_extra_volume.app_device }} | awk -F: '$0=$2'| cut -d\" \" -f2)
+echo EBS: Using {{ app_extra_volume.app_device }} with UUID: $EXT_AWS_UUID
+echo $EXT_AWS_UUID   /{{ app_extra_volume.path }}2  ext4 defaults,nofail    0  2 >>/etc/fstab
+
+
+
