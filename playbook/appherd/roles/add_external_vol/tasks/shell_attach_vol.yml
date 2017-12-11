@@ -9,7 +9,7 @@
     state: directory
     mode: 0755
 
-- name: "Setup first volume {{ app_extra_volume_1.path }}"
+- name: setup volume 1
   set facts:
     app_extra_volume: "{{ app_extra_volume_1 }}"
 
@@ -26,7 +26,7 @@
   shell: "/home/ec2-user/script/setup_ext_drive.sh"
   register: external_drive_setup
 
-- name: "Setup first volume {{ app_extra_volume_2.path }}"
+- name: setup volume 2
   set facts:
     app_extra_volume: "{{ app_extra_volume_2 }}"
 
