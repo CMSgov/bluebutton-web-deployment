@@ -34,6 +34,8 @@
 
 
 - name: Check for reboot hint.
+  become_user: root
+  become: yes
   shell: LAST_KERNEL=$(rpm -q --last kernel | perl -pe 's/^kernel-(\S+).*/$1/' | head -1); CURRENT_KERNEL=$(uname -r); if [ $LAST_KERNEL != $CURRENT_KERNEL ]; then echo 'reboot'; else echo 'no'; fi
   ignore_errors: true
   register: reboot_hint
