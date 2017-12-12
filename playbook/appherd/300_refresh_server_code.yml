@@ -77,6 +77,9 @@
     # prepare the folders for app install and log files
     - roles/app_prep
 
+    # Install assigned Certs
+    - roles/copy_issued_cert
+
     # Update application code and write virtualhosts file
     # Download from github
     # install requirements
