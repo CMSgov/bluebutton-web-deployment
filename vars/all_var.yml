@@ -246,6 +246,11 @@
   app_extra_volume_1: "{{ env_app_extra_volume_1 }}"
   app_extra_volume_2: "{{ env_app_extra_volume_2 }}"
 
+  # Apache cert, key and fullchain files
+  # Assigned Certificates and Keys to be copied to /etc/httpd/ssl/certs
+  apache_cert_file: "{{ env_apache_cert_file }}"
+  apache_key_file: "{{ env_apache_key_file }}"
+  apache_fullchain_file: "{{ env_apache_fullchain_file }}"
 
   # AppServer cert and key for communication with FHIR Server
   app_fhir_cert: "{{ env_app_fhir_cert }}"
