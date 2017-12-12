@@ -25,8 +25,11 @@
   become_user: root
   become: yes
   copy:
-    src: "{{ item.content }}"
+    content: "{{ item.content }}"
     dest: "{{ apache_cert_store }}/{{ item.name }}"
+    mode: 0755
+    owner: "root"
+    group: "root"
   with_items:
     - { "name": "cert.pem", "content": "{{ apache_cert_file }}" }
     - { "name": "key.pem", "content": "{{ apache_key_file }}" }
