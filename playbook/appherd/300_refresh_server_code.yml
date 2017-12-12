@@ -143,6 +143,8 @@
 
   handlers:
   - name: restart apache
+    become_user: root
+    become: yes
     service: name=httpd state=restarted
 
   # Now We should have a working machine
