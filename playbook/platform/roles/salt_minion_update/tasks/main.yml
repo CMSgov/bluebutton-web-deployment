@@ -6,7 +6,7 @@
 # Update Salt minion setup for V3 deployment
 
 - name: "kill the salt PID"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   file:
     dest: /var/run/salt-minion.pid
@@ -18,18 +18,18 @@
 
 # use /bin/cp because root usually has alias of cp -i to prompt for overwrite.
 - name: "get a backup of the salt/minion file"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   shell: "/bin/cp -f /etc/salt/minion /etc/salt/minion.backup"
 
 
 - name: "Remove the two ip address lines"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   shell: "cat /etc/salt/minion | grep -v ' - 10.' >/etc/salt/minion.new"
 
 - name: "Now update the master line by a adding an ip address"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   lineinfile:
     dest: "/etc/salt/minion.new"
@@ -37,7 +37,7 @@
     line: 'master: 10.128.11.102'
 
 - name: "Comment out the id value"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   replace:
     dest: "/etc/salt/minion.new"
@@ -46,13 +46,13 @@
 
 # now copy the new file over the original
 - name: "Update the etc/salt/minion file with the new version"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   shell: "/bin/cp -f /etc/salt/minion.new /etc/salt/minion"
 
 # now set the ownership and permissions on /etc/salt/minion
 - name: "Set ownership and permission on etc/salt/minion"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   file:
     dest: "/etc/salt/minion"
@@ -61,7 +61,7 @@
     mode: 0640
 
 - name: "Stop the service"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   service:
     name: "salt-minion"
@@ -69,13 +69,13 @@
 
 # Clean up the salt/pki/minion directory of old keys
 - name: "clean up the salt/pki directory"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   shell:  "rm -f /etc/salt/pki/minion/minion* "
 
 
 - name: "Re-starting salt-minion service"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   service:
     name: "salt-minion"
@@ -83,7 +83,7 @@
     enabled: yes
 
 - name: "Check salt-minion status"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   shell: "service salt-minion status"
   ignore_errors: yes

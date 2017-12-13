@@ -6,7 +6,7 @@
 # List postgresql user accounts
 
 - name: "Create db audit user sql script"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   template:
     src: "../templates/db_user_script.j2"
@@ -31,7 +31,7 @@
     state: absent
 
 - name: "Audit collector"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   ignore_errors: yes
   blockinfile:
@@ -48,7 +48,7 @@
     state: present
 
 - name: "Fetch audit file"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   fetch:
     src: "{{ local_dest }}/{{ fetch_filename }}"

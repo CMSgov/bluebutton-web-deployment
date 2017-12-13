@@ -26,7 +26,7 @@
   hosts: "{{ build_target | default('appservers-base') }}"
   connection: smart
   remote_user: ec2-user
-  # become_user: root
+  # become_user: "{{ remote_admin_account }}"
   # become: yes
   gather_facts: True
   vars:
@@ -49,7 +49,7 @@
 
   tasks:
   - name: "add and format volumes ({{ app_extra_volume_1.path }} , {{ app_extra_volume_1.path }}) to mountpoints"
-    become_user: root
+    become_user: "{{ remote_admin_account }}"
     become: yes
     import_tasks: roles/add_external_vol/tasks/shell_attach_vol.yml
 

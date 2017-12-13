@@ -7,14 +7,14 @@
 
 
 - name: "Create Virtualenv"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   # Python3.6 replaces pyvenv-(ver) with python3.6 -m venv
   # shell: "cd /var/virtualenv ;{{ python_bin_dir }}/pyvenv-{{ python_ver }} hhs_o_server "
   shell: "cd /var/virtualenv ; {{ python_bin_dir }}/python{{ python_ver }} -m  venv {{ project_dir }} "
 
 - name: "Set permissions to application code"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   file:
     dest: "{{ cf_app_pyapp_home }}"
@@ -26,7 +26,7 @@
 
 
 - name: "Set ownership to pyapps:apache ({{ cf_app_pyapps_user }}:{{ app_group }})"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   file:
     owner: "{{ cf_app_pyapps_user }}"
@@ -37,7 +37,7 @@
 
 ########################################
 - name: "Check for git installation"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   stat:
     path: "{{ install_root }}/{{ project_name }}/.git/*"
@@ -49,7 +49,7 @@
   ignore_errors: yes
 
 - name: "install from git: {{ project_repo }} branch:{{ git_branch }}"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   git:
     repo: "{{ project_repo }}"
@@ -60,7 +60,7 @@
 
   # Now pull a specific branch
 - name: "update from git: {{ project_repo }} branch:{{ git_branch }} to {{ env }}"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   git:
     repo: "{{ project_repo }}"
@@ -68,7 +68,7 @@
     version: "{{ git_branch }}"
 
 - name: "Set permissions to application code ( {{ cf_app_pyapps_user }}:{{ app_group }} )"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   file:
     dest: "{{ cf_app_pyapp_home }}"
@@ -79,7 +79,7 @@
     mode: 0755
 
 - name: "pip and basic update"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   shell: |
     cd {{ cf_app_pyapp_home }}/{{ common_project_name }}
@@ -111,7 +111,7 @@
 # Change conf file names to enable load in order
 # Apache loads alphabetically. use bb_nn_ prefix to force load sequence
 - name: "Create Virtualhosts file"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   template:
     src: "../templates/{{ item }}.{{ app_lb_app_protocol|lower }}.j2"
@@ -127,7 +127,7 @@
 
 # change ownership of files
 - name: "Update file ownership"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   file:
     path: "{{ install_root }}/{{ project_name }}/"
@@ -138,7 +138,7 @@
 
 # Change ownership for libraries
 - name: "Change ownership for libraries"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   file:
     path: "{{ venv }}"
@@ -148,7 +148,7 @@
     mode:  "u+rw,g+rw,o-rwx"
 
 - name: make manage.py executable
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   file:
     path: "{{ install_root }}/{{ project_name }}/manage.py"

@@ -6,7 +6,7 @@
 # Apply public key to nessus_service account
 
 - name: "Create the .ssh folder for {{ mon_nessus_user }}"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   file:
     dest: "/home/{{ mon_nessus_user }}/.ssh"
@@ -16,7 +16,7 @@
     state: directory
 
 - name: "Create/touch the .ssh/authorized_keys file"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   file:
     dest: "/home/{{ mon_nessus_user }}/.ssh/authorized_keys"
@@ -26,7 +26,7 @@
     state: touch
 
 - name: "Add the public key to authorized_keys"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   lineinfile:
     dest: "/home/{{ mon_nessus_user }}/.ssh/authorized_keys"
@@ -38,7 +38,7 @@
     backup: yes
 
 - name: "Check the authorized_keys file"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   shell: "cat /home/{{ mon_nessus_user }}/.ssh/authorized_keys"
   register: auth_keys_out

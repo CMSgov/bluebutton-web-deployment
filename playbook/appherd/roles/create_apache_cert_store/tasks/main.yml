@@ -14,7 +14,7 @@
 #SSLCertificateChainFile $CERT_STORE/fullchain.pem
 
 - name: "Create Certificate directory for Apache"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   file:
     dest: "{{ apache_cert_store }}"

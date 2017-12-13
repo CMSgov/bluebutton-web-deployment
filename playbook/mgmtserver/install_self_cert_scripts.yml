@@ -8,7 +8,7 @@
 
 - name: "install scripts for Self-signed Certificates"
   hosts: "{{ build_target }}"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   remote_user: ec2-user
   become: yes
   connection: local
@@ -26,7 +26,7 @@
 
   tasks:
   - name: "download cert_scripts zip file"
-    become_user: root
+    become_user: "{{ remote_admin_account }}"
     become: yes
     copy:
       src: "../../files/mgmtserver/cert_scripts_base.zip.download"
@@ -36,13 +36,13 @@
       group: root
 
   - name: "setup cert_scripts"
-    become_user: root
+    become_user: "{{ remote_admin_account }}"
     become: yes
     shell: "cd / ; unzip /root/cert_scripts_base.zip ; ls -la /root/ca/*"
     register: cert_install_result
 
   - name: "Cleaning up from unzip ..."
-    become_user: root
+    become_user: "{{ remote_admin_account }}"
     become: yes
     shell: "rm -Rf /__MACOSX "
 

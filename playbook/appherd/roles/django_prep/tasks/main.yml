@@ -7,7 +7,7 @@
 # add in group create for first run only.
 
 - name: "Django migrate "
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   # We only want to run migration on one server in the fleet
   run_once: yes
@@ -18,7 +18,7 @@
   when: ( migrate is defined ) and ( migrate == 'yes' )
 
 - name: "Add Group roles to database"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   run_once: yes
   django_manage:
@@ -28,7 +28,7 @@
   when: ( add_groups is defined ) and ( add_groups|lower == 'yes' )
 
 #- name: "Add Scopes to database"
-#  become_user: root
+#  become_user: "{{ remote_admin_account }}"
 #  become: yes
 #  run_once: yes
 #  django_manage:
@@ -47,7 +47,7 @@
 ############################################################
 
 - name: "MGMT Command to Add BlueButton Scopes to database"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   run_once: yes
   django_manage:
@@ -58,7 +58,7 @@
 
 
 - name: "Load ResourceRouter and SupportedResourceType tables"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   run_once: yes
   django_manage:
@@ -68,7 +68,7 @@
   when: ( add_back_end_resources is defined ) and ( add_back_end_resources == 'yes' )
 
 - name: Django collectstatic
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   run_once: yes
   django_manage:

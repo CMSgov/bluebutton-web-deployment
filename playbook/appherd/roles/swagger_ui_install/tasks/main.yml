@@ -4,7 +4,7 @@
 # Author: '@ekivemark'
 
 - name: "Create swagger-ui directory"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   file:
     dest: "{{ swagger_ui_parent_dir }}"
@@ -15,7 +15,7 @@
 
 ########################################
 - name: "Check for git installation - {{ swagger_ui_parent_dir }}/swagger-ui/.git"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   stat:
     path: "{{ swagger_ui_parent_dir }}/swagger-ui/.git"
@@ -27,7 +27,7 @@
   ignore_errors: yes
 
 - name: "install from git: {{ swagger_ui_repo_source }}"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   git:
     repo: "{{ swagger_ui_repo_source }}"
@@ -37,7 +37,7 @@
   when: not swagger_installed.stat.exists
 
 - name: "Update existing swagger install"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   git:
     repo: "{{ swagger_ui_repo_source }}"
@@ -51,7 +51,7 @@
     swagger_api_docs: "{{ app_lb_app_protocol }}://{{ external_dns_name }}{{ swagger_external_path }}{{ swagger_docs_file }}"
 
 - name: "replace petstore with full apidocs location - {{ swagger_api_docs }}"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   template:
     src: "../templates/index.html.j2"
@@ -61,7 +61,7 @@
     mode: 0640
 
 - name: "Set ownership of swagger_ui"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   file:
     dest: "{{ swagger_ui_parent_dir }}"

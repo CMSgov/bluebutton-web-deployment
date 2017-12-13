@@ -5,7 +5,7 @@
 # set permissions for virtualenv under selinux
 
 - name: "Set permissions for virtualenv under SELinux"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   shell: "semanage fcontext -a -t httpd_sys_content_t \"{{ env_venv[:-1] }}(/.*)?\" "
   ignore_errors: yes

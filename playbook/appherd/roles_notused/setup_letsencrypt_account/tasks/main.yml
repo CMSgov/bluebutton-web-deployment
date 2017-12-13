@@ -25,7 +25,7 @@
 
 
 - name: "Create a letsencrypt account key store on MGMT Server in {{ letsencrypt_account_store }} "
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   connection: local
   file:
@@ -37,7 +37,7 @@
     state: directory
 
 - name: "Create an account.key for letsencrypt on local MGMT Server "
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   connection: local
   shell: "openssl genrsa 4096 > {{ item }} "
@@ -46,7 +46,7 @@
     - "{{ letsencrypt_account_store }}/domain.key"
 
 - name: "Create a letsencrypt account key store on REMOTE in {{ letsencrypt_account_store }} "
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   file:
     dest: "{{ letsencrypt_account_store }}"
@@ -58,7 +58,7 @@
 
 
 - name: "copy account.key to remote machine"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   copy:
     src: "{{ letsencrypt_account_store }}/{{ item }}"

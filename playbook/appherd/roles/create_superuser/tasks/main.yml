@@ -16,7 +16,7 @@
 
 
 - name: "does superuser exist?"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   shell: |
     cd {{ cf_app_pyapp_home }}/{{ common_project_name }}
@@ -28,7 +28,7 @@
   register: superuser_count
 
 #- name: check su_result.txt
-#  become_user: root
+#  become_user: "{{ remote_admin_account }}"
 #  become: yes
 #  command:  |
 #    cat {{ cf_app_pyapp_home }}/output/su_result.txt ;
@@ -36,7 +36,7 @@
 #  register: superuser_count
 
 - name: "Create super user and set password"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   shell: |
     cd {{ cf_app_pyapp_home }}/{{ common_project_name }}
@@ -53,7 +53,7 @@
   when: ( superuser_count.stdout == "0" )
 
 - name: "does superuser exist now?"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   shell: |
     cd {{ cf_app_pyapp_home }}/{{ common_project_name }}

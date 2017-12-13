@@ -5,7 +5,7 @@
 # Start ntpd
 
 - name: "setup ntp drift directory"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   file:
     dest: "/var/lib/ntp"
@@ -19,7 +19,7 @@
 # Let's remove since it doesn't appear to be present in the gold image.
 
 - name: "remove driftfile"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   file:
     dest: "/var/lib/ntp/drift"
@@ -29,14 +29,14 @@
 
 
 - name: "setup ntp configuration"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   template:
     src: "./roles/ntp_update/templates/ntp.conf.j2"
     dest: "/etc/ntp.conf"
 
 - name: "restart ntp"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   service:
     name: ntpd

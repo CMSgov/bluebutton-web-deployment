@@ -5,7 +5,7 @@
 
 - name: "Create Ansible Management Users"
   hosts: "{{ build_target }}"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   remote_user: ec2-user
   become: yes
   connection: smart
@@ -23,14 +23,14 @@
 
   tasks:
   - name: Make sure we have a 'wheel' group
-    become_user: root
+    become_user: "{{ remote_admin_account }}"
     become: yes
     group:
       name: wheel
       state: present
 
   - name: "Add group {{ ans_group }}"
-    become_user: root
+    become_user: "{{ remote_admin_account }}"
     become: yes
     group:
       name: "{{ ans_group }}"
@@ -39,6 +39,6 @@
   - import_tasks: roles/mgmt_user_add/tasks/main.yml
 
   - name: "display the authorized_key"
-    become_user: root
+    become_user: "{{ remote_admin_account }}"
     become: yes
     shell: "cat /home/{{ mgmt_user_name }}/.ssh/id_rsa"

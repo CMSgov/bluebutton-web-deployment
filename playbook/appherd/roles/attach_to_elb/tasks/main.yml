@@ -5,7 +5,7 @@
 # Attach server to ELB
 
 - name: "Get facts"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   ec2_metadata_facts:
   register: ec2_facts_info

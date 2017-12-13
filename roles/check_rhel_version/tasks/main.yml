@@ -4,7 +4,7 @@
 # Author: '@ekivemark'
 
 - name: "Get RHEL Version"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   shell: "rpm -q --queryformat '%{RELEASE}' rpm | grep -o [[:digit:]]*\\$ "
   register: rhel_version_query

@@ -170,7 +170,7 @@
 #  - name: "Create filesystem on {{ app_extra_volume_1.src }} "
 #    connect: "{{ app_ec2_output.instances[0]['private_ip'] }}"
 #    remote_user: ec2-user
-#    become_user: root
+#    become_user: "{{ remote_admin_account }}"
 #    become: yes
 #    filesystem:
 #      fstype: "{{ app_extra_volume_1.fstype }}"
@@ -179,7 +179,7 @@
 #  - name: "Create filesystem on {{ app_extra_volume_2.src }} "
 #    connect: "{{ app_ec2_output.instances[0]['private_ip'] }}"
 #    remote_user: ec2-user
-#    become_user: root
+#    become_user: "{{ remote_admin_account }}"
 #    become: yes
 #    filesystem:
 #      fstype: "{{ app_extra_volume_2.fstype }}"

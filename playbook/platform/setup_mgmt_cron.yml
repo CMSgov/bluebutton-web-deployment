@@ -9,7 +9,7 @@
 - name: "setup Environment cron jobs"
   hosts: "localhost"
   remote_user: ec2-user
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   gather_facts: True
   vars:
@@ -26,7 +26,7 @@
   tasks:
   # Create a folder for scripts under /root
   - name: "create /root/cron_script"
-    become_user: root
+    become_user: "{{ remote_admin_account }}"
     become: yes
     file:
       dest: "/root/cron_script"
@@ -37,7 +37,7 @@
       mode: "0660"
 
   - name: "create yum update script"
-    become_user: root
+    become_user: "{{ remote_admin_account }}"
     become: yes
     copy:
       dest: "/root/cron_script/yum_update_all.sh"
@@ -58,12 +58,12 @@
       mode: "0760"
 
   - name: "Setup Cron for mgmtserver actions - get current cron jobs"
-    become_user: root
+    become_user: "{{ remote_admin_account }}"
     become: yes
     shell: "cat /etc/crontab >/root/cron.txt "
 
   - name: "Add mgmtserver Cron jobs"
-    become_user: root
+    become_user: "{{ remote_admin_account }}"
     become: yes
     lineinfile:
       owner: root
@@ -73,7 +73,7 @@
 
   # DAILY YUM UPDATES
   - name: "Run yum updates"
-    become_user: root
+    become_user: "{{ remote_admin_account }}"
     become: yes
     lineinfile:
       owner: root
@@ -82,14 +82,14 @@
       line: "25 22 * * *   /root/cron_script/yum_update_all.sh"
 
   - name: "Check if cron source file exists"
-    become_user: root
+    become_user: "{{ remote_admin_account }}"
     become: yes
     stat:
       path: "/root/cron.txt"
     register: cron_file
 
   - name: "Copy crontab if exists"
-    become_user: root
+    become_user: "{{ remote_admin_account }}"
     become: yes
     shell: "crontab /root/cron.txt"
     when: cron_file.stat.exists is defined and cron_file.stat.exists

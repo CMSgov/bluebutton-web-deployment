@@ -7,7 +7,7 @@
 
 
 - name: Copy ssshd_config file for safety
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   command: "cp -f /etc/ssh/sshd_config /etc/ssh_sshd_config.tmp"
 
@@ -21,7 +21,7 @@
 # press enter to bypass confirm passphrase entry
 
 - name: push new rsa keys to ec2-user on remote
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   copy:
     src: /home/ec2-user/.ssh/id_rsa.pub
@@ -31,7 +31,7 @@
     group: ec2-user
 
 - name: push new ecdsa keys to ec2-user on remote
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   copy:
     src: /home/ec2-user/.ssh/id_ecdsa.pub
@@ -41,26 +41,26 @@
     group: ec2-user
 
 - name: add to authorized_keys file
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   shell: |
     cat /home/ec2-user/.ssh/{{ env }}_id_rsa.pub >> /home/ec2-user/authorized_keys
     cat /home/ec2-user/.ssh/{{ env }}_id_ecdsa.pub >> /home/ec2-user/authorized_keys
 
 - name: Create sshd_config file backup
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   command: "cp -f /etc/ssh/sshd_config /etc/ssh/sshd_config.${date}.bak"
 
 - name: "replace sshd_config with template"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   template:
     src: ../templates/sshd_config.j2
     dest: /etc/ssh/sshd_config
 
 - name: Final sshd_config file check
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   shell: "/usr/sbin/sshd -t"
   register: sshd_config_error

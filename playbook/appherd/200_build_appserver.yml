@@ -32,7 +32,7 @@
   hosts: "{{ build_target | default('appservers-base') }}"
   # connection: local
   remote_user: ec2-user
-  # become_user: root
+  # become_user: "{{ remote_admin_account }}"
   # become: yes
   gather_facts: True
   vars:
@@ -229,7 +229,7 @@
 
   handlers:
   - name: restart apache
-    become_user: root
+    become_user: "{{ remote_admin_account }}"
     become: yes
     service: name=httpd state=restarted
 

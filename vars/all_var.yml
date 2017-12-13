@@ -57,6 +57,7 @@
 
   # Remote user access account
   remote_user_account: "{{ env_remote_user_account }}"
+  remote_admin_account: "{{ env_remote_admin_account }}"
 
   ### DJANGO_SECRET_KEY:
   # 8 Character Prefix and Suffix

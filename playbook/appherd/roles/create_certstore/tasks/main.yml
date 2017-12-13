@@ -6,7 +6,7 @@
 # create a certificate store folder
 
 - name: "Create a back-end app certstore"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   file:
     dest: "{{ cf_app_pyapp_home }}/certstore"

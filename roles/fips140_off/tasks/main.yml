@@ -16,37 +16,37 @@
   connection: smart
 
   - name: "FIPS enabled: Off"
-    become_user: root
+    become_user: "{{ remote_admin_account }}"
     become: yes
     yum:
       name: dracut-fips\*
       state: absent
 
   - name: "backup boot file (intramfs)"
-    become_user: root
+    become_user: "{{ remote_admin_account }}"
     become: yes
     shell: "mv -v /boot/initramfs-$(uname -r).img{,.FIPS-bak}"
 
 
   - name: "rebuild intramfs"
-    become_user: root
+    become_user: "{{ remote_admin_account }}"
     become: yes
     shell: "dracut"
 
   - name: "remove fips=1 from kernel command line"
-    become_user: root
+    become_user: "{{ remote_admin_account }}"
     become: yes
     shell: |
       grubby --update-kernel=ALL --remove-args=fips=1
       [[ -f /etc/default/grub ]] && sed -i 's/ fips=1//' /etc/default/grub
 
   - name: Reboot the machine
-    become_user: root
+    become_user: "{{ remote_admin_account }}"
     become: yes
     shell: nohup bash -c "sleep 2s && reboot" &
 
   - name: Wait for machine to come back
-    become_user: root
+    become_user: "{{ remote_admin_account }}"
     become: yes
     wait_for_connection:
       timeout: 120
