@@ -18,7 +18,7 @@
     msg: "app_ip_last_octet ={{ app_ip_last_octet.stdout }}"
 
 - name: "Configure Splunk ..."
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   template:
     src: "../templates/splunk_deployment_conf.j2"
@@ -36,7 +36,7 @@
     ./splunk clone-prep-clear-config
 
 - name: "Restart Splunk - if this steps fails to complete Splunk may require license acceptance on host"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   command: "/opt/splunkforwarder/bin/splunk restart"
   register: splunk_status

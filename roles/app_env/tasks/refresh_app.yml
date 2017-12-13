@@ -6,11 +6,11 @@
 - name: become root and activate virtualenv
   become: yes
   become_method: sudo
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   action: "shell source {{ venv }}/bin/activate"
 
 - name: create app folder
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   file:
     dest: "{{ install_root }}/{{ project_name }}"
@@ -20,7 +20,7 @@
     mode:  "u+rw,g+rw,o-rwx"
 
 - name: "Check for git installation"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   stat:
     path: "{{ install_root }}/{{ project_name }}/.git/*"
@@ -31,12 +31,12 @@
     msg: "git is [{{ git_installed }}]"
 
 - name: switch to app folder
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   shell: "cd {{ install_root }}/{{ project_name }} "
 
 - name: "install from git: {{ project_repo }} branch:{{ git_branch }}"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   git:
     repo: "{{ project_repo }}"
@@ -47,7 +47,7 @@
 
   # Now pull a specific branch
 - name: "update from git: {{ project_repo }} branch:{{ git_branch }}"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   git:
     repo: "{{ project_repo }}"
@@ -56,7 +56,7 @@
 
 # change ownership of files
 - name: "Update file ownership"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   file:
     path: "{{ install_root }}/{{ project_name }}/"
@@ -67,7 +67,7 @@
 
 # install dependencies with pip in virtualenv
 - name: "pip install requirements"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   pip:
     requirements: "{{ install_root }}/{{ project_name }}/requirements/requirements.txt"
@@ -76,7 +76,7 @@
 
 # Change ownership for libraries
 - name: "Change ownership for libraries"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   file:
     path: "{{ venv }}"
@@ -86,7 +86,7 @@
     mode:  "u+rw,g+rw,o-rwx"
 
 - name: make manage.py executable
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   file:
     path: "{{ install_root }}/{{ project_name }}/manage.py"
@@ -94,7 +94,7 @@
     mode: "u+rwx,g+rwx,o-rwx"
 
 - name: Django migrate
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   django_manage:
     command: migrate
@@ -103,7 +103,7 @@
   when: (migrate == 'yes')
 
 - name: Django collectstatic
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   django_manage:
     command: collectstatic
@@ -112,7 +112,7 @@
   when: (collectstatic == 'yes')
 
 - name: make sure apache server is running
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   service:
     name: httpd
@@ -120,7 +120,7 @@
     enabled: yes
 
 - name: Restart Apache
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   action: shell /bin/echo $HOSTNAME
   notify:

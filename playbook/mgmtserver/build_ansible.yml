@@ -13,7 +13,7 @@
 
 - name: "Build Ansible Server"
   hosts: "{{ build_target }}"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   remote_user: ec2-user
   become: yes
   connection: smart
@@ -55,7 +55,7 @@
   - import_tasks: "roles/add_logging/tasks/main.yml"
 
   - name: "setup folders"
-    become_user: root
+    become_user: "{{ remote_admin_account }}"
     become: yes
     file:
       dest: "/root/.ansible-vault"
@@ -69,7 +69,7 @@
       msg: "{{ create_vault.stdout | default(omit) }}"
 
   - name: "yum installs"
-    become_user: root
+    become_user: "{{ remote_admin_account }}"
     become: yes
     yum:
       name: "{{ item }}"
@@ -85,7 +85,7 @@
     ignore_errors: yes
 
   - name: "pip installs with optional version"
-    become_user: root
+    become_user: "{{ remote_admin_account }}"
     become: yes
     # ansible==2.2.1.0 (previous)
     # ansible==2.4.1.0
@@ -113,7 +113,7 @@
 
     ########################################
   - name: "Check for git installation"
-    become_user: root
+    become_user: "{{ remote_admin_account }}"
     become: yes
     stat:
       path: "/hhs_ansible/hhs_ansible/.git/*"
@@ -125,7 +125,7 @@
     ignore_errors: yes
 
   - name: "install from git: hhs_ansible branch:{{ hhs_ansible_git_branch }}"
-    become_user: root
+    become_user: "{{ remote_admin_account }}"
     become: yes
     git:
       repo: "{{ hhs_ansible_repo }}"
@@ -136,7 +136,7 @@
 
   # Now pull a specific branch
   - name: "update from git: hhs_ansible branch:{{ hhs_ansible_git_branch }}"
-    become_user: root
+    become_user: "{{ remote_admin_account }}"
     become: yes
     git:
       repo: "{{ hhs_ansible_repo }}"

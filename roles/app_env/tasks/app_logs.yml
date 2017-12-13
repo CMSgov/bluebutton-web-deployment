@@ -5,7 +5,7 @@
 # Create the App logging directory and touch the app logs
 
 - name: "Create the app log directory "
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   file:
     dest: "{{ cf_app_log_dir }}"
@@ -15,7 +15,7 @@
     mode: 0775
 
 - name: "Create the logs"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   file:
     dest: "{{ cf_app_log_dir }}/{{ item }}"

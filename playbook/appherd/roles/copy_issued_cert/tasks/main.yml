@@ -11,7 +11,7 @@
 
 
 - name: "Copy Assigned Cert: Create {{ apache_cert_store }} "
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   file:
     dest: "{{ apache_cert_store }}"
@@ -22,7 +22,7 @@
     state: directory
 
 - name: "copy certs from vault to {{ apache_cert_store }}"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   copy:
     content: "{{ item.content }}"

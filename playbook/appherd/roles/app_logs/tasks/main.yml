@@ -8,7 +8,7 @@
 # Set SELinux permissions
 
 - name: "Create the app log directory "
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   file:
     dest: "{{ cf_app_log_dir }}"
@@ -19,7 +19,7 @@
 
 # Logs need to be given group ownership to logreader
 - name: "Create the logs"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   file:
     dest: "{{ cf_app_log_dir }}/{{ item }}"
@@ -35,14 +35,14 @@
 
 
 - name: "Set permissions for SELinux"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   shell: "semanage fcontext -a -t httpd_sys_content_t \"{{ cf_app_log_dir }}(/.*)?\" "
   ignore_errors: yes
 
 
 #- name: "Create the error log"
-#  become_user: root
+#  become_user: "{{ remote_admin_account }}"
 #  become: yes
 #  file:
 #    dest: "{{ cf_app_log_dir }}/error.log"
@@ -52,7 +52,7 @@
 #    mode: 0766
 #
 #- name: "Create the info log"
-#  become_user: root
+#  become_user: "{{ remote_admin_account }}"
 #  become: yes
 #  file:
 #    dest: "{{ cf_app_log_dir }}/info.log"

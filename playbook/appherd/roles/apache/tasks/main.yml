@@ -8,7 +8,7 @@
   import_tasks: ../app_tools/tasks/main.yml
 
 - name: "Install Apache (httpd)"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   yum:
     name: "{{ item }}"
@@ -18,7 +18,7 @@
     - mod_ssl
 
 - name: "Setup docs directory for server"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   file:
     dest: "/var/www/doc/{{ cf_app_pyserver_name|lower }}"
@@ -28,7 +28,7 @@
     mode: "0755"
 
 - name: "give group ownership to httpd logs to logreader"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   file:
     dest: "/var/log/httpd"
@@ -39,7 +39,7 @@
 
 
 - name: "Check Apache is running"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   service:
     name: httpd

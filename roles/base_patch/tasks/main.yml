@@ -11,14 +11,14 @@
   import_tasks: ./fix_sshd_config.yml
 
 - name: "clean up /root for dataservers"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   file:
     dest: "/root/fips_140_2_update.log.*"
     state: absent
 
 - name: "upgrade all packages"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
 #  yum:
 #    name: "*"
@@ -26,7 +26,7 @@
   shell: yum upgrade -y  --skip-broken
 
 - name: "check sshd config"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   shell:  /usr/sbin/sshd -t
   register: sshd_config_state
@@ -34,14 +34,14 @@
 
 
 - name: Check for reboot hint.
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   shell: LAST_KERNEL=$(rpm -q --last kernel | perl -pe 's/^kernel-(\S+).*/$1/' | head -1); CURRENT_KERNEL=$(uname -r); if [ $LAST_KERNEL != $CURRENT_KERNEL ]; then echo 'reboot'; else echo 'no'; fi
   ignore_errors: true
   register: reboot_hint
 
 - name: "Rebooting .... If {{ reboot_hint.stdout }} Required"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   command: shutdown -r now "Reboot required for updated kernel"
   async: 0
@@ -51,7 +51,7 @@
   register: rebooting
 
 #- name: "Rebooting for updated kernel...{{ reboot_hint.stdout }}"
-#  become_user: root
+#  become_user: "{{ remote_admin_account }}"
 #  become: yes
 #  shell: shutdown -r now "Reboot required for updated kernel" && sleep 3
 #  when: reboot_hint.stdout.find("reboot") != -1

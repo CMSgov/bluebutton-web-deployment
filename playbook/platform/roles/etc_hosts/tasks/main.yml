@@ -6,21 +6,21 @@
 
 - name: Generate /etc/hosts file
   become: yes
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   template:
     src: "../templates/hosts.j2"
     dest: "/etc/hosts.ansible"
 
 - name: remove hosts. file
   become: yes
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   file:
     dest: "/etc/hosts."
     state: absent
 
 - name: "copy /etc/hosts.ansible to remotes"
   become: yes
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   copy:
     src: "/etc/hosts.ansible"
     dest: "/etc/hosts"
@@ -30,7 +30,7 @@
 
 - name: "update mgmtserver hosts file"
   connection: local
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   copy:
     src: "/etc/hosts.ansible"

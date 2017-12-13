@@ -4,7 +4,7 @@
 # Author: '@ekivemark'
 
 - name: "Get RHEL Version"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   shell: "rpm -q --queryformat '%{RELEASE}' rpm | grep -o [[:digit:]]*\\$ "
   register: rhel_version
@@ -14,12 +14,12 @@
     msg: "RHEL Major Version is {{ rhel_version.stdout }}"
 
 - name: "Update yum configs"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   shell: "yum-config-manager --enable rhel-server-rhscl-{{ rhel_version.stdout }}-rpms"
 
 - name: "upgrade all packages"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   yum:
     name: "*"

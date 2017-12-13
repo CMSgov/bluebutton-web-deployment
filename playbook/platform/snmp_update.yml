@@ -9,7 +9,7 @@
   # hosts: appservers
   # connection: local
   remote_user: ec2-user
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   gather_facts: True
   vars:

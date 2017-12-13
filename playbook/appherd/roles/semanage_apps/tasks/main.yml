@@ -4,7 +4,7 @@
 # Author: '@ekivemark'
 
 - name: "Set permissions for app under SELinux"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   shell: "semanage fcontext -a -t httpd_sys_content_t \"{{ project_parent[:-1] }}(/.*)?\" "
   ignore_errors: yes

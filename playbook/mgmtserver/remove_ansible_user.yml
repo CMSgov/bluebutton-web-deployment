@@ -5,7 +5,7 @@
 
 - name: "Remove Ansible Management User"
   hosts: "{{ build_target }}"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   remote_user: ec2-user
   become: yes
   connection: smart

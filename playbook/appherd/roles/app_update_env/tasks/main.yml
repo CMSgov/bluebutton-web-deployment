@@ -6,7 +6,7 @@
 # Write the environment variable files
 
 - name: "Write custom-envvars file"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   template:
     src: ../templates/custom-envvars.j2
@@ -17,7 +17,7 @@
     mode: 0664
 
 - name: "write django_settings.sh script"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   template:
     src: ../templates/django_settings.j2
@@ -29,7 +29,7 @@
 
 
 - name: "Make new files executable"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   shell: "chmod +x {{ cf_app_pyapp_home }}"
 

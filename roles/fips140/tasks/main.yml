@@ -22,7 +22,7 @@
     dest: "/root/fips140/fips_update.sh"
 
 - name: "modify yum config for RHEL {{ rhel_version }} to add dracut-fips-aesni"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   shell: "yum-config-manager --enable rhel-{{ rhel_version }}-server-optional-rpms"
 
@@ -31,7 +31,7 @@
     dracut_fips_aesni: "dracut-fips-aesni-004-409.el6_8.2.noarch.rpm"
 
 - name: "copy {{ dracut_fips_aesni }}. Can't depend on server-optional-rpms"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   copy:
     src: "../files/{{ dracut_fips_aesni }}"
@@ -44,7 +44,7 @@
 # yum update run in base_patch
 # install fips modules
 - name: "FIPS 140.2 install step 2"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   yum:
     pkg: "{{item}}"
@@ -55,32 +55,32 @@
    # - "/root/fips140/{{ dracut_fips_aesni }}"
 
 - name: "Initialize FIPS 140.2 Log"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   shell: "/root/fips140/fips_update.sh 0"
 
 - name: "FIPS 140.2 Update boot images"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   shell: "/root/fips140/fips_update.sh 2"
 
   #- name: "Backup initramfs"
-  #  become_user: root
+  #  become_user: "{{ remote_admin_account }}"
   #  shell: "mv -v /boot/initramfs-$(uname -r).img{,.bak}"
   #
   #- name: "run dracut to rebuild initramfs"
-  #  become_user: root
+  #  become_user: "{{ remote_admin_account }}"
   #  shell: "dracut --force "
   #
   #- name: "change boot loader to apply FIPS"
-  #  become_user: root
+  #  become_user: "{{ remote_admin_account }}"
   #  shell: "grubby --update-kernel=$(grubby --default-kernel) --args=fips=1"
 
 - name: "Rebooting after dracut update ..."
   command: shutdown -r now "Reboot required after initramfs and grubby changes" && sleep 2
   # async: 0
   # poll: 0
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   ignore_errors: true
   when: reboot_hint.stdout.find("reboot") != -1
@@ -92,7 +92,7 @@
 
 
 - name: "FIPS setup step 3/4..."
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   shell: "/root/fips140/fips_update.sh 3"
 
@@ -100,7 +100,7 @@
   command: shutdown -r now "Reboot required after FIPS Step 3 install" && sleep 2
   async: 0
   poll: 0
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   ignore_errors: true
   when: reboot_hint.stdout.find("reboot") != -1
@@ -111,13 +111,13 @@
   when: rebooting_3|changed
 
 - name: "FIPS setup step 4/4..."
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   shell: "sysctl crypto.fips_enabled"
   register: fips_installed
 
 - name: "FIPS 140.2 install Log"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   shell: "cat /root/fips_140_2_update.log"
   register: fips_log

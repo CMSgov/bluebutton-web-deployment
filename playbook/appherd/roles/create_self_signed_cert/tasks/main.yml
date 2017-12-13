@@ -11,7 +11,7 @@
 
 
 - name: "Self-Signed-Cert: Create {{ apache_cert_store }} "
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   file:
     dest: "{{ apache_cert_store }}"
@@ -22,7 +22,7 @@
     state: directory
 
 - name: "check .pem file is not zero  length. If so, move to .pem.old"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   shell: "find {{ apache_cert_store }}/{{ item }} -empty  | xargs -I '{}' mv {} {}.old ; "
   with_items:
@@ -31,7 +31,7 @@
     - fullchain.pem
 
 - name: "Generate key, csr and cert pem for {{ external_dns_name }} in {{ apache_cert_store }}"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   command: |
     openssl req -new -nodes -x509 \
@@ -44,7 +44,7 @@
 
 # avoid an error launching apache by copying cert.pem to fullchain.pem
 - name: "Copy {{ apache_cert_store }}/cert.pem to fullchain.pem"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   copy:
     remote_src: true

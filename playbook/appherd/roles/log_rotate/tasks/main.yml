@@ -5,7 +5,7 @@
 
 
 - name: setup log rotation for pyapps logs
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   copy:
     dest: "/etc/logrotate.d/pyapps"

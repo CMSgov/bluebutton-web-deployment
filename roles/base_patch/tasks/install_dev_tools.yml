@@ -4,7 +4,7 @@
 # Author: '@ekivemark'
 
 - name: "Install Development Tools"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   yum:
     name: '@Development Tools'

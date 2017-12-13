@@ -21,7 +21,7 @@
     mode: "u+rwx"
 
 - name: "Execute External Drive Script"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   shell: "/home/ec2-user/script/setup_ext_drive.sh"
   register: external_drive_setup
@@ -43,7 +43,7 @@
     mode: "u+rwx"
 
 - name: "Execute External Drive Script"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   shell: "/home/ec2-user/script/setup_ext_drive.sh"
   register: external_drive_setup
@@ -60,7 +60,7 @@
       - "{{ app_external_drive2 }}"
 
 - name: "migrate /tmp"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   shell: |
     cd /tmp
@@ -74,7 +74,7 @@
 
 
 - name: "migrate /var"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   shell: |
     cd /var

@@ -21,7 +21,7 @@
 #SELINUXTYPE=targeted
 
 - name: "Set selinux status"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   selinux:
     policy: "{{ cf_app_selinux_policy }}"
@@ -32,7 +32,7 @@
   command: shutdown -r now "Reboot required for SELinux state change"
   async: 0
   poll: 0
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   ignore_errors: true
   when: check_selinux.stdout.find("reboot") != -1
   register: rebooting_selinux

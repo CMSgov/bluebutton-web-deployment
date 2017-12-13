@@ -6,7 +6,7 @@
 # Check for python version
 
 - name: "Install Python 3.4"
-  become_user: root
+  become_user: "{{ remote_admin_account }}"
   become: yes
   yum:
     pkg: "{{ item }}"
