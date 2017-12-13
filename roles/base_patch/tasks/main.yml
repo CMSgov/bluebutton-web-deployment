@@ -40,13 +40,23 @@
   ignore_errors: true
   register: reboot_hint
 
-- name: "Rebooting for updated kernel...{{ reboot_hint.stdout }}"
+- name: "Rebooting .... If {{ reboot_hint.stdout }} Required"
   become_user: root
   become: yes
-  shell: shutdown -r now "Reboot required for updated kernel" && sleep 3
-  when: reboot_hint.stdout.find("reboot") != -1
+  command: shutdown -r now "Reboot required for updated kernel"
+  async: 0
+  poll: 0
   ignore_errors: true
+  when: reboot_hint.stdout.find("reboot") != -1
   register: rebooting
+
+#- name: "Rebooting for updated kernel...{{ reboot_hint.stdout }}"
+#  become_user: root
+#  become: yes
+#  shell: shutdown -r now "Reboot required for updated kernel" && sleep 3
+#  when: reboot_hint.stdout.find("reboot") != -1
+#  ignore_errors: true
+#  register: rebooting
 
 
 - name: "Waiting 120 seconds for instance to reboot..."
