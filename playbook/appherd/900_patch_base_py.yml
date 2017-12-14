@@ -74,7 +74,7 @@
   - name: "Replace default FHIR ID in base.py"
     become_user: "{{ remote_admin_account }}"
     become: yes
-    line_in_file:
+    lineinfile:
       state: present
       dest: "/var/pyapps/hhs_o_server/hhs_oauth_server/hhs_oauth_server/settings/base.py"
       regexp: "^{{ base_py_line_change_from }}"
