@@ -1,0 +1,96 @@
+---
+# File: playbook/appherd/900_patch_base_py.yml
+# Created: 5/9/17
+# Author: '@ekivemark'
+
+# Playbook to:
+#  - create Python3/Django AppServer
+#  - Take server in appservers and reapply python/django components.
+
+
+#
+# Based on: http://odecee.com.au/cloudformation-and-ansible/
+# Vars file is relative to playbook file
+# vars_files:
+# Vars file is relative to playbook file
+# Sequence:
+# 1. Common variables
+# 2. encrypted vault file
+# 3. environment specific variables
+# 4. all_vars which reference the preceding three files.
+# common_ prefixes common variables
+# vault_env_ prefixes encrypted variables
+# env_ prefixes environment specific variables
+# all_var incorporates preceding variables and defines variables without prefixes.
+# use all_var variables in scripts.
+
+# new base machines will be in appservers-base in /etc/ansible/hosts
+# add all the base software and move the server to appservers and
+# remove from appservers-base
+
+- name: Refresh App Server
+  # hosts: appservers
+  hosts: "{{ build_target | default('appservers') }}"
+  # connection: local
+  remote_user: ec2-user
+  # become_user: "{{ remote_admin_account }}"
+  # become: yes
+  gather_facts: True
+  vars:
+    ansible_ssh_pipelining: no
+    # The variables in this section can all be overridden in the vars_files
+    # that follow
+    env: "test"
+    azone: "az1"
+    sub_zone: "app"
+    sg_zone: "appserver"
+    env_az: "{{ env }}-{{ azone }}"
+    env_cf_app_version: "01"
+    # splunk_target_layer: "WEB | APP | DATA | MGMT"
+    splunk_target_layer: "{{ sub_zone|upper }}"
+    migrate: "yes"
+    collectstatic: "yes"
+    # Setting the playbook value for SNS Notifications
+    sns_playbook: "playbook/appserver/build_appserver.yml"
+    sns_subject: "rebuild appserver"
+    sns_playbook_action: "rebuild"
+    sns_debug: false
+    base_py_line_change_from: 'DEFAULT_SAMPLE_FHIR_ID = "3979"'
+    base_py_line_change_to: 'DEFAULT_SAMPLE_FHIR_ID = "20140000008325"'
+
+  vars_files:
+    - "./../../vars/common.yml"
+    - "./../../vault/env/{{ env }}/vault.yml"
+    - "./../../vars/env/{{ env }}/env.yml"
+    - "./../../vars/all_var.yml"
+
+  # ../../roles/ points to roles stored in roles at the top level
+  # - roles/ indicates the role is in this playbook directory
+
+  tasks:
+
+  # Create a super user for the python/django application
+
+  - name: "Replace default FHIR ID in base.ppy"
+    become_user: "{{ remote_admin_account }}"
+    become: yes
+    line_in_file:
+      path: "/var/pyapps/hhs_o_server/hhs_oauth_server/hhs_oauth_server/settings/base.py"
+      regexp: "{{ base_py_line_change_from }}"
+      line: "{{ base_py_line_change_to }}"
+
+
+  - name: "Restart Apache on {{ env }}"
+    action: shell /bin/echo $HOSTNAME
+    notify:
+      - restart apache
+
+  handlers:
+  - name: restart apache
+    become_user: "{{ remote_admin_account }}"
+    become: yes
+    service: name=httpd state=restarted
+
+  # Now We should have a working machine
+  # Apache / Mod_Wsgi / Python3
+
