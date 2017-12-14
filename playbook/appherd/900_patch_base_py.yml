@@ -71,12 +71,13 @@
 
   # Create a super user for the python/django application
 
-  - name: "Replace default FHIR ID in base.ppy"
+  - name: "Replace default FHIR ID in base.py"
     become_user: "{{ remote_admin_account }}"
     become: yes
     line_in_file:
-      path: "/var/pyapps/hhs_o_server/hhs_oauth_server/hhs_oauth_server/settings/base.py"
-      regexp: "{{ base_py_line_change_from }}"
+      state: present
+      dest: "/var/pyapps/hhs_o_server/hhs_oauth_server/hhs_oauth_server/settings/base.py"
+      regexp: "^{{ base_py_line_change_from }}"
       line: "{{ base_py_line_change_to }}"
 
 
