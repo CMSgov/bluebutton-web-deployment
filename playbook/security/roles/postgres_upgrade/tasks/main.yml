@@ -1,0 +1,16 @@
+---
+# File: playbook/security/roles/postgres_upgrade/tasks/main.yml
+# Created: 12/20/17
+# Author: '@ekivemark'
+
+
+- name: "Upgrade postgresql"
+  remote_user: ec2-user
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  yum:
+    pkg: "{{ item }}"
+    state: latest
+  with_items:
+    - postgresql
+

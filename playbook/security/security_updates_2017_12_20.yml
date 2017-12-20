@@ -1,0 +1,65 @@
+---
+# File: playbook/security/security_updates_2017_12_20.yml
+# Created: 12/20/17
+# Author: '@ekivemark'
+
+# Apply package updates
+
+#
+# Based on: http://odecee.com.au/cloudformation-and-ansible/
+# Vars file is relative to playbook file
+# vars_files:
+# Vars file is relative to playbook file
+# Sequence:
+# 1. Common variables
+# 2. encrypted vault file
+# 3. environment specific variables
+# 4. all_vars which reference the preceding three files.
+# common_ prefixes common variables
+# vault_env_ prefixes encrypted variables
+# env_ prefixes environment specific variables
+# all_var incorporates preceding variables and defines variables without prefixes.
+# use all_var variables in scripts.
+
+# new base machines will be in appservers-base in /etc/ansible/hosts
+# add all the base software and move the server to appservers and
+# remove from appservers-base
+
+- name: Apply Security Updates
+  # hosts: appservers
+  hosts: "{{ build_target | default('appservers') }}"
+  # connection: local
+  remote_user: ec2-user
+  # become_user: "{{ remote_admin_account }}"
+  # become: yes
+  gather_facts: True
+  vars:
+    ansible_ssh_pipelining: no
+    # The variables in this section can all be overridden in the vars_files
+    # that follow
+    env: "test"
+    azone: "az1"
+    sub_zone: "app"
+    sg_zone: "appserver"
+    env_az: "{{ env }}-{{ azone }}"
+    env_cf_app_version: "01"
+    # splunk_target_layer: "WEB | APP | DATA | MGMT"
+    # Setting the playbook value for SNS Notifications
+    sns_playbook: "playbook/security/package_updates.yml"
+    sns_subject: "Apply security updates"
+    sns_playbook_action: "rebuild"
+    sns_debug: true
+
+  vars_files:
+    - "./../../vars/common.yml"
+    - "./../../vault/env/{{ env }}/vault.yml"
+    - "./../../vars/env/{{ env }}/env.yml"
+    - "./../../vars/all_var.yml"
+
+  roles:
+  # ../../roles/ points to roles stored in roles at the top level
+  # - roles/ indicates the role is in this playbook directory
+    - roles/postgres_upgrade
+
+  tasks:
+
