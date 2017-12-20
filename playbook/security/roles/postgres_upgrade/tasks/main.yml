@@ -14,3 +14,15 @@
   with_items:
     - postgresql
 
+
+- name: Get installed packages
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  yum:
+    list: installed
+  register: yum_packages
+  changed_when: False
+
+- name: "View the contents of yum_packages"
+  debug:
+    var: yum_packages
