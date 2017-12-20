@@ -29,7 +29,7 @@
 
 - name: "check postgres"
   debug:
-    msg: item
+    msg: "{{ item }}"
   with_items: "{{yum_packages|json_query(jsonquery)}}"
   vars:
-    jsonquery: "results[?name=='postgresql'].version"
+    jsonquery: "results[?name=='postgresql'].envra"
