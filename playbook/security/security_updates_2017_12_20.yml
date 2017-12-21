@@ -63,3 +63,11 @@
 
   tasks:
 
+  - name: "upgrade all packages"
+    become_user: "{{ remote_admin_account }}"
+    become: yes
+    yum:
+      name: "*"
+      state: latest
+      skip_broken: yes
+#     shell: yum upgrade -y  --skip-broken

@@ -23,9 +23,9 @@
   register: yum_packages
   changed_when: False
 
-- name: "View the contents of yum_packages"
-  debug:
-    var: yum_packages
+#- name: "View the contents of yum_packages"
+#  debug:
+#    var: yum_packages
 
 - name: "check postgres"
   debug:
