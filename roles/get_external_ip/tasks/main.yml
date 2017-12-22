@@ -10,7 +10,9 @@
 - name: "get external ip address"
   become_user: root
   become: yes
-  shell: "dig +short myip.opendns.com @resolver1.opendns.com."
+  shell: "curl ipinfo.io/ip"
+  # dig fails
+  # shell: "dig +short myip.opendns.com @resolver1.opendns.com."
   register: external_ip
 
 - name: "get hostname"
