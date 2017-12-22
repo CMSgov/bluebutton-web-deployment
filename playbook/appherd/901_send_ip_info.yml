@@ -1,9 +1,9 @@
 ---
-# File: playbook/security/security_updates_2017_12_20.yml
-# Created: 12/20/17
+# File: playbook/appherd/901_send_ip_info.yml
+# Created: 12/22/17
 # Author: '@ekivemark'
 
-# Apply package updates
+# Get ip address information and send via sns
 
 #
 # Based on: http://odecee.com.au/cloudformation-and-ansible/
@@ -25,7 +25,7 @@
 # add all the base software and move the server to appservers and
 # remove from appservers-base
 
-- name: Apply Security Updates
+- name: Get and send IP Address and host information
   # hosts: appservers
   hosts: "{{ build_target | default('appservers') }}"
   # connection: local
@@ -44,30 +44,24 @@
     env_az: "{{ env }}-{{ azone }}"
     env_cf_app_version: "01"
     # splunk_target_layer: "WEB | APP | DATA | MGMT"
+    splunk_target_layer: "{{ sub_zone|upper }}"
+    migrate: "yes"
+    collectstatic: "yes"
     # Setting the playbook value for SNS Notifications
-    sns_playbook: "playbook/security/package_updates.yml"
-    sns_subject: "Apply security updates"
+    sns_playbook: "playbook/appserver/build_appserver.yml"
+    sns_subject: "get server address information"
     sns_playbook_action: "rebuild"
-    sns_debug: true
-
+    sns_debug: false
   vars_files:
     - "./../../vars/common.yml"
     - "./../../vault/env/{{ env }}/vault.yml"
     - "./../../vars/env/{{ env }}/env.yml"
     - "./../../vars/all_var.yml"
 
-  roles:
   # ../../roles/ points to roles stored in roles at the top level
   # - roles/ indicates the role is in this playbook directory
-    - roles/postgres_upgrade
 
-  tasks:
+  roles:
+    - ../../roles/get_external_ip
+    - ../../roles/send_notification
 
-  - name: "upgrade all packages"
-    become_user: "{{ remote_admin_account }}"
-    become: yes
-    yum:
-      name: "*"
-      state: latest
-      skip_broken: yes
-0-er#     shell: yum upgrade -y  --skip-broken
