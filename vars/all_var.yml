@@ -362,6 +362,17 @@
   ssh_key_replace: "{{ env_ssh_key_replace }}"
   ssh_auth_keys: "{{ env_ssh_auth_keys }}"
 
+  #
+  # MyMedicare Authentication Integration
+  #
+  sls_token_endpoint: "{{ env_sls_token_endpoint }}"
+  medicare_login_uri: "{{ env_medicare_login_uri }}"
+  medicare_redirect_uri: "{{ env_medicare_redirect_uri }}"
+  medicare_login_template_name: "{{ env_medicare_login_template_name }}"
+  authorization_template_name: "{{ env_authorization_template_name }}"
+  sls_verify_ssl: "{{ env_sls_verify_ssl }}"
+
+
   cf_env_layer: {
           "dev": {
             "az1": {
