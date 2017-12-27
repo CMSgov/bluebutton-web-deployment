@@ -100,14 +100,12 @@ no_overwrite('DATABASES_CUSTOM', "%s" % DEFAULT_DB_SET)
 # MyMedicare Authentication Integration
 #
 
-SLS_TOKEN_ENDPOINT = 'https://dev.accounts.cms.gov/v1/oauth/token'
-MEDICARE_LOGIN_URI = 'https://dev2.account.mymedicare.gov/?scope=openid%20profile&client_id=bluebutton'
-MEDICARE_REDIRECT_URI = 'http://localhost:8000/mymedicare/sls-callback'
-MEDICARE_LOGIN_TEMPLATE_NAME = 'design_system/login.html'
-AUTHORIZATION_TEMPLATE_NAME = 'design_system/authorize.html'
-SLS_VERIFY_SSL = False
-
-
+no_overwrite('DJANGO_SLS_TOKEN_ENDPOINT', '{{ sls_token_endpoint }}')
+no_overwrite('DJANGO_MEDICARE_LOGIN_URI', '{{ medicare_login_uri }}')
+no_overwrite('DJANGO_MEDICARE_REDIRECT_URI', '{{ medicare_redirect_uri }}')
+no_overwrite('DJANGO_MEDICARE_LOGIN_TEMPLATE_NAME', '{{ medicare_login_template_name }}')
+no_overwrite('DJANGO_AUTHORIZATION_TEMPLATE_NAME', '{{ authorization_template_name }}')
+no_overwrite('DJANGO_SLS_VERIFY_SSL', '{{ sls_verify_ssl }}')
 
 
 # Enable next line to confirm DEFAULT_DB_SET
