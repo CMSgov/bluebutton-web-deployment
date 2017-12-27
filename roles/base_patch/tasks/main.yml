@@ -43,7 +43,7 @@
 - name: "Rebooting .... If {{ reboot_hint.stdout }} Required"
   become_user: "{{ remote_admin_account }}"
   become: yes
-  shell: "shutdown -r -t 5  'Reboot required for updated kernel' "
+  shell: "shutdown -r 1 'Reboot required for updated kernel' "
   async: 0
   poll: 0
   ignore_errors: true
