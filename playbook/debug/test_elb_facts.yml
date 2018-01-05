@@ -57,7 +57,7 @@
     - set_fact:
         env_elb: "{{ item }}"
       with_items: "{{ elb_facts }}"
-      when: item.name is in ec2_elb_name
+
 
     - local_action:
         module: debug
