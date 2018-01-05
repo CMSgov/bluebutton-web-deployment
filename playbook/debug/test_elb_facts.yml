@@ -36,6 +36,7 @@
     sns_playbook: "playbook/debug/test_role.yml:{{ test_this_role }}"
     sns_playbook_action: "build_target={{ build_target }}"
     ec2_elb_dns_name: "BB-DEV-CLB-1-1941963047.us-east-1.elb.amazonaws.com"
+    ec2_elb_name: "BB-DEV-CLB-1"
 
   vars_files:
     - "./../../vars/common.yml"
@@ -55,4 +56,4 @@
     - local_action:
         module: debug
         msg: "{{ item.dns_name }} or {{ item.name }}"
-      with_items: "{{ elb_facts.elbs }}"
+      with_items: "{{ elb_facts.elbs | selectattr('name', ec2_elb_name) }}"
