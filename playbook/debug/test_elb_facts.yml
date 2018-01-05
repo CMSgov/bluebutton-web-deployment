@@ -49,16 +49,19 @@
   # pass in test_this_role variable
   # - import_tasks: "{{ test_this_role }}"
       # Gather facts about all ELBs
-    - local_action:
-        module: ec2_elb_facts
-        region: us-east-1
-      register: elb_facts
+  - name: "get facts"
+    connection: local
+    module: ec2_elb_facts
+      region: us-east-1
+    register: elb_facts
 
-    - set_fact:
-        env_elb: "{{ item }}"
-      with_items: "{{ elb_facts }}"
+  - name: "filter facts"
+    set_fact:
+      env_elb: "{{ item }}"
+    with_items: "{{ elb_facts }}"
 
-    - local_action:
-        module: debug
-        msg: "ELB INFO:\n\n{{ item.name }}: {{ item.tags }}\n\n"
-      with_items: "{{ env_elb }}"
+  - name: "show info"
+    connection: local
+    module: debug
+      msg: "ELB INFO:\n\n{{ item.name }}: {{ item.tags }}\n\n"
+    with_items: "{{ env_elb }}"
