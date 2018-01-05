@@ -103,6 +103,10 @@
 
   project_repo: "{{ env_project_repo }}"
 
+  # DEBUG Mode
+  # False in IMPL / PROD
+  django_debug: "{{ env_django_debug }}"
+
   # The value of your django project's STATIC_ROOT settings.
   # This will be the directory that django's `collectstatic` management command
   # copies static files to, and it must be an absolute path. The default value
@@ -120,6 +124,9 @@
 
   # settings module
   django_settings_module: "{{ env_django_settings_module }}"
+  # settings folder in project
+  django_settings_folder: "{{ env_django_settings_folder }}"
+
 
   ### TransparentHealthServer default settings:
   ths_fhir_server: "{{ env_ths_fhir_server }}"
@@ -130,6 +137,12 @@
 
   ### HOSTNAME_URL:
   host_url: "{{ env_external_dns_name }}"
+
+  # django environment specific apps list
+  django_environment_apps: "{{ env_django_environment_apps }}"
+  django_optional_installed_apps: "{{ env_django_optional_installed_apps }}"
+  django_cors_origin_allow_all: "{{ env_django_cors_origin_allow_all }}"
+  django_authentication_backends: "{{ env_django_authentication_backends }}"
 
   ### Email configuration - AWS SES
   # email backend options are:
@@ -312,6 +325,9 @@
   mon_nessus_user: "{{ env_mon_nessus_user }}"
   mon_nessus_pwd: "{{ env_mon_nessus_pwd }}"
   mon_nessus_pub_key: "{{ env_mon_nessus_pub_key }}"
+
+  # Type of Elastic Load Balancer: app | net | classic | appclassic
+  elastic_load_balancer_type: "{{ env_elastic_load_balancer_type }}"
 
   app_lb_arn: "{{ env_app_lb_arn}}"
   app_ssl_lb_arn: "{{ env_app_ssl_lb_arn }}"
