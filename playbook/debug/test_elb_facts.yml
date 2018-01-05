@@ -46,11 +46,11 @@
   # pass in test_this_role variable
   # - import_tasks: "{{ test_this_role }}"
       # Gather facts about all ELBs
-    - action:
+    - local_action:
         module: ec2_elb_facts
       register: elb_facts
 
-    - action:
+    - local_action:
         module: debug
         msg: "{{ item.dns_name }}"
       with_items: "{{ elb_facts.elbs }}"
