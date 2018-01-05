@@ -48,6 +48,7 @@
       # Gather facts about all ELBs
     - local_action:
         module: ec2_elb_facts
+        region: us-east-1
       register: elb_facts
 
     - local_action:
