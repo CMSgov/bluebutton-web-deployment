@@ -55,5 +55,5 @@
 
     - local_action:
         module: debug
-        msg: "{{ item }}\n\n{{ item.name }}: {{ item.tags }}\n\n"
+        msg: "ELB INFO:\n\n{{ item.name }}: {{ item.tags }}\n\n"
       with_items: "{{ elb_facts.elbs }}"
