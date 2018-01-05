@@ -56,5 +56,5 @@
         module: debug
         msg: "{{ item.dns_name }}"
       with_items: "{{ elb_facts }}"
-      when: elb_facts.name == ec2_elb_name
-      
+      when: elb_facts.elbs.name == ec2_elb_name
+
