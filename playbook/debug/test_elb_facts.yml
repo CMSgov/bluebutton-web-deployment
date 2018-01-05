@@ -55,6 +55,12 @@
       region: us-east-1
     register: elb_facts
 
+  - name: "show info"
+    connection: local
+    debug:
+      msg: "ELB INFO:\n\n{{ item.name }}: {{ item.tags }}\n\n"
+    with_items: "{{ elb_facts }}"
+
   - name: "filter facts"
     set_fact:
       env_elb: "{{ item }}"
@@ -63,5 +69,5 @@
   - name: "show info"
     connection: local
     debug:
-      msg: "ELB INFO:\n\n{{ item.name }}: {{ item.tags }}\n\n"
-    with_items: "{{ env_elb }}"
+      msg: "INFO:\n\n{{ item }}\n\n"
+    with_items: "{{ elb_facts }}"
