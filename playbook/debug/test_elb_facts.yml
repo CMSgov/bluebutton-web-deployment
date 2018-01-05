@@ -37,6 +37,7 @@
     sns_playbook_action: "build_target={{ build_target }}"
     ec2_elb_dns_name: "BB-DEV-CLB-1-1941963047.us-east-1.elb.amazonaws.com"
     ec2_elb_name: ["BB-DEV-CLB-1"]
+    env_elb: []
 
   vars_files:
     - "./../../vars/common.yml"
@@ -53,11 +54,10 @@
         region: us-east-1
       register: elb_facts
 
-    - local_action:
-        set_fact:
-          env_elb: "{{ item }}"
-        with_items: "{{ elb_facts }}"
-        when: item.name is in ec2_elb_name
+    - set_fact:
+        env_elb: "{{ item }}"
+      with_items: "{{ elb_facts }}"
+      when: item.name is in ec2_elb_name
 
     - local_action:
         module: debug
