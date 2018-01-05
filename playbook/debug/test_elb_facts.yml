@@ -54,10 +54,9 @@
         region: us-east-1
       register: elb_facts
 
-    - local_action:
-        set_fact:
-          env_elb: "{{ item }}"
-        with_items: "{{ elb_facts }}"
+    - set_fact:
+        env_elb: "{{ item }}"
+      with_items: "{{ elb_facts }}"
 
     - local_action:
         module: debug
