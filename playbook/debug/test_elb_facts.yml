@@ -55,4 +55,6 @@
     - local_action:
         module: debug
         msg: "{{ item.dns_name }}"
-      with_items: "{{ ec2_elb_name }}"
+      with_items: "{{ elb_facts }}"
+      when: elb_facts.name == ec2_elb_name
+      
