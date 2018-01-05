@@ -56,4 +56,4 @@
     - local_action:
         module: debug
         msg: "{{ item }}"
-      with_items: "{{ elb_facts.elbs | selectattr('name', ec2_elb_name) }}"
+      with_items: "{{ elb_facts.elbs | selectattr('name', ec2_elb_name) | list }}"
