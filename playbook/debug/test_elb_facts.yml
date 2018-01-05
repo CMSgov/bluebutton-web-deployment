@@ -51,8 +51,8 @@
       # Gather facts about all ELBs
   - name: "get facts"
     connection: local
-    module: ec2_elb_facts
-    region: us-east-1
+    ec2_elb_facts:
+      region: us-east-1
     register: elb_facts
 
   - name: "filter facts"
