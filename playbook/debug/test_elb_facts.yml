@@ -37,7 +37,7 @@
     sns_playbook_action: "build_target={{ build_target }}"
     ec2_elb_dns_name: "BB-DEV-CLB-1-1941963047.us-east-1.elb.amazonaws.com"
     ec2_elb_name: ["BB-DEV-CLB-1", ]
-    env_elb: []
+    env_elb: [{}, ]
 
   vars_files:
     - "./../../vars/common.yml"
