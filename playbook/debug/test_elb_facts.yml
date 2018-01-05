@@ -62,6 +62,6 @@
 
   - name: "show info"
     connection: local
-    module: debug
+    debug:
       msg: "ELB INFO:\n\n{{ item.name }}: {{ item.tags }}\n\n"
     with_items: "{{ env_elb }}"
