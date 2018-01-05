@@ -45,7 +45,6 @@
   tasks:
   # pass in test_this_role variable
   # - import_tasks: "{{ test_this_role }}"
-    - name: "Get elb_facts"
       # Gather facts about all ELBs
     - action:
         module: ec2_elb_facts
