@@ -127,6 +127,9 @@
   # settings folder in project
   django_settings_folder: "{{ env_django_settings_folder }}"
 
+  # List of Admin email addresses
+  # Format is: (('Mark Scrimshire[Dev]', 'mark@ekivemark.com'), )
+    django_admins: "{{ env_django_admins }}"
 
   ### TransparentHealthServer default settings:
   ths_fhir_server: "{{ env_ths_fhir_server }}"

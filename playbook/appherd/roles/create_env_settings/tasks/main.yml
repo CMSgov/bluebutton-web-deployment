@@ -10,7 +10,7 @@
   become: yes
   template:
     src: ../templates/aws-env.py.j2
-    dest: "{{ install_root }}/{{ django_settings_folder }}/aws-env-{{ env }}.py"
+    dest: "{{ install_root }}/{{ django_settings_folder }}/aws-{{ env }}.py"
     backup: yes
     owner: "{{ app_owner }}"
     group: "{{ app_group }}"

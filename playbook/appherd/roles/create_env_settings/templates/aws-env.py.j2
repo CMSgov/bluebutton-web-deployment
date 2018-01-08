@@ -13,11 +13,13 @@ from ..utils import bool_env
 # the parent variable in all_var.yml
 #
 
-ADMINS = (
-    ('Mark Scrimshire[Dev]', 'mark@ekivemark.com'),
-)
+# List of Admin email addresses
+# Format is:
+ADMINS = {{ django_admins }}
+
 MANAGERS = ADMINS
 
+# http://www.miniwebtool.com/django-secret-key-generator/
 SECRET_KEY = "{{ django_secret_key }}"
 
 ALLOWED_HOSTS = ['*', socket.gethostname()]
@@ -61,8 +63,8 @@ DATABASES = {
 }
 
 # AWS Credentials need to support SES, SQS and SNS
-AWS_ACCESS_KEY_ID = "{{ aws_access_id }}"
-AWS_SECRET_ACCESS_KEY = "{{ aws_secret_key }}"
+AWS_ACCESS_KEY_ID = '{{ aws_access_id }}'
+AWS_SECRET_ACCESS_KEY = '{{ aws_secret_key }}'
 
 # static files and media
 # Don't use BASE_DIR because for Production Environments
