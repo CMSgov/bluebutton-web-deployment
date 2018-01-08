@@ -1,0 +1,406 @@
+from .base import *
+import os
+import socket
+from getenv import env
+from ..utils import bool_env
+
+#
+# Written by Ansible /playbook/appherd/roles/create_env_settings
+# Overrides base.py with environment specific settings
+#
+# If a setting needs to vary by environment it should be added to the
+# env.yml file for each environment and referenced in this file by
+# the parent variable in all_var.yml
+#
+
+ADMINS = (
+    ('Mark Scrimshire[Dev]', 'mark@ekivemark.com'),
+)
+MANAGERS = ADMINS
+
+SECRET_KEY = "{{ django_secret_key }}"
+
+ALLOWED_HOSTS = ['*', socket.gethostname()]
+
+# if ALLOWED_HOSTS == ['*', socket.gethostname()]:
+#     print("WARNING: Set DJANGO_ALLOWED_HOSTS to the hostname "
+#           "for Production operation.\n"
+#           "         Currently defaulting to %s " % ALLOWED_HOSTS)
+# Warning: on macOS hostname is case sensitive
+
+# removing security enforcement in development mode
+# DEBUG Mode
+# False in IMPL / PROD
+# DEBUG = True / False
+DEBUG = {{ django_debug }}
+
+# Add apps for Site/Installation specific implementation here:
+# The hhs_oauth_server.hhs_oauth_server_context
+
+# Add list to env.yml
+#ENV_SPECIFIC_APPS = [
+#    # Installation/Site Specific apps based on  -----------------
+#    'storages',
+#    # A test client - moved to aws-test / dev /impl settings
+#    'apps.testclient',
+#]
+
+ENV_SPECIFIC_APPS = {{ django_environment_apps }}
+
+INSTALLED_APPS += ENV_SPECIFIC_APPS
+
+OPTIONAL_INSTALLED_APPS += {{ django_optional_installed_apps }}
+
+CORS_ORIGIN_ALLOW_ALL = {{ django_cors_origin_allow_all }}
+
+# database configuration - Postgres
+DATABASES_DEFAULT = "{{ db_platform_type }}://{{ db_user_name }}:{{ db_user_pw }}@{{ db_host_address }}:{{ db_host_port }}/{{ db_name }}{{ db_host_options }}"
+
+DATABASES = {
+    'default': dj_database_url.config(default=DATABASES_DEFAULT),
+}
+
+# AWS Credentials need to support SES, SQS and SNS
+AWS_ACCESS_KEY_ID = "{{ aws_access_id }}"
+AWS_SECRET_ACCESS_KEY = "{{ aws_secret_key }}"
+
+# static files and media
+# Don't use BASE_DIR because for Production Environments
+# Static Files may be located on an entirely different server.
+# But the default can be BASE_DIR Setting
+ASSETS_ROOT = "{{ install_root }}/{{ project_name }}"
+
+AWS_STORAGE_BUCKET_NAME = '{{ s3_storage_bucket_name }}'
+AWS_S3_CUSTOM_DOMAIN = 's3.amazonaws.com/%s' % AWS_STORAGE_BUCKET_NAME
+
+STATICFILES_LOCATION = '/static/'
+STATICFILES_STORAGE = 'hhs_oauth_server.s3_storage.StaticStorage'
+STATIC_URL = "https://%s%s" % (AWS_S3_CUSTOM_DOMAIN, STATICFILES_LOCATION)
+# STATIC_URL = '/static/'
+# print("Static URL:%s" % STATIC_URL)
+
+MEDIAFILES_LOCATION = '/media/'
+DEAFULT_FILE_STORAGE = 'hhs_oauth_server.s3_storage.MediaStorage'
+MEDIA_URL = "https://%s%s" % (AWS_S3_CUSTOM_DOMAIN, MEDIAFILES_LOCATION)
+# MEDIA_URL = '/media/'
+
+STATIC_ROOT = os.path.join(ASSETS_ROOT, 'collectedstatic')
+MEDIA_ROOT = os.path.join(ASSETS_ROOT, 'media')
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'sitestatic'),
+]
+
+OAUTH2_AUTHORIZATION_FORM = 'authorize/default.html'
+
+# TEMPLATES.context_processor:
+# 'hhs_oauth_server.hhs_oauth_server_context.active_apps'
+# enables custom code to be branched in templates eg.
+#                 {% if "apps.extapi" in active_apps %}
+#
+#                     {%  include "extapi/get_started.html" %}
+#                 {% endif %}
+# Place all environment/installation specific code in a separate app
+# hhs_oauth_server.hhs_oauth_server_context.py also
+# includes IsAppInstalled to check for target_app in INSTALLED_APPS
+# This enables implementation specific code to be branched inside views and
+# functions.
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [os.path.join(BASE_DIR, ('templates/'))],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+                'django_settings_export.settings_export',
+                'hhs_oauth_server.hhs_oauth_server_context.active_apps',
+            ],
+            'builtins': [
+            ],
+        },
+    },
+]
+
+# emails
+SEND_EMAIL = True
+# If using AWS SES, the email below must first be verified.
+DEFAULT_FROM_EMAIL = "{{ django_from_email }}"
+# The console.EmailBackend backend prints to the console.
+# Redefine this for SES or other email delivery mechanism
+EMAIL_BACKEND_DEFAULT = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND ="{{ django_email_backend }}"
+
+# SMS
+SEND_SMS = True
+
+# MFA - Active or Not or False
+# If using MFA enabled login this value is used to determin if
+# reverse with mfa_login or reverse with login is called
+#     if settings.MFA:
+#         return HttpResponseRedirect(reverse('mfa_login'))
+#     else:
+#         return HttpResponseRedirect(reverse('login'))
+MFA = True
+
+# Add in apps.accounts backends for DEV environment
+#AUTHENTICATION_BACKENDS = (
+#    'django.contrib.auth.backends.ModelBackend',
+#    'apps.accounts.auth.SettingsBackend',
+#    # 'apps.accounts.mymedicare_auth.MyMedicareBackend',
+#)
+AUTHENTICATION_BACKENDS = {{ django_authentication_backends }}
+
+APPLICATION_TITLE = "{{ django_app_title }}"
+
+ORGANIZATION_TITLE = 'The U.S. Centers for Medicare & Medicaid Services (CMS)'
+ORGANIZATION_URI = 'https://cms.gov'
+POLICY_URI = 'https://www.cms.gov/About-CMS/Agency-Information/Aboutwebsite/Privacy-Policy.html'
+POLICY_TITLE = 'Privacy Policy'
+TOS_URI = 'https://www.medicare.gov/find-a-plan/staticpages/UserAgreement.aspx'
+TOS_TITLE = 'Terms of Service'
+TAG_LINE_1 = 'Share your Medicare data'
+TAG_LINE_2 = 'with applications, organizations, and people you trust.'
+EXPLAINATION_LINE = 'This service allows Medicare beneficiaries to connect their health data to applications of their choosing.'
+
+# LINKS TO DOCS
+USER_DOCS_URI = "https://hhsidealab.github.io/bluebutton-user-help"
+USER_DOCS_TITLE = "User Documentation"
+DEVELOPER_DOCS_URI = "https://cmsgov.github.io/bluebutton-developer-help"
+DEVELOPER_DOCS_TITLE = "Developer Documentation"
+
+USER_TITLE = "Medicare beneficiaries, health providers, caregivers, and 3rd party application developers"
+
+DEFAULT_DISCLOSURE_TEXT = """
+This system is provided for use by %s. See the documentation for more information on proper use.
+Unauthorized or improper use of this system or its data may result in disciplinary action, as well as
+civil and criminal penalties. This system may be monitored, recorded, and subject to audit.
+""" % (USER_TITLE)
+
+DISCLOSURE_TEXT = DEFAULT_DISCLOSURE_TEXT
+
+HOSTNAME_URL = "{{ host_url }}"
+INVITE_REQUEST_ADMIN ='{{ django_admin_email }}'
+
+# Dynamic client registration Protocol
+# "O" = Open to everyone
+# "" = Disabled.
+DCRP = "{{ django_dcrp }}"
+
+# To support multiple resourceType records in SupportedResourceType
+# We need to have a default FHIR Server as a fallback if the Request.user
+# Does not have a Crosswalk with a default FHIRServer defined.
+# This variable will contain the ID of the Default FHIRServer
+# in the apps.fhir.bluebutton.server.models.FHIRServer table
+FHIR_SERVER_DEFAULT = {{ django_fhirserver_id }}
+
+FHIR_SERVER_CONF = {'SERVER': "{{ ths_fhir_server }}",
+                    'PATH': "{{ ths_fhir_path }}",
+                    'RELEASE': "{{ ths_fhir_rel }}",
+                    'REWRITE_FROM': ["{{ ths_fhir_server }}{{ ths_fhir_path }}{{ ths_fhir_rel }}",],
+                    # REWRITE_FROM should be a list
+                    'REWRITE_TO': "{{ ths_fhir_rewrite_to }}",
+                    # Minutes until search expires
+                    'SEARCH_EXPIRY': {{ ths_search_expiry }} }
+
+FHIR_CLIENT_CERTSTORE = os.path.join(BASE_DIR, {{ django_fhir_certstore_relative }} )
+
+SIGNUP_TIMEOUT_DAYS = env('SIGNUP_TIMEOUT_DAYS', 7)
+
+# Stub for Custom Authentication Backend
+SLS_USER = "ben"
+# enclose value for DJANGO_SLS_PASSWORD in single quotes to preserve
+# special characters eg. $
+# eg. export DJANGO_SLS_PASSWORD='$pecial_CharacterPre$erved'
+SLS_PASSWORD = 'pbkdf2_sha256$24000$V6XjGqYYNGY7$13tFC13aaTohxBgP2W3glTBz6PSbQN4l6HmUtxQrUys='
+SLS_FIRST_NAME = "Ben"
+SLS_LAST_NAME = "Barker"
+SLS_EMAIL = 'ben@example.com'
+
+# emails
+SEND_EMAIL = True
+# If using AWS SES, the email below must first be verified.
+DEFAULT_FROM_EMAIL = '{{ django_from_email }}'
+DEFAULT_ADMIN_EMAIL = '{{ django_admin_email }}'
+
+# The console.EmailBackend backend prints to the console.
+# Redefine this for SES or other email delivery mechanism
+EMAIL_BACKEND_DEFAULT = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = '{{ django_email_backend }}'
+EMAIL_HOST = 'email-smtp.us-east-1.amazonaws.com'
+# SES PORT options: 25, 465, 587, 2465 or 2587.
+# Port 25 is throttled
+# Use port 587 or 2587 for TLS connections
+# Use port 465 or 2465 for Native SSL support
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+EMAIL_TIMEOUT = None
+EMAIL_HOST_USER = None
+EMAIL_HOST_PASSWORD = None
+EMAIL_SSL_KEYFILE = None
+EMAIL_SSL_CERTFILE = None
+
+SEND_SMS = False
+
+# Move Admin to a variable url location
+ADMIN_PREPEND_URL = "{{ django_admin_redirector }}"
+
+#
+# MyMedicare Authentication Integration
+#
+MEDICARE_LOGON = {{ medicare_logon }}
+SLS_TOKEN_ENDPOINT = "{{ sls_token_endpoint }}"
+MEDICARE_LOGIN_URI = "{{ medicare_login_uri }}"
+MEDICARE_REDIRECT_URI = "{{ medicare_redirect_uri }}"
+MEDICARE_LOGIN_TEMPLATE_NAME = "{{ medicare_login_template_name }}"
+AUTHORIZATION_TEMPLATE_NAME = "{{ authorization_template_name }}"
+
+SLS_VERIFY_SSL = {{ sls_verify_ssl }}
+
+# Change these for production
+USER_ID_SALT = "{{ django_user_id_salt }}"
+USER_ID_ITERATIONS = {{ django_user_id_iterations }}
+
+
+# Fixed user and password for fake backend
+SETTINGS_AUTH_USER = 'ben'
+SETTINGS_AUTH_PASSWORD = 'pbkdf2_sha256$24000$V6XjGqYYNGY7$13tFC13aaTohxBgP2W3glTBz6PSbQN4l6HmUtxQrUys='
+
+ORGANIZATION_NAME = "{{ django_org_name }}"
+
+# logging
+# Based on blog posts:
+# http://thegeorgeous.com/2015/02/27/Logging-into-multiple-files-in-Django.html
+# https://docs.djangoproject.com/en/1.10/topics/logging/
+# IF a new file is added for logging go to hhs_ansible and update configuration
+# script to touch log files:
+# hhs_ansible/playbook/appherd/roles/app_update/tasks/main.yml
+# add the new filename as an item to the "Create the log files" action
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(asctime)s %(levelname)s %(name)s '
+                      '[%(process)d] %(message)s',
+            'datefmt': '%Y-%m-%d %H:%M:%S'
+        },
+        'simple': {
+            'format': '%(asctime)s %(levelname)s %(name)s %(message)s',
+            'datefmt': '%Y-%m-%d %H:%M:%S'
+        },
+        'jsonout': {
+            'format': '{"time": "%(asctime)s", "level": "%(levelname)s", '
+                      '"name": "%(name)s", "message": "%(message)s"}',
+            'datefmt': '%Y-%m-%d %H:%M:%S'
+
+        }
+    },
+    'filters': {
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+        'file_debug': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'formatter': 'simple',
+            'filename': '/var/log/pyapps/debug.log',
+        },
+        'file_error': {
+            'level': 'INFO',
+            'filters': ['require_debug_true'],
+            'class': 'logging.FileHandler',
+            'formatter': 'verbose',
+            'filename': '/var/log/pyapps/error.log',
+        },
+        'file_info': {
+            'level': 'INFO',
+            'filters': ['require_debug_true'],
+            'class': 'logging.FileHandler',
+            'formatter': 'simple',
+            'filename': '/var/log/pyapps/info.log',
+        },
+        'badlogin_info': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'formatter': 'simple',
+            'filename': '/var/log/pyapps/login_failed.log',
+        },
+        'adminuse_info': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'formatter': 'simple',
+            'filename': '/var/log/pyapps/admin_access.log',
+        },
+        'mail_admins': {
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler',
+            'formatter': 'verbose'
+        },
+        'perf_mon': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'formatter': 'jsonout',
+            'filename': '/var/log/pyapps/perf_mon.log',
+        }
+    },
+    'loggers': {
+        'hhs_server': {
+            'handlers': ['console', 'file_debug'],
+            'level': 'DEBUG',
+        },
+        'hhs_oauth_server.accounts': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+        'hhs_server_debug': {
+            'handlers': ['console', 'file_debug'],
+            'level': 'DEBUG',
+        },
+        'hhs_server_error': {
+            'handlers': ['console', 'file_error', 'mail_admins'],
+            'level': 'ERROR',
+        },
+        'unsuccessful_logins': {
+            'handlers': ['console', 'badlogin_info'],
+            'level': 'INFO',
+        },
+        'admin_interface': {
+            'handlers': ['console', 'adminuse_info'],
+            'level': 'INFO',
+        },
+        'hhs_server_info': {
+            'handlers': ['console', 'file_info'],
+            'level': 'INFO',
+        },
+        'oauth2_provider': {
+            'handlers': ['console'],
+            'level': 'INFO',
+        },
+        'oauthlib': {
+            'handlers': ['console'],
+            'level': 'INFO',
+        },
+        'tests': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+        'performance': {
+            'handlers': ['console', 'perf_mon'],
+            'level': 'INFO',
+        }
+    },
+}

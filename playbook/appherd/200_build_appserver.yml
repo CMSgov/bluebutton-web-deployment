@@ -159,6 +159,9 @@
     # Update environment variable files
     - roles/app_update_env
 
+    # Update environment settings file
+    - roles/create_env_settings
+
     # # install mod_wsgi
     # See if we can move mod_wsgi to pip install into virtual env
     - roles/mod_wsgi
