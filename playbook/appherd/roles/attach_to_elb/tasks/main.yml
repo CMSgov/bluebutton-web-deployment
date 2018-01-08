@@ -53,4 +53,3 @@
   shell: "/usr/bin/aws elb register-instances-with-load-balancer --load-balancer-name {{ app_clb_name }} --instances {{ ec2_facts_info['ansible_facts']['ansible_ec2_instance_id'] }} "
   register: app_clb_result
   when:  elastic_load_balancer_type == "classic" or elastic_load_balancer_type == "appclassic"
-  
