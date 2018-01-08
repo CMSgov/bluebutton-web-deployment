@@ -204,11 +204,12 @@ FHIR_SERVER_CONF = {'SERVER': "{{ ths_fhir_server }}",
                     # REWRITE_FROM should be a list
                     'REWRITE_TO': "{{ ths_fhir_rewrite_to }}",
                     # Minutes until search expires
-                    'SEARCH_EXPIRY': {{ ths_search_expiry }} }
+                    'SEARCH_EXPIRY': {{ ths_search_expiry }}
+}
 
 FHIR_CLIENT_CERTSTORE = os.path.join(BASE_DIR, {{ django_fhir_certstore_relative }} )
 
-SIGNUP_TIMEOUT_DAYS = env('SIGNUP_TIMEOUT_DAYS', 7)
+SIGNUP_TIMEOUT_DAYS = {{ django_signup_days }}
 
 # Stub for Custom Authentication Backend
 SLS_USER = "ben"
@@ -229,8 +230,8 @@ DEFAULT_ADMIN_EMAIL = '{{ django_admin_email }}'
 # The console.EmailBackend backend prints to the console.
 # Redefine this for SES or other email delivery mechanism
 EMAIL_BACKEND_DEFAULT = 'django.core.mail.backends.console.EmailBackend'
-EMAIL_BACKEND = '{{ django_email_backend }}'
-EMAIL_HOST = 'email-smtp.us-east-1.amazonaws.com'
+EMAIL_BACKEND = "{{ django_email_backend }}"
+EMAIL_HOST = "email-smtp.us-east-1.amazonaws.com"
 # SES PORT options: 25, 465, 587, 2465 or 2587.
 # Port 25 is throttled
 # Use port 587 or 2587 for TLS connections
