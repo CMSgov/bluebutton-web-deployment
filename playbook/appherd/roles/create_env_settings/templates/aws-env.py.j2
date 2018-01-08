@@ -209,7 +209,7 @@ FHIR_SERVER_CONF = {'SERVER': "{{ ths_fhir_server }}",
 
 FHIR_CLIENT_CERTSTORE = os.path.join(BASE_DIR, {{ django_fhir_certstore_relative }} )
 
-SIGNUP_TIMEOUT_DAYS = {{ django_signup_days }}
+SIGNUP_TIMEOUT_DAYS = {{ django_signup_timeout_days }}
 
 # Stub for Custom Authentication Backend
 SLS_USER = "ben"
