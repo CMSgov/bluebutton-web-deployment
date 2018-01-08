@@ -346,6 +346,10 @@
   # Type of Elastic Load Balancer: app | net | classic | appclassic
   elastic_load_balancer_type: "{{ env_elastic_load_balancer_type }}"
 
+  # Classic Load Balancer Name:
+  # follows format: BB-{env}-CLB-n
+  app_clb_name: "{{ env_app_clb_name }}"
+
   app_lb_arn: "{{ env_app_lb_arn}}"
   app_ssl_lb_arn: "{{ env_app_ssl_lb_arn }}"
   # Port 80 or 443 from ALB to APPServer = http | https

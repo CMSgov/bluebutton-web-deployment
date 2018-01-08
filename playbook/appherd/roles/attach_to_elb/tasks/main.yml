@@ -34,21 +34,22 @@
 - name: "attach server to Application ELB - HTTP"
   connection: local
   shell: "/usr/bin/aws elbv2 register-targets --target-group-arn {{ app_lb_arn }} --targets Id={{ ec2_facts_info['ansible_facts']['ansible_ec2_instance_id'] }} "
-  register: app_lb_result
+  register: app_lb_http_result
   when:  elastic_load_balancer_type == "app" or elastic_load_balancer_type == "appclassic"
 
 # Adding port 443 to HTTPS Target Group
 - name: "attach server to Application ELB - HTTPS"
   connection: local
   shell: "/usr/bin/aws elbv2 register-targets --target-group-arn {{ app_ssl_lb_arn }} --targets Id={{ ec2_facts_info['ansible_facts']['ansible_ec2_instance_id'] }} "
-  register: app_lb_result
+  register: app_lb_https_result
   when: elastic_load_balancer_type == "app" or elastic_load_balancer_type == "appclassic"
 
 # Adding EC2 instance to Classic ELB
+# aws elb   register-instances-with-load-balancer
+#          --load-balancer-name <value>
+#          --instances <value>
 - name: "attach server to Classic ELB"
-  local_action:
-    module: ec2_elb
-    instance_id: "{{ ec2_facts_info['ansible_facts']['ansible_ec2_instance_id'] }}"
-    ec2_elbs: "{{ elb_classic_id }}"
-    state: present
+  connection: local
+  shell: "/usr/bin/aws elb register-instances-with-load-balancer --load-balancer-name {{ app_clb_name }} --instances {{ ec2_facts_info['ansible_facts']['ansible_ec2_instance_id'] }} "
+  register: app_clb_result
   when:  elastic_load_balancer_type == "classic" or elastic_load_balancer_type == "appclassic"
