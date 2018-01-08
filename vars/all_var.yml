@@ -134,6 +134,7 @@
   ths_fhir_rel: "{{ env_ths_fhir_rel }}"
   ths_fhir_rewrite_to: "{{ env_ths_fhir_rewrite_to }}"
   ths_fhir_rewrite_from: "{{ env_ths_fhir_rewrite_from }}"
+  ths_search_expiry: "{{ env_ths_search_expiry }}"
 
   ### HOSTNAME_URL:
   host_url: "{{ env_external_dns_name }}"
@@ -162,6 +163,19 @@
   # SALT and ITERATIONS
   django_user_id_salt: "{{ env_django_user_id_salt }}"
   django_user_id_iterations: "{{ env_django_user_id_iterations }}"
+
+  # Dynamic client registration Protocol
+  # "O" = Open to everyone
+  # "" = Disabled.
+  django_dcrp: ""
+
+  # This variable will contain the ID of the Default FHIRServer
+  # in the apps.fhir.bluebutton.server.models.FHIRServer table
+  django_fhirserver_id: 1
+
+  django_fhir_certstore_relative: '{{ django_fhir_certstore_relative }}'
+
+  django_signup_timeout_days: "{{ env_django_signup_timeout_days }}"
 
   ### S3 Bucket Settings:
   s3_bucket_account: "{{ env_s3_bucket_account }}"
@@ -381,6 +395,7 @@
   #
   # MyMedicare Authentication Integration
   #
+  medicare_logon: "{{ env_medicare_logon }}"
   sls_token_endpoint: "{{ env_sls_token_endpoint }}"
   medicare_login_uri: "{{ env_medicare_login_uri }}"
   medicare_redirect_uri: "{{ env_medicare_redirect_uri }}"

@@ -1,0 +1,18 @@
+---
+# File: playbook/appherd/roles/create_env_settings/tasks/main.yml
+# Created: 12/29/17
+# Author: '@ekivemark'
+
+# Write the environment settings file
+
+- name: "Write aws-{{ env }}.py file"
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  template:
+    src: ../templates/aws-env.py.j2
+    dest: "{{ install_root }}/{{ django_settings_folder }}/aws-env-{{ env }}.py"
+    backup: yes
+    owner: "{{ app_owner }}"
+    group: "{{ app_group }}"
+    mode: 0664
+

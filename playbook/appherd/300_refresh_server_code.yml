@@ -99,6 +99,9 @@
     # Update environment variable files
     - roles/app_update_env
 
+    # Update environment settings file
+    - roles/create_env_settings
+
     # django migrate and collectstatic
     - roles/django_prep
 
