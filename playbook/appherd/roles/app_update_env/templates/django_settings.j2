@@ -4,6 +4,8 @@
 export DJANGO_APP_ROOT={{ install_root }}/{{ project_name }}
 export PATH="$PATH:$DJANGO_APP_ROOT"
 
+export DJANGO_DEBUG='{{ django_debug }}'
+
 # http://www.miniwebtool.com/django-secret-key-generator/
 export DJANGO_SECRET_KEY='{{ django_secret_key }}'
 export DJANGO_SETTINGS_MODULE='{{ django_settings_module }}'
