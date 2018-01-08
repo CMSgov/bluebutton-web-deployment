@@ -173,7 +173,7 @@
   # in the apps.fhir.bluebutton.server.models.FHIRServer table
   django_fhirserver_id: 1
 
-  django_fhir_certstore_relative: '{{ django_fhir_certstore_relative }}'
+  django_fhir_certstore_relative: "{{ env_django_fhir_certstore_relative }}"
 
   django_signup_timeout_days: "{{ env_django_signup_timeout_days }}"
 
