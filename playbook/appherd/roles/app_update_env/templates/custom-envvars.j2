@@ -23,6 +23,8 @@ def no_overwrite(env_var, env_val):
 no_overwrite('DJANGO_APP_ROOT', '{{ install_root }}/{{ project_name }}')
 sys.path.append(os.environ.get('DJANGO_APP_ROOT'))
 
+no_overwrite('DJANGO_DEBUG', '{{ django_debug }}')
+
 # http://www.miniwebtool.com/django-secret-key-generator/
 no_overwrite('DJANGO_SECRET_KEY', '{{ django_secret_key }}')
 no_overwrite('DJANGO_SETTINGS_MODULE', '{{ django_settings_module }}')
