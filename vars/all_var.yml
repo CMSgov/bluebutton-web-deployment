@@ -410,6 +410,7 @@
   authorization_template_name: "{{ env_authorization_template_name }}"
   sls_verify_ssl: "{{ env_sls_verify_ssl }}"
 
+  django_logging: "{{ env_django_logging }}"
 
   cf_env_layer: {
           "dev": {
