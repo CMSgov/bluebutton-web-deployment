@@ -283,4 +283,4 @@ ORGANIZATION_NAME = "{{ django_org_name }}"
 # script to touch log files:
 # hhs_ansible/playbook/appherd/roles/app_update/tasks/main.yml
 # add the new filename as an item to the "Create the log files" action
-LOGGING = {{ django_logging | to_nice_json }}
+LOGGING = {{ django_logging }}
