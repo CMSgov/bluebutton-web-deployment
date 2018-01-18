@@ -71,9 +71,10 @@
     become_user: "{{ remote_admin_account }}"
     become: yes
     fetch:
-      dest: "/home/ec2-user/settings"
+      dest: "/home/ec2-user/settings/{{ item }}/"
       src: "/var/pyapps/hhs_o_server/hhs_oauth_server/hhs_oauth_server/settings/aws-{{ env|lower }}.py"
-
+      flat: True
+    with_items: "{{ build_target | default('appservers') }}"
 
 
 
