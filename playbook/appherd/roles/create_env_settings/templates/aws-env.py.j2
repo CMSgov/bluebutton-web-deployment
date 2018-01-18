@@ -275,6 +275,10 @@ SETTINGS_AUTH_PASSWORD = 'pbkdf2_sha256$24000$V6XjGqYYNGY7$13tFC13aaTohxBgP2W3gl
 
 ORGANIZATION_NAME = "{{ django_org_name }}"
 
+# Should be set to True in production and False in all other dev and test environments
+REQUIRE_HTTPS_REDIRECT_URIS = {{ django_require_https_redirect }}
+
+
 # logging
 # Based on blog posts:
 # http://thegeorgeous.com/2015/02/27/Logging-into-multiple-files-in-Django.html
