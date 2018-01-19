@@ -85,9 +85,9 @@
       {{ cf_app_py_virtual_env }}/bin/python3 --version
     register: python_ver
 
-  - name: "display Python Version {{ python_ver.stdout }} and Django Version {{ django_ver.stdout }} "
+  - name: "display Python Version {{ python_ver.stdout }} and Django Version {{ django_ver.stdout-lines[1] }} "
     debug:
-      msg: "Python is {{ python_ver.stdout }} \n Django is {{ django_ver.stdout }}"
+      msg: "Python is {{ python_ver.stdout }} \n Django is {{ django_ver.stdout_lines[1] }}"
 
 
 
