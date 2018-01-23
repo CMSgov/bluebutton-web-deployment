@@ -66,6 +66,14 @@
     repo: "{{ project_repo }}"
     dest: "{{ install_root }}/{{ project_name }}"
     version: "{{ git_branch }}"
+  register: git_history
+
+# Record the git version installed
+- name: "record git result for {{ git_history }}"
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  shell: |
+    echo {{ inventory_hostname }}:{{ git_history }} > {{ cf_app_log_dir }}/info.log
 
 - name: "Set permissions to application code ( {{ cf_app_pyapps_user }}:{{ app_group }} )"
   become_user: "{{ remote_admin_account }}"
