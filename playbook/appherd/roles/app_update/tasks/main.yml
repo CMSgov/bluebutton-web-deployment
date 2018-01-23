@@ -73,7 +73,7 @@
   become_user: "{{ remote_admin_account }}"
   become: yes
   shell: |
-    echo {{ inventory_hostname }}:{{ git_history }} > {{ cf_app_log_dir }}/info.log
+    echo {{ env }}-{{ inventory_hostname }} Repo:{{ project_repo }} Branch:{{ git_branch }}:Changed:{{ git_history.changed }} From:{{ git_history.before }} To:{{ git_history.after }} > {{ cf_app_log_dir }}/info.log
 
 - name: "Set permissions to application code ( {{ cf_app_pyapps_user }}:{{ app_group }} )"
   become_user: "{{ remote_admin_account }}"
