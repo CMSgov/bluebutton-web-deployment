@@ -13,46 +13,13 @@ from ..utils import bool_env
 # the parent variable in all_var.yml
 #
 
-# List of Admin email addresses
-# Format is:
-ADMINS = {{ django_admins }}
-
-MANAGERS = ADMINS
-
 # http://www.miniwebtool.com/django-secret-key-generator/
 SECRET_KEY = "{{ django_secret_key }}"
-
 ALLOWED_HOSTS = ['*', socket.gethostname()]
-
-# if ALLOWED_HOSTS == ['*', socket.gethostname()]:
-#     print("WARNING: Set DJANGO_ALLOWED_HOSTS to the hostname "
-#           "for Production operation.\n"
-#           "         Currently defaulting to %s " % ALLOWED_HOSTS)
-# Warning: on macOS hostname is case sensitive
-
-# removing security enforcement in development mode
-# DEBUG Mode
-# False in IMPL / PROD
-# DEBUG = True / False
 DEBUG = {{ django_debug }}
-
-# Add apps for Site/Installation specific implementation here:
-# The hhs_oauth_server.hhs_oauth_server_context
-
-# Add list to env.yml
-#ENV_SPECIFIC_APPS = [
-#    # Installation/Site Specific apps based on  -----------------
-#    'storages',
-#    # A test client - moved to aws-test / dev /impl settings
-#    'apps.testclient',
-#]
-
 ENV_SPECIFIC_APPS = {{ django_environment_apps }}
-
 INSTALLED_APPS += ENV_SPECIFIC_APPS
-
 OPTIONAL_INSTALLED_APPS += {{ django_optional_installed_apps }}
-
 CORS_ORIGIN_ALLOW_ALL = {{ django_cors_origin_allow_all }}
 
 # database configuration - Postgres
@@ -78,13 +45,10 @@ AWS_S3_CUSTOM_DOMAIN = 's3.amazonaws.com/%s' % AWS_STORAGE_BUCKET_NAME
 STATICFILES_LOCATION = '/static/'
 STATICFILES_STORAGE = 'hhs_oauth_server.s3_storage.StaticStorage'
 STATIC_URL = "https://%s%s" % (AWS_S3_CUSTOM_DOMAIN, STATICFILES_LOCATION)
-# STATIC_URL = '/static/'
-# print("Static URL:%s" % STATIC_URL)
 
 MEDIAFILES_LOCATION = '/media/'
 DEAFULT_FILE_STORAGE = 'hhs_oauth_server.s3_storage.MediaStorage'
 MEDIA_URL = "https://%s%s" % (AWS_S3_CUSTOM_DOMAIN, MEDIAFILES_LOCATION)
-# MEDIA_URL = '/media/'
 
 STATIC_ROOT = os.path.join(ASSETS_ROOT, 'collectedstatic')
 MEDIA_ROOT = os.path.join(ASSETS_ROOT, 'media')
@@ -93,20 +57,6 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'sitestatic'),
 ]
 
-OAUTH2_AUTHORIZATION_FORM = 'authorize/default.html'
-
-# TEMPLATES.context_processor:
-# 'hhs_oauth_server.hhs_oauth_server_context.active_apps'
-# enables custom code to be branched in templates eg.
-#                 \{\% if "apps.extapi" in active_apps \%\}
-#
-#                     \{\%  include "extapi/get_started.html" \%\}
-#                 \{\% endif \%\}
-# Place all environment/installation specific code in a separate app
-# hhs_oauth_server.hhs_oauth_server_context.py also
-# includes IsAppInstalled to check for target_app in INSTALLED_APPS
-# This enables implementation specific code to be branched inside views and
-# functions.
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -268,7 +218,6 @@ SLS_VERIFY_SSL = {{ sls_verify_ssl }}
 USER_ID_SALT = "{{ django_user_id_salt }}"
 USER_ID_ITERATIONS = {{ django_user_id_iterations }}
 
-
 # Fixed user and password for fake backend
 SETTINGS_AUTH_USER = 'ben'
 SETTINGS_AUTH_PASSWORD = 'pbkdf2_sha256$24000$V6XjGqYYNGY7$13tFC13aaTohxBgP2W3glTBz6PSbQN4l6HmUtxQrUys='
@@ -278,13 +227,4 @@ ORGANIZATION_NAME = "{{ django_org_name }}"
 # Should be set to True in production and False in all other dev and test environments
 REQUIRE_HTTPS_REDIRECT_URIS = {{ django_require_https_redirect }}
 
-
-# logging
-# Based on blog posts:
-# http://thegeorgeous.com/2015/02/27/Logging-into-multiple-files-in-Django.html
-# https://docs.djangoproject.com/en/1.10/topics/logging/
-# IF a new file is added for logging go to hhs_ansible and update configuration
-# script to touch log files:
-# hhs_ansible/playbook/appherd/roles/app_update/tasks/main.yml
-# add the new filename as an item to the "Create the log files" action
 LOGGING = {{ django_logging }}
