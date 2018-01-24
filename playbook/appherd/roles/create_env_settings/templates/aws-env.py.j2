@@ -187,6 +187,9 @@ DISCLOSURE_TEXT = DEFAULT_DISCLOSURE_TEXT
 HOSTNAME_URL = "{{ host_url }}"
 INVITE_REQUEST_ADMIN ='{{ django_admin_email }}'
 
+# Set to False in NON-PRODUCTION Environments
+REQUIRE_INVITE_TO_REGISTER = {{ django_require_invite_to_register }}
+
 # Dynamic client registration Protocol
 # "O" = Open to everyone
 # "" = Disabled.
