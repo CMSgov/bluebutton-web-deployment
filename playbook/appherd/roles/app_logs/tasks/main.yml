@@ -32,7 +32,7 @@
     - error.log
     - info.log
     - perf_mon.log
-
+    - export.log
 
 - name: "Set permissions for SELinux"
   become_user: "{{ remote_admin_account }}"
