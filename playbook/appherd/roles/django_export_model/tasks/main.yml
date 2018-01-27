@@ -1,0 +1,19 @@
+---
+# File: playbook/appherd/roles/django_export_model/tasks/main.yml
+# Created: 5/26/17
+# Author: '@ekivemark'
+
+# Perform django management command to export a model as csv
+# add in group create for first run only.
+
+- name: "Django export {{ export_model }}"
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  # We only want to run the command on one server in the fleet
+  run_once: yes
+  django_manage:
+    command: "model2csv --application {{ export_application }} --model {{ export_model }} --add_table_name True >>/var/log/pyapps/export.log"
+    app_path: "{{ install_root }}/{{ project_name }}/"
+    virtualenv: "{{ venv }}"
+  when: ( export_model is defined )
+
