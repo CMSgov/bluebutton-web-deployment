@@ -416,7 +416,7 @@
   sls_verify_ssl: "{{ env_sls_verify_ssl }}"
 
   # Should be set to True in production and False in all other dev and test environments
-  django_require_https_redirect: "{{ env_django_require_https_redirect }}"
+  django_block_http_redirect: "{{ env_django_block_http_redirect }}"
 
   django_logging: "{{ env_django_logging }}"
 
