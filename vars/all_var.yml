@@ -422,6 +422,8 @@
 
   django_oauth2_provider: "{{ env_django_oauth2_provider }}"
 
+  django_mobile_redirect_regex: "{{ env_django_mobile_redirect_regex }}"
+
   cf_env_layer: {
           "dev": {
             "az1": {
