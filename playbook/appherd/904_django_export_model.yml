@@ -27,7 +27,7 @@
 # add all the base software and move the server to appservers and
 # remove from appservers-base
 
-- name: "what version of python/django is running?"
+- name: "export a model to splunk"
   # hosts: appservers
   hosts: "{{ build_target | default('appservers') }}"
   # connection: local
