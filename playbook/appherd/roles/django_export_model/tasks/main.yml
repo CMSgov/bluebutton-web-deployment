@@ -17,4 +17,3 @@
     export PATH={{ cf_app_py_virtual_env }}/bin:$PATH
     ./manage.py model2csv --application {{ export_application }} --model {{ export_model }} --add_table_name True >>{{ cf_app_log_dir }}/export.log
   when: ( export_model is defined )
-
