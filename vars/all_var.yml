@@ -420,6 +420,8 @@
 
   django_logging: "{{ env_django_logging }}"
 
+  django_oauth2_provider: "{{ env_django_oauth2_provider }}"
+
   cf_env_layer: {
           "dev": {
             "az1": {

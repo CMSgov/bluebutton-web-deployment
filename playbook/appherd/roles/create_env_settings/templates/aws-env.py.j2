@@ -232,4 +232,15 @@ ORGANIZATION_NAME = "{{ django_org_name }}"
 # REQUIRE_HTTPS_REDIRECT_URIS = True
 BLOCK_HTTP_REDIRECT_URIS = {{ django_block_http_redirect }}
 
+OAUTH2_PROVIDER = {{ django_oauth2_provider }}
+
+# logging
+# Based on blog posts:
+# http://thegeorgeous.com/2015/02/27/Logging-into-multiple-files-in-Django.html
+# https://docs.djangoproject.com/en/1.10/topics/logging/
+# IF a new file is added for logging go to hhs_ansible and update configuration
+# script to touch log files:
+# hhs_ansible/playbook/appherd/roles/app_update/tasks/main.yml
+# add the new filename as an item to the "Create the log files" action
+
 LOGGING = {{ django_logging }}
