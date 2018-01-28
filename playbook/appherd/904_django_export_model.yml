@@ -66,3 +66,4 @@
 
   roles:
     - roles/django_export_model
+
