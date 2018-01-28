@@ -11,9 +11,10 @@
   become: yes
   # We only want to run the command on one server in the fleet
   run_once: yes
-  django_manage:
-    command: "model2csv --application {{ export_application }} --model {{ export_model }} --add_table_name True >>{{ cf_app_log_dir }}/export.log"
-    app_path: "{{ install_root }}/{{ project_name }}/"
-    virtualenv: "{{ venv }}"
+  shell: |
+    cd {{ cf_app_pyapp_home }}/{{ common_project_name }}
+    source {{ cf_app_py_virtual_env }}/bin/activate
+    export PATH={{ cf_app_py_virtual_env }}/bin:$PATH
+    ./manage.py "model2csv --application {{ export_application }} --model {{ export_model }} --add_table_name True >>{{ cf_app_log_dir }}/export.log"
   when: ( export_model is defined )
 
