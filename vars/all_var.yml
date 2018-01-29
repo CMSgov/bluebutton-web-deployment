@@ -424,6 +424,9 @@
 
   django_mobile_redirect_regex: "{{ env_django_mobile_redirect_regex }}"
 
+  # file to append to in /var/log/pyapps/
+  django_export_model_file: "export.log"
+
   cf_env_layer: {
           "dev": {
             "az1": {
