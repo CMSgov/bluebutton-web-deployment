@@ -21,6 +21,16 @@ pipeline {
       description: 'The branch of the deployment repo to use for deployment.',
       name: 'DEPLOY_BRANCH'
     )
+    string(
+      defaultValue: "",
+      description: 'The Gold Image AMI id that will be used as the base for app servers.',
+      name: 'AMI_ID'
+    )
+    string(
+      defaultValue: "m3.medium",
+      description: 'The class/size of the ec2 instance to launch.',
+      name: 'INSTANCE_CLASS'
+    )
     choice(
       choices: 'no\nyes',
       description: 'Should we run database migrations on deploy?',
@@ -60,10 +70,10 @@ pipeline {
       }
     }
 
-    stage('Ensure CF_VERSION when REFRESH_ONLY is false') {
+    stage('Ensure CF_VERSION and AMI_ID when REFRESH_ONLY is false') {
       steps {
         sh """
-          if [ -z "${params.CF_VERSION}" ]
+          if [ -z "${params.CF_VERSION}" ] || [ -z "${params.AMI_ID}" ]
           then
             exit 1
           fi
@@ -144,7 +154,9 @@ pipeline {
                     --private-key ${pk} \
                     -e 'env=${params.ENV}' \
                     -e 'cf_platform_version=${params.CF_VERSION}' \
-                    -e 'azone=${params.AZ}'
+                    -e 'azone=${params.AZ}' \
+                    -e 'cf_app_instance_type=${params.INSTANCE_CLASS}' \
+                    -e 'ami_app_gold_image=${params.AMI_ID}'
                 """
               }
             }
