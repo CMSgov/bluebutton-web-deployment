@@ -62,17 +62,19 @@ pipeline {
 
     stage('Install requirements') {
       steps {
-        script {
-          sh """
-            virtualenv -ppython2.7 venv
-            . venv/bin/activate
+        dir('code') {
+          script {
+            sh """
+              virtualenv -ppython2.7 venv
+              . venv/bin/activate
 
-            pip install --upgrade pip
-            pip install --upgrade cffi
+              pip install --upgrade pip
+              pip install --upgrade cffi
 
-            pip install ansible==2.4.2.0
-            pip install boto
-          """
+              pip install ansible==2.4.2.0
+              pip install boto
+            """
+          }
         }
       }
     }
@@ -212,6 +214,8 @@ pipeline {
                 file(credentialsId: vault_pass, variable: 'vp')
               ]) {
                 sh """
+                  . venv/bin/activate
+
                   EC2_INI_PATH=inventory/config/${params.ENV}.ini \
                   ansible-playbook playbook/appherd/300_refresh_server_code.yml \
                     --vault-password-file ${vp} \
