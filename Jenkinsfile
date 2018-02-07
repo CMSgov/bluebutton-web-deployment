@@ -17,11 +17,6 @@ pipeline {
       name: 'BRANCH'
     )
     string(
-      defaultValue: "",
-      description: 'The CF platform version.',
-      name: 'CF_VERSION'
-    )
-    string(
       defaultValue: "*/master",
       description: 'The branch of the deployment repo to use for deployment.',
       name: 'DEPLOY_BRANCH'
@@ -40,6 +35,11 @@ pipeline {
       choices: 'az1\naz2\naz3',
       description: 'Availability zone to launch instance in.',
       name: 'AZ'
+    )
+    string(
+      defaultValue: "",
+      description: 'The CF platform version (e.g., "55"). Required when creating new servers.',
+      name: 'CF_VERSION'
     )
     booleanParam(
       defaultValue: true,
