@@ -186,21 +186,15 @@
   # Create a super user for the python/django application
   - import_tasks: roles/create_superuser/tasks/main.yml
 
-  - name: "remove server address ({{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}) from appservers-base in /etc/ansible/hosts file"
-    connection: local
-    lineinfile:
-      path: /etc/ansible/hosts
-      regexp: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
-      state: absent
-      backup: yes
+  - name: Gather instance metadata
+    ec2_metadata_facts:
 
-  - name: "Add server address ({{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}) to appservers section of /etc/ansible/hosts file"
-    connection: local
-    lineinfile:
-      path: /etc/ansible/hosts
-      regexp: '\[appservers\]'
-      line: "[appservers]\n{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
-      backup: yes
+  - name: Remove the State tag from the instance
+    ec2_tag:
+      resource: "{{ ansible_ec2_instance_id }}"
+      state: absent
+      tags:
+        State: "{{ build_target | default('appservers-base') }}"
 
   - name: make sure apache server is running
     service:

@@ -49,14 +49,29 @@ pipeline {
   }
 
   stages {
-    stage('Ensure ENV, BRANCH and CF_VERSION') {
+    stage('Ensure ENV and BRANCH') {
       steps {
         sh """
-        if [ -z "$BRANCH" ] || [ -z "$CF_VERSION" ] || [ -z "$ENV" ]
+        if [ -z "${params.BRANCH}" ] || [ -z "${params.ENV}" ]
         then
           exit 1
         fi
         """
+      }
+    }
+
+    stage('Ensure CF_VERSION when REFRESH_ONLY is false') {
+      steps {
+        sh """
+          if [ -z "${params.CF_VERSION}" ]
+          then
+            exit 1
+          fi
+      }
+      when {
+        expression {
+          params.REFRESH_ONLY == false
+        }
       }
     }
 
@@ -121,6 +136,8 @@ pipeline {
                 file(credentialsId: vault_pass, variable: 'vp')
               ]) {
                 sh """
+                  . venv/bin/activate
+
                   ansible-playbook playbook/appherd/100_create_appserver.yml  \
                     --vault-password-file ${vp} \
                     --private-key ${pk} \
@@ -150,13 +167,17 @@ pipeline {
                 file(credentialsId: vault_pass, variable: 'vp')
               ]) {
                 sh """
+                  . venv/bin/activate
+
+                  EC2_INI_PATH=inventory/config/${params.ENV}.ini \
                   ansible-playbook playbook/appherd/140_add_volumes.yml  \
                     --vault-password-file ${vp} \
                     --private-key ${pk} \
+                    -i inventory/ec2.py \
+                    -l 'tag_State_appservers_base' \
                     -e 'env=${params.ENV}' \
                     -e 'cf_platform_version=${params.CF_VERSION}' \
-                    -e 'azone=${params.AZ}' \
-                    -e 'build_target=appservers-base'
+                    -e 'azone=${params.AZ}
                 """
               }
             }
@@ -180,11 +201,15 @@ pipeline {
                 file(credentialsId: vault_pass, variable: 'vp')
               ]) {
                 sh """
+                  . venv/bin/activate
+
+                  EC2_INI_PATH=inventory/config/${params.ENV}.ini \
                   ansible-playbook playbook/appherd/200_build_appserver.yml  \
                     --vault-password-file ${vp} \
                     --private-key ${pk} \
+                    -i inventory/ec2.py \
+                    -l 'tag_State_appservers_base' \
                     -e 'env=${params.ENV}' \
-                    -e 'build_target=appservers-base' \
                     -e 'collectstatic=yes' \
                     -e 'add_groups=no' \
                     -e 'add_scopes=no' \
@@ -223,7 +248,6 @@ pipeline {
                     -i inventory/ec2.py \
                     -l 'tag_Function_app_AppServer' \
                     -e 'env=${params.ENV}' \
-                    -e 'build_target=appservers' \
                     -e 'collectstatic=yes' \
                     -e 'add_groups=no' \
                     -e 'add_scopes=no' \
