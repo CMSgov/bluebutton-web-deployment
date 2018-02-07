@@ -1,8 +1,14 @@
 def private_key = 'dev-key'
 def vault_pass = 'vault-pass'
+def aws_creds = 'cbj-deploy'
 
 pipeline {
-  agent any
+  agent {
+    node {
+      label ''
+      customWorkspace 'blue-button-deploy'
+    }
+  }
 
   parameters {
     string(
@@ -54,6 +60,23 @@ pipeline {
       }
     }
 
+    stage('Install requirements') {
+      steps {
+        script {
+          sh """
+            virtualenv -ppython2.7 venv
+            . venv/bin/activate
+
+            pip install --upgrade pip
+            pip install --upgrade cffi
+
+            pip install ansible==2.4.2.0
+            pip install boto
+          """
+        }
+      }
+    }
+
     stage('Set private key file') {
       steps {
         script {
@@ -90,18 +113,20 @@ pipeline {
       steps {
         script {
           dir('code') {
-            withCredentials([
-              file(credentialsId: private_key, variable: 'pk'),
-              file(credentialsId: vault_pass, variable: 'vp')
-            ]) {
-              sh """
-                ansible-playbook playbook/appherd/100_create_appserver.yml  \
-                  --vault-password-file ${vp} \
-                  --private-key ${pk} \
-                  -e 'env=${params.ENV}' \
-                  -e 'cf_platform_version=${params.CF_VERSION}' \
-                  -e 'azone=${params.AZ}'
-              """
+            withAwsCli(credentialsId: aws_creds, defaultRegion: 'us-east-1') {
+              withCredentials([
+                file(credentialsId: private_key, variable: 'pk'),
+                file(credentialsId: vault_pass, variable: 'vp')
+              ]) {
+                sh """
+                  ansible-playbook playbook/appherd/100_create_appserver.yml  \
+                    --vault-password-file ${vp} \
+                    --private-key ${pk} \
+                    -e 'env=${params.ENV}' \
+                    -e 'cf_platform_version=${params.CF_VERSION}' \
+                    -e 'azone=${params.AZ}'
+                """
+              }
             }
           }
         }
@@ -117,19 +142,21 @@ pipeline {
       steps {
         script {
           dir('code') {
-            withCredentials([
-              file(credentialsId: private_key, variable: 'pk'),
-              file(credentialsId: vault_pass, variable: 'vp')
-            ]) {
-              sh """
-                ansible-playbook playbook/appherd/140_add_volumes.yml  \
-                  --vault-password-file ${vp} \
-                  --private-key ${pk} \
-                  -e 'env=${params.ENV}' \
-                  -e 'cf_platform_version=${params.CF_VERSION}' \
-                  -e 'azone=${params.AZ}' \
-                  -e 'build_target=appservers-base'
-              """
+            withAwsCli(credentialsId: aws_creds, defaultRegion: 'us-east-1') {
+              withCredentials([
+                file(credentialsId: private_key, variable: 'pk'),
+                file(credentialsId: vault_pass, variable: 'vp')
+              ]) {
+                sh """
+                  ansible-playbook playbook/appherd/140_add_volumes.yml  \
+                    --vault-password-file ${vp} \
+                    --private-key ${pk} \
+                    -e 'env=${params.ENV}' \
+                    -e 'cf_platform_version=${params.CF_VERSION}' \
+                    -e 'azone=${params.AZ}' \
+                    -e 'build_target=appservers-base'
+                """
+              }
             }
           }
         }
@@ -145,23 +172,25 @@ pipeline {
       steps {
         script {
           dir('code') {
-            withCredentials([
-              file(credentialsId: private_key, variable: 'pk'),
-              file(credentialsId: vault_pass, variable: 'vp')
-            ]) {
-              sh """
-                ansible-playbook playbook/appherd/200_build_appserver.yml  \
-                  --vault-password-file ${vp} \
-                  --private-key ${pk} \
-                  -e 'env=${params.ENV}' \
-                  -e 'build_target=appservers-base' \
-                  -e 'collectstatic=yes' \
-                  -e 'add_groups=no' \
-                  -e 'add_scopes=no' \
-                  -e 'migrate=no' \
-                  -e 'git_branch=${params.BRANCH}' \
-                  -e 'cf_platform_version=${params.CF_VERSION}'
-              """
+            withAwsCli(credentialsId: aws_creds, defaultRegion: 'us-east-1') {
+              withCredentials([
+                file(credentialsId: private_key, variable: 'pk'),
+                file(credentialsId: vault_pass, variable: 'vp')
+              ]) {
+                sh """
+                  ansible-playbook playbook/appherd/200_build_appserver.yml  \
+                    --vault-password-file ${vp} \
+                    --private-key ${pk} \
+                    -e 'env=${params.ENV}' \
+                    -e 'build_target=appservers-base' \
+                    -e 'collectstatic=yes' \
+                    -e 'add_groups=no' \
+                    -e 'add_scopes=no' \
+                    -e 'migrate=no' \
+                    -e 'git_branch=${params.BRANCH}' \
+                    -e 'cf_platform_version=${params.CF_VERSION}'
+                """
+              }
             }
           }
         }
@@ -177,22 +206,24 @@ pipeline {
       steps {
         script {
           dir('code') {
-            withCredentials([
-              file(credentialsId: private_key, variable: 'pk'),
-              file(credentialsId: vault_pass, variable: 'vp')
-            ]) {
-              sh """
-                ansible-playbook playbook/appherd/300_refresh_server_code.yml \
-                  --vault-password-file ${vp} \
-                  --private-key ${pk} \
-                  -e 'env=${params.ENV}' \
-                  -e 'build_target=appservers' \
-                  -e 'collectstatic=yes' \
-                  -e 'add_groups=no' \
-                  -e 'add_scopes=no' \
-                  -e 'migrate=${params.MIGRATE}' \
-                  -e 'git_branch=${params.BRANCH}'
-              """
+            withAwsCli(credentialsId: aws_creds, defaultRegion: 'us-east-1') {
+              withCredentials([
+                file(credentialsId: private_key, variable: 'pk'),
+                file(credentialsId: vault_pass, variable: 'vp')
+              ]) {
+                sh """
+                  ansible-playbook playbook/appherd/300_refresh_server_code.yml \
+                    --vault-password-file ${vp} \
+                    --private-key ${pk} \
+                    -e 'env=${params.ENV}' \
+                    -e 'build_target=appservers' \
+                    -e 'collectstatic=yes' \
+                    -e 'add_groups=no' \
+                    -e 'add_scopes=no' \
+                    -e 'migrate=${params.MIGRATE}' \
+                    -e 'git_branch=${params.BRANCH}'
+                """
+              }
             }
           }
         }
