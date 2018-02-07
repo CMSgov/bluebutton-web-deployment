@@ -212,9 +212,12 @@ pipeline {
                 file(credentialsId: vault_pass, variable: 'vp')
               ]) {
                 sh """
+                  EC2_INI_PATH=inventory/config/${params.ENV}.ini \
                   ansible-playbook playbook/appherd/300_refresh_server_code.yml \
                     --vault-password-file ${vp} \
                     --private-key ${pk} \
+                    -i inventory/ec2.py \
+                    -l 'tag_Function_app_AppServer' \
                     -e 'env=${params.ENV}' \
                     -e 'build_target=appservers' \
                     -e 'collectstatic=yes' \
