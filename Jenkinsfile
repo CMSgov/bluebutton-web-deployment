@@ -67,6 +67,7 @@ pipeline {
           then
             exit 1
           fi
+        """
       }
       when {
         expression {
