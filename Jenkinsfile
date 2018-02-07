@@ -37,6 +37,11 @@ pipeline {
       name: 'MIGRATE'
     )
     choice(
+      choices: 'yes\nno',
+      description: 'Should we run collectstatic on deploy?',
+      name: 'COLLECT_STATIC'
+    )
+    choice(
       choices: 'dev\ntest\nimpl\nprod',
       description: 'The environment to deploy to. Required.',
       name: 'ENV'
@@ -170,40 +175,6 @@ pipeline {
       }
     }
 
-    stage('Add volumes') {
-      steps {
-        script {
-          dir('code') {
-            withAwsCli(credentialsId: aws_creds, defaultRegion: 'us-east-1') {
-              withCredentials([
-                file(credentialsId: private_key, variable: 'pk'),
-                file(credentialsId: vault_pass, variable: 'vp')
-              ]) {
-                sh """
-                  . venv/bin/activate
-
-                  EC2_INI_PATH=inventory/config/${params.ENV}.ini \
-                  ansible-playbook playbook/appherd/140_add_volumes.yml  \
-                    --vault-password-file ${vp} \
-                    --private-key ${pk} \
-                    -i inventory/ec2.py \
-                    -l 'tag_State_appservers_base' \
-                    -e 'env=${params.ENV}' \
-                    -e 'cf_platform_version=${params.CF_VERSION}' \
-                    -e 'azone=${params.AZ}
-                """
-              }
-            }
-          }
-        }
-      }
-      when {
-        expression {
-          params.REFRESH_ONLY == false
-        }
-      }
-    }
-
     stage('Build app server') {
       steps {
         script {
@@ -223,10 +194,8 @@ pipeline {
                     -i inventory/ec2.py \
                     -l 'tag_State_appservers_base' \
                     -e 'env=${params.ENV}' \
-                    -e 'collectstatic=yes' \
-                    -e 'add_groups=no' \
-                    -e 'add_scopes=no' \
-                    -e 'migrate=no' \
+                    -e 'collectstatic=${params.COLLECT_STATIC}' \
+                    -e 'migrate=${params.MIGRATE}' \
                     -e 'git_branch=${params.BRANCH}' \
                     -e 'cf_platform_version=${params.CF_VERSION}'
                 """
@@ -261,15 +230,18 @@ pipeline {
                     -i inventory/ec2.py \
                     -l 'tag_Function_app_AppServer' \
                     -e 'env=${params.ENV}' \
-                    -e 'collectstatic=yes' \
-                    -e 'add_groups=no' \
-                    -e 'add_scopes=no' \
+                    -e 'collectstatic=${params.COLLECT_STATIC}' \
                     -e 'migrate=${params.MIGRATE}' \
                     -e 'git_branch=${params.BRANCH}'
                 """
               }
             }
           }
+        }
+      }
+      when {
+        expression {
+          params.REFRESH_ONLY == true
         }
       }
     }
