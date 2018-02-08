@@ -161,7 +161,8 @@ pipeline {
                     -e 'cf_platform_version=${params.CF_VERSION}' \
                     -e 'azone=${params.AZ}' \
                     -e 'cf_app_instance_type=${params.INSTANCE_CLASS}' \
-                    -e 'ami_app_gold_image=${params.AMI_ID}'
+                    -e 'ami_app_gold_image=${params.AMI_ID}' \
+                    -e 'build_target=all'
                 """
               }
             }
@@ -197,7 +198,8 @@ pipeline {
                     -e 'collectstatic=${params.COLLECT_STATIC}' \
                     -e 'migrate=${params.MIGRATE}' \
                     -e 'git_branch=${params.BRANCH}' \
-                    -e 'cf_platform_version=${params.CF_VERSION}'
+                    -e 'cf_platform_version=${params.CF_VERSION}' \
+                    -e 'build_target=all'
                 """
               }
             }
@@ -232,7 +234,8 @@ pipeline {
                     -e 'env=${params.ENV}' \
                     -e 'collectstatic=${params.COLLECT_STATIC}' \
                     -e 'migrate=${params.MIGRATE}' \
-                    -e 'git_branch=${params.BRANCH}'
+                    -e 'git_branch=${params.BRANCH}' \
+                    -e 'build_target=all'
                 """
               }
             }
