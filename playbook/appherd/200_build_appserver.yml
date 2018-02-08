@@ -209,7 +209,7 @@
 
   # Check if server is responding
   - name: "call with curl to localhost"
-    shell: "curl https://localhost/"
+    shell: "curl -I -k https://localhost/"
     register: curl_output
     ignore_errors: yes
 
