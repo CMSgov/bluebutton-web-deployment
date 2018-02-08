@@ -7,7 +7,7 @@
   become_user: "{{ remote_admin_account }}"
   become: yes
   sefcontext:
-+    target: "{{ project_parent[:-1] }}(/.*)?"
-+    setype: httpd_sys_content_t
-+    state: present
+    target: "{{ project_parent[:-1] }}(/.*)?"
+    setype: httpd_sys_content_t
+    state: present
   ignore_errors: yes
