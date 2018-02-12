@@ -98,41 +98,7 @@ SEND_SMS = True
 #         return HttpResponseRedirect(reverse('login'))
 MFA = True
 
-# Add in apps.accounts backends for DEV environment
-#AUTHENTICATION_BACKENDS = (
-#    'django.contrib.auth.backends.ModelBackend',
-#    'apps.accounts.auth.SettingsBackend',
-#    # 'apps.accounts.mymedicare_auth.MyMedicareBackend',
-#)
-AUTHENTICATION_BACKENDS = {{ django_authentication_backends }}
-
 APPLICATION_TITLE = "{{ django_app_title }}"
-
-ORGANIZATION_TITLE = 'The U.S. Centers for Medicare & Medicaid Services (CMS)'
-ORGANIZATION_URI = 'https://cms.gov'
-POLICY_URI = 'https://www.cms.gov/About-CMS/Agency-Information/Aboutwebsite/Privacy-Policy.html'
-POLICY_TITLE = 'Privacy Policy'
-TOS_URI = 'https://cmsgov.github.io/bluebutton-developer-help/api-terms-of-use'
-TOS_TITLE = 'Terms of Service'
-TAG_LINE_1 = 'Share your Medicare data'
-TAG_LINE_2 = 'with applications, organizations, and people you trust.'
-EXPLAINATION_LINE = 'This service allows Medicare beneficiaries to connect their health data to applications of their choosing.'
-
-# LINKS TO DOCS
-USER_DOCS_URI = "https://hhsidealab.github.io/bluebutton-user-help"
-USER_DOCS_TITLE = "User Documentation"
-DEVELOPER_DOCS_URI = "https://cmsgov.github.io/bluebutton-developer-help"
-DEVELOPER_DOCS_TITLE = "Developer Documentation"
-
-USER_TITLE = "Medicare beneficiaries, health providers, caregivers, and 3rd party application developers"
-
-DEFAULT_DISCLOSURE_TEXT = """
-This system is provided for use by %s. See the documentation for more information on proper use.
-Unauthorized or improper use of this system or its data may result in disciplinary action, as well as
-civil and criminal penalties. This system may be monitored, recorded, and subject to audit.
-""" % (USER_TITLE)
-
-DISCLOSURE_TEXT = DEFAULT_DISCLOSURE_TEXT
 
 HOSTNAME_URL = "{{ host_url }}"
 INVITE_REQUEST_ADMIN ='{{ django_admin_email }}'
@@ -226,25 +192,10 @@ USER_ID_ITERATIONS = {{ django_user_id_iterations }}
 SETTINGS_AUTH_USER = 'ben'
 SETTINGS_AUTH_PASSWORD = 'pbkdf2_sha256$24000$V6XjGqYYNGY7$13tFC13aaTohxBgP2W3glTBz6PSbQN4l6HmUtxQrUys='
 
-ORGANIZATION_NAME = "{{ django_org_name }}"
-
 # Should be set to True in production and False in all other dev and test environments
 # Replace with BLOCK_HTTP_REDIRECT_URIS per CBBP-845 to support mobile apps
 # REQUIRE_HTTPS_REDIRECT_URIS = True
 BLOCK_HTTP_REDIRECT_URIS = {{ django_block_http_redirect }}
 
 OAUTH2_PROVIDER = {{ django_oauth2_provider }}
-
-OAUTH2_MOBILE_REDIRECT_REGEX = {{ django_mobile_redirect_regex }}
-
-
-# logging
-# Based on blog posts:
-# http://thegeorgeous.com/2015/02/27/Logging-into-multiple-files-in-Django.html
-# https://docs.djangoproject.com/en/1.10/topics/logging/
-# IF a new file is added for logging go to hhs_ansible and update configuration
-# script to touch log files:
-# hhs_ansible/playbook/appherd/roles/app_update/tasks/main.yml
-# add the new filename as an item to the "Create the log files" action
-
 LOGGING = {{ django_logging }}

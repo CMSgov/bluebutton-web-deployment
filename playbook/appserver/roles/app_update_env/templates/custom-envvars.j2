@@ -62,7 +62,6 @@ no_overwrite('AWS_SECRET_ACCESS_KEY', '{{ aws_secret_key }}')
 no_overwrite('AWS_STORAGE_BUCKET_NAME', '{{ s3_storage_bucket_name }}')
 
 # Organization and Application Info
-no_overwrite('DJANGO_ORGANIZATION_NAME', '{{ django_org_name }}')
 no_overwrite('DJANGO_APPLICATION_TITLE', '{{ django_app_title }}')
 
 # admin prepend url
