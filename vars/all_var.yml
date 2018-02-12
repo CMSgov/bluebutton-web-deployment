@@ -1,5 +1,5 @@
 ---
-# File: all_var.yml 
+# File: all_var.yml
 # Created: 4/4/17
 #
 # Incorporates encrypted vars/common.yml and vars/{{ env }}/env.yml
@@ -146,7 +146,6 @@
   django_environment_apps: "{{ env_django_environment_apps }}"
   django_optional_installed_apps: "{{ env_django_optional_installed_apps }}"
   django_cors_origin_allow_all: "{{ env_django_cors_origin_allow_all }}"
-  django_authentication_backends: "{{ env_django_authentication_backends }}"
 
   ### Email configuration - AWS SES
   # email backend options are:
@@ -202,9 +201,6 @@
   letsencrypt_account_store: "{{ letsencrypt_cert_store }}/account"
 
   ### Django Settings:
-  ##  DJANGO_ORGANIZATION_NAME='{{ django_org_name }}'
-  ##  DJANGO_APPLICATION_TITLE='{{ django_app_title }}'
-  django_org_name: "{{ env_django_org_name }}"
   django_app_title: "{{ env_django_app_title }}"
 
   # Add a variable endpoint for admin/
@@ -423,8 +419,6 @@
 
   django_oauth2_provider: "{{ env_django_oauth2_provider }}"
 
-  django_mobile_redirect_regex: "{{ env_django_mobile_redirect_regex }}"
-
   # file to append to in /var/log/pyapps/
   django_export_model_file: "export.log"
 
@@ -546,4 +540,3 @@
               }
           }
       }
-
