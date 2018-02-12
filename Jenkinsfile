@@ -101,7 +101,7 @@ pipeline {
           hipchatSend(
             color: 'GRAY',
             notify: true,
-            message: "STARTED: ${env.JOB_NAME} [${params.ENV}] (${env.BUILD_URL})",
+            message: "STARTED: ${env.JOB_NAME} [${params.ENV}]",
             room: room,
             sendAs: '',
             server: server,
@@ -281,7 +281,7 @@ pipeline {
         hipchatSend(
             color: 'GREEN',
             notify: true,
-            message: "SUCCESS: ${env.JOB_NAME} [${params.ENV}] (${env.BUILD_URL})",
+            message: "SUCCESS: ${env.JOB_NAME} [${params.ENV}]",
             room: room,
             sendAs: '',
             server: server,
@@ -300,7 +300,7 @@ pipeline {
         hipchatSend(
           color: 'RED',
           notify: true,
-          message: "FAILED: ${env.JOB_NAME} [${params.ENV}] (${env.BUILD_URL})",
+          message: "FAILED: ${env.JOB_NAME} [${params.ENV}]",
           room: room,
           sendAs: '',
           server: server,
