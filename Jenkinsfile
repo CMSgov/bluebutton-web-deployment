@@ -91,6 +91,27 @@ pipeline {
       }
     }
 
+    stage('Notify HipChat') {
+      steps {
+        withCredentials([
+          string(credentialsId: 'hipchat-room', variable: 'room'),
+          string(credentialsId: 'hipchat-server', variable: 'server'),
+          string(credentialsId: 'hipchat-token', variable: 'token')
+        ]) {
+          hipchatSend(
+            color: 'GRAY',
+            notify: true,
+            message: "STARTED: Job '${env.JOB_NAME} [${params.ENV}]' (${env.BUILD_URL})",
+            room: room,
+            sendAs: '',
+            server: server,
+            token: token,
+            v2enabled: true
+          )
+        }
+      }
+    }
+
     stage('Install requirements') {
       steps {
         dir('code') {
@@ -246,6 +267,46 @@ pipeline {
         expression {
           params.REFRESH_ONLY == true
         }
+      }
+    }
+  }
+
+  post {
+    success {
+      withCredentials([
+        string(credentialsId: 'hipchat-room', variable: 'room'),
+        string(credentialsId: 'hipchat-server', variable: 'server'),
+        string(credentialsId: 'hipchat-token', variable: 'token')
+      ]) {
+        hipchatSend(
+          color: 'GREEN',
+          notify: true,
+          message: "SUCCESS: Job '${env.JOB_NAME} [${params.ENV}]' (${env.BUILD_URL})",
+          room: room,
+          sendAs: '',
+          server: server,
+          token: token,
+          v2enabled: true
+        )
+      }
+    }
+
+    failure {
+      withCredentials([
+        string(credentialsId: 'hipchat-room', variable: 'room'),
+        string(credentialsId: 'hipchat-server', variable: 'server'),
+        string(credentialsId: 'hipchat-token', variable: 'token')
+      ]) {
+        hipchatSend(
+          color: 'RED',
+          notify: true,
+          message: "FAILED: Job '${env.JOB_NAME} [${params.ENV}]' (${env.BUILD_URL})",
+          room: room,
+          sendAs: '',
+          server: server,
+          token: token,
+          v2enabled: true
+        )
       }
     }
   }
