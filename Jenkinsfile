@@ -175,6 +175,8 @@ pipeline {
                 sh """
                   . venv/bin/activate
 
+                  rm -Rf ./tmp
+
                   ansible-playbook playbook/appherd/100_create_appserver.yml  \
                     --vault-password-file ${vp} \
                     --private-key ${pk} \
@@ -247,6 +249,8 @@ pipeline {
               ]) {
                 sh """
                   . venv/bin/activate
+
+                  rm -Rf ./tmp
 
                   EC2_INI_PATH=inventory/config/${params.ENV}.ini \
                   ansible-playbook playbook/appherd/300_refresh_server_code.yml \
