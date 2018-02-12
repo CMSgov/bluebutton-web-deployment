@@ -209,6 +209,8 @@ pipeline {
                 sh """
                   . venv/bin/activate
 
+                  rm -Rf ./tmp
+
                   EC2_INI_PATH=inventory/config/${params.ENV}.ini \
                   ansible-playbook playbook/appherd/200_build_appserver.yml  \
                     --vault-password-file ${vp} \
