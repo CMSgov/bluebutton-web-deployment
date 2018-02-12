@@ -117,7 +117,7 @@
         ami_name: "BB-{{ env|upper }}-{{ cf_app_tag_key_layer|upper }}"
         region: "{{ cf_region }}"
         Managed: "BB-MANAGED-{{ env|upper }}"
-        State: "{{ build_target | default('appservers-base') }}"
+        State: "appservers-base"
     register: app_ec2_output
 
   - name: "Add ec2 volume {{ app_extra_volume_1.src }} for {{ app_extra_volume_1.path }}"

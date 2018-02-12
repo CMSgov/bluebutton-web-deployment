@@ -194,7 +194,7 @@
       resource: "{{ ansible_ec2_instance_id }}"
       state: absent
       tags:
-        State: "{{ build_target | default('appservers-base') }}"
+        State: "appservers-base"
 
   - name: make sure apache server is running
     service:
