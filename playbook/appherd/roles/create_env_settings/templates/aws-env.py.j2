@@ -15,7 +15,6 @@ from ..utils import bool_env
 
 # http://www.miniwebtool.com/django-secret-key-generator/
 SECRET_KEY = "{{ django_secret_key }}"
-ALLOWED_HOSTS = ['*', socket.gethostname()]
 DEBUG = {{ django_debug }}
 ENV_SPECIFIC_APPS = {{ django_environment_apps }}
 INSTALLED_APPS += ENV_SPECIFIC_APPS
@@ -53,50 +52,12 @@ MEDIA_URL = "https://%s%s" % (AWS_S3_CUSTOM_DOMAIN, MEDIAFILES_LOCATION)
 STATIC_ROOT = os.path.join(ASSETS_ROOT, 'collectedstatic')
 MEDIA_ROOT = os.path.join(ASSETS_ROOT, 'media')
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'sitestatic'),
-]
-
-TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, ('templates/'))],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-                'django_settings_export.settings_export',
-                'hhs_oauth_server.hhs_oauth_server_context.active_apps',
-            ],
-            'builtins': [
-            ],
-        },
-    },
-]
-
-# emails
-SEND_EMAIL = True
 # If using AWS SES, the email below must first be verified.
 DEFAULT_FROM_EMAIL = "{{ django_from_email }}"
 # The console.EmailBackend backend prints to the console.
 # Redefine this for SES or other email delivery mechanism
 EMAIL_BACKEND_DEFAULT = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_BACKEND ="{{ django_email_backend }}"
-
-# SMS
-SEND_SMS = True
-
-# MFA - Active or Not or False
-# If using MFA enabled login this value is used to determin if
-# reverse with mfa_login or reverse with login is called
-#     if settings.MFA:
-#         return HttpResponseRedirect(reverse('mfa_login'))
-#     else:
-#         return HttpResponseRedirect(reverse('login'))
-MFA = True
 
 APPLICATION_TITLE = "{{ django_app_title }}"
 
@@ -105,11 +66,6 @@ INVITE_REQUEST_ADMIN ='{{ django_admin_email }}'
 
 # Set to False in NON-PRODUCTION Environments
 REQUIRE_INVITE_TO_REGISTER = {{ django_require_invite_to_register }}
-
-# Dynamic client registration Protocol
-# "O" = Open to everyone
-# "" = Disabled.
-DCRP = "{{ django_dcrp }}"
 
 # To support multiple resourceType records in SupportedResourceType
 # We need to have a default FHIR Server as a fallback if the Request.user
@@ -165,8 +121,6 @@ EMAIL_HOST_USER = None
 EMAIL_HOST_PASSWORD = None
 EMAIL_SSL_KEYFILE = None
 EMAIL_SSL_CERTFILE = None
-
-SEND_SMS = False
 
 # Move Admin to a variable url location
 ADMIN_PREPEND_URL = "{{ django_admin_redirector }}"
