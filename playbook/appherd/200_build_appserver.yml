@@ -192,6 +192,7 @@
         state: absent
         tags:
           State: "appservers-base"
+      delegate_to: localhost
 
     - name: make sure apache server is running
       service:
