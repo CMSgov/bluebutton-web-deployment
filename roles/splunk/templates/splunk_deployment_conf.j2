@@ -1,10 +1,5 @@
 [deployment-client]
-#clientName = {{ splunk_client_name }}
-clientName = {{ env_splunk_group_name }}-{{ env|upper }}-{{ splunk_name_mapper[hostvars[inventory_hostname].group_names[0]] }}-{{ app_ip_last_octet.stdout }}
+clientName = {{ env_splunk_group_name }}-{{ env|upper }}-{{ cf_app_tag_key_layer|upper }}-{{ app_ip_last_octet.stdout }}
 
 [target-broker:deploymentServer]
-# V2 Splunk
-# targetUri=10.128.11.78:8089
-# v3 Splunk
-# targetUri=10.244.112.51
 targetUri={{ splunk_target_server }}:{{ splunk_target_port }}
