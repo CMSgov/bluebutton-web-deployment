@@ -2,13 +2,9 @@
 # File: roles/base_patch/tasks/main.yml
 # Created: 5/4/17
 # Author: @ekivemark
-# Source: http://blog.programster.org/ansible-update-and-reboot-if-required-amazon-linux-servers/
 
 - name: "fix sudoers file"
   import_tasks: ./fix_sudoers.yml
-
-- name: "fix sshd_config file"
-  import_tasks: ./fix_sshd_config.yml
 
 - name: "clean up /root for dataservers"
   become_user: "{{ remote_admin_account }}"
@@ -17,49 +13,7 @@
     dest: "/root/fips_140_2_update.log.*"
     state: absent
 
-- name: "upgrade all packages"
+- name: "apply security patches"
   become_user: "{{ remote_admin_account }}"
   become: yes
-#  yum:
-#    name: "*"
-#    state: latest
-  shell: yum upgrade -y  --skip-broken
-
-- name: "check sshd config"
-  become_user: "{{ remote_admin_account }}"
-  become: yes
-  shell:  /usr/sbin/sshd -t
-  register: sshd_config_state
-  failed_when: sshd_config_state.rc > 0
-
-
-- name: Check for reboot hint.
-  become_user: "{{ remote_admin_account }}"
-  become: yes
-  shell: LAST_KERNEL=$(rpm -q --last kernel | perl -pe 's/^kernel-(\S+).*/$1/' | head -1); CURRENT_KERNEL=$(uname -r); if [ $LAST_KERNEL != $CURRENT_KERNEL ]; then echo 'reboot'; else echo 'no'; fi
-  ignore_errors: true
-  register: reboot_hint
-
-- name: "Rebooting .... If {{ reboot_hint.stdout }} Required"
-  become_user: "{{ remote_admin_account }}"
-  become: yes
-  shell: "shutdown -r 1 'Reboot required for updated kernel' "
-  async: 0
-  poll: 0
-  ignore_errors: true
-  when: reboot_hint.stdout.find("reboot") != -1
-  register: rebooting
-
-#- name: "Rebooting for updated kernel...{{ reboot_hint.stdout }}"
-#  become_user: "{{ remote_admin_account }}"
-#  become: yes
-#  shell: shutdown -r now "Reboot required for updated kernel" && sleep 3
-#  when: reboot_hint.stdout.find("reboot") != -1
-#  ignore_errors: true
-#  register: rebooting
-
-
-- name: "Waiting 180 seconds for instance to reboot..."
-  pause: seconds=180
-  when: rebooting|changed
-
+  shell: yum update-minimal --security -y
