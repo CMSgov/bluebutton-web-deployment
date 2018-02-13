@@ -184,8 +184,7 @@ pipeline {
                     -e 'cf_platform_version=${params.CF_VERSION}' \
                     -e 'azone=${params.AZ}' \
                     -e 'cf_app_instance_type=${params.INSTANCE_CLASS}' \
-                    -e 'ami_app_gold_image=${params.AMI_ID}' \
-                    -e 'build_target=all'
+                    -e 'ami_app_gold_image=${params.AMI_ID}'
                 """
               }
             }
