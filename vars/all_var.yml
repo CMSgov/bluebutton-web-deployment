@@ -392,10 +392,6 @@
   snmp_community_string: "oedabluebuttonsnmpcommunity"
 
   # ssh authorized_keys settings:
-  #      user: "{{ ssh_user }}"
-  #      state: present
-  #      exclusive: "{{ ssh_key_replace }}"  # "yes" or "no"
-  #      key: "{{ ssh_auth_keys }}"
   ssh_user: "{{ env_ssh_user }}"
   ssh_key_replace: "{{ env_ssh_key_replace }}"
   ssh_auth_keys: "{{ env_ssh_auth_keys }}"
@@ -408,8 +404,6 @@
   sls_userinfo_endpoint: "{{ env_sls_userinfo_endpoint }}"
   medicare_login_uri: "{{ env_medicare_login_uri }}"
   medicare_redirect_uri: "{{ env_medicare_redirect_uri }}"
-  medicare_login_template_name: "{{ env_medicare_login_template_name }}"
-  authorization_template_name: "{{ env_authorization_template_name }}"
   sls_verify_ssl: "{{ env_sls_verify_ssl }}"
 
   # Should be set to True in production and False in all other dev and test environments
