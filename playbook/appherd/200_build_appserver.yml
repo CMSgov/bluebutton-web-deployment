@@ -68,12 +68,10 @@
     # fix sudoers file
     # apply yum upgrades
     # check the sshd config
-    # reboot and wait if reboot required
     - ../../roles/base_patch
 
     # Check SELINIUX set to permissive
     # set state based on var/env.yml
-    # reboot and wait if changed
     - roles/selinux_state
 
     # setup aws config and credentials
@@ -166,7 +164,6 @@
     # See if we can move mod_wsgi to pip install into virtual env
     - roles/mod_wsgi
 
-
     # django migrate and collectstatic
     - roles/django_prep
 
@@ -177,60 +174,69 @@
 
 
   tasks:
-  # Make sure sudoers is working correctly
-  - import_tasks: ../../roles/base_patch/tasks/fix_sudoers.yml
+    # Make sure sudoers is working correctly
+    - import_tasks: ../../roles/base_patch/tasks/fix_sudoers.yml
 
-  # yum upgrade all packages
-  - import_tasks: ../../roles/base_patch/tasks/update_packages.yml
+    # yum upgrade all packages
+    - import_tasks: ../../roles/base_patch/tasks/update_packages.yml
 
-  # Create a super user for the python/django application
-  - import_tasks: roles/create_superuser/tasks/main.yml
+    # Create a super user for the python/django application
+    - import_tasks: roles/create_superuser/tasks/main.yml
 
-  - name: Gather instance metadata
-    ec2_metadata_facts:
+    - name: Gather instance metadata
+      ec2_metadata_facts:
 
-  - name: Remove the State tag from the instance
-    ec2_tag:
-      resource: "{{ ansible_ec2_instance_id }}"
-      state: absent
-      tags:
-        State: "appservers-base"
+    - name: Remove the State tag from the instance
+      ec2_tag:
+        resource: "{{ ansible_ec2_instance_id }}"
+        state: absent
+        tags:
+          State: "appservers-base"
 
-  - name: make sure apache server is running
-    service:
-      name: httpd
-      state: started
-      enabled: yes
+    - name: make sure apache server is running
+      service:
+        name: httpd
+        state: started
+        enabled: yes
 
-  - name: "Restart Apache on {{ env }}"
-    action: shell /bin/echo $HOSTNAME
-    notify:
-      - restart apache
+    - name: "Restart Apache on {{ env }}"
+      action: shell /bin/echo $HOSTNAME
+      notify:
+        - restart apache
 
-  # Check if server is responding
-  - name: "call with curl to localhost"
-    shell: "curl -I -k https://localhost/"
-    register: curl_output
-    ignore_errors: yes
+    # Check if server is responding
+    - name: "call with curl to localhost"
+      shell: "curl -I -k https://localhost/"
+      register: curl_output
+      ignore_errors: yes
 
-  - name: "Result of curl was..."
-    debug:
-      msg: "{{ curl_output.stdout }}"
+    - name: "Result of curl was..."
+      debug:
+        msg: "{{ curl_output.stdout }}"
 
+    - name: "Reboot the instance"
+      command: shutdown -r now "Reboot the instance"
+      async: 0
+      poll: 0
+      become_user: "{{ remote_admin_account }}"
+      ignore_errors: true
 
-  - name: "Add in to Loadbalancer"
-    import_tasks: roles/attach_to_elb/tasks/main.yml
+    - name: "Wait for instance to reboot"
+      wait_for:
+        port: 22
+        host: "{{ ansible_ec2_local_ipv4 }}"
+        timeout: 300
+        search_regex: OpenSSH
+      delegate_to: localhost
 
-  - name: "Notify completion result"
-    import_tasks: "../../roles/send_notification/tasks/main.yml"
+    - name: "Add in to Loadbalancer"
+      import_tasks: roles/attach_to_elb/tasks/main.yml
+
+    - name: "Notify completion result"
+      import_tasks: "../../roles/send_notification/tasks/main.yml"
 
   handlers:
   - name: restart apache
     become_user: "{{ remote_admin_account }}"
     become: yes
     service: name=httpd state=restarted
-
-
-  # Now We should have a working machine
-  # Apache / Mod_Wsgi / Python3
-
