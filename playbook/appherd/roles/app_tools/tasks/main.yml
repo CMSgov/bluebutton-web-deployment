@@ -53,13 +53,3 @@
     name: awscli
     state: latest
     extra_args: " --upgrade {{ pip_extra_args }} "
-
-- name: "install boto3 for collectstatic"
-  become_user: "{{ remote_admin_account }}"
-  become: yes
-  pip:
-    name: boto3
-    version: 1.4.0
-    state: present
-    extra_args: " --upgrade {{ pip_extra_args }} "
-    virtualenv: "{{ venv }}"
