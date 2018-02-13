@@ -22,8 +22,6 @@
 # all_var incorporates preceding variables and defines variables without prefixes.
 # use all_var variables in scripts.
 
-
-
 - name: Provision Appserver
   hosts: localhost
   connection: local
@@ -95,15 +93,6 @@
       # Wait for desired state
       wait: yes
       wait_timeout: 500
-#      volumes:
-#        - device_name: "{{ app_extra_volume_1.src }}"
-#          volume_size: "{{ app_extra_volume_1.size }}"
-#          volume_type: "{{ app_extra_volume_1.vol_type }}"
-#          encrypted: "{{ app_extra_volume_1.encrypted }}"
-#        - device_name: "{{ app_extra_volume_2.src }}"
-#          volume_size: "{{ app_extra_volume_2.size }}"
-#          volume_type: "{{ app_extra_volume_2.vol_type }}"
-#          encrypted: "{{ app_extra_volume_2.encrypted }}"
 
       # tags to instance_tags
       instance_tags:
@@ -144,49 +133,12 @@
     with_items: "{{ app_ec2_output.instances }}"
     register: ec2_vol_2
 
-#  - name: "mount {{ app_extra_volume_1.path }}"
-#    mount:
-#      instance: "{{ item.id }}"
-#      path: "{{ app_extra_volume_1.path }}"
-#      src: "{{ app_extra_volume_1.src }}"
-#      fstype: "{{ app_extra_volume_1.fstype }}"
-#      state: present
-#    with_items: "{{ app_ec2_output.instances }}"
-#
-#  - name: "mount {{ app_extra_volume_2.path }}"
-#    mount:
-#      instance: "{{ item.id }}"
-#      path: "{{ app_extra_volume_2.path }}"
-#      src: "{{ app_extra_volume_2.src }}"
-#      fstype: "{{ app_extra_volume_2.fstype }}"
-#      state: present
-#    with_items: "{{ app_ec2_output.instances }}"
-
   - name: waiting for ssh to start
     wait_for:
       port: 22
       host: "{{ app_ec2_output.instances[0]['private_ip'] }}"
       timeout: 300
       search_regex: OpenSSH
-
-#  - name: "Create filesystem on {{ app_extra_volume_1.src }} "
-#    connect: "{{ app_ec2_output.instances[0]['private_ip'] }}"
-#    remote_user: ec2-user
-#    become_user: "{{ remote_admin_account }}"
-#    become: yes
-#    filesystem:
-#      fstype: "{{ app_extra_volume_1.fstype }}"
-#      dev: "{{ app_extra_volume_1.src }}"
-#
-#  - name: "Create filesystem on {{ app_extra_volume_2.src }} "
-#    connect: "{{ app_ec2_output.instances[0]['private_ip'] }}"
-#    remote_user: ec2-user
-#    become_user: "{{ remote_admin_account }}"
-#    become: yes
-#    filesystem:
-#      fstype: "{{ app_extra_volume_2.fstype }}"
-#      dev: "{{ app_extra_volume_2.src }}"
-#
 
   - name: "add host to group: just_created ( {{ app_ec2_output.instances[0]['private_ip'] }} ) "
     add_host:
