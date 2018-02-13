@@ -1,5 +1,5 @@
 ---
-# File: all_var.yml 
+# File: all_var.yml
 # Created: 4/4/17
 #
 # Incorporates encrypted vars/common.yml and vars/{{ env }}/env.yml
@@ -146,7 +146,6 @@
   django_environment_apps: "{{ env_django_environment_apps }}"
   django_optional_installed_apps: "{{ env_django_optional_installed_apps }}"
   django_cors_origin_allow_all: "{{ env_django_cors_origin_allow_all }}"
-  django_authentication_backends: "{{ env_django_authentication_backends }}"
 
   ### Email configuration - AWS SES
   # email backend options are:
@@ -202,9 +201,6 @@
   letsencrypt_account_store: "{{ letsencrypt_cert_store }}/account"
 
   ### Django Settings:
-  ##  DJANGO_ORGANIZATION_NAME='{{ django_org_name }}'
-  ##  DJANGO_APPLICATION_TITLE='{{ django_app_title }}'
-  django_org_name: "{{ env_django_org_name }}"
   django_app_title: "{{ env_django_app_title }}"
 
   # Add a variable endpoint for admin/
@@ -396,10 +392,6 @@
   snmp_community_string: "oedabluebuttonsnmpcommunity"
 
   # ssh authorized_keys settings:
-  #      user: "{{ ssh_user }}"
-  #      state: present
-  #      exclusive: "{{ ssh_key_replace }}"  # "yes" or "no"
-  #      key: "{{ ssh_auth_keys }}"
   ssh_user: "{{ env_ssh_user }}"
   ssh_key_replace: "{{ env_ssh_key_replace }}"
   ssh_auth_keys: "{{ env_ssh_auth_keys }}"
@@ -412,8 +404,6 @@
   sls_userinfo_endpoint: "{{ env_sls_userinfo_endpoint }}"
   medicare_login_uri: "{{ env_medicare_login_uri }}"
   medicare_redirect_uri: "{{ env_medicare_redirect_uri }}"
-  medicare_login_template_name: "{{ env_medicare_login_template_name }}"
-  authorization_template_name: "{{ env_authorization_template_name }}"
   sls_verify_ssl: "{{ env_sls_verify_ssl }}"
 
   # Should be set to True in production and False in all other dev and test environments
@@ -422,8 +412,6 @@
   django_logging: "{{ env_django_logging }}"
 
   django_oauth2_provider: "{{ env_django_oauth2_provider }}"
-
-  django_mobile_redirect_regex: "{{ env_django_mobile_redirect_regex }}"
 
   # file to append to in /var/log/pyapps/
   django_export_model_file: "export.log"
@@ -546,4 +534,3 @@
               }
           }
       }
-
