@@ -169,16 +169,13 @@
 
     # Set permissions for app under selinux
     - roles/semanage_apps
+
     # Set permissions for virtualenv under selinux
     - roles/semanage_virtualenv
-
 
   tasks:
     # Make sure sudoers is working correctly
     - import_tasks: ../../roles/base_patch/tasks/fix_sudoers.yml
-
-    # yum upgrade all packages
-    - import_tasks: ../../roles/base_patch/tasks/update_packages.yml
 
     # Create a super user for the python/django application
     - import_tasks: roles/create_superuser/tasks/main.yml
@@ -216,16 +213,23 @@
         msg: "{{ curl_output.stdout }}"
 
     - name: "Reboot the instance"
-      command: shutdown -r now "Reboot the instance"
+      shell: /sbin/shutdown -r now
       async: 0
       poll: 0
       become_user: "{{ remote_admin_account }}"
+      become: true
       ignore_errors: true
 
-    - name: "Wait for instance to reboot"
+    - name: "Wait for the instance to initiate reboot"
+      wait_for:
+        host: "{{ ansible_ssh_host }}"
+        port: 22
+        state: stopped
+
+    - name: "Wait for instance to finish reboot"
       wait_for:
         port: 22
-        host: "{{ ansible_ec2_local_ipv4 }}"
+        host: "{{ ansible_ssh_host }}"
         timeout: 300
         search_regex: OpenSSH
       delegate_to: localhost

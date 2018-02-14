@@ -28,5 +28,7 @@
     instance_id: "{{ ansible_ec2_instance_id }}"
     ec2_elbs: "{{ app_clb_name }}"
     state: present
+    wait: yes
+    wait_timeout: 300
   when:  elastic_load_balancer_type == "classic" or elastic_load_balancer_type == "appclassic"
   connection: local

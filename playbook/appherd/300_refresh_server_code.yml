@@ -105,12 +105,6 @@
     # django migrate and collectstatic
     - roles/django_prep
 
-    # Set permissions for app under selinux
-    - roles/semanage_apps
-
-    # Set permissions for virtualenv under selinux
-    - roles/semanage_virtualenv
-
   tasks:
     # Create a super user for the python/django application
     - import_tasks: roles/create_superuser/tasks/main.yml
