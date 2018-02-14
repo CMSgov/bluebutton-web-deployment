@@ -110,15 +110,11 @@
     - import_tasks: roles/create_superuser/tasks/main.yml
 
     - name: make sure apache server is running
+      become: yes
       service:
         name: httpd
-        state: started
+        state: restarted
         enabled: yes
-
-    - name: "Restart Apache on {{ env }}"
-      action: shell /bin/echo $HOSTNAME
-      notify:
-        - restart apache
 
     # Check if server is responding
     - name: "call with curl to localhost"

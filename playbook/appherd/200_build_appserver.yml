@@ -197,10 +197,32 @@
         state: started
         enabled: yes
 
+    - name: "Reboot the instance"
+      shell: sleep 2 && /sbin/shutdown -r now
+      async: 1
+      poll: 0
+      become: yes
+
+    - name: "Wait for the instance to initiate reboot"
+      wait_for:
+        host: "{{ ansible_ssh_host }}"
+        port: 22
+        state: stopped
+      connection: local
+
+    - name: "Wait for instance to finish reboot"
+      wait_for:
+        port: 22
+        host: '{{ ansible_ssh_host }}'
+        delay: 5
+      connection: local
+
     - name: "Restart Apache on {{ env }}"
-      action: shell /bin/echo $HOSTNAME
-      notify:
-        - restart apache
+      become: yes
+      service:
+        name: httpd
+        state: restarted
+        enabled: yes
 
     # Check if server is responding
     - name: "call with curl to localhost"
@@ -211,28 +233,6 @@
     - name: "Result of curl was..."
       debug:
         msg: "{{ curl_output.stdout }}"
-
-    - name: "Reboot the instance"
-      shell: /sbin/shutdown -r now
-      async: 0
-      poll: 0
-      become_user: "{{ remote_admin_account }}"
-      become: true
-      ignore_errors: true
-
-    - name: "Wait for the instance to initiate reboot"
-      wait_for:
-        host: "{{ ansible_ssh_host }}"
-        port: 22
-        state: stopped
-
-    - name: "Wait for instance to finish reboot"
-      wait_for:
-        port: 22
-        host: "{{ ansible_ssh_host }}"
-        timeout: 300
-        search_regex: OpenSSH
-      delegate_to: localhost
 
     - name: "Add in to Loadbalancer"
       import_tasks: roles/attach_to_elb/tasks/main.yml
