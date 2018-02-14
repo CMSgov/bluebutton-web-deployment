@@ -27,17 +27,3 @@
     policy: "{{ cf_app_selinux_policy }}"
     state: "{{ cf_app_selinux_state }}"
   register: check_selinux
-
-- name: "Reboot if selinux state changed"
-  command: shutdown -r now "Reboot required for SELinux state change"
-  async: 0
-  poll: 0
-  become_user: "{{ remote_admin_account }}"
-  ignore_errors: true
-  when: check_selinux.stdout.find("reboot") != -1
-  register: rebooting_selinux
-
-
-- name: Wait for thing to reboot...
-  pause: seconds=45
-  when: rebooting_selinux|changed

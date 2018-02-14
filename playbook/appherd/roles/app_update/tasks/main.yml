@@ -100,6 +100,16 @@
     - "install psycopg2 {{ pip_extra_args }} --allow-external psycopg2 "
     - "install -r {{ cf_app_pyapp_home }}/{{ common_project_name }}/requirements/requirements.txt {{ pip_extra_args }} "
 
+- name: "install boto3 for collectstatic"
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  pip:
+    name: boto3
+    version: 1.4.0
+    state: present
+    extra_args: " --upgrade {{ pip_extra_args }} "
+    virtualenv: "{{ venv }}"
+
 # Relative reference from playbook/appserver
 - import_tasks: ./../appherd/roles/create_certstore/tasks/main.yml
 

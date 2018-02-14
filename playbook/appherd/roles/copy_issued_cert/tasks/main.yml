@@ -30,6 +30,7 @@
     mode: 0755
     owner: "root"
     group: "root"
+  no_log: True
   with_items:
     - { "name": "cert.pem", "content": "{{ apache_cert_file }}" }
     - { "name": "key.pem", "content": "{{ apache_key_file }}" }
