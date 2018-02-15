@@ -42,26 +42,3 @@
     setype: httpd_sys_content_t
     state: present
   ignore_errors: True
-
-
-#- name: "Create the error log"
-#  become_user: "{{ remote_admin_account }}"
-#  become: yes
-#  file:
-#    dest: "{{ cf_app_log_dir }}/error.log"
-#    owner: "{{ cf_app_pyapps_user }}"
-#    group: logreader
-#    state: touch
-#    mode: 0766
-#
-#- name: "Create the info log"
-#  become_user: "{{ remote_admin_account }}"
-#  become: yes
-#  file:
-#    dest: "{{ cf_app_log_dir }}/info.log"
-#    owner: "{{ cf_app_pyapps_user }}"
-#    group: logreader
-#    state: touch
-#    mode: 0766
-
-
