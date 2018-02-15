@@ -60,7 +60,7 @@
         delay: 5
 
 - name: Provision server
-  hosts: all
+  hosts: build_servers
   remote_user: ec2-user
   gather_facts: no
   vars:
