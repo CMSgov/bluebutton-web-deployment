@@ -17,3 +17,16 @@
   become_user: "{{ remote_admin_account }}"
   become: yes
   shell: yum update-minimal --security -y
+
+- name: "add amazon ntp server to chrony.conf"
+  lineinfile:
+    path: /etc/chrony.conf
+    insertafter: EOF
+    line: 'server 169.254.169.123 prefer iburst'
+  become: yes
+
+- name: "restart chronyd"
+  service:
+    name: chronyd
+    state: restarted
+  become: yes
