@@ -1,0 +1,156 @@
+def aws_creds = 'cbj-deploy'
+def backend_config = ''
+def terraform_vars = ''
+
+pipeline {
+  agent {
+    node {
+      label ''
+      customWorkspace 'blue-button-deploy-ami'
+    }
+  }
+
+  parameters {
+    string(
+      defaultValue: "*/master",
+      description: 'The branch of the deployment repo to use for the build.',
+      name: 'DEPLOY_BRANCH'
+    )
+    string(
+      defaultValue: "",
+      description: 'The Blue Button AMI id that will be used for the deployment.',
+      name: 'AMI_ID'
+    )
+    string(
+      defaultValue: "m3.medium",
+      description: 'The class/size of the ec2 instance to launch.',
+      name: 'INSTANCE_CLASS'
+    )
+    choice(
+      choices: 'dev\ntest\nimpl\nprod',
+      description: 'The environment to deploy to. Required.',
+      name: 'ENV'
+    )
+  }
+
+  stages {
+    stage('Ensure ENV and AMI_ID') {
+      steps {
+        sh """
+        if [ -z "${params.BRANCH}" ] || [ -z "${params.ENV}" ] || [ -z "${params.AMI_ID}" ] || [ -z "${params.SUBNET_ID}" ]
+        then
+          exit 1
+        fi
+        """
+      }
+    }
+
+    stage('Checkout') {
+      steps {
+        checkout([
+          $class: 'GitSCM',
+          branches: [[
+            name: "${params.BUILD_BRANCH}"
+          ]],
+          doGenerateSubmoduleConfigurations: false,
+          extensions: [[
+            $class: 'RelativeTargetDirectory',
+            relativeTargetDir: 'code'
+          ]],
+          userRemoteConfigs: [[
+            url: 'https://github.com/CMSgov/bluebutton-web-deployment.git'
+          ]]
+        ])
+      }
+    }
+
+    stage('Determine terraform config files') {
+      steps {
+        script {
+          if (params.ENV == 'dev') {
+            backend_config = 'bb-backend-dev'
+            terraform_vars = 'bb-tf-dev'
+          }
+          if (params.ENV == 'test') {
+            backend_config = 'bb-backend-test'
+            terraform_vars = 'bb-tf-test'
+          }
+          if (params.ENV == 'impl') {
+            backend_config = 'bb-backend-impl'
+            terraform_vars = 'bb-tf-impl'
+          }
+          if (params.ENV == 'prod') {
+            backend_config = 'bb-backend-prod'
+            terraform_vars = 'bb-tf-prod'
+          }
+        }
+      }
+    }
+
+
+    stage('Sanity check terraform plan') {
+      steps {
+        script {
+          dir('code') {
+            withAwsCli(credentialsId: aws_creds, defaultRegion: 'us-east-1') {
+              withCredentials([
+                file(credentialsId: backend_config, variable: 'bc'),
+                file(credentialsId: terraform_vars, variable: 'tv')
+              ]) {
+                sh """
+                  cd terraform/${params.ENV}
+
+                  export TF_CLI_ARGS="-no-color"
+
+                  terraform init -backend-config=$bc
+
+                  TF_OUT=\$(terraform plan \
+                    -var-file=$tv \
+                    -var 'ami_id=${params.AMI_ID}')
+
+                  TF_ASG_CHECK=\$(echo "\$TF_OUT" | grep "aws_autoscaling_group.main")
+                  TF_LC_CHECK=\$(echo "\$TF_OUT" | grep "aws_launch_configuration.app")
+                  TF_AMI_CHECK=\$(echo "\$TF_OUT" | grep "image_id:.*(forces new resource)")
+                  TF_PLAN_CHECK=\$(echo "\$TF_OUT" | grep "Plan: 2 to add, 0 to change, 2 to destroy.")
+
+                  if [ -z "\$TF_ASG_CHECK" ] || [ -z "\$TF_LC_CHECK" ] || [ -z "\$TF_AMI_CHECK" ] || [ -z "\$TF_PLAN_CHECK" ]
+                  then
+                    echo "Terraform plan does not match expectations."
+                    exit 1
+                  fi
+                """
+              }
+            }
+          }
+        }
+      }
+    }
+
+    stage('Deploy AMI') {
+      steps {
+        script {
+          dir('code') {
+            withAwsCli(credentialsId: aws_creds, defaultRegion: 'us-east-1') {
+              withCredentials([
+                file(credentialsId: backend_config, variable: 'bc'),
+                file(credentialsId: terraform_vars, variable: 'tv')
+              ]) {
+                sh """
+                  cd terraform/${params.ENV}
+
+                  export TF_CLI_ARGS="-no-color"
+
+                  terraform init -backend-config=$bc
+                  terraform apply \
+                    -var-file=$tv \
+                    -var 'ami_id=${params.AMI_ID}' \
+                    -auto-approve
+                """
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
