@@ -11,8 +11,6 @@
     env_az: "{{ env }}-{{ azone }}"
     env_cf_data_version: "20"
     env_cf_app_version: "01"
-    migrate: "yes"
-    collectstatic: "yes"
     build_subnet_id: null
   vars_files:
     - "./../../vars/common.yml"
