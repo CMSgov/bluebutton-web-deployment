@@ -165,9 +165,9 @@
         region: '{{ cf_region }}'
         instance_id: "{{ ansible_ec2_instance_id }}"
         wait: yes
-        name: "bb-{{ env }}-{{ git_branch }}-latest"
+        name: "bb-{{ env }}-{{ git_branch }}-{{ ansible_date_time.date }}"
         tags:
-          Name: "bb-{{ env }}-{{ git_branch }}-latest"
+          Name: "bb-{{ env }}-{{ git_branch }}-{{ ansible_date_time.date }}"
           Application: "{{ cf_tags_application }}"
           Environment: "{{ env|upper }}"
           Function: "{{ cf_app_tag_key_layer }}-AppServer"
