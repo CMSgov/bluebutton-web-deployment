@@ -50,7 +50,7 @@ pipeline {
         checkout([
           $class: 'GitSCM',
           branches: [[
-            name: "${params.BUILD_BRANCH}"
+            name: "${params.DEPLOY_BRANCH}"
           ]],
           doGenerateSubmoduleConfigurations: false,
           extensions: [[
