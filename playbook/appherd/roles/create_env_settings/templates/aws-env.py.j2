@@ -52,13 +52,6 @@ MEDIA_URL = "https://%s%s" % (AWS_S3_CUSTOM_DOMAIN, MEDIAFILES_LOCATION)
 STATIC_ROOT = os.path.join(ASSETS_ROOT, 'collectedstatic')
 MEDIA_ROOT = os.path.join(ASSETS_ROOT, 'media')
 
-# If using AWS SES, the email below must first be verified.
-DEFAULT_FROM_EMAIL = "{{ django_from_email }}"
-# The console.EmailBackend backend prints to the console.
-# Redefine this for SES or other email delivery mechanism
-EMAIL_BACKEND_DEFAULT = 'django.core.mail.backends.console.EmailBackend'
-EMAIL_BACKEND ="{{ django_email_backend }}"
-
 APPLICATION_TITLE = "{{ django_app_title }}"
 
 HOSTNAME_URL = "{{ host_url }}"
