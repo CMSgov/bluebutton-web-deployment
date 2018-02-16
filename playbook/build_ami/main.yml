@@ -1,0 +1,184 @@
+---
+- name: Start server for AMI build
+  hosts: localhost
+  connection: local
+  vars:
+    ansible_ssh_pipelining: no
+    env: "dev"
+    azone: "az1"
+    sub_zone: "app"
+    sg_zone: "appserver"
+    env_az: "{{ env }}-{{ azone }}"
+    env_cf_data_version: "20"
+    env_cf_app_version: "01"
+    build_subnet_id: null
+  vars_files:
+    - "./../../vars/common.yml"
+    - "./../../vault/env/{{ env }}/vault.yml"
+    - "./../../vars/env/{{ env }}/env.yml"
+    - "./../../vars/all_var.yml"
+
+  pre_tasks:
+    - name: "Create Base EC2 machine to build appserver"
+      ec2:
+        instance_type: "{{ cf_app_instance_type }}"
+        group: "BB-SG-{{ env|upper }}-{{ sg_zone|upper }}-ALLZONE" # Change the security group name here
+        image: "{{ ami_app_gold_image }}" # Change the AMI, from which you want to launch the server
+        key_name: "{{ cf_app_key_name }}" # Change the keypair name
+        region: "{{ aws_region }}"
+        tenancy: "dedicated"
+        vpc_subnet_id: "{{ build_subnet_id }}"
+        count: 1
+        termination_protection: no
+        wait: yes
+        wait_timeout: 500
+
+        # tags to instance_tags
+        instance_tags:
+          Name: "bb-{{ env }}-{{ azone }}-ami-build"
+          Stack: "BB-{{ env|upper }}-{{ cf_app_azone|upper }}-{{ cf_app_tag_key_layer|upper }}-ANSIBLE"
+          Business: "{{ cf_tags_business }}"
+          Application: "{{ cf_tags_application }}"
+          Environment: "{{ env|upper }}"
+          Function: "{{ cf_app_tag_key_layer }}-AppServer"
+          Layer:  "{{ cf_app_tag_key_layer|upper }}"
+          ami_name: "BB-{{ env|upper }}-{{ cf_app_tag_key_layer|upper }}"
+          region: "{{ cf_region }}"
+          Managed: "BB-MANAGED-{{ env|upper }}"
+          State: "ami-build"
+      register: app_ec2_output
+
+    - name: "Add new instance to inventory ( {{ app_ec2_output.instances[0]['private_ip'] }} ) "
+      add_host:
+        name: "{{ app_ec2_output.instances[0]['private_ip'] }}"
+        groups: build_servers
+
+    - name: "Wait for SSH to become available"
+      wait_for:
+        port: 22
+        host: "{{ app_ec2_output.instances[0]['private_ip'] }}"
+        delay: 5
+
+- name: Provision server
+  hosts: build_servers
+  remote_user: ec2-user
+  gather_facts: no
+  vars:
+    ansible_ssh_pipelining: no
+    env: "dev"
+    azone: "az1"
+    sub_zone: "app"
+    sg_zone: "appserver"
+    env_az: "{{ env }}-{{ azone }}"
+    env_cf_data_version: "20"
+    env_cf_app_version: "01"
+    splunk_target_layer: "app"
+  vars_files:
+    - "./../../vars/common.yml"
+    - "./../../vault/env/{{ env }}/vault.yml"
+    - "./../../vars/env/{{ env }}/env.yml"
+    - "./../../vars/all_var.yml"
+
+  roles:
+    - ../../roles/base_patch
+    - ../../roles/snmp_update_public
+    - ../../roles/nessus_update_key
+    - ../../roles/add_authorized_keys
+    - ../../roles/splunk
+
+    - ../appherd/roles/selinux_state
+    - ../appherd/roles/aws_config
+    - ../appherd/roles/app_tools
+    - ../appherd/roles/app_user
+    - ../appherd/roles/app_logs
+    - ../appherd/roles/python34
+    - ../appherd/roles/create_apache_cert_store
+    - ../appherd/roles/install_fhircerts_to_store
+    - ../appherd/roles/copy_issued_cert
+    - ../appherd/roles/apache
+    - ../appherd/roles/swagger_ui_install
+
+    - ../appherd/roles/app_prep
+    - ../appherd/roles/app_update
+    - ../appherd/roles/log_rotate
+    - ../appherd/roles/app_update_env
+    - ../appherd/roles/create_env_settings
+    - ../appherd/roles/mod_wsgi
+
+    - ../appherd/roles/semanage_apps
+    - ../appherd/roles/semanage_virtualenv
+
+  post_tasks:
+    - name: Gather instance metadata
+      ec2_metadata_facts:
+
+    - import_tasks: ../appherd/roles/create_superuser/tasks/main.yml
+
+    - name: "Reboot the instance"
+      shell: sleep 2 && /sbin/shutdown -r now
+      async: 1
+      poll: 0
+      become: yes
+
+    - name: "Wait for the instance to initiate reboot"
+      wait_for:
+        host: "{{ ansible_ssh_host }}"
+        port: 22
+        state: stopped
+      connection: local
+
+    - name: "Wait for instance to finish reboot"
+      wait_for:
+        port: 22
+        host: '{{ ansible_ssh_host }}'
+        delay: 5
+      connection: local
+
+    - name: "Restart Apache on {{ env }}"
+      become: yes
+      service:
+        name: httpd
+        state: restarted
+        enabled: yes
+
+    - name: "call with curl to localhost"
+      shell: "curl -I -k https://localhost/"
+      register: curl_output
+      ignore_errors: yes
+
+    - name: "Result of curl was..."
+      debug:
+        msg: "{{ curl_output.stdout }}"
+
+    - name: "Stop the build server"
+      ec2:
+        instance_ids: '{{ ansible_ec2_instance_id }}'
+        region: '{{ cf_region }}'
+        state: stopped
+        wait: yes
+      delegate_to: localhost
+
+    - set_fact:
+        ts: "{{lookup('pipe','date +%Y%m%d%H%M%S')}}"
+
+    - name: "Create an AMI"
+      ec2_ami:
+        region: '{{ cf_region }}'
+        instance_id: "{{ ansible_ec2_instance_id }}"
+        wait: yes
+        name: "bb-{{ env }}-{{ git_branch }}-{{ ts }}"
+        tags:
+          Name: "bb-{{ env }}-{{ git_branch }}-{{ ts }}"
+          Application: "{{ cf_tags_application }}"
+          Environment: "{{ env|upper }}"
+          Function: "{{ cf_app_tag_key_layer }}-AppServer"
+          Layer:  "{{ cf_app_tag_key_layer|upper }}"
+      delegate_to: localhost
+
+    - name: "Terminate the build server"
+      ec2:
+        instance_ids: '{{ ansible_ec2_instance_id }}'
+        region: '{{ cf_region }}'
+        state: absent
+        wait: yes
+      delegate_to: localhost

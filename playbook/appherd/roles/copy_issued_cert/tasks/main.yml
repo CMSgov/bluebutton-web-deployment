@@ -35,7 +35,3 @@
     - { "name": "cert.pem", "content": "{{ apache_cert_file }}" }
     - { "name": "key.pem", "content": "{{ apache_key_file }}" }
     - { "name": "fullchain.pem", "content": "{{ apache_fullchain_file }}" }
-
-# apache_cert_file: "env_apache_cert_file" : "vault_env_apache_cert_file"
-# apache_key_file: "env_apache_key_file" : "vault_env_apache_key_file"
-# apache_fullchain_file: "env_apache_fullchain_file" : "vault_env_apache_fullchain_file"
