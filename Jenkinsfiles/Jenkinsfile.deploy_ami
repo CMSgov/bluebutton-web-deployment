@@ -45,6 +45,14 @@ pipeline {
       }
     }
 
+    stage('Clear the working dir') {
+      steps {
+        dir('code') {
+          deleteDir()
+        }
+      }
+    }
+
     stage('Notify HipChat') {
       steps {
         withCredentials([
@@ -131,7 +139,7 @@ pipeline {
                   TF_ASG_CHECK=\$(echo "\$TF_OUT" | grep "aws_autoscaling_group.main")
                   TF_LC_CHECK=\$(echo "\$TF_OUT" | grep "aws_launch_configuration.app")
                   TF_AMI_CHECK=\$(echo "\$TF_OUT" | grep "image_id:.*(forces new resource)")
-                  TF_PLAN_CHECK=\$(echo "\$TF_OUT" | grep "Plan: 2 to add, 0 to change, 2 to destroy.")
+                  TF_PLAN_CHECK=\$(echo "\$TF_OUT" | grep "Plan: 4 to add, 2 to change, 4 to destroy.")
 
                   if [ -z "\$TF_ASG_CHECK" ] || [ -z "\$TF_LC_CHECK" ] || [ -z "\$TF_AMI_CHECK" ] || [ -z "\$TF_PLAN_CHECK" ]
                   then
