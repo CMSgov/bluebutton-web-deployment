@@ -31,7 +31,7 @@
 # add all the base software and move the server to appservers and
 # remove from appservers-base
 
-- name: "what version of python/django is running?"
+- name: "Export Data to info.log for use by Splunk"
   # hosts: appservers
   hosts: "{{ build_target | default('appservers') }}"
   # connection: local
@@ -69,7 +69,7 @@
   # - roles/ indicates the role is in this playbook directory
 
   tasks:
-  - name: "Use management command to export data to info.log"
+  - name: "Export Active Application count to info.log "
     become_user: "{{ remote_admin_account }}"
     become: yes
     run_once: yes
@@ -78,5 +78,13 @@
       cd {{ install_root }}/{{ project_name }}/
       echo "$(date --iso-8601=seconds) Active_BBAPI_Applications:$({{ cf_app_py_virtual_env }}/bin/python3 manage.py dumpdata dot_ext.application --indent 2 |grep \"active\": | wc -l ) " >>{{ cf_app_log_dir }}/info.log
 
+  - name: "Export Application List to info.log "
+    become_user: "{{ remote_admin_account }}"
+    become: yes
+    run_once: yes
+    shell: |
+      source {{ cf_app_py_virtual_env }}/bin/activate
+      cd {{ install_root }}/{{ project_name }}/
+      {{ cf_app_py_virtual_env }}/bin/python3 manage.py model2csv --application dot_ext --model application --add_table_name True | sed '/WARNING:/d' | cut -d ',' -f 1,2,3,7,22,23 | sed 's/dot_ext.application/dot_ext.application_info/' >>{{ cf_app_log_dir }}/info.log
 
 
