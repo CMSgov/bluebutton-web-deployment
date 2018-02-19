@@ -1,4 +1,6 @@
 def aws_creds = 'cbj-deploy'
+def private_key = 'dev-key'
+def vault_pass = 'vault-pass'
 def backend_config = ''
 def terraform_vars = ''
 
@@ -30,6 +32,16 @@ pipeline {
       choices: 'dev\ntest\nimpl\nprod',
       description: 'The environment to deploy to. Required.',
       name: 'ENV'
+    )
+    choice(
+      choices: 'no\nyes',
+      description: 'Should we run database migrations on deploy?',
+      name: 'MIGRATE'
+    )
+    choice(
+      choices: 'yes\nno',
+      description: 'Should we run collectstatic on deploy?',
+      name: 'COLLECT_STATIC'
     )
   }
 
@@ -90,6 +102,38 @@ pipeline {
             url: 'https://github.com/CMSgov/bluebutton-web-deployment.git'
           ]]
         ])
+      }
+    }
+
+    stage('Install requirements') {
+      steps {
+        dir('code') {
+          script {
+            sh """
+              virtualenv -ppython2.7 venv
+              . venv/bin/activate
+
+              pip install --upgrade pip
+              pip install --upgrade cffi
+
+              pip install ansible==2.4.2.0
+              pip install boto
+            """
+          }
+        }
+      }
+    }
+
+    stage('Set private key file') {
+      steps {
+        script {
+            private_key = 'prod-key'
+        }
+      }
+      when {
+        expression {
+          params.ENV == "prod"
+        }
       }
     }
 
@@ -177,6 +221,42 @@ pipeline {
               }
             }
           }
+        }
+      }
+    }
+
+    stage('Django - migrate and collectstatic') {
+      steps {
+        script {
+          dir('code') {
+            withAwsCli(credentialsId: aws_creds, defaultRegion: 'us-east-1') {
+              withCredentials([
+                file(credentialsId: private_key, variable: 'pk'),
+                file(credentialsId: vault_pass, variable: 'vp')
+              ]) {
+                sh """
+                  . venv/bin/activate
+
+                  rm -Rf ./tmp
+
+                  EC2_INI_PATH=inventory/config/${params.ENV}.ini \
+                  ansible-playbook playbook/django/main.yml \
+                    --vault-password-file ${vp} \
+                    --private-key ${pk} \
+                    -i inventory/ec2.py \
+                    -l 'tag_Function_app_AppServer' \
+                    -e 'env=${params.ENV}' \
+                    -e 'collectstatic=${params.COLLECT_STATIC}' \
+                    -e 'migrate=${params.MIGRATE}'
+                """
+              }
+            }
+          }
+        }
+      }
+      when {
+        expression {
+          params.COLLECT_STATIC == "yes" || params.MIGRATE == "yes"
         }
       }
     }

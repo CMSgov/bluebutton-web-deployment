@@ -27,17 +27,6 @@
     virtualenv: "{{ venv }}"
   when: ( add_groups is defined ) and ( add_groups|lower == 'yes' )
 
-#- name: "Add Scopes to database"
-#  become_user: "{{ remote_admin_account }}"
-#  become: yes
-#  run_once: yes
-#  django_manage:
-#    command: loaddata apps/accounts/fixtures/scopes.json
-#    app_path: "{{ install_root }}/{{ project_name }}/"
-#    virtualenv: "{{ venv }}"
-#  when: ( add_scopes is defined ) and ( add_scopes|lower == 'yes' )
-
-
 ############################################################
 #
 # If you re-run the create_blue_button_scopes command
@@ -55,7 +44,6 @@
     app_path: "{{ install_root }}/{{ project_name }}/"
     virtualenv: "{{ venv }}"
   when: ( add_scopes is defined ) and ( add_scopes|lower == 'yes' )
-
 
 - name: "Load ResourceRouter and SupportedResourceType tables"
   become_user: "{{ remote_admin_account }}"
@@ -77,4 +65,3 @@
     virtualenv: "{{ venv }}"
   when: ( collectstatic is undefined ) or
         (( collectstatic is defined ) and ( collectstatic|lower == 'yes' ))
-
