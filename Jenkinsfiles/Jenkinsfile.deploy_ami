@@ -49,7 +49,7 @@ pipeline {
     stage('Ensure ENV and AMI_ID') {
       steps {
         sh """
-        if [ -z "${params.BRANCH}" ] || [ -z "${params.ENV}" ] || [ -z "${params.AMI_ID}" ] || [ -z "${params.SUBNET_ID}" ]
+        if [ -z "${params.ENV}" ] || [ -z "${params.AMI_ID}" ]
         then
           exit 1
         fi
