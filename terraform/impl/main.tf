@@ -21,3 +21,14 @@ module "asg" {
   app_sg_id     = "${var.app_sg_id}"
   vpn_sg_id     = "${var.vpn_sg_id}"
 }
+
+resource "aws_sns_topic" "cloudwatch_alarms_topic" {
+  name = "bluebutton-${var.stack}-cloudwatch-alarms"
+}
+
+module "cloudwatch_alarms" {
+  source                      = "../modules/elb_alarms"
+  vpc_name                    = "${var.vpc_id}"
+  cloudwatch_notification_arn = "${aws_sns_topic.cloudwatch_alarms_topic.arn}"
+  load_balancer_name          = "${var.elb_name}"
+}
