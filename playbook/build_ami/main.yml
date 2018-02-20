@@ -173,6 +173,12 @@
           Environment: "{{ env|upper }}"
           Function: "{{ cf_app_tag_key_layer }}-AppServer"
           Layer:  "{{ cf_app_tag_key_layer|upper }}"
+      register: new_ami
+      delegate_to: localhost
+
+    - name: "Output new AMI ID"
+      debug:
+        msg: "{{ new_ami.image_id }}"
       delegate_to: localhost
 
     - name: "Terminate the build server"
