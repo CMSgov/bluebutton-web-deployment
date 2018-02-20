@@ -70,7 +70,7 @@ resource "aws_autoscaling_group" "main" {
   desired_capacity          = "${var.asg_desired}"
   max_size                  = "${var.asg_max}"
   min_size                  = "${var.asg_min}"
-  min_elb_capacity          = 1
+  min_elb_capacity          = "${var.asg_min}"
   health_check_grace_period = 300
   health_check_type         = "ELB"
   vpc_zone_identifier       = ["${data.aws_subnet_ids.app.ids}"]
