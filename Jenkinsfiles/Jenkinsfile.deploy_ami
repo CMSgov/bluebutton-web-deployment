@@ -178,7 +178,8 @@ pipeline {
 
                   TF_OUT=\$(terraform plan \
                     -var-file=$tv \
-                    -var 'ami_id=${params.AMI_ID}')
+                    -var 'ami_id=${params.AMI_ID}' \
+                    -var 'instance_type=${params.INSTANCE_CLASS}')
 
                   TF_ASG_CHECK=\$(echo "\$TF_OUT" | grep "aws_autoscaling_group.main")
                   TF_LC_CHECK=\$(echo "\$TF_OUT" | grep "aws_launch_configuration.app")
@@ -216,6 +217,7 @@ pipeline {
                   terraform apply \
                     -var-file=$tv \
                     -var 'ami_id=${params.AMI_ID}' \
+                    -var 'instance_type=${params.INSTANCE_CLASS}' \
                     -auto-approve
                 """
               }
