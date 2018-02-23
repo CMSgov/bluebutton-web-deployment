@@ -76,6 +76,11 @@ resource "aws_autoscaling_group" "main" {
   vpc_zone_identifier       = ["${data.aws_subnet_ids.app.ids}"]
   launch_configuration      = "${aws_launch_configuration.app.name}"
   load_balancers            = ["${data.aws_elb.elb.name}"]
+  enabled_metrics           = [
+    "GroupMinSize", "GroupMaxSize", "GroupDesiredCapacity",
+    "GroupInServiceInstances", "GroupPendingInstances",
+    "GroupStandbyInstances", "GroupTerminatingInstances", "GroupTotalInstances"
+  ]
 
   tag {
     key                 = "Name"
@@ -153,4 +158,23 @@ resource "aws_cloudwatch_metric_alarm" "low-cpu" {
 
   alarm_description = "CPU usage for ${aws_autoscaling_group.main.name} ASG"
   alarm_actions     = ["${aws_autoscaling_policy.low-cpu.arn}"]
+}
+
+##
+# Autoscaling notifications
+##
+resource "aws_autoscaling_notification" "asg_notifications" {
+  count = "${var.sns_topic_arn != "" ? 1 : 0}"
+
+  group_names = [
+    "${aws_autoscaling_group.main.name}",
+  ]
+
+  notifications = [
+    "autoscaling:EC2_INSTANCE_LAUNCH",
+    "autoscaling:EC2_INSTANCE_TERMINATE",
+    "autoscaling:EC2_INSTANCE_LAUNCH_ERROR",
+  ]
+
+  topic_arn = "${var.sns_topic_arn}"
 }

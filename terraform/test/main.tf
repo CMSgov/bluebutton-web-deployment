@@ -2,6 +2,10 @@ provider "aws" {
   region = "us-east-1"
 }
 
+resource "aws_sns_topic" "cloudwatch_alarms_topic" {
+  name = "bluebutton-${var.stack}-cloudwatch-alarms"
+}
+
 module "asg" {
   source = "../modules/asg"
 
@@ -20,10 +24,7 @@ module "asg" {
   ci_cidrs      = ["${var.ci_cidrs}"]
   app_sg_id     = "${var.app_sg_id}"
   vpn_sg_id     = "${var.vpn_sg_id}"
-}
-
-resource "aws_sns_topic" "cloudwatch_alarms_topic" {
-  name = "bluebutton-${var.stack}-cloudwatch-alarms"
+  sns_topic_arn = "${aws_sns_topic.cloudwatch_alarms_topic.arn}"
 }
 
 module "cloudwatch_alarms" {
