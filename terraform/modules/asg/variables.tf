@@ -31,3 +31,7 @@ variable "azs" {
 variable "ci_cidrs" {
   type = "list"
 }
+
+variable "sns_topic_arn" {
+  default = ""
+}
