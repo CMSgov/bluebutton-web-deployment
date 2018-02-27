@@ -31,3 +31,10 @@ variable "azs" {
 variable "ci_cidrs" {
   type = "list"
 }
+
+variable "cloudwatch_max_latency_secs" {
+  description = "Maximum average latency threshold."
+  type        = "string"
+  default     = "2"
+}
+
