@@ -17,6 +17,18 @@
     - httpd
     - mod_ssl
 
+- name: "update log format for source ip"
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  template:
+    src: ../templates/httpd.conf.j2
+    dest: "/etc/httpd/conf/httpd.conf"
+    backup: no
+    owner: "root"
+    group: "root"
+    mode: 0644
+
+
 - name: "Setup docs directory for server"
   become_user: "{{ remote_admin_account }}"
   become: yes
