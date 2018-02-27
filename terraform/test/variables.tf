@@ -31,3 +31,4 @@ variable "azs" {
 variable "ci_cidrs" {
   type = "list"
 }
+
