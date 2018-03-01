@@ -76,7 +76,7 @@ pipeline {
           if (params.BRANCH == 'develop' || params.BRANCH == 'master') {
             release_version = "latest-${params.BRANCH}"
           } else {
-            # Git tag, committish or branch other than master, develop
+            // Git tag, committish or branch other than master, develop
             release_version = "${params.BRANCH}"
           }
         }
