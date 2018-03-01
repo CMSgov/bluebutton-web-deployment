@@ -2,20 +2,19 @@
 """
 BlueButton (2.0!) Locust Test
 
-A basic locust test for blue button.  This right now simply has stubs for the
-oauth flow and tries to retrieve the access token from the
-"LOCUST_BB_LOAD_TEST_ACCESS_TOKEN" environment variable.
+A basic locust test for blue button.
 
-Other environment variables:
+Environment variables:
 
-    - LOCUST_BB_LOAD_TEST_BASE_URL:    The protocol + host to test (e.g. https://dev.bluebutton.cms.gov)
-    - LOCUST_BB_LOAD_TEST_MIN_WAIT:    The minimum number of ms for a client to wait before starting a new request
-    - LOCUST_BB_LOAD_TEST_MAX_WAIT:    The maximum number of ms for a client to wait before starting a new request
+    - LOCUST_BB_LOAD_TEST_ACCESS_TOKEN: The access token used to auth requests
+    - LOCUST_BB_LOAD_TEST_BASE_URL:     The protocol + host to test (e.g. https://dev.bluebutton.cms.gov)
+    - LOCUST_BB_LOAD_TEST_MIN_WAIT:     The minimum number of ms for a client to wait before starting a new request
+    - LOCUST_BB_LOAD_TEST_MAX_WAIT:     The maximum number of ms for a client to wait before starting a new request
 
 Things to do:
 
 - Somehow integrate oauth setup
-- Actually load test oauth setup (comments below)
+- Actually load test oauth setup
 """
 
 from locust import HttpLocust, TaskSet, task, web
@@ -61,22 +60,22 @@ class UserBehavior(TaskSet):
 
     @task(26)
     def get_eob(self):
-        resource = '/v1/fhir/ExplanationOfBenefit/?patient=%s&_format=json' % self.patient
+        resource = '/v1/fhir/ExplanationOfBenefit/?patient=%s' % self.patient
         self.make_req(resource)
 
     @task(13)
     def get_coverage(self):
-        resource = '/v1/fhir/Coverage/?_format=json'
+        resource = '/v1/fhir/Coverage/'
         self.make_req(resource)
 
     @task(22)
     def get_patient(self):
-        resource ='/v1/fhir/Patient/%s?_format=json' % self.patient
+        resource ='/v1/fhir/Patient/%s' % self.patient
         self.make_req(resource)
 
     @task(6)
     def get_metadata(self):
-        resource = '/v1/fhir/metadata?format=json'
+        resource = '/v1/fhir/metadata'
         self.make_req(resource)
 
 

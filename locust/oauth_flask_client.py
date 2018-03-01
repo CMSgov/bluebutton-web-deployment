@@ -41,20 +41,13 @@ os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 # - token_url: The URL to send the third step of the oauth flow to
 # - redirect_uri: The URL to send the client to in step two of the oauth flow
 # - resource_url: The URL of the resource to access after oauth  is complete
-#
-# client_id = os.environ["LOCUST_BB_LOAD_TEST_CLIENT_ID"]
-# client_secret = os.environ["LOCUST_BB_LOAD_TEST_CLIENT_SECRET"]
-# authorization_base_url = 'http://localhost:8000/v1/o/authorize/'
-# token_url = 'http://localhost:8000/v1/o/token/'
-# redirect_uri = "http://localhost:5000/callback"
-
+###################################################
 client_id = os.environ["LOCUST_BB_LOAD_TEST_CLIENT_ID"]
 client_secret = os.environ["LOCUST_BB_LOAD_TEST_CLIENT_SECRET"]
-authorization_base_url = 'https://dev.bluebutton.cms.gov/v1/o/authorize/'
-token_url = 'https://dev.bluebutton.cms.gov/v1/o/token/'
-redirect_uri = "http://localhost:5000/callback"
-resource_url = 'https://dev.bluebutton.cms.gov/v1/connect/userinfo'
-###################################################
+authorization_base_url = os.environ.get('LOCUST_BB_AUTH_BASE_URL', 'https://dev.bluebutton.cms.gov/v1/o/authorize/')
+token_url = os.environ.get('LOCUST_BB_TOKEN_URL', 'https://dev.bluebutton.cms.gov/v1/o/token/')
+redirect_uri = os.environ.get('LOCUST_BB_REDIRECT_URI', 'http://localhost:5000/callback')
+resource_url = os.environ.get('LOCUST_BB_RESOURCE_URL', 'https://dev.bluebutton.cms.gov/v1/connect/userinfo')
 
 
 @app.route("/")
