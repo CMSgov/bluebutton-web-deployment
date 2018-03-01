@@ -173,6 +173,7 @@
           Environment: "{{ env|upper }}"
           Function: "{{ cf_app_tag_key_layer }}-AppServer"
           Layer:  "{{ cf_app_tag_key_layer|upper }}"
+          Release: "{{ release_version|default('none') }}"
       register: new_ami
       delegate_to: localhost
 
