@@ -24,6 +24,16 @@ data "aws_elb" "elb" {
   name = "${var.elb_name}"
 }
 
+data "aws_ami" "image" {
+  most_recent = true
+  owners      = ["self"]
+
+  filter {
+    name   = "image-id"
+    values = ["${var.ami_id}"]
+  }
+}
+
 ##
 # Security groups
 ##
@@ -97,6 +107,12 @@ resource "aws_autoscaling_group" "main" {
   tag {
     key                 = "Function"
     value               = "app-AppServer"
+    propagate_at_launch = true
+  }
+
+  tag {
+    key                 = "Release"
+    value               = "${lookup(data.aws_ami.image.tags, "Release", "none")}"
     propagate_at_launch = true
   }
 
