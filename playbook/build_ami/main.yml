@@ -112,8 +112,6 @@
     - name: Gather instance metadata
       ec2_metadata_facts:
 
-    - import_tasks: ../appherd/roles/create_superuser/tasks/main.yml
-
     - name: "Reboot the instance"
       shell: sleep 2 && /sbin/shutdown -r now
       async: 1
