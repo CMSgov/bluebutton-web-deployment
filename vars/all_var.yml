@@ -538,4 +538,4 @@
       }
 
   # new relic
-  new_relic_license_key: "{{ env_new_relic_license_key }}"
+  new_relic_license_key: "{{ vault_env_new_relic_license_key }}"

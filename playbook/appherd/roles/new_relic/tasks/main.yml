@@ -5,4 +5,4 @@
     owner: "{{ app_owner }}"
     group: "{{ app_group }}"
     mode: 0664
-  when: new_relic_license_key != ""
+  when: env in ["impl", "prod"] and new_relic_license_key is defined
