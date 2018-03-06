@@ -536,3 +536,6 @@
               }
           }
       }
+
+  # new relic
+  new_relic_license_key: "{{ vault_env_new_relic_license_key }}"

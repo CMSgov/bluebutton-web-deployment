@@ -104,6 +104,7 @@
     - ../appherd/roles/app_update_env
     - ../appherd/roles/create_env_settings
     - ../appherd/roles/mod_wsgi
+    - ../appherd/roles/new_relic
 
     - ../appherd/roles/semanage_apps
     - ../appherd/roles/semanage_virtualenv
