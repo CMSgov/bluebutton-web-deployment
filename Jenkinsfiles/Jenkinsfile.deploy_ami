@@ -282,6 +282,20 @@ pipeline {
             v2enabled: true
         )
       }
+
+      withCredentials([
+        string(credentialsId: 'new-relic-app-id-${params.ENV}', variable: 'app_id'),
+        string(credentialsId: 'new-relic-api-key', variable: 'api_key'),
+      ]) {
+        sh """
+          . venv/bin/activate
+
+          python ./lib/mark_deployment.py \
+            --app_id ${app_id} \
+            --api_key ${api_key} \
+            --version ${params.AMI_ID}
+        """
+      }
     }
 
     failure {
