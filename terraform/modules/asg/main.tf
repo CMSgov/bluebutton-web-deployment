@@ -194,3 +194,10 @@ resource "aws_autoscaling_notification" "asg_notifications" {
 
   topic_arn = "${var.sns_topic_arn}"
 }
+
+
+
+
+output "asg_id" {
+  value = "${aws_autoscaling_group.main.name}"
+}
