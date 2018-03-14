@@ -85,6 +85,6 @@
     shell: |
       source {{ cf_app_py_virtual_env }}/bin/activate
       cd {{ install_root }}/{{ project_name }}/
-      {{ cf_app_py_virtual_env }}/bin/python3 manage.py model2csv --application dot_ext --model application --add_table_name True | sed '/WARNING:/d' | cut -d ',' -f 1,2,3,7,22,23 | sed 's/dot_ext.application/dot_ext.application_info/' >>{{ cf_app_log_dir }}/info.log
+      {{ cf_app_py_virtual_env }}/bin/python3 manage.py model2csv --application dot_ext --model application --add_table_name True --filter_fields id,client_id,user,name | sed '/WARNING:/d' | sed 's/dot_ext.application/dot_ext.application_info/' >>{{ cf_app_log_dir }}/info.log
 
 
