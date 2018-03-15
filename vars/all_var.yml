@@ -411,6 +411,8 @@
 
   django_logging: "{{ env_django_logging }}"
 
+  django_no_ui: "{{ env_django_no_ui }}"
+
   django_oauth2_provider: "{{ env_django_oauth2_provider }}"
 
   # file to append to in /var/log/pyapps/
@@ -534,3 +536,6 @@
               }
           }
       }
+
+  # new relic
+  new_relic_license_key: "{{ vault_env_new_relic_license_key }}"

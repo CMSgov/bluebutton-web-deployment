@@ -1,0 +1,19 @@
+---
+- name: Django Management (migrate, collectstatic)
+  hosts: all
+  remote_user: ec2-user
+  gather_facts: True
+  vars:
+    ansible_ssh_pipelining: no
+    env: "test"
+    migrate: "yes"
+    collectstatic: "yes"
+  vars_files:
+    - "./../../vars/common.yml"
+    - "./../../vault/env/{{ env }}/vault.yml"
+    - "./../../vars/env/{{ env }}/env.yml"
+    - "./../../vars/all_var.yml"
+
+  roles:
+    # django migrate and collectstatic
+    - ../appherd/roles/django_prep

@@ -1,0 +1,227 @@
+def private_key = 'dev-key'
+def vault_pass = 'vault-pass'
+def aws_creds = 'cbj-deploy'
+def release_version = ''
+
+pipeline {
+  agent {
+    node {
+      label ''
+      customWorkspace 'blue-button-build-ami'
+    }
+  }
+
+  parameters {
+    string(
+      defaultValue: "",
+      description: 'The branch of the application repo to build. Required.',
+      name: 'BRANCH'
+    )
+    string(
+      defaultValue: "*/master",
+      description: 'The branch of the deployment repo to use for the build.',
+      name: 'BUILD_BRANCH'
+    )
+    string(
+      defaultValue: "",
+      description: 'The Gold Image AMI id that will be used as the base for app servers.',
+      name: 'AMI_ID'
+    )
+    string(
+      defaultValue: "",
+      description: 'The subnet ID where the build server will be launched.',
+      name: 'SUBNET_ID'
+    )
+    string(
+      defaultValue: "m3.medium",
+      description: 'The class/size of the ec2 instance to launch.',
+      name: 'INSTANCE_CLASS'
+    )
+    choice(
+      choices: 'dev\ntest\nimpl\nprod',
+      description: 'The environment to deploy to. Required.',
+      name: 'ENV'
+    )
+  }
+
+  stages {
+    stage('Ensure BRANCH, ENV, AMI_ID and SUBNET_ID') {
+      steps {
+        sh """
+        if [ -z "${params.BRANCH}" ] || [ -z "${params.ENV}" ] || [ -z "${params.AMI_ID}" ] || [ -z "${params.SUBNET_ID}" ]
+        then
+          exit 1
+        fi
+        """
+      }
+    }
+
+    stage('Stop master and develop deployments to IMPL and PROD') {
+      steps {
+        sh """
+        if [ "${params.BRANCH}" == "master" ] || [ "${params.BRANCH}" == "develop" ]
+        then
+          if [ "${params.ENV}" == "impl" ] || [ "${params.ENV}" == "prod" ]
+          then
+            exit 1
+          fi
+        fi
+        """
+      }
+    }
+
+    stage('Set release_version var') {
+      steps {
+        script {
+          if (params.BRANCH == 'develop' || params.BRANCH == 'master') {
+            release_version = "latest-${params.BRANCH}"
+          } else {
+            // Git tag, committish or branch other than master, develop
+            release_version = "${params.BRANCH}"
+          }
+        }
+      }
+    }
+
+    stage('Notify HipChat') {
+      steps {
+        withCredentials([
+          string(credentialsId: 'hipchat-room', variable: 'room'),
+          string(credentialsId: 'hipchat-server', variable: 'server'),
+          string(credentialsId: 'hipchat-token', variable: 'token')
+        ]) {
+          hipchatSend(
+            color: 'GRAY',
+            notify: true,
+            message: "STARTED: ${env.JOB_NAME} [${params.ENV}]",
+            room: room,
+            sendAs: '',
+            server: server,
+            token: token,
+            v2enabled: true
+          )
+        }
+      }
+    }
+
+    stage('Install requirements') {
+      steps {
+        dir('code') {
+          script {
+            sh """
+              virtualenv -ppython2.7 venv
+              . venv/bin/activate
+
+              pip install --upgrade pip
+              pip install --upgrade cffi
+
+              pip install ansible==2.4.2.0
+              pip install boto
+            """
+          }
+        }
+      }
+    }
+
+    stage('Set private key file') {
+      steps {
+        script {
+            private_key = 'prod-key'
+        }
+      }
+      when {
+        expression {
+          params.ENV == "prod"
+        }
+      }
+    }
+
+    stage('Checkout') {
+      steps {
+        checkout([
+          $class: 'GitSCM',
+          branches: [[
+            name: "${params.BUILD_BRANCH}"
+          ]],
+          doGenerateSubmoduleConfigurations: false,
+          extensions: [[
+            $class: 'RelativeTargetDirectory',
+            relativeTargetDir: 'code'
+          ]],
+          userRemoteConfigs: [[
+            url: 'https://github.com/CMSgov/bluebutton-web-deployment.git'
+          ]]
+        ])
+      }
+    }
+
+    stage('Build AMI') {
+      steps {
+        script {
+          dir('code') {
+            withAwsCli(credentialsId: aws_creds, defaultRegion: 'us-east-1') {
+              withCredentials([
+                file(credentialsId: private_key, variable: 'pk'),
+                file(credentialsId: vault_pass, variable: 'vp')
+              ]) {
+                sh """
+                  . venv/bin/activate
+
+                  ansible-playbook playbook/build_ami/main.yml  \
+                    --vault-password-file ${vp} \
+                    --private-key ${pk} \
+                    -e 'git_branch=${params.BRANCH}' \
+                    -e 'env=${params.ENV}' \
+                    -e 'cf_app_instance_type=${params.INSTANCE_CLASS}' \
+                    -e 'build_subnet_id=${params.SUBNET_ID}' \
+                    -e 'ami_app_gold_image=${params.AMI_ID}' \
+                    -e 'release_version=${release_version}'
+                """
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  post {
+    success {
+      withCredentials([
+        string(credentialsId: 'hipchat-room', variable: 'room'),
+        string(credentialsId: 'hipchat-server', variable: 'server'),
+        string(credentialsId: 'hipchat-token', variable: 'token')
+      ]) {
+        hipchatSend(
+            color: 'GREEN',
+            notify: true,
+            message: "SUCCESS: ${env.JOB_NAME} [${params.ENV}]",
+            room: room,
+            sendAs: '',
+            server: server,
+            token: token,
+            v2enabled: true
+        )
+      }
+    }
+
+    failure {
+      withCredentials([
+        string(credentialsId: 'hipchat-room', variable: 'room'),
+        string(credentialsId: 'hipchat-server', variable: 'server'),
+        string(credentialsId: 'hipchat-token', variable: 'token')
+      ]) {
+        hipchatSend(
+          color: 'RED',
+          notify: true,
+          message: "FAILED: ${env.JOB_NAME} [${params.ENV}]",
+          room: room,
+          sendAs: '',
+          server: server,
+          token: token,
+          v2enabled: true
+        )
+      }
+    }
+  }
+}

@@ -105,51 +105,32 @@
     # django migrate and collectstatic
     - roles/django_prep
 
-    # Set permissions for app under selinux
-    - roles/semanage_apps
-
-    # Set permissions for virtualenv under selinux
-    - roles/semanage_virtualenv
-
   tasks:
+    # Create a super user for the python/django application
+    - import_tasks: roles/create_superuser/tasks/main.yml
 
-  # Create a super user for the python/django application
-  - import_tasks: roles/create_superuser/tasks/main.yml
+    - name: make sure apache server is running
+      become: yes
+      service:
+        name: httpd
+        state: restarted
+        enabled: yes
 
-  - name: make sure apache server is running
-    service:
-      name: httpd
-      state: started
-      enabled: yes
+    # Check if server is responding
+    - name: "call with curl to localhost"
+      shell: "curl -I -k https://localhost/"
+      register: curl_output
+      ignore_errors: yes
 
-  - name: "Restart Apache on {{ env }}"
-    action: shell /bin/echo $HOSTNAME
-    notify:
-      - restart apache
+    - name: "Result of curl was..."
+      debug:
+        msg: "{{ curl_output.stdout }}"
 
-  # Check if server is responding
-  - name: "call with curl to localhost"
-    shell: "curl https://localhost/"
-    register: curl_output
-    ignore_errors: yes
-
-  - name: "Result of curl was..."
-    debug:
-      msg: "{{ curl_output.stdout }}"
-
-
-  - name: "Add in to Loadbalancer"
-    import_tasks: roles/attach_to_elb/tasks/main.yml
-
-  - name: "Notify completion result"
-    import_tasks: "../../roles/send_notification/tasks/main.yml"
+    - name: "Add in to Loadbalancer"
+      import_tasks: roles/attach_to_elb/tasks/main.yml
 
   handlers:
-  - name: restart apache
-    become_user: "{{ remote_admin_account }}"
-    become: yes
-    service: name=httpd state=restarted
-
-  # Now We should have a working machine
-  # Apache / Mod_Wsgi / Python3
-
+    - name: restart apache
+      become_user: "{{ remote_admin_account }}"
+      become: yes
+      service: name=httpd state=restarted

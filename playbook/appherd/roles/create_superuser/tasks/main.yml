@@ -64,7 +64,6 @@
     DJANGO_SETTINGS_MODULE: "{{ django_settings_module }}"
   register: superuser_made_count
 
-
 - name: "superuser count"
   debug:
     msg: "Superuser count = {{ superuser_made_count.stdout }}"

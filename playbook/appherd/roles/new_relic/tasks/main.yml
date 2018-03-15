@@ -1,0 +1,10 @@
+- name: copy new relic config to target
+  template:
+    src: templates/newrelic.ini.j2
+    dest: "{{ install_root }}/newrelic.ini"
+    owner: "{{ app_owner }}"
+    group: "{{ app_group }}"
+    mode: 0664
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  when: env in ["impl", "prod"] and new_relic_license_key != ""

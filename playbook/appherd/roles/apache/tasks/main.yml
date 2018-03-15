@@ -49,7 +49,6 @@
     state: directory
     mode: "0755"
 
-
 - name: "Check Apache is running"
   become_user: "{{ remote_admin_account }}"
   become: yes
