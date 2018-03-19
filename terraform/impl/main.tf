@@ -24,6 +24,7 @@ module "asg" {
   ci_cidrs      = ["${var.ci_cidrs}"]
   app_sg_id     = "${var.app_sg_id}"
   vpn_sg_id     = "${var.vpn_sg_id}"
+  ent_tools_sg_id = "${var.ent_tools_sg_id}"
   sns_topic_arn = "${aws_sns_topic.cloudwatch_alarms_topic.arn}"
 }
 
