@@ -147,4 +147,4 @@ LOGGING = {{ django_logging }}
 
 NO_UI = {{ django_no_ui }}
 
-{% if env == "prod" %}TEALIUM_ENV = "prod"{% endif %}
+{% if env in ["prod", "impl"] %}TEALIUM_ENV = "prod"{% endif %}
