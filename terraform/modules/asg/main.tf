@@ -57,6 +57,7 @@ resource "aws_launch_configuration" "app" {
   security_groups = [
     "${var.app_sg_id}",
     "${var.vpn_sg_id}",
+    "${var.ent_tools_sg_id}",
     "${aws_security_group.ci.id}",
   ]
 
