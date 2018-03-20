@@ -126,12 +126,13 @@ pipeline {
     stage('Set private key file') {
       steps {
         script {
+          if (params.ENV == "prod") {
             private_key = 'prod-key'
-        }
-      }
-      when {
-        expression {
-          params.ENV == "prod"
+          } else if (params.ENV == "impl") {
+            private_key = 'impl-key'
+          } else if (params.ENV == "test") {
+            private_key = 'test-key'
+          }
         }
       }
     }
