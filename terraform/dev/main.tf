@@ -26,13 +26,11 @@ module "asg" {
   vpn_sg_id     = "${var.vpn_sg_id}"
   ent_tools_sg_id = "${var.ent_tools_sg_id}"
   sns_topic_arn = "${aws_sns_topic.cloudwatch_alarms_topic.arn}"
-
-
-
 }
 
-module "cloudwatch_alarms" {
-  source                      = "../modules/bb_alarms"
+
+module "cloudwatch_alarms_elb_http" {
+  source                      = "../modules/elb_http_alarms"
 
   app           = "${var.app}"
   env           = "${var.env}"
@@ -40,26 +38,6 @@ module "cloudwatch_alarms" {
   vpc_name                    = "${var.vpc_id}"
   cloudwatch_notification_arn = "${aws_sns_topic.cloudwatch_alarms_topic.arn}"
   load_balancer_name          = "${var.elb_name}"
-
-  asg_name                    = "${module.asg.asg_id}"
-  rds_name                    = "${var.rds_name}"
-  nat_gw_name                    = "${var.nat_gw_name}"
-
-
-  alarm_status_check_failed_enable = "${var.alarm_status_check_failed_enable}"
-  alarm_status_check_failed_eval_periods = "${var.alarm_status_check_failed_eval_periods}"
-  alarm_status_check_failed_period = "${var.alarm_status_check_failed_period}"
-  alarm_status_check_failed_threshold = "${var.alarm_status_check_failed_threshold}"
-
-  alarm_status_check_failed_instance_enable = "${var.alarm_status_check_failed_instance_enable}"
-  alarm_status_check_failed_instance_eval_periods = "${var.alarm_status_check_failed_instance_eval_periods}"
-  alarm_status_check_failed_instance_period = "${var.alarm_status_check_failed_instance_period}"
-  alarm_status_check_failed_instance_threshold = "${var.alarm_status_check_failed_instance_threshold}"
-
-  alarm_status_check_failed_system_enable = "${var.alarm_status_check_failed_system_enable}"
-  alarm_status_check_failed_system_eval_periods = "${var.alarm_status_check_failed_system_eval_periods}"
-  alarm_status_check_failed_system_period = "${var.alarm_status_check_failed_system_period}"
-  alarm_status_check_failed_system_threshold = "${var.alarm_status_check_failed_system_threshold}"
 
   alarm_elb_no_backend_enable = "${var.alarm_elb_no_backend_enable}"
   alarm_elb_no_backend_eval_periods = "${var.alarm_elb_no_backend_eval_periods}"
@@ -95,7 +73,45 @@ module "cloudwatch_alarms" {
   alarm_elb_5xx_eval_periods = "${var.alarm_elb_5xx_eval_periods}" 
   alarm_elb_5xx_period = "${var.alarm_elb_5xx_period}" 
   alarm_elb_5xx_threshold = "${var.alarm_elb_5xx_threshold}" 
+}
 
+
+module "cloudwatch_alarms_ec2" {
+  source                      = "../modules/ec2_alarms"
+
+  app           = "${var.app}"
+  env           = "${var.env}"
+
+  cloudwatch_notification_arn = "${aws_sns_topic.cloudwatch_alarms_topic.arn}"
+
+  asg_name                    = "${module.asg.asg_id}"
+
+  alarm_status_check_failed_enable = "${var.alarm_status_check_failed_enable}"
+  alarm_status_check_failed_eval_periods = "${var.alarm_status_check_failed_eval_periods}"
+  alarm_status_check_failed_period = "${var.alarm_status_check_failed_period}"
+  alarm_status_check_failed_threshold = "${var.alarm_status_check_failed_threshold}"
+
+  alarm_status_check_failed_instance_enable = "${var.alarm_status_check_failed_instance_enable}"
+  alarm_status_check_failed_instance_eval_periods = "${var.alarm_status_check_failed_instance_eval_periods}"
+  alarm_status_check_failed_instance_period = "${var.alarm_status_check_failed_instance_period}"
+  alarm_status_check_failed_instance_threshold = "${var.alarm_status_check_failed_instance_threshold}"
+
+  alarm_status_check_failed_system_enable = "${var.alarm_status_check_failed_system_enable}"
+  alarm_status_check_failed_system_eval_periods = "${var.alarm_status_check_failed_system_eval_periods}"
+  alarm_status_check_failed_system_period = "${var.alarm_status_check_failed_system_period}"
+  alarm_status_check_failed_system_threshold = "${var.alarm_status_check_failed_system_threshold}"
+}
+
+
+module "cloudwatch_alarms_rds" {
+  source                      = "../modules/rds_alarms"
+
+  app           = "${var.app}"
+  env           = "${var.env}"
+
+  cloudwatch_notification_arn = "${aws_sns_topic.cloudwatch_alarms_topic.arn}"
+
+  rds_name                    = "${var.rds_name}"
 
   alarm_rds_high_cpu_enable = "${var.alarm_rds_high_cpu_enable}" 
   alarm_rds_high_cpu_eval_periods = "${var.alarm_rds_high_cpu_eval_periods}" 
@@ -131,6 +147,18 @@ module "cloudwatch_alarms" {
   alarm_rds_free_memory_eval_periods = "${var.alarm_rds_free_memory_eval_periods}"
   alarm_rds_free_memory_period = "${var.alarm_rds_free_memory_period}"
   alarm_rds_free_memory_threshold = "${var.alarm_rds_free_memory_threshold}"
+}
+
+
+module "cloudwatch_alarms_nat" {
+  source                      = "../modules/nat_alarms"
+
+  app           = "${var.app}"
+  env           = "${var.env}"
+
+  cloudwatch_notification_arn = "${aws_sns_topic.cloudwatch_alarms_topic.arn}"
+
+  nat_gw_name                    = "${var.nat_gw_name}"
 
   alarm_nat_error_port_alloc_enable = "${var.alarm_nat_error_port_alloc_enable}"
   alarm_nat_error_port_alloc_eval_periods = "${var.alarm_nat_error_port_alloc_eval_periods}"

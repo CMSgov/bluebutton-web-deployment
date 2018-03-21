@@ -1,6 +1,6 @@
 # Terraform Compatible BB Cloudwatch Alarms Module
 
-This module should create additional Cloudwatch Alarms.
+This module should create RDS Cloudwatch Alarms.
 
 See the [top level README](../README.md) for more details.
 
