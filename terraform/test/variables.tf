@@ -18,6 +18,8 @@ variable "app_sg_id" {}
 
 variable "vpn_sg_id" {}
 
+variable "ent_tools_sg_id" {}
+
 variable "asg_min" {}
 
 variable "asg_max" {}
