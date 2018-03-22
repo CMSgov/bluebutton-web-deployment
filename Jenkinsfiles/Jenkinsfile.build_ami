@@ -1,4 +1,4 @@
-def private_key = 'dev-key'
+def private_key = ''
 def vault_pass = 'vault-pass'
 def aws_creds = 'cbj-deploy'
 def release_version = ''
@@ -126,12 +126,7 @@ pipeline {
     stage('Set private key file') {
       steps {
         script {
-            private_key = 'prod-key'
-        }
-      }
-      when {
-        expression {
-          params.ENV == "prod"
+          private_key = "${params.ENV}-key"
         }
       }
     }
