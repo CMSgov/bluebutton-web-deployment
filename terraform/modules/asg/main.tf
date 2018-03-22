@@ -87,10 +87,16 @@ resource "aws_autoscaling_group" "main" {
   vpc_zone_identifier       = ["${data.aws_subnet_ids.app.ids}"]
   launch_configuration      = "${aws_launch_configuration.app.name}"
   load_balancers            = ["${data.aws_elb.elb.name}"]
-  enabled_metrics           = [
-    "GroupMinSize", "GroupMaxSize", "GroupDesiredCapacity",
-    "GroupInServiceInstances", "GroupPendingInstances",
-    "GroupStandbyInstances", "GroupTerminatingInstances", "GroupTotalInstances"
+
+  enabled_metrics = [
+    "GroupMinSize",
+    "GroupMaxSize",
+    "GroupDesiredCapacity",
+    "GroupInServiceInstances",
+    "GroupPendingInstances",
+    "GroupStandbyInstances",
+    "GroupTerminatingInstances",
+    "GroupTotalInstances",
   ]
 
   tag {
@@ -195,9 +201,6 @@ resource "aws_autoscaling_notification" "asg_notifications" {
 
   topic_arn = "${var.sns_topic_arn}"
 }
-
-
-
 
 output "asg_id" {
   value = "${aws_autoscaling_group.main.name}"

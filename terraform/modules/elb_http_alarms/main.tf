@@ -4,7 +4,6 @@
 #
 ##
 
-
 resource "aws_cloudwatch_metric_alarm" "healthy_hosts" {
   count               = "${var.alarm_elb_no_backend_enable}"
   alarm_name          = "${var.load_balancer_name}-elb-no-backend"
@@ -16,7 +15,7 @@ resource "aws_cloudwatch_metric_alarm" "healthy_hosts" {
   statistic           = "Average"
   threshold           = "${var.alarm_elb_no_backend_threshold}"
 
-  alarm_description   = "No backends available for ${var.load_balancer_name} in ${var.vpc_name} in APP-ENV: ${var.app}-${var.env}"
+  alarm_description = "No backends available for ${var.load_balancer_name} in ${var.vpc_name} in APP-ENV: ${var.app}-${var.env}"
 
   dimensions {
     LoadBalancerName = "${var.load_balancer_name}"
@@ -66,7 +65,6 @@ resource "aws_cloudwatch_metric_alarm" "spillover_count" {
     LoadBalancerName = "${var.load_balancer_name}"
   }
 
-
   threshold         = "${var.alarm_elb_spillover_count_threshold}"
   unit              = "Count"
   alarm_description = "Spillover alarm for ELB ${var.load_balancer_name} in ${var.vpc_name} in APP-ENV: ${var.app}-${var.env}"
@@ -102,7 +100,6 @@ resource "aws_cloudwatch_metric_alarm" "surge_queue_exceeded" {
   alarm_actions = ["${var.cloudwatch_notification_arn}"]
   ok_actions    = ["${var.cloudwatch_notification_arn}"]
 }
-
 
 resource "aws_cloudwatch_metric_alarm" "httpcode_backend_4xx" {
   count               = "${var.alarm_backend_4xx_enable}"

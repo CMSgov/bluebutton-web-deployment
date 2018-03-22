@@ -4,7 +4,6 @@
 #
 ##
 
-
 resource "aws_cloudwatch_metric_alarm" "rds_high_cpu" {
   count               = "${var.alarm_rds_high_cpu_enable}"
   alarm_name          = "${var.rds_name}-rds-high-cpu"
@@ -16,7 +15,7 @@ resource "aws_cloudwatch_metric_alarm" "rds_high_cpu" {
   statistic           = "Average"
   threshold           = "${var.alarm_rds_high_cpu_threshold}"
 
-  alarm_description   = "RDS - CPU Utilization is high for ${var.rds_name} in APP-ENV: ${var.app}-${var.env}"
+  alarm_description = "RDS - CPU Utilization is high for ${var.rds_name} in APP-ENV: ${var.app}-${var.env}"
 
   dimensions {
     DBInstanceIdentifier = "${var.rds_name}"
@@ -38,7 +37,7 @@ resource "aws_cloudwatch_metric_alarm" "rds_free_storage" {
   statistic           = "Average"
   threshold           = "${var.alarm_rds_free_storage_threshold}"
 
-  alarm_description   = "RDS - Free storage space is low for ${var.rds_name} in APP-ENV: ${var.app}-${var.env}"
+  alarm_description = "RDS - Free storage space is low for ${var.rds_name} in APP-ENV: ${var.app}-${var.env}"
 
   dimensions {
     DBInstanceIdentifier = "${var.rds_name}"
@@ -60,7 +59,7 @@ resource "aws_cloudwatch_metric_alarm" "rds_write_latency" {
   statistic           = "Average"
   threshold           = "${var.alarm_rds_write_latency_threshold}"
 
-  alarm_description   = "RDS - Write latency is high for ${var.rds_name} in APP-ENV: ${var.app}-${var.env}"
+  alarm_description = "RDS - Write latency is high for ${var.rds_name} in APP-ENV: ${var.app}-${var.env}"
 
   dimensions {
     DBInstanceIdentifier = "${var.rds_name}"
@@ -82,7 +81,7 @@ resource "aws_cloudwatch_metric_alarm" "rds_read_latency" {
   statistic           = "Average"
   threshold           = "${var.alarm_rds_read_latency_threshold}"
 
-  alarm_description   = "RDS - Read latency is high for ${var.rds_name} in APP-ENV: ${var.app}-${var.env}"
+  alarm_description = "RDS - Read latency is high for ${var.rds_name} in APP-ENV: ${var.app}-${var.env}"
 
   dimensions {
     DBInstanceIdentifier = "${var.rds_name}"
@@ -104,7 +103,7 @@ resource "aws_cloudwatch_metric_alarm" "rds_swap_usage" {
   statistic           = "Sum"
   threshold           = "${var.alarm_rds_swap_usage_threshold}"
 
-  alarm_description   = "RDS - Swap Usage is high for ${var.rds_name} in APP-ENV: ${var.app}-${var.env}"
+  alarm_description = "RDS - Swap Usage is high for ${var.rds_name} in APP-ENV: ${var.app}-${var.env}"
 
   dimensions {
     DBInstanceIdentifier = "${var.rds_name}"
@@ -126,7 +125,7 @@ resource "aws_cloudwatch_metric_alarm" "rds_disk_queue_depth" {
   statistic           = "Average"
   threshold           = "${var.alarm_rds_disk_queue_depth_threshold}"
 
-  alarm_description   = "RDS - Disk queue depth is high for ${var.rds_name} in APP-ENV: ${var.app}-${var.env}"
+  alarm_description = "RDS - Disk queue depth is high for ${var.rds_name} in APP-ENV: ${var.app}-${var.env}"
 
   dimensions {
     DBInstanceIdentifier = "${var.rds_name}"
@@ -148,7 +147,7 @@ resource "aws_cloudwatch_metric_alarm" "rds_free_memory" {
   statistic           = "Average"
   threshold           = "${var.alarm_rds_free_memory_threshold}"
 
-  alarm_description   = "RDS - Free memory is low for ${var.rds_name} in APP-ENV: ${var.app}-${var.env}"
+  alarm_description = "RDS - Free memory is low for ${var.rds_name} in APP-ENV: ${var.app}-${var.env}"
 
   dimensions {
     DBInstanceIdentifier = "${var.rds_name}"

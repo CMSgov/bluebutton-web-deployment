@@ -8,13 +8,9 @@ variable "load_balancer_name" {
   type        = "string"
 }
 
-
 variable "app" {}
 variable "env" {}
-
 variable "asg_name" {}
 variable "rds_name" {}
 variable "nat_gw_name" {}
-
 variable "dashboard_enable" {}
-

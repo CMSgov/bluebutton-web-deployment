@@ -34,7 +34,10 @@ variable "ci_cidrs" {
   type = "list"
 }
 
-variable "asg_name" { default = "" }
+variable "asg_name" {
+  default = ""
+}
+
 variable "rds_name" {}
 variable "nat_gw_name" {}
 
