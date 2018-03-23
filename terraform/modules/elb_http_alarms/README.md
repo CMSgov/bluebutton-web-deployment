@@ -1,6 +1,6 @@
-# Terraform Compatible ELB Cloudwatch Alarms Module
+# Terraform Compatible BB Cloudwatch Alarms Module
 
-This module should create Cloudwatch Alarms for an existing ELB.
+This module should create ELB - HTTP Cloudwatch Alarms.
 
 See the [top level README](../README.md) for more details.
 
