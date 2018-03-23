@@ -176,12 +176,13 @@ pipeline {
                     -var 'ami_id=${params.AMI_ID}' \
                     -var 'instance_type=${params.INSTANCE_CLASS}')
 
-                  TF_ASG_CHECK=\$(echo "\$TF_OUT" | grep "aws_autoscaling_group.main")
-                  TF_LC_CHECK=\$(echo "\$TF_OUT" | grep "aws_launch_configuration.app")
+                  TF_ASG_CHECK=\$(echo "\$TF_OUT" | grep "aws_autoscaling_group.main.*(forces new resource)")
+                  TF_LC_CHECK=\$(echo "\$TF_OUT" | grep "aws_launch_configuration.app.*(forces new resource)")
                   TF_AMI_CHECK=\$(echo "\$TF_OUT" | grep "image_id:.*(forces new resource)")
-                  TF_PLAN_CHECK=\$(echo "\$TF_OUT" | grep "Plan: 4 to add, 3 to change, 4 to destroy.")
+                  TF_HIGHCPU_CHECK=\$(echo "\$TF_OUT" | grep "aws_autoscaling_policy.high-cpu.*(new resource required)")
+                  TF_LOWCPU_CHECK=\$(echo "\$TF_OUT" | grep "aws_autoscaling_policy.low-cpu.*(new resource required)")
 
-                  if [ -z "\$TF_ASG_CHECK" ] || [ -z "\$TF_LC_CHECK" ] || [ -z "\$TF_AMI_CHECK" ] || [ -z "\$TF_PLAN_CHECK" ]
+                  if [ -z "\$TF_ASG_CHECK" ] || [ -z "\$TF_LC_CHECK" ] || [ -z "\$TF_AMI_CHECK" ] || [ -z "\$TF_HIGHCPU_CHECK" ] || [ -z "\$TF_LOWCPU_CHECK" ]
                   then
                     echo "Terraform plan does not match expectations."
                     exit 1
