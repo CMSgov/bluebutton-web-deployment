@@ -43,6 +43,7 @@
   python_ver_full: "{{ env_python_ver_full }}"
   mod_wsgi_ver_full: "{{ env_mod_wsgi_ver_full }}"
   mod_wsgi_processes: "{{ env_mod_wsgi_processes | default(1) }}"
+  mod_wsgi_threads: "{{ env_mod_wsgi_threads | default(15) }}"
   python_bin_dir: "{{ env_python_bin_dir }}"
 
 
