@@ -140,22 +140,8 @@ pipeline {
     stage('Determine terraform config files') {
       steps {
         script {
-          if (params.ENV == 'dev') {
-            backend_config = 'bb-backend-dev'
-            terraform_vars = 'bb-tf-dev'
-          }
-          if (params.ENV == 'test') {
-            backend_config = 'bb-backend-test'
-            terraform_vars = 'bb-tf-test'
-          }
-          if (params.ENV == 'impl') {
-            backend_config = 'bb-backend-impl'
-            terraform_vars = 'bb-tf-impl'
-          }
-          if (params.ENV == 'prod') {
-            backend_config = 'bb-backend-prod'
-            terraform_vars = 'bb-tf-prod'
-          }
+          backend_config = 'bb-backend-${params.ENV}'
+          terraform_vars = 'bb-tf-${params.ENV}'
         }
       }
     }
