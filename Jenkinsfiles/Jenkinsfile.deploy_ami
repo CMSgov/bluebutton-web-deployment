@@ -3,6 +3,7 @@ def private_key = 'dev-key'
 def vault_pass = 'vault-pass'
 def backend_config = ''
 def terraform_vars = ''
+def release_version = ''
 
 pipeline {
   agent {
@@ -271,6 +272,13 @@ pipeline {
 
       script {
         if (params.ENV == "prod" || params.ENV == "impl") {
+          withAwsCli(credentialsId: aws_creds, defaultRegion: 'us-east-1') {
+            release_version = sh(
+              script: "aws ec2 describe-images --image-ids ${params.AMI_ID} --query 'Images[0].Tags[?Key==`Release`].Value' --output text",
+              returnStdout: true
+            ).trim()
+          }
+
           withCredentials([
             string(credentialsId: 'new-relic-app-id-${params.ENV}', variable: 'app_id'),
             string(credentialsId: 'new-relic-api-key', variable: 'api_key'),
@@ -281,7 +289,7 @@ pipeline {
               python ./lib/mark_deployment.py \
                 --app_id ${app_id} \
                 --api_key ${api_key} \
-                --version ${params.AMI_ID}
+                --version ${release_version}
             """
           }
         }
