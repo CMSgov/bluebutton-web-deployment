@@ -3,6 +3,7 @@ def private_key = ''
 def vault_pass = 'vault-pass'
 def backend_config = ''
 def terraform_vars = ''
+def release_version = ''
 
 pipeline {
   agent {
@@ -140,22 +141,8 @@ pipeline {
     stage('Determine terraform config files') {
       steps {
         script {
-          if (params.ENV == 'dev') {
-            backend_config = 'bb-backend-dev'
-            terraform_vars = 'bb-tf-dev'
-          }
-          if (params.ENV == 'test') {
-            backend_config = 'bb-backend-test'
-            terraform_vars = 'bb-tf-test'
-          }
-          if (params.ENV == 'impl') {
-            backend_config = 'bb-backend-impl'
-            terraform_vars = 'bb-tf-impl'
-          }
-          if (params.ENV == 'prod') {
-            backend_config = 'bb-backend-prod'
-            terraform_vars = 'bb-tf-prod'
-          }
+          backend_config = 'bb-backend-${params.ENV}'
+          terraform_vars = 'bb-tf-${params.ENV}'
         }
       }
     }
@@ -284,6 +271,31 @@ pipeline {
             token: token,
             v2enabled: true
         )
+      }
+
+      script {
+        if (params.ENV == "prod" || params.ENV == "impl") {
+          withAwsCli(credentialsId: aws_creds, defaultRegion: 'us-east-1') {
+            release_version = sh(
+              script: "aws ec2 describe-images --image-ids ${params.AMI_ID} --query 'Images[0].Tags[?Key==`Release`].Value' --output text",
+              returnStdout: true
+            ).trim()
+          }
+
+          withCredentials([
+            string(credentialsId: 'new-relic-app-id-${params.ENV}', variable: 'app_id'),
+            string(credentialsId: 'new-relic-api-key', variable: 'api_key'),
+          ]) {
+            sh """
+              . venv/bin/activate
+
+              python ./lib/mark_deployment.py \
+                --app_id ${app_id} \
+                --api_key ${api_key} \
+                --version ${release_version}
+            """
+          }
+        }
       }
     }
 
