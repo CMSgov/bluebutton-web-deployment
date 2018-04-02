@@ -283,7 +283,7 @@ pipeline {
           }
 
           withCredentials([
-            string(credentialsId: 'new-relic-app-id-${params.ENV}', variable: 'app_id'),
+            string(credentialsId: "new-relic-app-id-${params.ENV}", variable: 'app_id'),
             string(credentialsId: 'new-relic-api-key', variable: 'api_key'),
           ]) {
             sh """
