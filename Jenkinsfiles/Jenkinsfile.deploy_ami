@@ -141,8 +141,8 @@ pipeline {
     stage('Determine terraform config files') {
       steps {
         script {
-          backend_config = 'bb-backend-${params.ENV}'
-          terraform_vars = 'bb-tf-${params.ENV}'
+          backend_config = "bb-backend-${params.ENV}"
+          terraform_vars = "bb-tf-${params.ENV}"
         }
       }
     }
