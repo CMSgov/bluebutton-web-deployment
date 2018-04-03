@@ -143,6 +143,8 @@
 
   ### HOSTNAME_URL:
   host_url: "{{ env_external_dns_name }}"
+  ### Front-End FHIR API PATH - eg. /v1/fhir
+  fhir_api_path_in: "{{ env_fhir_api_path_in }}"
 
   # django environment specific apps list
   django_environment_apps: "{{ env_django_environment_apps }}"
