@@ -54,6 +54,10 @@
     sns_subject: "rebuild appserver"
     sns_playbook_action: "rebuild"
     sns_debug: false
+    export_application: "dot_ext"
+    export_app_model: "application"
+    export_devuser_application: "accounts"
+    export_dev_model: "userprofile"
 
   vars_files:
     - "./../../vars/common.yml"
