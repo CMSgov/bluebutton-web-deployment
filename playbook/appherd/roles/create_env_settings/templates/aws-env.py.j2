@@ -21,11 +21,8 @@ INSTALLED_APPS += ENV_SPECIFIC_APPS
 OPTIONAL_INSTALLED_APPS += {{ django_optional_installed_apps }}
 CORS_ORIGIN_ALLOW_ALL = {{ django_cors_origin_allow_all }}
 
-# database configuration - Postgres
-DATABASES_DEFAULT = "{{ db_platform_type }}://{{ db_user_name }}:{{ db_user_pw }}@{{ db_host_address }}:{{ db_host_port }}/{{ db_name }}{{ db_host_options }}"
-
 DATABASES = {
-    'default': dj_database_url.config(default=DATABASES_DEFAULT),
+    'default': dj_database_url.config(default="{{ db_platform_type }}://{{ db_user_name }}:{{ db_user_pw }}@{{ db_host_address }}:{{ db_host_port }}/{{ db_name }}{{ db_host_options }}"),
 }
 
 # AWS Credentials need to support SES, SQS and SNS
