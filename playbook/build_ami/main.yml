@@ -88,6 +88,8 @@
       ignore_errors: yes
 
     - name: "disable boot-time yum update"
+      become: yes
+      become_user: "{{ remote_admin_account }}"
       lineinfile:
         dest: /etc/cloud/cloud.cfg
         state: absent
