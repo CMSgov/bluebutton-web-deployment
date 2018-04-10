@@ -3,7 +3,7 @@
   become: yes
   become_user: "{{ remote_admin_account }}"
   shell: |
-   source {{ cf_app_py_virtual_env }}/bin/activate && pip install mod_wsgi
+   source {{ cf_app_py_virtual_env }}/bin/activate && pip install mod_wsgi==4.6.4
   environment:
     APXS: /bin/apxs
 
