@@ -6,13 +6,6 @@
 - name: "fix sudoers file"
   import_tasks: ./fix_sudoers.yml
 
-- name: "clean up /root for dataservers"
-  become_user: "{{ remote_admin_account }}"
-  become: yes
-  file:
-    dest: "/root/fips_140_2_update.log.*"
-    state: absent
-
 - name: "apply security patches"
   become_user: "{{ remote_admin_account }}"
   become: yes
