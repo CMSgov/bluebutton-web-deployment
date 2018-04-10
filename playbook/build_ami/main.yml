@@ -79,6 +79,14 @@
     - "./../../vars/env/{{ env }}/env.yml"
     - "./../../vars/all_var.yml"
 
+  pre_tasks:
+    - name: "kill yum"
+      become: yes
+      become_user: "{{ remote_admin_account }}"
+      shell: |
+        kill "$(cat /var/run/yum.pid)"
+      ignore_errors: yes
+
   roles:
     - ../../roles/base_patch
     - ../../roles/snmp_update_public
