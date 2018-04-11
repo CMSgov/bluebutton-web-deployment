@@ -407,6 +407,8 @@
   medicare_login_uri: "{{ env_medicare_login_uri }}"
   medicare_redirect_uri: "{{ env_medicare_redirect_uri }}"
   sls_verify_ssl: "{{ env_sls_verify_ssl }}"
+  sls_client_id: "{{ env_sls_client_id }}"
+  sls_client_secret: "{{ env_sls_client_secret }}"
 
   # Should be set to True in production and False in all other dev and test environments
   django_block_http_redirect: "{{ env_django_block_http_redirect }}"
@@ -541,3 +543,5 @@
 
   # new relic
   new_relic_license_key: "{{ vault_env_new_relic_license_key }}"
+
+
