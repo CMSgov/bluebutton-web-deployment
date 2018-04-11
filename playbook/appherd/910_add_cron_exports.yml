@@ -59,6 +59,11 @@
     sns_playbook_action: "export_info"
     sns_debug: false
 
+    export_application: "dot_ext"
+    export_app_model: "application"
+    export_devuser_application: "accounts"
+    export_dev_model: "userprofile"
+
   vars_files:
     - "./../../vars/common.yml"
     - "./../../vault/env/{{ env }}/vault.yml"
@@ -67,6 +72,9 @@
 
   # ../../roles/ points to roles stored in roles at the top level
   # - roles/ indicates the role is in this playbook directory
+
+  roles:
+    - roles/django_export_model
 
   tasks:
   - name: "Export Active Application count to info.log "
@@ -77,14 +85,4 @@
       source {{ cf_app_py_virtual_env }}/bin/activate
       cd {{ install_root }}/{{ project_name }}/
       echo "$(date --iso-8601=seconds) Active_BBAPI_Applications:$({{ cf_app_py_virtual_env }}/bin/python3 manage.py dumpdata dot_ext.application --indent 2 |grep \"active\": | wc -l ) " >>{{ cf_app_log_dir }}/info.log
-
-  - name: "Export Application List to info.log "
-    become_user: "{{ remote_admin_account }}"
-    become: yes
-    run_once: yes
-    shell: |
-      source {{ cf_app_py_virtual_env }}/bin/activate
-      cd {{ install_root }}/{{ project_name }}/
-      {{ cf_app_py_virtual_env }}/bin/python3 manage.py model2csv --application dot_ext --model application --add_table_name True --filter_fields id,client_id,user,name | sed '/WARNING:/d' | sed 's/dot_ext.application/dot_ext.application_info/' >>{{ cf_app_log_dir }}/info.log
-
-
+      chown pyapps:logreader {{ cf_app_log_dir }}/info.log
