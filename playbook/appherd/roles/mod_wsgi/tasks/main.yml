@@ -18,7 +18,7 @@
   become_user: "{{ remote_admin_account }}"
   become: yes
   template:
-    src: "../templates/wsgi.conf"
+    src: "wsgi.conf.j2"
     dest: "/etc/httpd/conf.modules.d/10-wsgi.conf"
     owner: root
     group: root
