@@ -7,6 +7,16 @@
   environment:
     APXS: /bin/apxs
 
+- name: "fix ownership of virtualenv"
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  file:
+    owner: "{{ cf_app_pyapps_user }}"
+    group: "{{ app_group }}"
+    dest: "{{ cf_app_py_virtual_env }}"
+    state: directory
+    recurse: yes
+
 - name: "capture wsgi configuration"
   become: yes
   become_user: "{{ remote_admin_account }}"
