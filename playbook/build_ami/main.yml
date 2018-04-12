@@ -99,7 +99,6 @@
     - ../../roles/base_patch
     - ../../roles/snmp_update_public
     - ../../roles/nessus_update_key
-    - ../../roles/add_authorized_keys
     - ../../roles/splunk
 
     - ../appherd/roles/selinux_state
