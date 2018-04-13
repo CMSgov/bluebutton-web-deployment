@@ -287,7 +287,7 @@ pipeline {
             string(credentialsId: 'new-relic-api-key', variable: 'api_key'),
           ]) {
             sh """
-              python ./lib/mark_deployment.py \
+              python3 ./lib/mark_deployment.py \
                 --app_id ${app_id} \
                 --api_key ${api_key} \
                 --version ${release_version}
