@@ -47,7 +47,7 @@ pipeline {
 
     stage('Copy Gold Image') {
       steps {
-        dir('packer')
+        dir('packer') {
           sh """
             packer build \
               -var "source_ami=${params.SOURCE_AMI}" \
