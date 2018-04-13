@@ -102,11 +102,6 @@
     # apply nessus public key
     - ../../roles/nessus_update_key
 
-    #
-    # Add ssh authorized keys to server from vault
-    #
-    - ../../roles/add_authorized_keys
-
     # Change Server ID for Splunk
     # uses splunk_name_mapper
     # added appservers-base to splunk_name_mapper

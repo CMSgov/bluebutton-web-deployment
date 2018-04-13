@@ -393,11 +393,6 @@
   # snmp community string
   snmp_community_string: "oedabluebuttonsnmpcommunity"
 
-  # ssh authorized_keys settings:
-  ssh_user: "{{ env_ssh_user }}"
-  ssh_key_replace: "{{ env_ssh_key_replace }}"
-  ssh_auth_keys: "{{ env_ssh_auth_keys }}"
-
   #
   # MyMedicare Authentication Integration
   #

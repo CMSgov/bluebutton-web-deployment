@@ -32,6 +32,7 @@
         termination_protection: no
         wait: yes
         wait_timeout: 500
+        user_data: "{{ lookup('file', 'user_data.sh') }}"
 
         # tags to instance_tags
         instance_tags:
@@ -80,6 +81,32 @@
     - "./../../vars/all_var.yml"
 
   pre_tasks:
+    - name: "fix umask"
+      become: yes
+      become_user: "{{ remote_admin_account }}"
+      shell: |
+        echo '
+        # Use default RHEL umask setting
+        if ! shopt -q login_shell ; then
+            if [ $UID -gt 199 ] && [ "$(/usr/bin/id -gn)" = "$(/usr/bin/id -un)" ]; then
+                umask 002
+            else
+                umask 022
+            fi
+        fi
+        ' | sudo tee -a /etc/bashrc
+
+        echo '
+        # Use default RHEL umask setting
+        if [ $UID -gt 199 ] && [ "$(id -gn)" = "$(id -un)" ]; then
+            umask 002
+        else
+            umask 022
+        fi
+        ' | sudo tee -a /etc/profile
+      args:
+        executable: /bin/bash
+
     - name: "kill yum"
       become: yes
       become_user: "{{ remote_admin_account }}"
@@ -99,7 +126,6 @@
     - ../../roles/base_patch
     - ../../roles/snmp_update_public
     - ../../roles/nessus_update_key
-    - ../../roles/add_authorized_keys
     - ../../roles/splunk
 
     - ../appherd/roles/selinux_state
