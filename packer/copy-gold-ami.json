@@ -1,0 +1,26 @@
+{
+  "variables": {
+    "source_ami": "",
+    "vpc_id": "",
+    "subnet_id": ""
+  },
+  "builders": [{
+    "type": "amazon-ebs",
+    "profile": "default",
+    "ssh_username": "ec2-user",
+    "instance_type": "m4.large",
+    "region": "us-east-1",
+    "subnet_id": "{{user `subnet_id`}}",
+    "vpc_id": "{{user `vpc_id`}}",
+    "associate_public_ip_address": "false",
+    "source_ami": "{{user `source_ami`}}",
+    "ami_name": "bluebutton-gold-{{isotime \"200601021504\"}}",
+    "ami_description": "Copy of Gold AMI",
+    "ssh_pty": true,
+    "tags": {
+      "type": "gold",
+      "timestamp": "{{timestamp}}",
+      "source_ami": "{{user `source_ami`}}"
+    }
+  }]
+}

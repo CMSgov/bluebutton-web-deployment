@@ -1,0 +1,62 @@
+pipeline {
+  agent {
+    node {
+      label ''
+      customWorkspace 'blue-button-copy-gold-ami'
+    }
+  }
+
+  parameters {
+    string(
+      defaultValue: "",
+      description: 'Source AMI ID',
+      name: 'SOURCE_AMI'
+    )
+    string(
+      defaultValue: "",
+      description: 'The VPC ID where packer should create the build instance',
+      name: 'VPC_ID'
+    )
+    string(
+      defaultValue: "",
+      description: 'The subnet ID where packer should create the build instance',
+      name: 'SUBNET_ID'
+    )
+    string(
+      defaultValue: "*/master",
+      description: 'The branch of the deployment repo to use for the build.',
+      name: 'BUILD_BRANCH'
+    )
+  }
+
+  stages {
+    stage('Checkout') {
+      steps {
+        checkout([
+          $class: 'GitSCM',
+          branches: [[
+            name: "${params.BUILD_BRANCH}"
+          ]],
+          doGenerateSubmoduleConfigurations: false,
+          userRemoteConfigs: [[
+            url: 'https://github.com/CMSgov/bluebutton-web-deployment.git'
+          ]]
+        ])
+      }
+    }
+
+    stage('Copy Gold Image') {
+      steps {
+        dir('packer')
+          sh """
+            packer build \
+              -var "source_ami=${params.SOURCE_AMI}" \
+              -var "vpc_id=${params.VPC_ID}" \
+              -var "subnet_id=${params.SUBNET_ID}" \
+              copy-gold-ami.json
+          """
+        }
+      }
+    }
+  }
+}
