@@ -35,7 +35,7 @@ def main(user, app_id, version, api_key):
         url, data=json.dumps(data).encode('utf-8'), headers=headers, method='POST')
     resp = urllib.request.urlopen(req)
 
-    if resp.status != "201":
+    if resp.status != 201:
         print("Could not post deployment info to New Relic")
     else:
         print("Successfully marked deployment in New Relic")
