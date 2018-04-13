@@ -51,6 +51,7 @@ pipeline {
           withAwsCli(credentialsId: 'cbj-deploy', defaultRegion: 'us-east-1') {
             sh """
               packer build \
+                -color=false \
                 -var "source_ami=${params.SOURCE_AMI}" \
                 -var "vpc_id=${params.VPC_ID}" \
                 -var "subnet_id=${params.SUBNET_ID}" \
