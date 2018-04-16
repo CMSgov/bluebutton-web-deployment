@@ -18,7 +18,6 @@
     - python-psycopg2
     - httpd
     - httpd-devel
-    # - mod_wsgi
     - bzip2-devel
     - openssl-devel
     - ncurses-devel
@@ -34,7 +33,6 @@
     - libxslt-devel
     - libffi
     - libffi-devel
-    # - libpcap-devel
     - xz-devel
     - zlib-devel
 
