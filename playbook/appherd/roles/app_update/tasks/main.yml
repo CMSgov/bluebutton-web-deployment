@@ -97,7 +97,7 @@
     {{ cf_app_py_virtual_env }}/bin/pip{{ python_ver }} {{ item }}
   with_items:
     - "install --upgrade pip {{ pip_extra_args }} "
-    - "install psycopg2 {{ pip_extra_args }} --allow-external psycopg2 "
+    - "install psycopg2 {{ pip_extra_args }}"
     - "install -r {{ cf_app_pyapp_home }}/{{ common_project_name }}/requirements/requirements.txt {{ pip_extra_args }} "
 
 - name: "install boto3 for collectstatic"
