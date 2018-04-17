@@ -1,23 +1,5 @@
 ---
-# File: roles/splunk/main.yml
-# Created: 5/4/17
-# Author: '@ekivemark'
-
-- name: "Stop Splunk "
-  become_user: splunk
-  become: yes
-  command: "/opt/splunkforwarder/bin/splunk stop"
-  register: splunk_status
-
-- name: "get last octet of ip address"
-  shell: "export last_ip_octet=$(/usr/sbin/ip route get 8.8.8.8 | /usr/bin/awk -F. '{print $NF;exit}') ; echo $last_ip_octet "
-  register: app_ip_last_octet
-
-- name: "octect number"
-  debug:
-    msg: "app_ip_last_octet ={{ app_ip_last_octet.stdout }}"
-
-- name: "Configure Splunk ..."
+- name: "configure splunk"
   become_user: "{{ remote_admin_account }}"
   become: yes
   template:
@@ -28,18 +10,14 @@
     mode: "750"
     backup: yes
 
-- name: "Initialize splunk configuration"
+- name: "stop splunk"
+  become_user: splunk
+  become: yes
+  command: "/opt/splunkforwarder/bin/splunk stop"
+  register: splunk_status
+
+- name: "initialize splunk configuration"
   become_user: splunk
   become: yes
   shell: |
-    cd /opt/splunkforwarder/bin
-    ./splunk clone-prep-clear-config
-
-- name: "Restart Splunk - if this steps fails to complete Splunk may require license acceptance on host"
-  become_user: "{{ remote_admin_account }}"
-  become: yes
-  command: "/opt/splunkforwarder/bin/splunk restart"
-  register: splunk_status
-
-
-
+    /opt/splunkforwarder/bin/splunk clone-prep-clear-config
