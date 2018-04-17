@@ -1,22 +1,4 @@
 ---
-# File: playbook/appherd/roles/apache/main.yml
-# Created: 5/9/17
-# Author: '@ekivemark'
-# Revision 5/25/17
-
-- name: "Install supporting packages"
-  import_tasks: ../app_tools/tasks/main.yml
-
-- name: "Install Apache (httpd)"
-  become_user: "{{ remote_admin_account }}"
-  become: yes
-  yum:
-    name: "{{ item }}"
-    state: latest
-  with_items:
-    - httpd
-    - mod_ssl
-
 - name: "update log format for source ip"
   become_user: "{{ remote_admin_account }}"
   become: yes
@@ -28,8 +10,7 @@
     group: "root"
     mode: 0644
 
-
-- name: "Setup docs directory for server"
+- name: "setup docs directory for server"
   become_user: "{{ remote_admin_account }}"
   become: yes
   file:
@@ -49,12 +30,10 @@
     state: directory
     mode: "0755"
 
-- name: "Check Apache is running"
+- name: "start apache"
   become_user: "{{ remote_admin_account }}"
   become: yes
   service:
     name: httpd
-    # state=running to be deprecated in 2.7. Switch to state=started
     state: started
     enabled: yes
-

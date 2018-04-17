@@ -358,7 +358,7 @@
   # Port 80 or 443 from ALB to APPServer = http | https
   # Also used to define which set of apache conf files are copied to appserver
   # See playbook/appserver/roles/
-  app_lb_app_protocol: "{{ env_app_lb_app_protocol }}"
+  app_lb_app_protocol: "https"
 
   # splunk configuration
   # Group name = BBAPI
