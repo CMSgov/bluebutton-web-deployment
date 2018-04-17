@@ -141,7 +141,7 @@ pipeline {
                 file(credentialsId: vault_pass, variable: 'vp')
               ]) {
                 sh """
-                  virtualenv -ppython2.7 venv
+                  virtualenv -ppython3 venv
                   . venv/bin/activate
 
                   pip install --upgrade pip
