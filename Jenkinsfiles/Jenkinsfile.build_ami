@@ -104,25 +104,6 @@ pipeline {
       }
     }
 
-    stage('Install requirements') {
-      steps {
-        dir('code') {
-          script {
-            sh """
-              virtualenv -ppython2.7 venv
-              . venv/bin/activate
-
-              pip install --upgrade pip
-              pip install --upgrade cffi
-
-              pip install ansible==2.4.2.0
-              pip install boto
-            """
-          }
-        }
-      }
-    }
-
     stage('Set private key file') {
       steps {
         script {
@@ -160,7 +141,14 @@ pipeline {
                 file(credentialsId: vault_pass, variable: 'vp')
               ]) {
                 sh """
+                  virtualenv -ppython2.7 venv
                   . venv/bin/activate
+
+                  pip install --upgrade pip
+                  pip install --upgrade cffi
+
+                  pip install ansible==2.4.2.0
+                  pip install boto
 
                   ansible-playbook playbook/build_ami/main.yml  \
                     --vault-password-file ${vp} \
