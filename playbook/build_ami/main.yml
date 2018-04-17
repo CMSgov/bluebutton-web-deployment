@@ -82,7 +82,6 @@
 
   roles:
     - ../../roles/base_patch
-    - ../../roles/snmp_update_public
     - ../../roles/nessus_update_key
     - ../../roles/splunk
 
