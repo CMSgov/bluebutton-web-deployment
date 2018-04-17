@@ -112,42 +112,6 @@
     - name: Gather instance metadata
       ec2_metadata_facts:
 
-    - name: "Reboot the instance"
-      shell: sleep 2 && /sbin/shutdown -r now
-      async: 1
-      poll: 0
-      become: yes
-
-    - name: "Wait for the instance to initiate reboot"
-      wait_for:
-        host: "{{ ansible_ssh_host }}"
-        port: 22
-        state: stopped
-      connection: local
-
-    - name: "Wait for instance to finish reboot"
-      wait_for:
-        port: 22
-        host: '{{ ansible_ssh_host }}'
-        delay: 5
-      connection: local
-
-    - name: "Restart Apache on {{ env }}"
-      become: yes
-      service:
-        name: httpd
-        state: restarted
-        enabled: yes
-
-    - name: "call with curl to localhost"
-      shell: "curl -I -k https://localhost/"
-      register: curl_output
-      ignore_errors: yes
-
-    - name: "Result of curl was..."
-      debug:
-        msg: "{{ curl_output.stdout }}"
-
     - name: "Stop the build server"
       ec2:
         instance_ids: '{{ ansible_ec2_instance_id }}'
