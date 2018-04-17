@@ -1,9 +1,5 @@
 ---
-# File: roles/base_patch/tasks/app_server_tools.yml
-# Created: 5/9/17
-# Author: '@ekivemark'
-
-- name: "Install base App Server Components"
+- name: "install base app server components"
   remote_user: ec2-user
   become_user: "{{ remote_admin_account }}"
   become: yes
@@ -14,10 +10,10 @@
     - gcc
     - gcc-c++
     - git
-    - python-pip
     - python-psycopg2
     - httpd
     - httpd-devel
+    - mod_ssl
     - bzip2-devel
     - openssl-devel
     - ncurses-devel
@@ -36,18 +32,12 @@
     - xz-devel
     - zlib-devel
 
-- name: "upgrade pip"
-  remote_user: ec2-user
+- name: "install pip 9.0.3"
   become_user: "{{ remote_admin_account }}"
   become: yes
-  pip:
-    name: pip
-    extra_args: " --upgrade {{ pip_extra_args }} "
+  shell: easy_install pip==9.0.3
 
 - name: "install newer version of awscli - needed for elbv2"
   become_user: "{{ remote_admin_account }}"
   become: yes
-  pip:
-    name: awscli
-    state: latest
-    extra_args: " --upgrade {{ pip_extra_args }} "
+  shell: pip install --upgrade awscli

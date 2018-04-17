@@ -1,17 +1,8 @@
 ---
-# File: playbook/appherd/roles/app_update/tasks/main.yml
-# Created: 5/10/17
-# last modified: 11/27/17
-# Author: '@ekivemark'
-# Create the application environment
-
-
 - name: "Create Virtualenv"
   become_user: "{{ remote_admin_account }}"
   become: yes
-  # Python3.6 replaces pyvenv-(ver) with python3.6 -m venv
-  # shell: "cd /var/virtualenv ;{{ python_bin_dir }}/pyvenv-{{ python_ver }} hhs_o_server "
-  shell: "cd /var/virtualenv ; {{ python_bin_dir }}/python{{ python_ver }} -m  venv {{ project_dir }} "
+  shell: "cd /var/virtualenv; {{ python_bin_dir }}/python{{ python_ver }} -m venv {{ project_dir }}"
 
 - name: "Set permissions to application code"
   become_user: "{{ remote_admin_account }}"
@@ -24,8 +15,7 @@
     group: "{{ app_group }}"
     mode: 0755
 
-
-- name: "Set ownership to pyapps:apache ({{ cf_app_pyapps_user }}:{{ app_group }})"
+- name: "set ownership to pyapps:apache ({{ cf_app_pyapps_user }}:{{ app_group }})"
   become_user: "{{ remote_admin_account }}"
   become: yes
   file:
@@ -35,19 +25,6 @@
     state: directory
     recurse: yes
 
-########################################
-- name: "Check for git installation"
-  become_user: "{{ remote_admin_account }}"
-  become: yes
-  stat:
-    path: "{{ install_root }}/{{ project_name }}/.git/*"
-  register: git_installed
-
-- name: "Check result of git check"
-  debug:
-    msg: "git is installed [{{ git_installed.stat.exists }}]"
-  ignore_errors: yes
-
 - name: "install from git: {{ project_repo }} branch:{{ git_branch }}"
   become_user: "{{ remote_admin_account }}"
   become: yes
@@ -56,9 +33,7 @@
     dest: "{{ install_root }}/{{ project_name }}"
     force: yes
     clone: yes
-  when: not git_installed.stat.exists
 
-  # Now pull a specific branch
 - name: "update from git: {{ project_repo }} branch:{{ git_branch }} to {{ env }}"
   become_user: "{{ remote_admin_account }}"
   become: yes
@@ -68,15 +43,7 @@
     version: "{{ git_branch }}"
   register: git_history
 
-# Record the git version installed
-- name: "record git result for {{ git_history }}"
-  become_user: "{{ remote_admin_account }}"
-  become: yes
-  shell: |
-    NOW=$(date "+DATE: %Y-%m-%d %H:%M:%S")
-    echo GIT INSTALL RECORD: $NOW {{ env|upper }}-{{ inventory_hostname }} Repo:{{ project_repo }} Branch:{{ git_branch }}:Changed:{{ git_history.changed }} From:{{ git_history.before }} To:{{ git_history.after }} >> {{ cf_app_log_dir }}/info.log
-
-- name: "Set permissions to application code ( {{ cf_app_pyapps_user }}:{{ app_group }} )"
+- name: "set permissions to application code ( {{ cf_app_pyapps_user }}:{{ app_group }} )"
   become_user: "{{ remote_admin_account }}"
   become: yes
   file:
@@ -87,7 +54,7 @@
     group: "{{ app_group }}"
     mode: 0755
 
-- name: "pip and basic update"
+- name: "install requirements"
   become_user: "{{ remote_admin_account }}"
   become: yes
   shell: |
@@ -105,7 +72,6 @@
     extra_args: " --upgrade {{ pip_extra_args }} "
     virtualenv: "{{ venv }}"
 
-# Relative reference from playbook/appserver
 - import_tasks: ./../appherd/roles/create_certstore/tasks/main.yml
 
 # app_lb_app_protocol is https or http.
@@ -119,7 +85,6 @@
 - name: "octect number"
   debug:
     msg: "app_ip_last_octet ={{ app_ip_last_octet.stdout }}"
-
 
 # app_ip_last_octet is used in apache conf files.
 # Change conf file names to enable load in order
@@ -168,8 +133,3 @@
     path: "{{ install_root }}/{{ project_name }}/manage.py"
     state: touch
     mode: "u+rwx,g+rwx,o-rwx"
-
-#####
-## Add the create variable files here before running Migrate and Collectstatic
-## Break Migrate and collectstatic out to separate role: django_prep
-#####
