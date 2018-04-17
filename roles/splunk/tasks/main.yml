@@ -1,12 +1,4 @@
 ---
-- name: neutralize /root/.splunk_clone_prepare.sh
-  become_user: "{{ remote_admin_account }}"
-  become: yes
-  copy:
-    src: files/splunk_clone_prepare.sh
-    dest: /root/.splunk_clone_prepare.sh
-    mode: "0755"
-
 - name: "configure splunk"
   become_user: "{{ remote_admin_account }}"
   become: yes
