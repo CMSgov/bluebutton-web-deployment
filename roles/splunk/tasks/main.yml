@@ -1,23 +1,22 @@
 ---
+- name: neutralize /root/.splunk_clone_prepare.sh
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  copy:
+    src: files/splunk_clone_prepare.sh
+    dest: /root/.splunk_clone_prepare.sh
+    mode: "0755"
+
 - name: "configure splunk"
   become_user: "{{ remote_admin_account }}"
   become: yes
   template:
     src: "../templates/splunk_deployment_conf.j2"
     dest: "/opt/splunkforwarder/etc/system/local/deploymentclient.conf"
-    owner: splunk
-    group: splunk
-    mode: "750"
-    backup: yes
-
-- name: "stop splunk"
-  become_user: splunk
-  become: yes
-  command: "/opt/splunkforwarder/bin/splunk stop"
-  register: splunk_status
 
 - name: "initialize splunk configuration"
-  become_user: splunk
+  become_user: "{{ remote_admin_account }}"
   become: yes
   shell: |
+    /opt/splunkforwarder/bin/splunk stop
     /opt/splunkforwarder/bin/splunk clone-prep-clear-config
