@@ -84,10 +84,12 @@ pipeline {
     stage('Ensure AMI ID') {
       steps {
         script {
-          if (ami_id == "" && params.AMI_ID == "") {
-            sh "exit 1"
-          } else {
-            ami_id = "${params.AMI_ID}"
+          if (ami_id == "") {
+            if (params.AMI_ID != "") {
+              ami_id = "${params.AMI_ID}"
+            } else {
+              sh "exit 1"
+            }
           }
         }
       }
@@ -195,7 +197,7 @@ pipeline {
 
                   TF_OUT=\$(terraform plan \
                     -var-file=$tv \
-                    -var 'ami_id=${ami_id}' \
+                    -var 'ami_id=$ami_id' \
                     -var 'instance_type=${params.INSTANCE_CLASS}')
 
                   TF_ASG_CHECK=\$(echo "\$TF_OUT" | grep "aws_autoscaling_group.main.*(forces new resource)")
@@ -236,7 +238,7 @@ pipeline {
                   terraform init -backend-config=$bc
                   terraform apply \
                     -var-file=$tv \
-                    -var 'ami_id=${ami_id}' \
+                    -var 'ami_id=$ami_id' \
                     -var 'instance_type=${params.INSTANCE_CLASS}' \
                     -auto-approve
                 """
