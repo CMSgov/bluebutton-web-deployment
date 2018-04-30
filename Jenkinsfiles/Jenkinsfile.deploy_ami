@@ -4,6 +4,7 @@ def vault_pass = 'vault-pass'
 def backend_config = ''
 def terraform_vars = ''
 def release_version = ''
+def ami_id = ''
 
 pipeline {
   agent {
@@ -52,14 +53,45 @@ pipeline {
   }
 
   stages {
-    stage('Ensure ENV and AMI_ID') {
+    stage('Ensure ENV') {
       steps {
-        sh """
-        if [ -z "${params.ENV}" ] || [ -z "${params.AMI_ID}" ]
-        then
-          exit 1
-        fi
-        """
+        script {
+          if (params.ENV == "") {
+            sh "exit 1"
+          }
+        }
+      }
+    }
+
+    stage('Look up AMI ID (dev and test)') {
+      steps {
+        script {
+          withAwsCli(credentialsId: aws_creds, defaultRegion: 'us-east-1') {
+            ami_id = sh(
+              script: "aws ec2 describe-images --filter 'Name=name,Values=bb-${params.ENV}-*' --query 'sort_by(Images,&CreationDate)[-1].ImageId' --output=text",
+              returnStdout: true
+            ).trim()
+          }
+        }
+      }
+      when {
+        expression {
+          (params.ENV == "dev" || params.ENV == "test") && params.AMI_ID == ""
+        }
+      }
+    }
+
+    stage('Ensure AMI ID') {
+      steps {
+        script {
+          if (ami_id == "") {
+            if (params.AMI_ID != "") {
+              ami_id = "${params.AMI_ID}"
+            } else {
+              sh "exit 1"
+            }
+          }
+        }
       }
     }
 
@@ -165,7 +197,7 @@ pipeline {
 
                   TF_OUT=\$(terraform plan \
                     -var-file=$tv \
-                    -var 'ami_id=${params.AMI_ID}' \
+                    -var 'ami_id=$ami_id' \
                     -var 'instance_type=${params.INSTANCE_CLASS}')
 
                   TF_ASG_CHECK=\$(echo "\$TF_OUT" | grep "aws_autoscaling_group.main.*(forces new resource)")
@@ -206,7 +238,7 @@ pipeline {
                   terraform init -backend-config=$bc
                   terraform apply \
                     -var-file=$tv \
-                    -var 'ami_id=${params.AMI_ID}' \
+                    -var 'ami_id=$ami_id' \
                     -var 'instance_type=${params.INSTANCE_CLASS}' \
                     -auto-approve
                 """
@@ -277,7 +309,7 @@ pipeline {
         if (params.ENV == "prod" || params.ENV == "impl") {
           withAwsCli(credentialsId: aws_creds, defaultRegion: 'us-east-1') {
             release_version = sh(
-              script: "aws ec2 describe-images --image-ids ${params.AMI_ID} --query 'Images[0].Tags[?Key==`Release`].Value' --output text",
+              script: "aws ec2 describe-images --image-ids ${ami_id} --query 'Images[0].Tags[?Key==`Release`].Value' --output text",
               returnStdout: true
             ).trim()
           }
