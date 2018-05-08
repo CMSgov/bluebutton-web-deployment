@@ -1,0 +1,79 @@
+---
+- name: "install nginx"
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  yum:
+    pkg: "nginx"
+    state: installed
+
+- name: "copy nginx.conf to the target"
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  copy:
+    src: files/nginx.conf
+    dest: /etc/nginx/nginx.conf
+    mode: 0644
+
+- name: "copy certs from vault to target"
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  copy:
+    content: "{{ item.content }}"
+    dest: "/etc/ssl/certs/{{ item.name }}"
+    mode: "{{ item.mode }}"
+    owner: "root"
+    group: "root"
+  no_log: True
+  with_items:
+    - { "name": "cert.pem", "content": "{{ apache_cert_file }}", "mode": "0644" }
+    - { "name": "key.pem", "content": "{{ apache_key_file }}", "mode": "0644" }
+    - { "name": "fullchain.pem", "content": "{{ apache_fullchain_file }}", "mode": "0644" }
+
+- name: "install uwsgi"
+  become: yes
+  become_user: "{{ remote_admin_account }}"
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - uwsgi
+    - uwsgi-plugin-python3
+
+- name: "create sock file"
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  file:
+    path: /var/pyapps/hhs_o_server/hhs_oauth_server/pyapps.sock
+    state: touch
+    mode: "0664"
+
+- name: "create vassals dir"
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  file:
+    path: /etc/uwsgi/vassals
+    state: directory
+    mode: "0664"
+
+- name: "install uwsgi ini file"
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  template:
+    src: files/uwsgi.ini
+    dest: /etc/uwsgi/vassals/pyapps.ini
+    mode: "0644"
+
+- name: "add uwsgi to system startup"
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  copy:
+    src: files/uwsgi.service
+    dest: /etc/systemd/system/uwsgi.service
+    mode: "0644"
+
+- name: "start nginx"
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  service:
+    name: nginx
+    state: started

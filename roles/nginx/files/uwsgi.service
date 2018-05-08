@@ -1,0 +1,5 @@
+[Unit]
+Description=uWSGI - Blue Button 2.0
+
+[Service]
+ExecStart=/usr/bin/bash -c '/sbin/uwsgi --emperor /etc/uwsgi/vassals --daemonize /var/log/uwsgi-emperor.log'
