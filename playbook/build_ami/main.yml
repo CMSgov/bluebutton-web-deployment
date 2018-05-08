@@ -91,10 +91,7 @@
     - ../appherd/roles/app_user
     - ../appherd/roles/app_logs
     - ../appherd/roles/python34
-    - ../appherd/roles/create_apache_cert_store
     - ../appherd/roles/install_fhircerts_to_store
-    - ../appherd/roles/copy_issued_cert
-    - ../appherd/roles/apache
     - ../appherd/roles/swagger_ui_install
 
     - ../appherd/roles/app_prep
@@ -102,8 +99,8 @@
     - ../appherd/roles/log_rotate
     - ../appherd/roles/app_update_env
     - ../appherd/roles/create_env_settings
-    - ../appherd/roles/mod_wsgi
-    - ../appherd/roles/new_relic
+    - ../../roles/new_relic
+    - ../../roles/nginx
 
     - ../appherd/roles/semanage_apps
     - ../appherd/roles/semanage_virtualenv
