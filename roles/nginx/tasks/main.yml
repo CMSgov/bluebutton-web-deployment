@@ -71,9 +71,16 @@
     dest: /etc/systemd/system/uwsgi.service
     mode: "0644"
 
-- name: "start nginx"
+- name: "enable nginx"
   become_user: "{{ remote_admin_account }}"
   become: yes
   service:
     name: nginx
-    state: started
+    enabled: yes
+
+- name: "enable uwsgi"
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  service:
+    name: uwsgi
+    enabled: yes

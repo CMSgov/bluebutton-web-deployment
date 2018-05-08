@@ -2,4 +2,11 @@
 Description=uWSGI - Blue Button 2.0
 
 [Service]
-ExecStart=/usr/bin/bash -c '/sbin/uwsgi --emperor /etc/uwsgi/vassals --daemonize /var/log/uwsgi-emperor.log'
+ExecStart=/sbin/uwsgi --emperor /etc/uwsgi/vassals --logto /var/log/uwsgi-emperor.log
+Restart=always
+KillSignal=SIGQUIT
+Type=notify
+NotifyAccess=all
+
+[Install]
+WantedBy=multi-user.target
