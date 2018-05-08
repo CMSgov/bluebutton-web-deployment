@@ -15,4 +15,3 @@
     owner: "{{ app_owner }}"
     group: "{{ app_group }}"
     mode: 0664
-
