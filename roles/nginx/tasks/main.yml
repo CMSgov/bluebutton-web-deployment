@@ -25,9 +25,8 @@
     group: "root"
   no_log: True
   with_items:
-    - { "name": "cert.pem", "content": "{{ apache_cert_file }}", "mode": "0644" }
+    - { "name": "cert.pem", "content": "{{ apache_cert_file }}\n{{ apache_fullchain_file }}", "mode": "0644" }
     - { "name": "key.pem", "content": "{{ apache_key_file }}", "mode": "0644" }
-    - { "name": "fullchain.pem", "content": "{{ apache_fullchain_file }}", "mode": "0644" }
 
 - name: "install uwsgi"
   become: yes
