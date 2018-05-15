@@ -30,7 +30,7 @@ WSGIPythonPath {{ cf_app_pyapp_home }}:{{ cf_app_py_virtual_env }}/bin:/usr/loca
     # Set ServerName to match letsencrypt certificate
     ServerName {{ cf_app_tag_key_layer|lower }}{{ app_ip_last_octet.stdout }}.{{ external_dns_name }}
 
-    WSGIDaemonProcess apache user={{ env_cf_app_pyapps_user }} group=apache python-home={{ cf_app_py_virtual_env }} python-path={{ cf_app_py_virtual_env }}/bin:/usr/local/bin:{{ cf_app_py_virtual_env }}/lib/python{{ python_ver }}/site-packages
+    WSGIDaemonProcess apache user={{ env_cf_app_pyapps_user }} group=apache python-home={{ cf_app_py_virtual_env }} request-timeout={{ mod_wsgi_timeout }} python-path={{ cf_app_py_virtual_env }}/bin:/usr/local/bin:{{ cf_app_py_virtual_env }}/lib/python{{ python_ver }}/site-packages
     WSGIProcessGroup apache
     WSGIScriptAlias / {{ cf_app_pyapp_home }}/hhs_oauth_server/hhs_oauth_server/wsgi.py
     WSGIPassAuthorization on
