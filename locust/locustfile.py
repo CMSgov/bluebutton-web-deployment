@@ -6,40 +6,33 @@ A basic locust test for blue button.
 
 Environment variables:
 
-    - LOCUST_BB_LOAD_TEST_ACCESS_TOKEN: The access token used to auth requests
-    - LOCUST_BB_LOAD_TEST_BASE_URL:     The protocol + host to test (e.g. https://dev.bluebutton.cms.gov)
-    - LOCUST_BB_LOAD_TEST_MIN_WAIT:     The minimum number of ms for a client to wait before starting a new request
-    - LOCUST_BB_LOAD_TEST_MAX_WAIT:     The maximum number of ms for a client to wait before starting a new request
-
-Things to do:
-
-- Somehow integrate oauth setup
-- Actually load test oauth setup
+    - BB_LOAD_TEST_BASE_URL: The protocol + host to test (e.g. https://sandbox.bluebutton.cms.gov)
+    - BB_LOAD_TEST_MIN_WAIT: The minimum number of ms for a client to wait before starting a new request
+    - BB_LOAD_TEST_MAX_WAIT: The maximum number of ms for a client to wait before starting a new request
+    - BB_TKNS_FILE :         The location of the file containing access tokens to use during the test
 """
 
 from locust import HttpLocust, TaskSet, task, web
 from requests_oauthlib import OAuth2Session
 import os
 import json
+import random
 
 # The base URL for the API server where testing will take place.
-base_url = os.environ.get("LOCUST_BB_LOAD_TEST_BASE_URL", "https://dev.bluebutton.cms.gov")
-access_token = os.environ["LOCUST_BB_LOAD_TEST_ACCESS_TOKEN"]
+base_url = os.environ.get("BB_LOAD_TEST_BASE_URL", "https://sandbox.bluebutton.cms.gov")
 
 
 class UserBehavior(TaskSet):
 
     count = 0
     max_count = 50
+    tokens = []
 
     def __init__(self, parent):
         super(UserBehavior, self).__init__(parent)
 
-        self.client.headers['Authorization'] = 'Bearer ' + access_token
-        response = self.client.get("%s%s" % (base_url, '/v1/connect/userinfo'))
-        data = json.loads(response.content)
-
-        self.patient = data.get('patient')
+        with open(os.environ.get('BB_TKNS_FILE', 'tkns.txt')) as f:
+            self.tokens = [json.loads(line)['access_token'] for line in f]
 
     def check_count(self):
         if self.count >= self.max_count:
@@ -48,38 +41,33 @@ class UserBehavior(TaskSet):
     def record_req(self):
         self.count += 1
 
+    def get_token(self):
+        secure_random = random.SystemRandom()
+        return secure_random.choice(self.tokens)
+
+    def set_auth_header(self, token):
+        self.client.headers['Authorization'] = 'Bearer ' + token
+
+    def get_random_userinfo(self):
+        access_token = self.get_token()
+        self.set_auth_header(access_token)
+        response = self.client.get("%s%s" % (base_url, '/v1/connect/userinfo'))
+        data = json.loads(response.content)
+        return data.get('patient')
+
     def make_req(self, resource):
         self.check_count()
         self.client.get("%s%s" % (base_url, resource))
         self.record_req()
 
-    @task(11)
-    def get_userinfo(self):
-        resource = '/v1/connect/userinfo'
-        self.make_req(resource)
-
-    @task(26)
+    @task()
     def get_eob(self):
-        resource = '/v1/fhir/ExplanationOfBenefit/?patient=%s' % self.patient
-        self.make_req(resource)
-
-    @task(13)
-    def get_coverage(self):
-        resource = '/v1/fhir/Coverage/'
-        self.make_req(resource)
-
-    @task(22)
-    def get_patient(self):
-        resource ='/v1/fhir/Patient/%s' % self.patient
-        self.make_req(resource)
-
-    @task(6)
-    def get_metadata(self):
-        resource = '/v1/fhir/metadata'
+        patient = self.get_random_userinfo()
+        resource = '/v1/fhir/ExplanationOfBenefit/?patient=%s' % patient
         self.make_req(resource)
 
 
 class WebsiteUser(HttpLocust):
     task_set = UserBehavior
-    min_wait = int(os.environ.get("LOCUST_BB_LOAD_TEST_MIN_WAIT", 0))
-    max_wait = int(os.environ.get("LOCUST_BB_LOAD_TEST_MAX_WAIT", 500))
+    min_wait = int(os.environ.get("BB_LOAD_TEST_MIN_WAIT", 1000))
+    max_wait = int(os.environ.get("BB_LOAD_TEST_MAX_WAIT", 5000))
