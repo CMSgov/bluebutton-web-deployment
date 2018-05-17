@@ -29,6 +29,8 @@
     - { "name": "key.pem", "content": "{{ apache_key_file }}", "mode": "0644" }
 
 - name: "set permission on nginx log dir"
+  become: yes
+  become_user: "{{ remote_admin_account }}"
   file:
     path: /var/log/nginx
     state: directory
