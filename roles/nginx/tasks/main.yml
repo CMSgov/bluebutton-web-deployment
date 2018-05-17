@@ -28,6 +28,13 @@
     - { "name": "cert.pem", "content": "{{ apache_cert_file }}\n{{ apache_fullchain_file }}", "mode": "0644" }
     - { "name": "key.pem", "content": "{{ apache_key_file }}", "mode": "0644" }
 
+- name: "set permission on nginx log dir"
+  file:
+    path: /var/log/nginx
+    state: directory
+    mode: 0755
+    group: "logreader"
+
 - name: "install uwsgi"
   become: yes
   become_user: "{{ remote_admin_account }}"
