@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#set -e
+set -e
 
 ###
 # Usage:
@@ -17,6 +17,8 @@
 # BB_LOAD_TEST_DURATION (number of seconds, default: 20)
 # BB_LOAD_TEST_HATCH_RATE (hatch rate for clients added per second, default: 1)
 # BB_LOAD_TEST_CONCURRENCY (how many clients make requests at once, default: 1)
+# BB_LOAD_TEST_MIN_WAIT (how many ms to wait between requests, lower bound, default: 1000)
+# BB_LOAD_TEST_MAX_WAIT (how many ms to wait between requests, upper bound, default: 5000)
 ###
 
 docker build -f ./Dockerfiles/Dockerfile.tkns -t bb_tkns .
@@ -27,14 +29,15 @@ docker run --rm -it bb_tkns \
   -id $BB_CLIENT_ID \
   -secret $BB_CLIENT_SECRET \
   -url https://${BB_SUB_DOMAIN} \
-  -redirect-url http://localhost:8080/ \
-  -n ${BB_NUM_BENES:-5} > tkns.txt
+  -n ${BB_NUM_BENES:-4} > tkns.txt
 
 echo "Run locust tests..."
 docker run \
   -v "$(pwd):/code" \
   -e BB_TKNS_FILE=/code/tkns.txt \
   -e BB_LOAD_TEST_BASE_URL=https://${BB_SUB_DOMAIN} \
+  -e BB_LOAD_TEST_MIN_WAIT=${BB_LOAD_TEST_MIN_WAIT:-1000} \
+  -e BB_LOAD_TEST_MAX_WAIT=${BB_LOAD_TEST_MAX_WAIT:-5000} \
   --rm -it bb_locust \
   --host https://${BB_SUB_DOMAIN} \
   --no-web \
