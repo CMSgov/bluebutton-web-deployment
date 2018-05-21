@@ -10,9 +10,11 @@ Environment variables:
     - BB_LOAD_TEST_MIN_WAIT: The minimum number of ms for a client to wait before starting a new request
     - BB_LOAD_TEST_MAX_WAIT: The maximum number of ms for a client to wait before starting a new request
     - BB_TKNS_FILE :         The location of the file containing access tokens to use during the test
+    - BB_CLIENT_ID:          The client id of the OAuth application
+    - BB_CLIENT_SECRET:      The client secret of the OAuth application
 """
 
-from locust import HttpLocust, TaskSet, task, web
+from locust import HttpLocust, TaskSet, task, web, events
 from requests_oauthlib import OAuth2Session
 import os
 import json
@@ -20,6 +22,8 @@ import random
 
 # The base URL for the API server where testing will take place.
 base_url = os.environ.get("BB_LOAD_TEST_BASE_URL", "https://sandbox.bluebutton.cms.gov")
+client_id = os.environ["BB_CLIENT_ID"]
+client_secret = os.environ["BB_CLIENT_SECRET"]
 
 
 class UserBehavior(TaskSet):
@@ -33,6 +37,16 @@ class UserBehavior(TaskSet):
 
         with open(os.environ.get('BB_TKNS_FILE', 'tkns.txt')) as f:
             self.tokens = [json.loads(line)['access_token'] for line in f]
+
+        events.quitting += self.quitting
+
+    def quitting(self):
+        for token in self.tokens:
+            self.client.post("%s%s" % (base_url, '/v1/o/revoke_token/'), data={
+                    'token': token,
+                    'client_id': client_id,
+                    'client_secret': client_secret
+                })
 
     def check_count(self):
         if self.count >= self.max_count:

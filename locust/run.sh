@@ -38,9 +38,14 @@ docker run \
   -e BB_LOAD_TEST_BASE_URL=https://${BB_SUB_DOMAIN} \
   -e BB_LOAD_TEST_MIN_WAIT=${BB_LOAD_TEST_MIN_WAIT:-1000} \
   -e BB_LOAD_TEST_MAX_WAIT=${BB_LOAD_TEST_MAX_WAIT:-5000} \
+  -e BB_CLIENT_ID=${BB_CLIENT_ID} \
+  -e BB_CLIENT_SECRET=${BB_CLIENT_SECRET} \
   --rm -it bb_locust \
   --host https://${BB_SUB_DOMAIN} \
   --no-web \
+  --only-summary \
   -c ${BB_LOAD_TEST_CONCURRENCY:-1} \
   -r ${BB_LOAD_TEST_HATCH_RATE:-1} \
   -t ${BB_LOAD_TEST_DURATION:-20}
+
+rm tkns.txt
