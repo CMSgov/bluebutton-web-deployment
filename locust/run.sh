@@ -9,12 +9,12 @@
 # BB_CLIENT_ID (application's client id)
 # BB_CLIENT_SECRET (application's client secret)
 # BB_SUB_DOMAIN (sub domain to test against, e.g., sandbox.bluebutton.cms.gov)
+# BB_LOAD_TEST_TYPE (either "eob" or "all" -- the endpoints to include in the test)
 #
 # Optional:
-# BB_NUM_BENES (number of synthetic benes, default: 5)
+# BB_NUM_BENES (number of synthetic benes, default: 4)
 # BB_LOAD_TEST_DURATION (number of seconds, default: 20)
 # BB_LOAD_TEST_HATCH_RATE (hatch rate for clients added per second, default: 1)
-# BB_LOAD_TEST_CONCURRENCY (how many clients make requests at once, default: 1)
 # BB_LOAD_TEST_MIN_WAIT (how many ms to wait between requests, lower bound, default: 1000)
 # BB_LOAD_TEST_MAX_WAIT (how many ms to wait between requests, upper bound, default: 5000)
 ###
@@ -63,7 +63,7 @@ docker run \
   --no-web \
   --only-summary \
   -f locustfiles/${BB_LOAD_TEST_TYPE}.py \
-  -c ${BB_LOAD_TEST_CONCURRENCY:-1} \
+  -c ${BB_NUM_BENES:-4} \
   -r ${BB_LOAD_TEST_HATCH_RATE:-1} \
   -t ${BB_LOAD_TEST_DURATION:-20}
 
