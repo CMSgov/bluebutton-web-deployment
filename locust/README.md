@@ -1,45 +1,34 @@
-# Locust.io Load Testing
+### Load testing with locust
 
-This is a first pass at load testing, with many rough edges and things not done
-yet.
+There are two [locust](https://locust.io/) test plans included:
 
-## Quick Start
+- The `locustfiles/eob.py` test plan exercises the Explanation of Benefits (EOB) endpoint only
+- The `locustfiles/all.py` test plan exercises the EOB, Coverage and Patient endpoints
 
-Install dependencies:
+#### Set up and run the load tests
 
-```
-pipenv install
-pipenv shell
-```
+Define the required environment variables:
 
-Run Oauth 2.0 flow and get access code:
-
-```
-export LOCUST_BB_LOAD_TEST_CLIENT_ID=<client_id>
-export LOCUST_BB_LOAD_TEST_CLIENT_SECRET=<client_secret>
-python oauth_flask_client.py
-# Navigate to localhost:5000 and follow the oauth flow
-# Copy the auth token from the logs, should be last debug line
+```sh
+export BB_CLIENT_ID=<client_id>
+export BB_CLIENT_SECRET=<client_secret>
+export BB_SUB_DOMAIN=sandbox.bluebutton.cms.gov
+export BB_LOAD_TEST_TYPE=all
 ```
 
-The client ID and secret should be from when you registered your oauth
-application.
+Optional environment variables:
 
-Finally, run the load test using that access code:
-
+```sh
+# BB_NUM_BENES (number of synthetic benes, default: 4)
+# BB_LOAD_TEST_DURATION (number of seconds, default: 20)
+# BB_LOAD_TEST_HATCH_RATE (hatch rate for clients added per second, default: 1)
+# BB_LOAD_TEST_MIN_WAIT (how many ms to wait between requests, lower bound, default: 1000)
+# BB_LOAD_TEST_MAX_WAIT (how many ms to wait between requests, upper bound, default: 5000)
+# BB_TKNS_WORKERS (how many tkns workers to use when fetching access tokens, default: 2)
 ```
-export LOCUST_BB_LOAD_TEST_ACCESS_TOKEN="<auth_token>"
-locust --host https://sandbox.bluebutton.cms.gov
-# Navigate to localhost:8089 and run some locusts
+
+Once your environment is prepared:
+
+```sh
+./run.sh
 ```
-
-## Files
-
-- `oauth_flask_client.py`: The flask application that can run the Oauth 2.0 flow
-  and get the access token.  It should use it to request the "userinfo"
-  resource.  See https://bluebutton.cms.gov/developers/#core-resources.
-- `locustfile.py`: The file run by locust.io, with the default name.  This
-  doesn't yet have Oauth 2.0 support, instead it depends on you to explicitly
-  set the access token.
-- `Pipfile`: Dependencies, as specified by pipenv:
-  https://github.com/pypa/pipenv

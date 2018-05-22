@@ -1,0 +1,7 @@
+FROM golang:1.10
+RUN go get -u github.com/whytheplatypus/go-bluebutton/cmd/tkns
+
+FROM selenium/node-firefox
+COPY --from=0 /go/bin/tkns /usr/local/bin/tkns
+
+ENTRYPOINT [ "tkns" ]
