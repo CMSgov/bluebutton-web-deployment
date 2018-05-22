@@ -17,6 +17,7 @@
 # BB_LOAD_TEST_HATCH_RATE (hatch rate for clients added per second, default: 1)
 # BB_LOAD_TEST_MIN_WAIT (how many ms to wait between requests, lower bound, default: 1000)
 # BB_LOAD_TEST_MAX_WAIT (how many ms to wait between requests, upper bound, default: 5000)
+# BB_TKNS_WORKERS (how many tkns workers to use when fetching access tokens, default: 2)
 ###
 
 set -e
@@ -34,6 +35,7 @@ docker build -f ./Dockerfiles/Dockerfile.locust -t bb_locust .
 
 echo "Get access tokens..."
 docker run --rm -it bb_tkns \
+  -w ${BB_TKNS_WORKERS:-2} \
   -id $BB_CLIENT_ID \
   -secret $BB_CLIENT_SECRET \
   -url https://${BB_SUB_DOMAIN} \

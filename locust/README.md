@@ -24,6 +24,7 @@ Optional environment variables:
 # BB_LOAD_TEST_HATCH_RATE (hatch rate for clients added per second, default: 1)
 # BB_LOAD_TEST_MIN_WAIT (how many ms to wait between requests, lower bound, default: 1000)
 # BB_LOAD_TEST_MAX_WAIT (how many ms to wait between requests, upper bound, default: 5000)
+# BB_TKNS_WORKERS (how many tkns workers to use when fetching access tokens, default: 2)
 ```
 
 Once your environment is prepared:
