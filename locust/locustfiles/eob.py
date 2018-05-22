@@ -8,7 +8,7 @@ class EOBEndpoint(bb.UserBehavior):
 
     @task()
     def get_eob(self):
-        resource = '/v1/fhir/ExplanationOfBenefit/?patient=%s' % patient
+        resource = '/v1/fhir/ExplanationOfBenefit/?patient=%s' % self.patient
         self.make_req(resource)
 
 
