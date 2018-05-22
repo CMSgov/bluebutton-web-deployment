@@ -16,15 +16,6 @@
     recurse: yes
     state: directory
 
-#  - name: "copy cert({{ src_cert }}) to certstore [{{ app_fhir_cert_subdir }}]"
-#    copy:
-#      src: "{{ src_cert_dir }}/{{ src_cert }}"
-#      dest: "{{ cf_app_pyapp_home }}/certstore/{{ app_fhir_cert_subdir }}/{{ src_cert }}"
-#      mode: 0755
-#      owner: "{{ cf_app_pyapps_user }}"
-#      group: "{{ app_group }}"
-#    when: "src_cert_dir != '' and src_cert != '' "
-
 - name: "copy cert({{ app_fhir_cert_name }}) to certstore [{{ app_fhir_cert_subdir }}]"
   become_user: "{{ remote_admin_account }}"
   become: yes
@@ -47,16 +38,3 @@
     owner: "{{ cf_app_pyapps_user }}"
     group: "{{ app_group }}"
   when: "app_fhir_key_name != '' and app_fhir_key != '' "
-
-
-
-# mkdir -p /var/pyapps/certs/bb-sandbox
-#cd /
-#unzip /home/ec2-user/download/certs.zip
-#cp /home/ec2-user/download/certs/* /var/pyapps/certs/bb-sandbox/
-#
-##cp /root/ca/certs/ca.cert* /var/pyapps/certs/bb-sandbox/
-##cp /root/ca/private/ca.key* /var/pyapps/certs/bb-sandbox/
-#chown -Rf pyapps:apache /var/pyapps/certs
-#ls -la /var/pyapps/certs/bb-sandbox
-
