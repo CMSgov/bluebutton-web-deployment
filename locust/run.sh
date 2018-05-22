@@ -32,22 +32,12 @@ fi
 docker build -f ./Dockerfiles/Dockerfile.tkns -t bb_tkns .
 docker build -f ./Dockerfiles/Dockerfile.locust -t bb_locust .
 
-set +e
-
 echo "Get access tokens..."
 docker run --rm -it bb_tkns \
   -id $BB_CLIENT_ID \
   -secret $BB_CLIENT_SECRET \
   -url https://${BB_SUB_DOMAIN} \
   -n ${BB_NUM_BENES:-4} > tkns.txt
-
-if [ -z "$(cat tkns.txt)" ]
-then
-  echo "There was a problem fetching access tokens" >&2
-  exit 1
-fi
-
-set -e
 
 echo "Run locust tests..."
 docker run \
