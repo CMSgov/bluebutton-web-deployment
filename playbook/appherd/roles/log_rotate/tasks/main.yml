@@ -14,7 +14,9 @@
       missingok
       notifempty
       compress
-      size 20k
+      size 10M
+      rotate 10
+      copytruncate
       daily
       create 0776 {{ cf_app_pyapps_user }} logreader
       }
