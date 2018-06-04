@@ -9,7 +9,7 @@
 - name: "copy nginx.conf to the target"
   become_user: "{{ remote_admin_account }}"
   become: yes
-  copy:
+  template:
     src: files/nginx.conf
     dest: /etc/nginx/nginx.conf
     mode: 0644
