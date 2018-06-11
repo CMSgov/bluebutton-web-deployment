@@ -212,25 +212,14 @@
   django_admin_redirector: "{{ env_django_admin_redirector }}"
 
   ### Database Settings:
-  ## Postgresql 9.6
-  ## export RDS_DB_PLATFORM='postgres'
-  ## export RDS_DB_ENGINE='django.db.backends.postgresql_psycopg2'
-  ## export RDS_DB_NAME='something_secret'
-  ## export RDS_DB_OPTIONS='?sslmode=require'
-  ## export RDS_USERNAME='some_user'
-  ## export RDS_PASSWORD='super_secret_password'
-  ## export RDS_HOSTNAME='some.ip.or.dns.name'
-  ## export RDS_PORT='5432'
-  ### Database Access String Construction: postgres://USER:PASSWORD@HOST:PORT/NAME
-  ## export DEFAULT_DB_SET="$RDS_DB_PLATFORM://$RDS_USERNAME:$RDS_PASSWORD@$RDS_HOSTNAME:$RDS_PORT/$RDS_DB_NAME"
-  db_platform_type: "{{ env_db_platform_type }}"
-  db_engine_driver: "{{ env_db_engine_driver }}"
   db_name: "{{ env_db_name }}"
   db_user_name: "{{ env_db_user_name }}"
   db_user_pw: "{{ env_db_user_pw }}"
-  db_host_address: "{{ env_db_host_address }}"
-  db_host_port: "{{ env_db_host_port }}"
-  db_host_options: "{{ env_db_host_options }}"
+  db_platform_type: "postgres"
+  db_engine_driver: "django.db.backends.postgresql_psycopg2"
+  db_host_address: "db.bluebutton-{{ env }}.local"
+  db_host_port: "15432"
+  db_host_options: "?sslmode=require"
 
   # Database SSL Certificate and Key Files:
   ca_key: "server.key"
