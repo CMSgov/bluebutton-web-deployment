@@ -1,0 +1,11 @@
+---
+- name: "Write aws-{{ env }}.py file"
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  template:
+    src: ../templates/aws-env.py.j2
+    dest: "{{ install_root }}/{{ django_settings_folder }}/aws-{{ env }}.py"
+    backup: yes
+    owner: "{{ app_owner }}"
+    group: "{{ app_group }}"
+    mode: 0664

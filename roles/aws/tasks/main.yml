@@ -1,0 +1,31 @@
+---
+- name: "Create .aws directory"
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  file:
+    dest: /root/.aws
+    mode: 0600
+    owner: root
+    group: root
+    state: directory
+
+- name: "Write aws config file"
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  template:
+    src: "../templates/root_aws_config.j2"
+    dest: "/root/.aws/config"
+    backup: yes
+    owner: root
+    group: root
+    mode: "u+r"
+
+- name: "write aws credentials for appserver"
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  template:
+    src: "../templates/root_app_aws_credentials.j2"
+    dest: "/root/.aws/credentials"
+    owner: root
+    group: root
+    mode: "u+r"

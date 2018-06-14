@@ -85,25 +85,25 @@
     - ../../roles/nessus_update_key
     - ../../roles/splunk
 
-    - ../appherd/roles/selinux_state
-    - ../appherd/roles/aws_config
-    - ../appherd/roles/app_tools
-    - ../appherd/roles/app_user
-    - ../appherd/roles/app_logs
-    - ../appherd/roles/python34
-    - ../appherd/roles/install_fhircerts_to_store
-    - ../appherd/roles/swagger_ui_install
+    - ../../roles/selinux # selinux_state
+    # TODO(rnagle): we probably don't need this
+    #- ../../roles/aws # aws_config
+    - ../../roles/app_tools
+    - ../../roles/app_user
+    - ../../roles/app_logs
+    - ../../roles/python34
+    - ../../roles/certstore # install_fhircerts_to_store
+    # TODO(rnagle): this is not being used at the moment
+    #- ../../roles/swagger_ui_install
 
-    - ../appherd/roles/app_prep
-    - ../appherd/roles/app_update
-    - ../appherd/roles/log_rotate
-    - ../appherd/roles/app_update_env
-    - ../appherd/roles/create_env_settings
+    - ../../roles/app_prep
+    - ../../roles/app_update_env
+    - ../../roles/create_env_settings
     - ../../roles/new_relic
-    - ../../roles/nginx
+    - ../../nginx
 
-    - ../appherd/roles/semanage_apps
-    - ../appherd/roles/semanage_virtualenv
+    - ../../roles/semanage_apps
+    - ../../roles/semanage_virtualenv
 
   post_tasks:
     - name: Gather instance metadata

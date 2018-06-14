@@ -1,0 +1,57 @@
+---
+- name: "Create the app log directory "
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  file:
+    dest: "{{ cf_app_log_dir }}"
+    owner: "{{ cf_app_pyapps_user }}"
+    group: logreader
+    state: directory
+    mode: 0775
+
+# Logs need to be given group ownership to logreader
+- name: "Create the logs"
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  file:
+    dest: "{{ cf_app_log_dir }}/{{ item }}"
+    owner: "{{ cf_app_pyapps_user }}"
+    group: logreader
+    state: touch
+    mode: 0776
+  with_items:
+    - debug.log
+    - error.log
+    - info.log
+    - login_failed.log
+    - admin_access.log
+    - perf_mon.log
+
+- name: "Set permissions for SELinux"
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  sefcontext:
+    target: "{{ cf_app_log_dir }}(/.*)?"
+    setype: httpd_sys_content_t
+    state: present
+  ignore_errors: True
+
+- name: "Setup log rotation for pyapps logs"
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  copy:
+    dest: "/etc/logrotate.d/pyapps"
+    content: |
+      {{ cf_app_log_dir }}/*.log {
+      missingok
+      notifempty
+      compress
+      size 10M
+      rotate 10
+      copytruncate
+      daily
+      create 0776 {{ cf_app_pyapps_user }} logreader
+      }
+    owner: root
+    group: logreader
+    mode: 0600
