@@ -3,7 +3,7 @@
     "release_version": "none",
     "source_ami": "",
     "vault_password_file": "",
-    "git_branch": "",
+    "git_branch": "master",
     "subnet_id": "",
     "env": ""
   },
@@ -34,8 +34,8 @@
               "ANSIBLE_VAULT_PASSWORD_FILE={{user `vault_password_file`}}"
             ],
             "extra_arguments": [
-              "-e 'git_branch={{user `git_branch`}}'",
-              "-e 'env={{user `env`}}'"
+              "-e git_branch={{user `git_branch`}}",
+              "-e env={{user `env`}}"
             ]
         }
     ]
