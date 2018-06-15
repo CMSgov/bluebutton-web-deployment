@@ -4,7 +4,6 @@
     "source_ami": "",
     "vault_password_file": "",
     "git_branch": "",
-    "vpc_id": "",
     "subnet_id": "",
     "env": ""
   },
@@ -14,7 +13,6 @@
     "instance_type": "m4.large",
     "region": "us-east-1",
     "subnet_id": "{{user `subnet_id`}}",
-    "vpc_id": "{{user `vpc_id`}}",
     "associate_public_ip_address": "false",
     "source_ami": "{{user `source_ami`}}",
     "ami_name": "bb-{{user `env`}}-{{user `git_branch`}}-{{isotime \"20060102030405\"}}",
