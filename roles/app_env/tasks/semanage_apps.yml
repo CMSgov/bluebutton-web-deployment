@@ -1,9 +1,0 @@
----
-# File: roles/app_env/tasks/semanage_apps.yml
-# Created: 5/13/17
-# Author: '@ekivemark'
-
-- name: "Set permissions for SELinux"
-  become_user: "{{ remote_admin_account }}"
-  become: yes
-  shell: "semanage fcontext -a -t httpd_sys_content_t \"{{ project_parent[:-1] }}(/.*)?\" "

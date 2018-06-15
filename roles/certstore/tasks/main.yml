@@ -1,0 +1,33 @@
+---
+- name: "Add {{ app_fhir_cert_subdir }} to certstore"
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  file:
+    dest: "{{ cf_app_pyapp_home }}/certstore/{{ app_fhir_cert_subdir }}"
+    mode: 0755
+    owner: "{{ cf_app_pyapps_user }}"
+    group: "{{ app_group }}"
+    recurse: yes
+    state: directory
+
+- name: "copy cert({{ app_fhir_cert_name }}) to certstore [{{ app_fhir_cert_subdir }}]"
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  copy:
+    content: "{{ app_fhir_cert }}"
+    dest: "{{ cf_app_pyapp_home }}/certstore/{{ app_fhir_cert_subdir }}/{{ app_fhir_cert_name }}"
+    mode: 0755
+    owner: "{{ cf_app_pyapps_user }}"
+    group: "{{ app_group }}"
+  when: "app_fhir_cert_name != '' and app_fhir_cert != '' "
+
+- name: "copy key({{ app_fhir_key_name }}) to certstore [{{ app_fhir_cert_subdir }}]"
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  copy:
+    content: "{{ app_fhir_key }}"
+    dest: "{{ cf_app_pyapp_home }}/certstore/{{ app_fhir_cert_subdir }}/{{ app_fhir_key_name }}"
+    mode: 0755
+    owner: "{{ cf_app_pyapps_user }}"
+    group: "{{ app_group }}"
+  when: "app_fhir_key_name != '' and app_fhir_key != '' "

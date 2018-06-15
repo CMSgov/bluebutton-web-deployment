@@ -1,0 +1,8 @@
+---
+- name: "Set selinux status"
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  selinux:
+    policy: "{{ cf_app_selinux_policy }}"
+    state: "{{ cf_app_selinux_state }}"
+  register: check_selinux

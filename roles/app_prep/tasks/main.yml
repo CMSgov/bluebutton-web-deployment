@@ -1,0 +1,20 @@
+---
+- name: " Create the virtualenv folder"
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  file:
+    dest: "/var/virtualenv"
+    owner: "{{ cf_app_pyapps_user }}"
+    group: "{{ cf_app_pyapps_user }}"
+    mode: 0755
+    state: directory
+
+- name: "Create the app folder"
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  file:
+    dest: "/var/pyapps"
+    owner: "{{ cf_app_pyapps_user }}"
+    group: "{{ cf_app_pyapps_user }}"
+    mode: 0755
+    state: directory

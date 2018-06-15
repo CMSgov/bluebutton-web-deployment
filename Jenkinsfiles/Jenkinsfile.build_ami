@@ -137,7 +137,6 @@ pipeline {
           dir('code') {
             withAwsCli(credentialsId: aws_creds, defaultRegion: 'us-east-1') {
               withCredentials([
-                file(credentialsId: private_key, variable: 'pk'),
                 file(credentialsId: vault_pass, variable: 'vp')
               ]) {
                 sh """
@@ -150,15 +149,14 @@ pipeline {
                   pip install ansible==2.4.2.0
                   pip install boto
 
-                  ansible-playbook playbook/build_ami/main.yml  \
-                    --vault-password-file ${vp} \
-                    --private-key ${pk} \
-                    -e 'git_branch=${params.BRANCH}' \
-                    -e 'env=${params.ENV}' \
-                    -e 'cf_app_instance_type=${params.INSTANCE_CLASS}' \
-                    -e 'build_subnet_id=${params.SUBNET_ID}' \
-                    -e 'ami_app_gold_image=${params.AMI_ID}' \
-                    -e 'release_version=${release_version}'
+                  packer build \
+                    -var 'vault_password_file=${vp}' \
+                    -var 'git_branch=${params.BRANCH}' \
+                    -var 'subnet_id=${params.SUBNET_ID}' \
+                    -var 'env=${params.ENV}' \
+                    -var 'source_ami=${params.AMI_ID}' \
+                    -var 'release_version=${release_version}' \
+                    packer/build-ami.json
                 """
               }
             }
