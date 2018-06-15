@@ -1,0 +1,44 @@
+{
+  "variables": {
+    "release_version": "none",
+    "source_ami": "",
+    "vault_password_file": "",
+    "git_branch": "",
+    "vpc_id": "",
+    "subnet_id": "",
+    "env": ""
+  },
+  "builders": [{
+    "type": "amazon-ebs",
+    "ssh_username": "ec2-user",
+    "instance_type": "m4.large",
+    "region": "us-east-1",
+    "subnet_id": "{{user `subnet_id`}}",
+    "vpc_id": "{{user `vpc_id`}}",
+    "associate_public_ip_address": "false",
+    "source_ami": "{{user `source_ami`}}",
+    "ami_name": "bb-{{user `env`}}-{{user `git_branch`}}-{{isotime \"20060102030405\"}}",
+    "ssh_pty": true,
+    "tags": {
+        "Name": "bb-{{user `env`}}-{{user `git_branch`}}-{{isotime \"20060102030405\"}}",
+        "Application": "BlueButton",
+        "Environment": "{{user `env`}}",
+        "Function": "AppServer",
+        "Layer":  "APP",
+        "Release": "{{user `release_version`}}"
+    }
+  }],
+    "provisioners": [
+        {
+            "type": "ansible",
+            "playbook_file": "playbook/build_ami/main.yml",
+            "ansible_env_vars": [
+              "ANSIBLE_VAULT_PASSWORD_FILE={{user `vault_password_file`}}"
+            ],
+            "extra_arguments": [
+              "-e 'git_branch={{user `git_branch`}}'",
+              "-e 'env={{user `env`}}'"
+            ]
+        }
+    ]
+}
