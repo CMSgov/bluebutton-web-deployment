@@ -383,7 +383,6 @@
   #
   # MyMedicare Authentication Integration
   #
-  medicare_logon: "{{ env_medicare_logon }}"
   sls_token_endpoint: "{{ env_sls_token_endpoint }}"
   sls_userinfo_endpoint: "{{ env_sls_userinfo_endpoint }}"
   medicare_login_uri: "{{ env_medicare_login_uri }}"
