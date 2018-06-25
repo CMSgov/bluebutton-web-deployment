@@ -19,13 +19,3 @@
     owner: root
     group: root
     mode: "u+r"
-
-- name: "write aws credentials for appserver"
-  become_user: "{{ remote_admin_account }}"
-  become: yes
-  template:
-    src: "../templates/root_app_aws_credentials.j2"
-    dest: "/root/.aws/credentials"
-    owner: root
-    group: root
-    mode: "u+r"
