@@ -23,8 +23,7 @@
     - ../../roles/splunk
 
     - ../../roles/selinux # selinux_state
-    # TODO(rnagle): we probably don't need this
-    #- ../../roles/aws # aws_config
+    - ../../roles/aws
     - ../../roles/app_tools
     - ../../roles/app_user
     - ../../roles/app_logs
@@ -35,8 +34,7 @@
 
     - ../../roles/app_prep
     - ../../roles/app_install
-    - ../../roles/app_env
-    - ../../roles/create_env_settings
+    - ../../roles/env_vars
     - ../../roles/new_relic
     - ../../roles/nginx
 
