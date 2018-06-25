@@ -26,6 +26,8 @@ variable "asg_max" {}
 
 variable "asg_desired" {}
 
+variable "app_config_bucket" {}
+
 variable "azs" {
   type = "list"
 }
@@ -37,3 +39,4 @@ variable "ci_cidrs" {
 variable "sns_topic_arn" {
   default = ""
 }
+
