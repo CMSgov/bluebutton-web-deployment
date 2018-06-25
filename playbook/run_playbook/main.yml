@@ -1,5 +1,5 @@
 ---
-- name: Start server for playbook run
+- name: Start instance for playbook to run on
   hosts: localhost
   connection: local
   vars:
@@ -54,43 +54,49 @@
         name: "{{ app_ec2_output.instances[0]['private_ip'] }}"
         groups: run_servers
 
+    - name: Wait 180 seconds, but only start checking after 60 seconds
+      wait_for_connection:
+        delay: 60
+        timeout: 180
+
     - name: "Wait for SSH to become available"
       wait_for:
         port: 22
         host: "{{ app_ec2_output.instances[0]['private_ip'] }}"
         delay: 5
 
-- name: Provision server
+
+- name: Provision EC2 instance
   hosts: run_servers
   remote_user: ec2-user
   gather_facts: no
   vars:
     ansible_ssh_pipelining: no
-    env: "dev"
-    azone: "az1"
-    sub_zone: "app"
-    sg_zone: "appserver"
-    env_az: "{{ env }}-{{ azone }}"
-    env_cf_data_version: "20"
-    env_cf_app_version: "01"
-    splunk_target_layer: "app"
-  vars_files:
-    - "./../../vars/common.yml"
-    - "./../../vault/env/{{ env }}/vault.yml"
-    - "./../../vars/env/{{ env }}/env.yml"
-    - "./../../vars/all_var.yml"
 
-  roles:
-    - ../../roles/base_patch
+    #roles:
+    #- ../../roles/base_patch
+
+
+# Nested playbook import:
+
+- import_playbook: "../{{ playbook }}/main.yml"
+
+
+- name: Decommission EC2 instance
+  hosts: run_servers
+  remote_user: ec2-user
+  gather_facts: no
+  vars:
+    ansible_ssh_pipelining: no
 
   post_tasks:
     - name: Gather instance metadata
       ec2_metadata_facts:
 
-    - name: "Stop the run instance"
+    - name: "Stop the EC2 instance"
       ec2:
         instance_ids: '{{ ansible_ec2_instance_id }}'
-        region: '{{ cf_region }}'
+        region: '{{ ansible_ec2_placement_region }}'
         state: stopped
         wait: yes
       delegate_to: localhost
@@ -98,10 +104,10 @@
     - set_fact:
         ts: "{{lookup('pipe','date +%Y%m%d%H%M%S')}}"
 
-    - name: "Terminate the run instance"
+    - name: "Terminate the EC2 instance"
       ec2:
         instance_ids: '{{ ansible_ec2_instance_id }}'
-        region: '{{ cf_region }}'
+        region: '{{ ansible_ec2_placement_region }}'
         state: absent
         wait: yes
       delegate_to: localhost

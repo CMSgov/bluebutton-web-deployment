@@ -1,0 +1,102 @@
+---
+#  loadtest playbook:
+#  
+#  Tasks performed:
+#  1. Install docker and git on the ephemeral ec2 host.
+#  2. Clone the web-deployment repo
+#  3. Run the load test rig and capture the output/results to a log file
+#  4. Transfer the output to an S3 bucket for retreival later.
+#  
+
+- name: Running LOADTEST playbook
+  hosts: run_servers
+  remote_user: ec2-user
+  gather_facts: no
+  vars:
+    ansible_ssh_pipelining: no
+
+  tasks:
+  - name: "Install git and docker deps"
+    become: yes
+    yum:
+      name: "{{ item }}"
+      state: present
+    with_items:
+    - yum-utils
+    - device-mapper-persistent-data
+    - lvm2
+    - git
+
+  - name: Add docker-ce repository
+    become: yes
+    shell: |
+      yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+      exit 0
+    register: command_result
+  - debug: msg="{{ command_result.stdout_lines }}"
+
+  - name: Enable rhui-REGION-rhel-server-extras repository
+    become: yes
+    shell: |
+      yum-config-manager --enable rhui-REGION-rhel-server-extras
+      exit 0
+    register: command_result
+  - debug: msg="{{ command_result.stdout_lines }}"
+
+  - name: "Install docker-ce"
+    become: yes
+    yum:
+      name: "docker-ce"
+      state: present
+
+  - name: "Start docker service"
+    become: yes
+    service:
+      name: docker
+      state: restarted
+      enabled: yes
+
+  - name: "Add ec2-user to docker group"
+    become: yes
+    user:
+      name: ec2-user
+      groups: docker
+      append: yes
+
+  - name: "GIT | install from : {{ PB_GIT_URL }} branch:{{ PB_BRANCH }}"
+    git:
+      repo: "{{ PB_GIT_URL }}"
+      dest: "bluebutton-web-deployment"
+      version: "{{ PB_BRANCH }}"
+      force: yes
+      clone: yes
+
+  - name: "Run loadtest software and log results"
+    shell: |
+      export BB_CLIENT_ID="{{ PB_CLIENT_ID }}"
+      export BB_CLIENT_SECRET="{{ PB_CLIENT_SECRET }}"
+      export BB_SUB_DOMAIN="{{ PB_SUB_DOMAIN }}"
+      export BB_LOAD_TEST_TYPE="{{ PB_LOAD_TEST_TYPE }}"
+      export BB_NUM_BENES="{{ PB_NUM_BENES }}"
+      export BB_TKNS_WORKERS="{{ PB_TKNS_WORKERS }}"
+      export BB_LOAD_TEST_DURATION="{{ PB_LOAD_TEST_DURATION }}"
+      export BB_LOAD_TEST_HATCH_RATE="{{ PB_LOAD_TEST_HATCH_RATE }}"
+      export BB_LOAD_TEST_MIN_WAIT="{{ PB_LOAD_TEST_MIN_WAIT }}"
+      export BB_LOAD_TEST_MAX_WAIT="{{ PB_LOAD_TEST_MAX_WAIT }}"
+      cd bluebutton-web-deployment/locust
+      date
+      echo "Loadtest variables:"
+      env | grep BB_
+      echo
+      echo
+      dt=$(date +"%Y%M%d%H%M")
+      fn="${dt}_loadtest_results.log"
+      ./run.sh ${BB_LOAD_TEST_TYPE} >${fn} 2>&1
+      date
+      docker ps -a
+      uptime
+      echo "Loadtest results file out:"
+      cat ${fn}
+      exit 0
+    register: command_result
+  - debug: msg="{{ command_result.stdout_lines }}"

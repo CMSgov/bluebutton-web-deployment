@@ -18,11 +18,6 @@ pipeline {
       name: 'PLAYBOOK'
     )
     string(
-      defaultValue: "*/master",
-      description: 'The branch of the deployment repo to use for the playbook run.',
-      name: 'RUN_BRANCH'
-    )
-    string(
       defaultValue: "",
       description: 'The Gold Image AMI id that will be used as the base for app servers.',
       name: 'AMI_ID'
@@ -80,7 +75,7 @@ pipeline {
         checkout([
           $class: 'GitSCM',
           branches: [[
-            name: "${params.RUN_BRANCH}"
+            name: "${env.GIT_BRANCH}"
           ]],
           doGenerateSubmoduleConfigurations: false,
           extensions: [[
@@ -103,6 +98,12 @@ pipeline {
                 file(credentialsId: private_key, variable: 'pk'),
                 file(credentialsId: vault_pass, variable: 'vp')
               ]) {
+
+                def playbook_params
+		playbook_params = ""
+
+                params.each{ k, v -> playbook_params = playbook_params + ( k.indexOf('PB_') == 0 ?  "${k}=${v} " : "" ) }
+
                 sh """
                   virtualenv -ppython3 venv
                   . venv/bin/activate
@@ -116,11 +117,12 @@ pipeline {
                   ansible-playbook playbook/run_playbook/main.yml  \
                     --vault-password-file ${vp} \
                     --private-key ${pk} \
-                    -e 'git_branch=${params.BRANCH}' \
                     -e 'env=${params.ENV}' \
                     -e 'cf_app_instance_type=${params.INSTANCE_CLASS}' \
                     -e 'build_subnet_id=${params.SUBNET_ID}' \
-                    -e 'ami_app_gold_image=${params.AMI_ID}'
+                    -e 'ami_app_gold_image=${params.AMI_ID}' \
+                    -e 'playbook=${PLAYBOOK}' \
+                    -e '${playbook_params}'
                 """
               }
             }
