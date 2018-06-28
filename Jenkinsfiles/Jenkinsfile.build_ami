@@ -149,7 +149,7 @@ pipeline {
                   pip install ansible==2.4.2.0
                   pip install boto
 
-                  packer build \
+                  packer build -color=false \
                     -var 'vault_password_file=${vp}' \
                     -var 'git_branch=${params.BRANCH}' \
                     -var 'subnet_id=${params.SUBNET_ID}' \
