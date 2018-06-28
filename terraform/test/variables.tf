@@ -38,6 +38,8 @@ variable "asg_name" {
   default = ""
 }
 
+variable "app_config_bucket" {}
+
 variable "rds_name" {}
 variable "nat_gw_name" {}
 
