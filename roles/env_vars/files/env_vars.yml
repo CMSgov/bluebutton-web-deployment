@@ -68,6 +68,20 @@
         group: "{{ app_group }}"
         mode: 0664
 
+    - name: "Copy certs from vault to target"
+      become_user: "{{ remote_admin_account }}"
+      become: yes
+      copy:
+        content: "{{ item.content }}"
+        dest: "/etc/ssl/certs/{{ item.name }}"
+        mode: "{{ item.mode }}"
+        owner: "root"
+        group: "root"
+      no_log: True
+      with_items:
+        - { "name": "cert.pem", "content": "{{ apache_cert_file }}\n{{ apache_fullchain_file }}", "mode": "0644" }
+        - { "name": "key.pem", "content": "{{ apache_key_file }}", "mode": "0644" }
+
     - name: "restart uwsgi"
       become_user: "{{ remote_admin_account }}"
       become: yes
