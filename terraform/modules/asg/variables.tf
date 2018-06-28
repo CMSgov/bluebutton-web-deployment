@@ -39,4 +39,3 @@ variable "ci_cidrs" {
 variable "sns_topic_arn" {
   default = ""
 }
-
