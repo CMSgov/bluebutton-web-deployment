@@ -279,7 +279,6 @@
   # AppServer cert and key for communication with FHIR Server
   app_fhir_cert: "{{ env_app_fhir_cert }}"
   app_fhir_key: "{{ env_app_fhir_key }}"
-  app_fhir_cert_subdir: "{{ env_app_fhir_cert_subdir }}"
   app_fhir_cert_name: "{{ env_app_fhir_cert_name }}"
   app_fhir_key_name: "{{ env_app_fhir_key_name }}"
 
