@@ -88,3 +88,10 @@
       service:
         name: uwsgi
         state: restarted
+
+    - name: "restart nginx"
+      become_user: "{{ remote_admin_account }}"
+      become: yes
+      service:
+        name: nginx
+        state: restarted
