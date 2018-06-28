@@ -14,20 +14,6 @@
     dest: /etc/nginx/nginx.conf
     mode: 0644
 
-- name: "copy certs from vault to target"
-  become_user: "{{ remote_admin_account }}"
-  become: yes
-  copy:
-    content: "{{ item.content }}"
-    dest: "/etc/ssl/certs/{{ item.name }}"
-    mode: "{{ item.mode }}"
-    owner: "root"
-    group: "root"
-  no_log: True
-  with_items:
-    - { "name": "cert.pem", "content": "{{ apache_cert_file }}\n{{ apache_fullchain_file }}", "mode": "0644" }
-    - { "name": "key.pem", "content": "{{ apache_key_file }}", "mode": "0644" }
-
 - name: "set permission on nginx log dir"
   become: yes
   become_user: "{{ remote_admin_account }}"

@@ -26,6 +26,8 @@ variable "asg_max" {}
 
 variable "asg_desired" {}
 
+variable "app_config_bucket" {}
+
 variable "azs" {
   type = "list"
 }

@@ -53,6 +53,15 @@ resource "aws_security_group" "ci" {
 ##
 # Launch configuration
 ##
+data "template_file" "user_data" {
+  template = "${file("${path.module}/templates/user_data.tpl")}"
+
+  vars {
+    env    = "${lower(var.env)}"
+    bucket = "${var.app_config_bucket}"
+  }
+}
+
 resource "aws_launch_configuration" "app" {
   security_groups = [
     "${var.app_sg_id}",
@@ -66,6 +75,8 @@ resource "aws_launch_configuration" "app" {
   instance_type               = "${var.instance_type}"
   associate_public_ip_address = false
   name_prefix                 = "bb-${var.stack}-app-"
+  user_data                   = "${data.template_file.user_data.rendered}"
+  iam_instance_profile        = "bb-${lower(var.env)}-app-profile"
 
   lifecycle {
     create_before_destroy = true
