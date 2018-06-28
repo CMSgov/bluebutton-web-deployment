@@ -28,7 +28,6 @@
     - ../../roles/app_user
     - ../../roles/app_logs
     - ../../roles/python34
-    - ../../roles/certstore # install_fhircerts_to_store
     # TODO(rnagle): this is not being used at the moment
     #- ../../roles/swagger_ui_install
 
