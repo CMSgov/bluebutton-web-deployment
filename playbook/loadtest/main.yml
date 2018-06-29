@@ -14,6 +14,10 @@
   gather_facts: no
   vars:
     ansible_ssh_pipelining: no
+    results_fn: "{{ lookup('pipe', 'date +%Y%m%d%H%M') }}_loadtest_results.log"
+    src_results_file: "bluebutton-web-deployment/locust/{{ results_fn }}"
+    dst_results_file: "{{ env }}/{{ results_fn }}"
+
 
   tasks:
   - name: "Install git and docker deps"
@@ -89,14 +93,18 @@
       env | grep BB_
       echo
       echo
-      dt=$(date +"%Y%M%d%H%M")
-      fn="${dt}_loadtest_results.log"
+      fn="{{ results_fn }}"
       ./run.sh ${BB_LOAD_TEST_TYPE} >${fn} 2>&1
       date
-      docker ps -a
       uptime
-      echo "Loadtest results file out:"
-      cat ${fn}
       exit 0
     register: command_result
   - debug: msg="{{ command_result.stdout_lines }}"
+
+  - name: "Put results file to AWS S3 bucket: {{ PB_AWS_S3_BUCKET }} / {{ dst_results_file }}"
+    aws_s3:
+      bucket: "{{ PB_AWS_S3_BUCKET }}"
+      object: "{{ dst_results_file }}"
+      src: "{{ src_results_file }}"
+      mode: put
+

@@ -19,6 +19,11 @@ pipeline {
     )
     string(
       defaultValue: "",
+      description: 'The SSH key ID to use for the ephemeral instance. Required.',
+      name: 'INSTANCE_SSH_KEY_ID'
+    )
+    string(
+      defaultValue: "",
       description: 'The Gold Image AMI id that will be used as the base for app servers.',
       name: 'AMI_ID'
     )
@@ -40,10 +45,10 @@ pipeline {
   }
 
   stages {
-    stage('Ensure PLAYBOOK, ENV, AMI_ID and SUBNET_ID') {
+    stage('Ensure PLAYBOOK, ENV, AMI_ID, SUBNET_ID, and INSTANCE_SSH_KEY_ID') {
       steps {
         sh """
-        if [ -z "${params.PLAYBOOK}" ] || [ -z "${params.ENV}" ] || [ -z "${params.AMI_ID}" ] || [ -z "${params.SUBNET_ID}" ]
+        if [ -z "${params.PLAYBOOK}" ] || [ -z "${params.ENV}" ] || [ -z "${params.AMI_ID}" ] || [ -z "${params.SUBNET_ID}" || [ -z "${params.INSTANCE_SSH_KEY_ID}" ]
         then
           exit 1
         fi
@@ -65,7 +70,7 @@ pipeline {
     stage('Set private key file') {
       steps {
         script {
-          private_key = "${params.ENV}-key"
+          private_key = "${params.INSTANCE_SSH_KEY_ID}"
         }
       }
     }
@@ -98,7 +103,6 @@ pipeline {
                 file(credentialsId: private_key, variable: 'pk'),
                 file(credentialsId: vault_pass, variable: 'vp')
               ]) {
-
                 def playbook_params
 		playbook_params = ""
 
