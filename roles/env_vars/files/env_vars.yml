@@ -62,7 +62,7 @@
       become_user: "{{ remote_admin_account }}"
       become: yes
       template:
-        src: "{{ root_lookup.files[0].path | dirname }}/roles/create_env_settings/templates/env.j2"
+        src: "{{ root_lookup.files[0].path | dirname }}/roles/env_vars/templates/env.j2"
         dest: "{{ install_root }}/.env"
         owner: "{{ app_owner }}"
         group: "{{ app_group }}"
