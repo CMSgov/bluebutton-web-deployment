@@ -63,3 +63,35 @@ WARNING: the only acceptable method of deploying to upper environments (e.g., `I
 It is also possible that, if code _is_ refreshed on `IMPL` or `PROD` instances, if the autoscaling group adds a new instance to meet higher demand, the newest instance will be running a stale version of the application.
 
 TL;DR: do not deploy to `IMPL` or `PROD` using this strategy.
+
+
+### Run a nested playbook on an ephemeral EC2 instance
+
+See: [run_playbook](https://cloudbeesjenkins.cms.gov/dev-master/job/Blue%20Button/job/run%20playbook/build?delay=0sec) Jenkins job
+
+Parameters:
+
+- PLAYBOOK: The name of the nested playbook to run with in the EC2 ephemeral instance.
+- EC2_KEYPAIR_NAME: The AWS EC2 keypair name to use for the EC2 instance.
+- INSTANCE_SSH_KEY_ID: The CBJ credentials ID with the SSH key .pem file to use for the EC2 instance.
+- AMI_ID: The EC2 Image AMI id that will be used for the EC2 ephemeral instance.
+- SUBNET_ID: The subnet ID where the EC2 instance will be launched.
+- INSTANCE_CLASS: The class/size of the ec2 instance to launch.
+- ENV: The environment to deploy to. 
+
+Usage:
+
+The run_playbook Jenkins CB project and run_playbook Ansible playbook work together to provide a method for running a nested playbook with in an ephemeral EC2 instance.
+
+1. Although job parameters can be filled in with appropriate values and built, this is meant to be used as a downstream (sub-) project.
+2. An upstream project references this sub-project under the built-triggers (projects to build) section as "Blue Button/run playbook"
+3. An upstream project also defines the job parameters in the build predefined parameters section specific to the job run needs.
+4. The parameters specific to the nested playbook are configured in this upstream project's "This project is parameterized" section. This is for setting the project's build parameters. 
+5. These playbook parameters are prefixed by "PB_" so that they can be passed through to the nested playbook via ansible, without a need to custom configure the run_playbook sub-project. 
+6. When adding new playbooks to be run under an ephemeral EC2 instance, you will only need to custom configure a new upstream project, with no need to confgure the run_playbook sub-project.  
+
+For an example, see the loadtest upstream project: [run_playbook (loadtest)](https://cloudbeesjenkins.cms.gov/dev-master/job/Blue%20Button/job/run%20playbook%20(loadtest)/build?delay=0sec) Jenkins job
+
+This is currently restricted to running in the DEV and TEST enviornments only.
+
+TL;DR: do not deploy to `IMPL` or `PROD` using this strategy.

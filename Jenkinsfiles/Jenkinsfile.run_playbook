@@ -14,22 +14,27 @@ pipeline {
   parameters {
     string(
       defaultValue: "",
-      description: 'The playbook to run in instance. Required.',
+      description: 'The name of the nested playbook to run with in the EC2 ephemeral instance.',
       name: 'PLAYBOOK'
     )
     string(
       defaultValue: "",
-      description: 'The SSH key ID to use for the ephemeral instance. Required.',
+      description: 'The AWS EC2 keypair name to use for the EC2 instance.',
+      name: 'EC2_KEYPAIR_NAME'
+    )
+    string(
+      defaultValue: "",
+      description: 'The CBJ credentials ID with the SSH key .pem file to use for the EC2 instance.',
       name: 'INSTANCE_SSH_KEY_ID'
     )
     string(
       defaultValue: "",
-      description: 'The Gold Image AMI id that will be used as the base for app servers.',
+      description: 'The EC2 Image AMI id that will be used for the EC2 ephemeral instance.',
       name: 'AMI_ID'
     )
     string(
       defaultValue: "",
-      description: 'The subnet ID where the build server will be launched.',
+      description: 'The subnet ID where the EC2 instance will be launched.',
       name: 'SUBNET_ID'
     )
     string(
@@ -39,16 +44,17 @@ pipeline {
     )
     choice(
       choices: 'dev\ntest',
-      description: 'The environment to deploy to. Required.',
+      description: 'The environment to deploy to.',
       name: 'ENV'
     )
   }
 
   stages {
-    stage('Ensure PLAYBOOK, ENV, AMI_ID, SUBNET_ID, and INSTANCE_SSH_KEY_ID') {
+    stage('Ensure PLAYBOOK, ENV, AMI_ID, SUBNET_ID, EC2_KEYPAIR_NAME and INSTANCE_SSH_KEY_ID') {
       steps {
         sh """
-        if [ -z "${params.PLAYBOOK}" ] || [ -z "${params.ENV}" ] || [ -z "${params.AMI_ID}" ] || [ -z "${params.SUBNET_ID}" || [ -z "${params.INSTANCE_SSH_KEY_ID}" ]
+        if [ -z "${params.PLAYBOOK}" ] || [ -z "${params.ENV}" ] || [ -z "${params.AMI_ID}" ] || [ -z "${params.SUBNET_ID}" || 
+[ -z "${params.INSTANCE_SSH_KEY_ID}" ] || [ -z "${params.EC2_KEYPAIR_NAME}" ]
         then
           exit 1
         fi
@@ -126,6 +132,7 @@ pipeline {
                     -e 'build_subnet_id=${params.SUBNET_ID}' \
                     -e 'ami_app_gold_image=${params.AMI_ID}' \
                     -e 'playbook=${PLAYBOOK}' \
+                    -e 'ec2_keypair_name=${params.EC2_KEYPAIR_NAME}' \
                     -e '${playbook_params}'
                 """
               }

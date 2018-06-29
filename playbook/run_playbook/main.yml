@@ -24,7 +24,7 @@
         instance_type: "{{ cf_app_instance_type }}"
         group: "BB-SG-{{ env|upper }}-{{ sg_zone|upper }}-ALLZONE" # Change the security group name here
         image: "{{ ami_app_gold_image }}" # Change the AMI, from which you want to launch the server
-        key_name: "{{ cf_app_key_name }}" # Change the keypair name
+        key_name: "{{ ec2_keypair_name }}" # Change the keypair name
         region: "{{ aws_region }}"
         tenancy: "dedicated"
         vpc_subnet_id: "{{ build_subnet_id }}"
@@ -80,7 +80,7 @@
 # Nested playbook import:
 
 - import_playbook: "../{{ playbook }}/main.yml"
-
+  ignore_errors: yes
 
 - name: Decommission EC2 instance
   hosts: run_servers
