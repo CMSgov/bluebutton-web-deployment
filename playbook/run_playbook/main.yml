@@ -73,14 +73,15 @@
   vars:
     ansible_ssh_pipelining: no
 
-    #roles:
-    #- ../../roles/base_patch
+    roles:
+    - ../../roles/base_patch
 
 
 # Nested playbook import:
 
 - import_playbook: "../{{ playbook }}/main.yml"
   ignore_errors: yes
+
 
 - name: Decommission EC2 instance
   hosts: run_servers

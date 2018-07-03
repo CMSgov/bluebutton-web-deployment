@@ -53,7 +53,7 @@ pipeline {
     stage('Ensure PLAYBOOK, ENV, AMI_ID, SUBNET_ID, EC2_KEYPAIR_NAME and INSTANCE_SSH_KEY_ID') {
       steps {
         sh """
-        if [ -z "${params.PLAYBOOK}" ] || [ -z "${params.ENV}" ] || [ -z "${params.AMI_ID}" ] || [ -z "${params.SUBNET_ID}" || 
+        if [ -z "${params.PLAYBOOK}" ] || [ -z "${params.ENV}" ] || [ -z "${params.AMI_ID}" ] || [ -z "${params.SUBNET_ID}" ] || 
 [ -z "${params.INSTANCE_SSH_KEY_ID}" ] || [ -z "${params.EC2_KEYPAIR_NAME}" ]
         then
           exit 1
@@ -123,6 +123,7 @@ pipeline {
 
                   pip install ansible==2.4.2.0
                   pip install boto
+                  pip install boto3
 
                   ansible-playbook playbook/run_playbook/main.yml  \
                     --vault-password-file ${vp} \
@@ -133,6 +134,8 @@ pipeline {
                     -e 'ami_app_gold_image=${params.AMI_ID}' \
                     -e 'playbook=${PLAYBOOK}' \
                     -e 'ec2_keypair_name=${params.EC2_KEYPAIR_NAME}' \
+                    -e 'global_aws_access_key=${env.AWS_ACCESS_KEY_ID}' \
+                    -e 'global_aws_secret_key=${env.AWS_SECRET_ACCESS_KEY}' \
                     -e '${playbook_params}'
                 """
               }
