@@ -33,6 +33,7 @@
         wait: yes
         wait_timeout: 500
         user_data: "{{ lookup('file', 'user_data.sh') }}"
+        instance_profile_name: "bb-{{ env }}-ephemeral-profile"
 
         # tags to instance_tags
         instance_tags:

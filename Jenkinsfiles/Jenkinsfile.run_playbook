@@ -134,8 +134,6 @@ pipeline {
                     -e 'ami_app_gold_image=${params.AMI_ID}' \
                     -e 'playbook=${PLAYBOOK}' \
                     -e 'ec2_keypair_name=${params.EC2_KEYPAIR_NAME}' \
-                    -e 'global_aws_access_key=${env.AWS_ACCESS_KEY_ID}' \
-                    -e 'global_aws_secret_key=${env.AWS_SECRET_ACCESS_KEY}' \
                     -e '${playbook_params}'
                 """
               }

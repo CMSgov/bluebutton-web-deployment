@@ -20,8 +20,6 @@
     aws_access_key: "{{ hostvars['localhost'] }}"
 
   environment:
-    AWS_ACCESS_KEY_ID: "{{ global_aws_access_key }}" 
-    AWS_SECRET_ACCESS_KEY: "{{ global_aws_secret_key }}" 
     BB_CLIENT_ID: "{{ PB_CLIENT_ID }}"
     BB_CLIENT_SECRET: "{{ PB_CLIENT_SECRET }}"
     BB_SUB_DOMAIN: "{{ PB_SUB_DOMAIN }}"
@@ -117,6 +115,4 @@
         object: "{{ dst_results_file }}"
         src: "{{ src_results_file }}"
         mode: put
-        aws_access_key: "{{ global_aws_access_key }}"
-        aws_secret_key: "{{ global_aws_secret_key }}"
       ignore_errors: yes
