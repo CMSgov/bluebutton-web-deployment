@@ -78,10 +78,30 @@
     - ../../roles/base_patch
 
 
+- name: "playbook_debug_fail before nested playbook if set = 1"
+  hosts: localhost
+  connection: local
+
+  tasks:
+    - name: "playbook_debug_fail before nested playbook if set = 1"
+      fail: msg="Fail out early to skip remaining tasks and leave instance running."
+      when: playbook_debug_fail == "1"
+
+
 # Nested playbook import:
 
 - import_playbook: "../{{ playbook }}/main.yml"
   ignore_errors: yes
+
+
+- name: "playbook_debug_fail after nested playbook if set = 2"
+  hosts: localhost
+  connection: local
+
+  tasks:
+    - name: "playbook_debug_fail after nested playbook if set = 2"
+      fail: msg="Fail out early to skip remaining tasks and leave instance running."
+      when: playbook_debug_fail == "2"
 
 
 - name: Decommission EC2 instance

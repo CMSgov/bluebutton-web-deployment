@@ -29,6 +29,11 @@ pipeline {
     )
     string(
       defaultValue: "",
+      description: 'Set to 0=normal operation, 1=fail before running nested playbook, 2=fail after nested playbook. Note: 1 and 2 do not terminate the instance for debugging purposes.',
+      name: 'PLAYBOOK_DEBUG_FAIL'
+    )
+    string(
+      defaultValue: "",
       description: 'The EC2 Image AMI id that will be used for the EC2 ephemeral instance.',
       name: 'AMI_ID'
     )
@@ -133,6 +138,7 @@ pipeline {
                     -e 'build_subnet_id=${params.SUBNET_ID}' \
                     -e 'ami_app_gold_image=${params.AMI_ID}' \
                     -e 'playbook=${PLAYBOOK}' \
+                    -e 'playbook_debug_fail=${PLAYBOOK_DEBUG_FAIL}' \
                     -e 'ec2_keypair_name=${params.EC2_KEYPAIR_NAME}' \
                     -e '${playbook_params}'
                 """
