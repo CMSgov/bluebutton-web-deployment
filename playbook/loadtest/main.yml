@@ -99,11 +99,14 @@
         echo
         echo
         fn="{{ results_fn }}"
-        ./run.sh ${BB_LOAD_TEST_TYPE} >${fn} 2>&1
         date
-        tail -n 50 ${fn}
+        ./run.sh ${BB_LOAD_TEST_TYPE} >${fn} 2>&1 
+        date
         exit 0
       register: command_result
+      # Added async to resolve SSH connection/time-out issue after long running shell process.
+      async: 7200
+      poll: 10
       ignore_errors: yes
     - debug: msg="{{ command_result.stdout_lines }}"
 
