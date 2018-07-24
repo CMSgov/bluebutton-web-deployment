@@ -39,6 +39,7 @@ docker run --rm -it bb_tkns \
   -id $BB_CLIENT_ID \
   -secret $BB_CLIENT_SECRET \
   -url https://${BB_SUB_DOMAIN} \
+  -prep-url ${BB_PREP_URL} \
   -n ${BB_NUM_BENES:-4} > tkns.txt
 
 echo "Run locust tests..."
