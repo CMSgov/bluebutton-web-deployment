@@ -42,6 +42,11 @@ docker run --rm -it bb_tkns \
   -prep-url ${BB_PREP_URL} \
   -n ${BB_NUM_BENES:-4} > tkns.txt
 
+echo "Using access tokens..."
+echo "---"
+cat tkns.txt
+echo "---"
+
 echo "Run locust tests..."
 docker run \
   -v "$(pwd):/code" \
