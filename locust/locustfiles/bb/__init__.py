@@ -42,7 +42,7 @@ class UserBehavior(TaskSet):
 
         # Get patient info
         response = self.client.get("%s%s" % (base_url, '/v1/connect/userinfo'))
-        self.patient = json.loads(response.content).get('patient')
+        self.patient = response.json().get('patient')
 
         # Revoke the access token when we're done
         events.quitting += self.quitting
