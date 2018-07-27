@@ -34,7 +34,7 @@ docker build -f ./Dockerfiles/Dockerfile.tkns -t bb_tkns .
 docker build -f ./Dockerfiles/Dockerfile.locust -t bb_locust .
 
 echo "Get access tokens..."
-docker run --rm -it bb_tkns \
+docker run --rm -t bb_tkns \
   -w ${BB_TKNS_WORKERS:-2} \
   -id $BB_CLIENT_ID \
   -secret $BB_CLIENT_SECRET \
@@ -56,7 +56,7 @@ docker run \
   -e BB_LOAD_TEST_MAX_WAIT=${BB_LOAD_TEST_MAX_WAIT:-5000} \
   -e BB_CLIENT_ID=${BB_CLIENT_ID} \
   -e BB_CLIENT_SECRET=${BB_CLIENT_SECRET} \
-  --rm -it bb_locust \
+  --rm -t bb_locust \
   --host https://${BB_SUB_DOMAIN} \
   --no-web \
   --only-summary \
