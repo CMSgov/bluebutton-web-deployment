@@ -156,6 +156,15 @@ error_collector.enabled = true
 # ignore. The exception name should be of the form 'module:class'.
 error_collector.ignore_errors =
 
+# Lists HTTP status codes which the agent should ignore rather
+# than record as errors. List additional status codes as integers
+# separated by spaces, and specify ranges with a hyphen - separator
+# between the start and end values. To whitelist one of the default
+# codes, preface the code with an exclamation point !.
+# This setting is only compatible with some web frameworks, as some
+# frameworks do not use exceptions to return HTTP responses.
+error_collector.ignore_status_codes = 401 403 405
+
 # Browser monitoring is the Real User Monitoring feature of the UI.
 # For those Python web frameworks that are supported, this
 # setting enables the auto-insertion of the browser monitoring
