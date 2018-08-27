@@ -48,15 +48,15 @@
   become: yes
   shell: yum update-minimal --security -y
 
-- name: "add amazon ntp server to chrony.conf"
+- name: "add amazon ntp server to ntp.conf"
   lineinfile:
-    path: /etc/chrony.conf
+    path: /etc/ntp.conf
     insertafter: EOF
     line: 'server 169.254.169.123 prefer iburst'
   become: yes
 
-- name: "restart chronyd"
+- name: "restart ntpd"
   service:
-    name: chronyd
+    name: ntpd
     state: restarted
   become: yes
