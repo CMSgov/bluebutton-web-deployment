@@ -66,7 +66,7 @@
         dest: "{{ install_root }}/.env"
         owner: "{{ app_owner }}"
         group: "{{ app_group }}"
-        mode: 0664
+        mode: 0640
 
     - name: Copy certs from vault to target
       become_user: "{{ remote_admin_account }}"
@@ -79,8 +79,8 @@
         group: "root"
       no_log: True
       with_items:
-        - { "name": "cert.pem", "content": "{{ apache_cert_file }}\n{{ apache_fullchain_file }}", "mode": "0644" }
-        - { "name": "key.pem", "content": "{{ apache_key_file }}", "mode": "0644" }
+        - { "name": "cert.pem", "content": "{{ apache_cert_file }}\n{{ apache_fullchain_file }}", "mode": "0640" }
+        - { "name": "key.pem", "content": "{{ apache_key_file }}", "mode": "0640" }
 
     - name: "Copy cert({{ app_fhir_cert_name }}) to certstore"
       become_user: "{{ remote_admin_account }}"
@@ -88,7 +88,7 @@
       copy:
         content: "{{ app_fhir_cert }}"
         dest: "{{ cf_app_pyapp_home }}/certstore/{{ app_fhir_cert_name }}"
-        mode: 0755
+        mode: 0640
         owner: "{{ cf_app_pyapps_user }}"
         group: "{{ app_group }}"
 
@@ -98,7 +98,7 @@
       copy:
         content: "{{ app_fhir_key }}"
         dest: "{{ cf_app_pyapp_home }}/certstore/{{ app_fhir_key_name }}"
-        mode: 0755
+        mode: 0640
         owner: "{{ cf_app_pyapps_user }}"
         group: "{{ app_group }}"
 
