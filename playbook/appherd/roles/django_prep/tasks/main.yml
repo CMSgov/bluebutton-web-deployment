@@ -18,6 +18,9 @@
     app_path: "{{ install_root }}/{{ project_name }}/"
     virtualenv: "{{ venv }}"
   when: ( migrate is defined ) and ( migrate == 'yes' )
+  register: output
+  
+- debug: var=output.stdout_lines
 
 - name: "Add Group roles to database"
   become_user: "{{ remote_admin_account }}"
