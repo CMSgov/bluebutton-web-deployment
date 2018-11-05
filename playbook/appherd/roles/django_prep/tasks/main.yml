@@ -17,8 +17,8 @@
     command: migrate
     app_path: "{{ install_root }}/{{ project_name }}/"
     virtualenv: "{{ venv }}"
+    register: output
   when: ( migrate is defined ) and ( migrate == 'yes' )
-  register: output
 
 - debug: var=output.stdout_lines
 
