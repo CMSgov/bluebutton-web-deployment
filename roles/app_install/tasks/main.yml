@@ -4,6 +4,11 @@
   become: yes
   shell: "cd /var/virtualenv; {{ python_bin_dir }}/python{{ python_ver }} -m venv {{ project_dir }}"
 
+- name: Ensure group "www-data" exists
+  group:
+    name: www-data
+    state: present
+
 - name: "Set permissions to application code"
   become_user: "{{ remote_admin_account }}"
   become: yes
@@ -15,7 +20,7 @@
     group: "{{ app_group }}"
     mode: 0755
 
-- name: "set ownership to pyapps:apache ({{ cf_app_pyapps_user }}:{{ app_group }})"
+- name: "set ownership to pyapps:www-data ({{ cf_app_pyapps_user }}:{{ app_group }})"
   become_user: "{{ remote_admin_account }}"
   become: yes
   file:

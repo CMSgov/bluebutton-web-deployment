@@ -120,7 +120,7 @@
   # application owner: pyapps
   app_owner: "pyapps"
   # application group: apache
-  app_group: "apache"
+  app_group: "www-data"
 
   ### External Internet Domain Name for the platform
   external_dns_name: "{{ env_external_dns_name }}"
