@@ -80,6 +80,7 @@
     virtualenv: "{{ venv }}"
 
 - import_tasks: ./../appherd/roles/create_certstore/tasks/main.yml
+- import_tasks: ./../appherd/roles/create_self_signed_cert/tasks/main.yml
 
 # change ownership of files
 - name: "Update file ownership"
