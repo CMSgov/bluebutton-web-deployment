@@ -5,8 +5,10 @@
   shell: "cd /var/virtualenv; {{ python_bin_dir }}/python{{ python_ver }} -m venv {{ project_dir }}"
 
 - name: Ensure group "www-data" exists
+  become_user: "{{ remote_admin_account }}"
+  become: yes
   group:
-    name: www-data
+    name: "{{ app_group }}"
     state: present
 
 - name: "Set permissions to application code"
