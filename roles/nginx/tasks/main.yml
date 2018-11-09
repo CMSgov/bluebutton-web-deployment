@@ -31,7 +31,7 @@
     state: present
   with_items:
     - uwsgi
-    - uwsgi-plugin-python34
+    - uwsgi-plugin-python36
 
 - name: "create sock file"
   become_user: "{{ remote_admin_account }}"

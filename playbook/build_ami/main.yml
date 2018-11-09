@@ -27,7 +27,7 @@
     - ../../roles/app_tools
     - ../../roles/app_user
     - ../../roles/app_logs
-    - ../../roles/python34
+    - ../../roles/python
     # TODO(rnagle): this is not being used at the moment
     #- ../../roles/swagger_ui_install
 

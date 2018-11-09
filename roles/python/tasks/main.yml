@@ -5,13 +5,13 @@
 # download and install python3
 # Check for python version
 
-- name: "Install Python 3.4"
+- name: "Install Python 3.6"
   become_user: "{{ remote_admin_account }}"
   become: yes
   yum:
     pkg: "{{ item }}"
     state: installed
   with_items:
-    - python34
-    - python34-devel
+    - python36
+    - python36-devel
 
