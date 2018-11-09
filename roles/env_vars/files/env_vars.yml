@@ -79,8 +79,8 @@
         group: "root"
       no_log: True
       with_items:
-        - { "name": "cert.pem", "content": "{{ apache_cert_file }}\n{{ apache_fullchain_file }}", "mode": "0640" }
-        - { "name": "key.pem", "content": "{{ apache_key_file }}", "mode": "0640" }
+        - { "name": "cert.pem", "content": "{{ www_cert_file }}\n{{ www_fullchain_file }}", "mode": "0640" }
+        - { "name": "key.pem", "content": "{{ www_key_file }}", "mode": "0640" }
 
     - name: "Copy cert({{ app_fhir_cert_name }}) to certstore"
       become_user: "{{ remote_admin_account }}"

@@ -119,7 +119,7 @@
 
   # application owner: pyapps
   app_owner: "pyapps"
-  # application group: apache
+  # application group: nginx
   app_group: "www-data"
 
   ### External Internet Domain Name for the platform
@@ -270,11 +270,11 @@
   app_extra_volume_1: "{{ env_app_extra_volume_1 }}"
   app_extra_volume_2: "{{ env_app_extra_volume_2 }}"
 
-  # Apache cert, key and fullchain files
-  # Assigned Certificates and Keys to be copied to /etc/httpd/ssl/certs
-  apache_cert_file: "{{ env_apache_cert_file }}"
-  apache_key_file: "{{ env_apache_key_file }}"
-  apache_fullchain_file: "{{ env_apache_fullchain_file }}"
+  # Nginx cert, key and fullchain files
+  # Assigned Certificates and Keys to be copied to /etc/ssl/certs
+  env_www_cert_file: "{{ vault_env_www_cert_file }}"
+  env_www_key_file: "{{ vault_env_www_key_file }}"
+  env_www_fullchain_file: "{{ vault_env_www_fullchain_file }}"
 
   # AppServer cert and key for communication with FHIR Server
   app_fhir_cert: "{{ env_app_fhir_cert }}"
