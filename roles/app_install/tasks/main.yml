@@ -67,7 +67,7 @@
   become: yes
   pip:
     name: boto3
-    version: 1.9.43
+    version: 1.9.42
     state: present
     extra_args: " --upgrade {{ pip_extra_args }} "
     virtualenv: "{{ venv }}"
