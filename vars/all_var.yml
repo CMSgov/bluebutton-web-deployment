@@ -272,9 +272,9 @@
 
   # Nginx cert, key and fullchain files
   # Assigned Certificates and Keys to be copied to /etc/ssl/certs
-  env_www_cert_file: "{{ env_www_cert_file }}"
-  env_www_key_file: "{{ env_www_key_file }}"
-  env_www_fullchain_file: "{{ env_www_fullchain_file }}"
+  www_cert_file: "{{ env_www_cert_file }}"
+  www_key_file: "{{ env_www_key_file }}"
+  www_fullchain_file: "{{ env_www_fullchain_file }}"
 
   # AppServer cert and key for communication with FHIR Server
   app_fhir_cert: "{{ env_app_fhir_cert }}"
