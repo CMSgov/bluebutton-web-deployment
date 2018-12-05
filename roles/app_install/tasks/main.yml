@@ -50,6 +50,15 @@
     version: "{{ git_branch }}"
   register: git_history
 
+- name: "clone bluebutton-css to hhs_oauth_server app base directory"
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  git:
+    repo: "{{ css_repo }}"
+    dest: "{{ app_dir }}"
+    force: yes
+    clone: yes
+
 - name: "set permissions to application code ( {{ cf_app_pyapps_user }}:{{ app_group }} )"
   become_user: "{{ remote_admin_account }}"
   become: yes
