@@ -17,10 +17,7 @@
     command: migrate
     app_path: "{{ install_root }}/{{ project_name }}/"
     virtualenv: "{{ venv }}"
-  register: output
   when: ( migrate is defined ) and ( migrate == 'yes' )
-
-- debug: var=output.stdout_lines
 
 - name: "Add Group roles to database"
   become_user: "{{ remote_admin_account }}"
@@ -64,6 +61,8 @@
   become_user: "{{ remote_admin_account }}"
   become: yes
   run_once: yes
+  environment:
+    DJANGO_DOTENV_FILE: "{{ install_root }}"
   django_manage:
     command: collectstatic
     app_path: "{{ install_root }}/{{ project_name }}/"
