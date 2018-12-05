@@ -55,7 +55,7 @@
   become: yes
   git:
     repo: "{{ css_repo }}"
-    dest: "{{ install_root }}/{{ project_name }}"
+    dest: "{{ install_root }}/{{ project_name }}/{{ css_dir }}"
     force: yes
     clone: yes
 

@@ -109,6 +109,9 @@
   # the git repository URL for the CSS repo
   css_repo: "{{ env_css_repo }}"
 
+  # the directory to clone css repo to
+  css_dir: "{{ env_css_dir }}"
+
   # DEBUG Mode
   # False in IMPL / PROD
   django_debug: "{{ env_django_debug }}"
