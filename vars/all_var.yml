@@ -109,9 +109,6 @@
   # the git repository URL for the CSS repo
   css_repo: "{{ env_css_repo }}"
 
-  # the directory of the hhs_oauth_server app
-  app_dir: "{{ env_app_dir }}"
-
   # DEBUG Mode
   # False in IMPL / PROD
   django_debug: "{{ env_django_debug }}"
