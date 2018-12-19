@@ -179,7 +179,9 @@ pipeline {
         dir('tfenv') {
           script {
             sh """
+              if ! bin/tfenv list | grep -qa -f ../code/terraform-version; then
               bin/tfenv install
+              fi
               terraform --version
             """
           }
