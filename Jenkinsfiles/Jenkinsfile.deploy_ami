@@ -140,6 +140,18 @@ pipeline {
             url: 'https://github.com/CMSgov/bluebutton-web-deployment.git'
           ]]
         ])
+        checkout([
+          $class: 'GitSCM',
+          branches: [[
+            name: "*/master"
+          ]],
+          doGenerateSubmoduleConfigurations: false,
+          extensions: [[
+            $class: 'RelativeTargetDirectory',
+            relativeTargetDir: 'tfenv'
+          ]],
+          userRemoteConfigs: [[
+            url: 'https://github.com/tfutils/tfenv.git']]])
       }
     }
 
@@ -156,6 +168,19 @@ pipeline {
 
               pip install ansible==2.4.2.0
               pip install boto
+            """
+          }
+        }
+      }
+    }
+
+    stage('Install Terraform Version') {
+      steps {
+        dir('tfenv') {
+          script {
+            sh """
+              bin/tfenv install
+              terraform --version
             """
           }
         }
