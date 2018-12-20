@@ -88,7 +88,7 @@ resource "aws_launch_configuration" "app" {
 ##
 resource "aws_autoscaling_group" "main" {
   availability_zones        = ["${var.azs}"]
-  name                      = "bb-${var.stack}-app-${aws_launch_configuration.app.name}"
+  name                      = "asg-${aws_launch_configuration.app.name}"
   desired_capacity          = "${var.asg_desired}"
   max_size                  = "${var.asg_max}"
   min_size                  = "${var.asg_min}"
