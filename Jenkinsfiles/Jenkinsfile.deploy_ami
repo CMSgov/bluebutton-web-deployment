@@ -124,39 +124,89 @@ pipeline {
       }
     }
 
-    stage('Checkout') {
-      steps {
-        checkout([
-          $class: 'GitSCM',
-          branches: [[
-            name: "${params.DEPLOY_BRANCH}"
-          ]],
-          doGenerateSubmoduleConfigurations: false,
-          extensions: [[
-            $class: 'RelativeTargetDirectory',
-            relativeTargetDir: 'code'
-          ]],
-          userRemoteConfigs: [[
-            url: 'https://github.com/CMSgov/bluebutton-web-deployment.git'
-          ]]
-        ])
+    stage('Checkout Repos') {
+      parallel {
+        stage('Checkout Deployment Repo') {
+          steps {
+            checkout([
+              $class: 'GitSCM',
+              branches: [[
+                name: "${params.DEPLOY_BRANCH}"
+              ]],
+              doGenerateSubmoduleConfigurations: false,
+              extensions: [[
+                $class: 'RelativeTargetDirectory',
+                relativeTargetDir: 'code'
+              ]],
+              userRemoteConfigs: [[
+                url: 'https://github.com/CMSgov/bluebutton-web-deployment.git'
+              ]]
+            ])
+          }
+        }
+        stage('Checkout TFENV Repo') {
+          steps {
+            checkout([
+              $class: 'GitSCM',
+              branches: [[
+                name: "*/master"
+              ]],
+              doGenerateSubmoduleConfigurations: false,
+              extensions: [[
+                $class: 'RelativeTargetDirectory',
+                relativeTargetDir: 'tfenv'
+              ]],
+              userRemoteConfigs: [[
+                url: 'https://github.com/tfutils/tfenv.git'
+              ]]
+            ])
+          }
+        }
       }
     }
 
     stage('Install requirements') {
-      steps {
-        dir('code') {
-          script {
-            sh """
-              virtualenv -ppython2.7 venv
-              . venv/bin/activate
+      parallel {
+        stage('Upgrade PIP and CFFI') {
+          steps {
+            dir('code') {
+              script {
+                sh """
+                  virtualenv -ppython2.7 venv1
+                  . venv1/bin/activate
 
-              pip install --upgrade pip
-              pip install --upgrade cffi
+                  pip install --upgrade pip
+                  pip install --upgrade cffi
+                """
+              }
+            }
+          }
+        }
+        stage('Install Ansible and Boto') {
+          steps {
+            dir('code') {
+              script {
+                sh """
+                  virtualenv -ppython2.7 venv2
+                  . venv2/bin/activate
 
-              pip install ansible==2.4.2.0
-              pip install boto
-            """
+                  pip install ansible==2.4.2.0
+                  pip install boto
+                """
+              }
+            }
+          }
+        }
+        stage('Install Terraform Version') {
+          steps {
+            dir('tfenv') {
+              script {
+                sh """
+                  bin/tfenv install
+                  terraform --version
+                """
+              }
+            }
           }
         }
       }
@@ -259,7 +309,7 @@ pipeline {
                 file(credentialsId: vault_pass, variable: 'vp')
               ]) {
                 sh """
-                  . venv/bin/activate
+                  . venv1/bin/activate
 
                   rm -Rf ./tmp
 
