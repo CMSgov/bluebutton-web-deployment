@@ -307,7 +307,7 @@ pipeline {
                 file(credentialsId: vault_pass, variable: 'vp')
               ]) {
                 sh """
-                  . venv2/bin/activate
+                  . venv/bin/activate
 
                   rm -Rf ./tmp
 
