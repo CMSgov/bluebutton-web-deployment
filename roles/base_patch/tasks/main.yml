@@ -25,12 +25,12 @@
   args:
     executable: /bin/bash
 
-- name: "kill yum"
+/*- name: "kill yum"
   become: yes
   become_user: "{{ remote_admin_account }}"
   shell: |
     kill "$(cat /var/run/yum.pid)"
-  ignore_errors: yes
+  ignore_errors: yes */
 
 - name: "disable boot-time yum update"
   become: yes
