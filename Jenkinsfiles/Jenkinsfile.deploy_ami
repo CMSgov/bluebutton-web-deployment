@@ -124,7 +124,7 @@ pipeline {
       }
     }
 
-    stage('Checkout Repos') {
+    stage('Checkout Repo') {
       parallel {
         stage('Checkout Deployment Repo') {
           steps {
@@ -166,47 +166,45 @@ pipeline {
     }
 
     stage('Install requirements') {
-      parallel {
-        stage('Upgrade PIP and CFFI') {
-          steps {
-            dir('code') {
-              script {
-                sh """
-                  virtualenv -ppython2.7 venv1
-                  . venv1/bin/activate
+      steps {
+        dir('code') {
+          script {
+            sh """
+              virtualenv -ppython2.7 venv
+              . venv/bin/activate
 
-                  pip install --upgrade pip
-                  pip install --upgrade cffi
-                """
-              }
-            }
+              pip install --upgrade pip
+              pip install --upgrade cffi
+            """
           }
         }
-        stage('Install Ansible and Boto') {
-          steps {
-            dir('code') {
-              script {
-                sh """
-                  virtualenv -ppython2.7 venv2
-                  . venv2/bin/activate
+      }
+    }
 
-                  pip install ansible==2.4.2.0
-                  pip install boto
-                """
-              }
-            }
+    stage('Install Ansible and Boto') {
+      steps {
+        dir('code') {
+          script {
+            sh """
+              virtualenv -ppython2.7 venv
+              . venv/bin/activate
+
+              pip install ansible==2.4.2.0
+              pip install boto
+            """
           }
         }
-        stage('Install Terraform Version') {
-          steps {
-            dir('tfenv') {
-              script {
-                sh """
-                  bin/tfenv install
-                  terraform --version
-                """
-              }
-            }
+      }
+    }
+
+    stage('Install Terraform Version') {
+      steps {
+        dir('tfenv') {
+          script {
+            sh """
+              bin/tfenv install
+              terraform --version
+            """
           }
         }
       }
@@ -309,7 +307,7 @@ pipeline {
                 file(credentialsId: vault_pass, variable: 'vp')
               ]) {
                 sh """
-                  . venv1/bin/activate
+                  . venv/bin/activate
 
                   rm -Rf ./tmp
 
