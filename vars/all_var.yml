@@ -213,9 +213,9 @@
   django_app_title: "{{ env_django_app_title }}"
 
   ### Application LOGO image settings:
-  django_app_logo_size_max: {{ env_django_app_logo_size_max }}
-  django_app_logo_width_max: {{ env_django_app_logo_width_max }}
-  django_app_logo_height_max: {{ env_django_app_logo_height_max }}
+  django_app_logo_size_max: "{{ env_django_app_logo_size_max }}"
+  django_app_logo_width_max: "{{ env_django_app_logo_width_max }}"
+  django_app_logo_height_max: "{{ env_django_app_logo_height_max }}"
 
   # Add a variable endpoint for admin/
   # eg. To move from /admin/ to /secret/admin/
