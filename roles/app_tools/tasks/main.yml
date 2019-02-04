@@ -11,6 +11,8 @@
     - git
     - postgresql-devel
     - python-devel
+    - zlib-devel
+    - libjpeg-turbo-devel
 
 - name: "install pip 9.0.3"
   become_user: "{{ remote_admin_account }}"
