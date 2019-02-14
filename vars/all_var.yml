@@ -217,6 +217,10 @@
   django_app_logo_width_max: "{{ env_django_app_logo_width_max }}"
   django_app_logo_height_max: "{{ env_django_app_logo_height_max }}"
 
+  # Application label slugs to exclude from externally
+  # published lists, like those used for internal use testing.
+  django_app_list_exclude: "{{ env_django_app_list_exclude }}"
+
   # Add a variable endpoint for admin/
   # eg. To move from /admin/ to /secret/admin/
   #     set redirector to 'secret/'
