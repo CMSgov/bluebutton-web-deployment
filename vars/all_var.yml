@@ -234,7 +234,7 @@
   db_engine_driver: "django.db.backends.postgresql_psycopg2"
   db_host_address: "db.bluebutton-{{ env }}.local"
   db_host_port: "15432"
-  db_host_options: "?sslmode=require"
+  db_host_options: "?sslmode=require&options=-c role={{ env_db_role }}"
 
   # Database SSL Certificate and Key Files:
   ca_key: "server.key"
