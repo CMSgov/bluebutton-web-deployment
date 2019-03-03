@@ -62,7 +62,7 @@ pipeline {
       }
     }
 
-    stage('Stop master branch deployments to SBX and PROD. Only Releases are allowed for those ENV's.') {
+    stage('Stop master branch deployments to SBX and PROD. Only Releases are allowed for those ENVs.') {
       steps {
         sh """
         if [ "${params.BB20_APP_VERSION}" == "master" ]
