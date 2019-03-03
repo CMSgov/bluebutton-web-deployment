@@ -18,11 +18,6 @@ pipeline {
   }
 
   parameters {
-    booleanParam(
-      defaultValue: "false",
-      description: 'If this variable is set to True, then the BB20 - Build and Deploy job will be triggered downstream with the newly created Platinum AMI. If this variable is set to False, then only the Platinum AMI is constructed, and the BB20_APP_VERSION and DEPLOY are unused.',
-      name: 'FULL_BB20_BUILD_AND_DEPLOY'
-    )
     string(
       defaultValue: "master",
       description: 'The branch or tag of the bluebutton-web-server repo to build.',
@@ -44,7 +39,7 @@ pipeline {
       name: 'GDIT_GOLD_IMAGE_AMI_ID'
     )
     string(
-      defaultValue: "",
+      defaultValue: "subnet-81ecfbab",
       description: 'The subnet ID where the build server will be launched.',
       name: 'SUBNET_ID'
     )
