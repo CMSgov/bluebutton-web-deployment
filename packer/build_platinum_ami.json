@@ -16,11 +16,12 @@
     "associate_public_ip_address": "false",
     "source_ami": "{{user `source_ami`}}",
     "ami_name": "bb20-platinum-{{isotime \"20060102030405\"}}",
-    "ssh_pty": true,
-    "tags": {
-        "Name": "bb20-platinum-{{isotime \"20060102030405\"}}",
-    }
-  }],
+          "ssh_pty": true,
+          "tags": {
+            "Name": "bb20-platinum-{{isotime \"20060102030405\"}}"
+          }
+        }
+      ],
     "provisioners": [
         {
             "type": "ansible",
