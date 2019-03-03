@@ -1,0 +1,222 @@
+def private_key = ''
+def vault_pass = 'vault-pass'
+def aws_creds = 'cbj-deploy'
+def release_version = ''
+def BB20_PLATINUM_AMI_ID = ''
+def slack_channel = '#bluebutton-alerts'
+
+pipeline {
+  agent {
+    node {
+      label ''
+      customWorkspace 'blue-button-build-ami'
+    }
+  }
+
+  triggers {
+    cron('H 23 * * *')
+  }
+
+  parameters {
+    booleanParam(
+      defaultValue: "false",
+      description: 'If this variable is set to True, then the BB20 - Build and Deploy job will be triggered downstream with the newly created Platinum AMI. If this variable is set to False, then only the Platinum AMI is constructed, and the BB20_APP_VERSION and DEPLOY are unused.',
+      name: 'FULL_BB20_BUILD_AND_DEPLOY'
+    )
+    string(
+      defaultValue: "master",
+      description: 'The branch or tag of the bluebutton-web-server repo to build.',
+      name: 'BB20_APP_VERSION'
+    )
+    choice(
+      choices: 'DEV\nTEST\nSBX\nPROD',
+      description: 'The environment to deploy to. Required.',
+      name: 'ENV'
+    )
+    string(
+      defaultValue: "master",
+      description: 'The branch of the bluebutton-web-deployment repo containing the ops scripts.',
+      name: 'BB20_DEPLOY_BRANCH'
+    )
+    string(
+      defaultValue: "ami-06364f70ec759cbe1",
+      description: 'The AMI ID of the GDIT Gold Image.',
+      name: 'GDIT_GOLD_IMAGE_AMI_ID'
+    )
+    string(
+      defaultValue: "",
+      description: 'The subnet ID where the build server will be launched.',
+      name: 'SUBNET_ID'
+    )
+    string(
+      defaultValue: "m3.medium",
+      description: 'The class/size of the EC2 instance to launch.',
+      name: 'INSTANCE_CLASS'
+    )
+  }
+
+  stages {
+    stage('Ensure BB20_APP_VERSION, ENV, GDIT_GOLD_IMAGE_AMI_ID and SUBNET_ID') {
+      steps {
+        sh """
+        if [ -z "${params.BB20_APP_VERSION}" ] || [ -z "${params.ENV}" ] || [ -z "${params.GDIT_GOLD_IMAGE_AMI_ID}" ] || [ -z "${params.SUBNET_ID}" ]
+        then
+          exit 1
+        fi
+        """
+      }
+    }
+
+    stage('Stop master branch deployments to SBX and PROD. Only Releases are allowed for those ENV's.') {
+      steps {
+        sh """
+        if [ "${params.BB20_APP_VERSION}" == "master" ]
+        then
+          if [ "${params.ENV}" == "SBX" ] || [ "${params.ENV}" == "PROD" ]
+          then
+            exit 1
+          fi
+        fi
+        """
+      }
+    }
+
+    stage('Set release_version var') {
+      steps {
+        script {
+          if (params.BRANCH == 'master') {
+            release_version = "latest-${params.BRANCH}"
+          } else {
+            // Git tag, commit hash or branch other than master
+            release_version = "${params.BRANCH}"
+          }
+        }
+      }
+    }
+
+    stage('Set private key file') {
+      steps {
+        script {
+          private_key = "${params.ENV}-key"
+        }
+      }
+    }
+
+    stage('Checkout bluebutton-web-deployment') {
+      steps {
+        checkout([
+          $class: 'GitSCM',
+          branches: [[
+            name: "${params.BB20_DEPLOY_BRANCH}"
+          ]],
+          doGenerateSubmoduleConfigurations: false,
+          extensions: [[
+            $class: 'RelativeTargetDirectory',
+            relativeTargetDir: 'code'
+          ]],
+          userRemoteConfigs: [[
+            url: 'https://github.com/CMSgov/bluebutton-web-deployment.git'
+          ]]
+        ])
+      }
+    }
+
+    stage('Build Platinum AMI') {
+      steps {
+        script {
+          dir('code') {
+            withAwsCli(credentialsId: aws_creds, defaultRegion: 'us-east-1') {
+              withCredentials([
+                file(credentialsId: vault_pass, variable: 'vp')
+              ]) {
+                sh """
+                  virtualenv -ppython3 venv
+                  . venv/bin/activate
+
+                  pip install --upgrade pip
+                  pip install --upgrade cffi
+
+                  pip install ansible==2.4.2.0
+                  pip install boto
+
+                  packer build -color=false \
+                    -var 'vault_password_file=${vp}' \
+                    -var 'git_branch=${params.BB20_APP_VERSION}' \
+                    -var 'subnet_id=${params.SUBNET_ID}' \
+                    -var 'env=${params.ENV}' \
+                    -var 'source_ami=${params.GDIT_GOLD_IMAGE_AMI_ID}' \
+                    -var 'release_version=${release_version}' \
+                    packer/build_platinum_ami.json 2>&1 | tee platinum_packer_output.txt
+                """
+              }
+            }
+          }
+        }
+      }
+    }
+
+
+    stage('Acquire Platinum AMI ID'){
+        steps {
+            script {
+                dir('code') {
+                    BB20_PLATINUM_AMI_ID = sh(returnStdout: true, script: """grep 'us-east-1: ami-' platinum_packer_output.txt | cut -d ' ' -f2 | tr '\n' ' ' | sed -e 's/ //g'""")
+                    echo "BB20 PLATINUM AMI: ${BB20_PLATINUM_AMI_ID}"
+                }
+            }
+        }
+    }
+
+    stage('Execute Full Build and Package') {
+     when {
+         expression { params.FULL_BB20_BUILD_AND_DEPLOY == true }
+     }
+     steps {
+        build job: 'build ami',
+        parameters: [string(name: 'BB20_APP_VERSION', value: "${params.BB20_APP_VERSION}"), string(name: 'DEPLOY', value: "${params.DEPLOY}"), string(name: 'BB20_DEPLOY_BRANCH', value: "${BB20_DEPLOY_BRANCH}"), string(name: 'BB20_PLATINUM_AMI_ID', value: "${BB20_PLATINUM_AMI_ID}"), string(name: 'SUBNET_ID', value: "${params.SUBNET_ID}")],
+        wait: true,
+        propagate: false
+     }
+    }
+  }
+
+  post {
+    success {
+      withCredentials([
+        string(credentialsId: 'hipchat-room', variable: 'room'),
+        string(credentialsId: 'hipchat-server', variable: 'server'),
+        string(credentialsId: 'hipchat-token', variable: 'token')
+      ]) {
+        hipchatSend(
+            color: 'GREEN',
+            notify: true,
+            message: "SUCCESS: ${env.JOB_NAME} [${params.ENV}]",
+            room: room,
+            sendAs: '',
+            server: server,
+            token: token,
+            v2enabled: true
+        )
+      }
+    }
+
+    failure {
+      withCredentials([
+        string(credentialsId: 'hipchat-room', variable: 'room'),
+        string(credentialsId: 'hipchat-server', variable: 'server'),
+        string(credentialsId: 'hipchat-token', variable: 'token')
+      ]) {
+        hipchatSend(
+          color: 'RED',
+          notify: true,
+          message: "FAILED: ${env.JOB_NAME} [${params.ENV}]",
+          room: room,
+          sendAs: '',
+          server: server,
+          token: token,
+          v2enabled: true
+        )
+      }
+    }
+  }
+}
