@@ -175,7 +175,7 @@ pipeline {
     }
   }
 
-  post {
+/*  post {
     success {
       withCredentials([
         string(credentialsId: 'hipchat-room', variable: 'room'),
@@ -213,5 +213,5 @@ pipeline {
         )
       }
     }
-  }
+  }*/
 }
