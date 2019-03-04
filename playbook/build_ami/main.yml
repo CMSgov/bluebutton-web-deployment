@@ -18,6 +18,19 @@
     - "./../../vars/all_var.yml"
 
   roles:
+    - ../../roles/base_patch
+    - ../../roles/nessus_update_key
+    - ../../roles/splunk
+
+    - ../../roles/selinux # selinux_state
+    - ../../roles/aws
+    - ../../roles/app_tools
+    - ../../roles/app_user
+    - ../../roles/app_logs
+    - ../../roles/python
+    # TODO(rnagle): this is not being used at the moment
+    #- ../../roles/swagger_ui_install
+
     - ../../roles/app_prep
     - ../../roles/app_install
     - ../../roles/env_vars
