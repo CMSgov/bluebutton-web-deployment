@@ -2,7 +2,6 @@ def private_key = ''
 def vault_pass = 'vault-pass'
 def aws_creds = 'cbj-deploy'
 def release_version = ''
-def BB20_PLATINUM_AMI_ID = ''
 def slack_channel = '#bluebutton-alerts'
 
 pipeline {
@@ -22,11 +21,6 @@ pipeline {
       defaultValue: "master",
       description: 'The branch or tag of the bluebutton-web-server repo to build.',
       name: 'BB20_APP_VERSION'
-    )
-    choice(
-      choices: 'dev\ntest\nimpl\nprod',
-      description: 'The environment to deploy to. Required.',
-      name: 'ENV'
     )
     string(
       defaultValue: "master",
@@ -48,29 +42,20 @@ pipeline {
       description: 'The class/size of the EC2 instance to launch.',
       name: 'INSTANCE_CLASS'
     )
+    choice(
+      choices: ['Do Not Deploy', 'dev', 'test', 'impl', 'prod'],
+      description: 'The environment to deploy the BCDA and BCDA Worker AMI to.',
+      name: 'ENV'
+    )
   }
 
   stages {
-    stage('Ensure BB20_APP_VERSION, ENV, GDIT_GOLD_IMAGE_AMI_ID and SUBNET_ID') {
+    stage('Ensure BB20_APP_VERSION, GDIT_GOLD_IMAGE_AMI_ID and SUBNET_ID') {
       steps {
         sh """
-        if [ -z "${params.BB20_APP_VERSION}" ] || [ -z "${params.ENV}" ] || [ -z "${params.GDIT_GOLD_IMAGE_AMI_ID}" ] || [ -z "${params.SUBNET_ID}" ]
+        if [ -z "${params.BB20_APP_VERSION}" ] || [ -z "${params.GDIT_GOLD_IMAGE_AMI_ID}" ] || [ -z "${params.SUBNET_ID}" ]
         then
           exit 1
-        fi
-        """
-      }
-    }
-
-    stage('Stop master branch deployments to impl and prod. Only Releases are allowed for those ENVs.') {
-      steps {
-        sh """
-        if [ "${params.BB20_APP_VERSION}" == "master" ]
-        then
-          if [ "${params.ENV}" == "impl" ] || [ "${params.ENV}" == "prod" ]
-          then
-            exit 1
-          fi
         fi
         """
       }
@@ -85,14 +70,6 @@ pipeline {
             // Git tag, commit hash or branch other than master
             release_version = "${params.BB20_APP_VERSION}"
           }
-        }
-      }
-    }
-
-    stage('Set private key file') {
-      steps {
-        script {
-          private_key = "${params.ENV}-key"
         }
       }
     }
@@ -138,7 +115,6 @@ pipeline {
                     -var 'vault_password_file=${vp}' \
                     -var 'git_branch=${params.BB20_APP_VERSION}' \
                     -var 'subnet_id=${params.SUBNET_ID}' \
-                    -var 'env=${params.ENV}' \
                     -var 'source_ami=${params.GDIT_GOLD_IMAGE_AMI_ID}' \
                     -var 'release_version=${release_version}' \
                     packer/build_platinum_ami.json 2>&1 | tee platinum_packer_output.txt
@@ -149,7 +125,6 @@ pipeline {
         }
       }
     }
-
 
     stage('Acquire Platinum AMI ID'){
         steps {
@@ -167,51 +142,16 @@ pipeline {
          expression { params.FULL_BB20_BUILD_AND_DEPLOY == true }
      }
      steps {
-        build job: 'build ami',
-        parameters: [string(name: 'BB20_APP_VERSION', value: "${params.BB20_APP_VERSION}"), string(name: 'DEPLOY', value: "${params.DEPLOY}"), string(name: 'BB20_DEPLOY_BRANCH', value: "${BB20_DEPLOY_BRANCH}"), string(name: 'BB20_PLATINUM_AMI_ID', value: "${BB20_PLATINUM_AMI_ID}"), string(name: 'SUBNET_ID', value: "${params.SUBNET_ID}")],
+        build job: 'BUILD_BB_AMI',
+        parameters: [string(name: 'BB20_APP_VERSION', value: "${params.BB20_APP_VERSION}"), string(name: 'ENV', value: "${params.ENV}"), string(name: 'BB20_DEPLOY_BRANCH', value: "${BB20_DEPLOY_BRANCH}"), string(name: 'BB20_PLATINUM_AMI_ID', value: "${BB20_PLATINUM_AMI_ID}"), string(name: 'SUBNET_ID', value: "${params.SUBNET_ID}")],
         wait: true,
         propagate: false
      }
     }
   }
 
-/*  post {
-    success {
-      withCredentials([
-        string(credentialsId: 'hipchat-room', variable: 'room'),
-        string(credentialsId: 'hipchat-server', variable: 'server'),
-        string(credentialsId: 'hipchat-token', variable: 'token')
-      ]) {
-        hipchatSend(
-            color: 'GREEN',
-            notify: true,
-            message: "SUCCESS: ${env.JOB_NAME} [${params.ENV}]",
-            room: room,
-            sendAs: '',
-            server: server,
-            token: token,
-            v2enabled: true
-        )
-      }
-    }
+/*
+# THIS IS WHERE WE WILL ADD SLACK NOTIFICATIONS ONCE SLACK IS ONLINE
+*/
 
-    failure {
-      withCredentials([
-        string(credentialsId: 'hipchat-room', variable: 'room'),
-        string(credentialsId: 'hipchat-server', variable: 'server'),
-        string(credentialsId: 'hipchat-token', variable: 'token')
-      ]) {
-        hipchatSend(
-          color: 'RED',
-          notify: true,
-          message: "FAILED: ${env.JOB_NAME} [${params.ENV}]",
-          room: room,
-          sendAs: '',
-          server: server,
-          token: token,
-          v2enabled: true
-        )
-      }
-    }
-  }*/
 }

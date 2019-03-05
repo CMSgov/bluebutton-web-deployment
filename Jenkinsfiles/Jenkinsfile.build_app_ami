@@ -1,0 +1,178 @@
+def private_key = ''
+def vault_pass = 'vault-pass'
+def aws_creds = 'cbj-deploy'
+def release_version = ''
+def slack_channel = '#bluebutton-alerts'
+def BB20_PLATINUM_AMI_ID = ''
+
+pipeline {
+  agent {
+    node {
+      label ''
+      customWorkspace 'blue-button-build-ami'
+    }
+  }
+
+  parameters {
+    string(
+      defaultValue: "",
+      description: 'The branch of the application repo to build. Required.',
+      name: 'BB20_APP_VERSION'
+    )
+    string(
+      defaultValue: "*/master",
+      description: 'The branch of the deployment repo to use for the build.',
+      name: 'BB20_DEPLOY_BRANCH'
+    )
+    string(
+      defaultValue: "",
+      description: 'The AMI ID of the Platinum Gold Image. If unset, the latest will be pulled from AWS and used.',
+      name: 'BB20_PLATINUM_AMI_ID'
+    )
+    string(
+      defaultValue: "",
+      description: 'The subnet ID where the build server will be launched.',
+      name: 'SUBNET_ID'
+    )
+    string(
+      defaultValue: "m3.medium",
+      description: 'The class/size of the ec2 instance to launch.',
+      name: 'INSTANCE_CLASS'
+    )
+    choice(
+      choices: ['Do Not Deploy', 'dev', 'test', 'impl', 'prod'],
+      description: 'The environment to deploy to. Required.',
+      name: 'ENV'
+    )
+  }
+
+  stages {
+    stage('Ensure BB20_APP_VERSION, ENV, BB20_PLATINUM_AMI_ID and SUBNET_ID') {
+      steps {
+        sh """
+        if [ -z "${params.BB20_APP_VERSION}" ] || [ -z "${params.ENV}" ] || [ -z "${params.BB20_PLATINUM_AMI_ID}" ] || [ -z "${params.SUBNET_ID}" ]
+        then
+          exit 1
+        fi
+        """
+      }
+    }
+
+    stage('Stop master deployments to IMPL and PROD') {
+      steps {
+        sh """
+        if [ "${params.BB20_APP_VERSION}" == "master" ]
+        then
+          if [ "${params.ENV}" == "impl" ] || [ "${params.ENV}" == "prod" ]
+          then
+            exit 1
+          fi
+        fi
+        """
+      }
+    }
+
+    stage('Set release_version var') {
+      steps {
+        script {
+          if (params.BB20_APP_VERSION == 'develop' || params.BB20_APP_VERSION == 'master') {
+            release_version = "latest-${params.BB20_APP_VERSION}"
+          } else {
+            // Git tag, commit hash or branch other than master, develop
+            release_version = "${params.BB20_APP_VERSION}"
+          }
+        }
+      }
+    }
+
+/*
+# THIS IS WHERE WE WILL ADD SLACK NOTIFICATIONS ONCE SLACK IS ONLINE
+*/
+
+    stage('Set private key file') {
+      steps {
+        script {
+          private_key = "${params.ENV}-key"
+        }
+      }
+    }
+
+    stage('Checkout') {
+      steps {
+        checkout([
+          $class: 'GitSCM',
+          branches: [[
+            name: "${params.BB20_DEPLOY_BRANCH}"
+          ]],
+          doGenerateSubmoduleConfigurations: false,
+          extensions: [[
+            $class: 'RelativeTargetDirectory',
+            relativeTargetDir: 'code'
+          ]],
+          userRemoteConfigs: [[
+            url: 'https://github.com/CMSgov/bluebutton-web-deployment.git'
+          ]]
+        ])
+      }
+    }
+
+    stage('Acquire Platinum AMI') {
+    steps {
+        script {
+            if (params.BB20_PLATINUM_AMI_ID.startsWith("ami")) {
+            BB20_PLATINUM_AMI = params.BB20_PLATINUM_AMI_ID
+            } else {
+                withAWS(credentials: aws_creds, region: 'us-east-1') {
+                    BB20_PLATINUM_AMI = sh(
+                        script: "aws --region us-east-1 ec2 describe-images --filters Name=name,Values='bb20-platinum-??????????????' --query 'sort_by(Images,&CreationDate)[-1]' --output json | jq -r .ImageId",
+                        returnStdout: true
+                    ).trim()
+                  }
+              }
+            sh """
+              echo "BB20 PLATINUM AMI ID: ${BB20_PLATINUM_AMI}"
+            """
+        }
+    }
+}
+
+    stage('Build AMI') {
+      steps {
+        script {
+          dir('code') {
+            withAwsCli(credentialsId: aws_creds, defaultRegion: 'us-east-1') {
+              withCredentials([
+                file(credentialsId: vault_pass, variable: 'vp')
+              ]) {
+                sh """
+                  virtualenv -ppython3 venv
+                  . venv/bin/activate
+
+                  pip install --upgrade pip
+                  pip install --upgrade cffi
+
+                  pip install ansible==2.4.2.0
+                  pip install boto
+
+                  packer build -color=false \
+                    -var 'vault_password_file=${vp}' \
+                    -var 'git_branch=${params.BB20_DEPLOY_BRANCH}' \
+                    -var 'subnet_id=${params.SUBNET_ID}' \
+                    -var 'env=${params.ENV}' \
+                    -var 'source_ami=${params.BB20_PLATINUM_AMI}' \
+                    -var 'release_version=${release_version}' \
+                    packer/build-ami.json
+                """
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+/*
+# THIS IS WHERE WE WILL ADD SLACK NOTIFICATIONS ONCE SLACK IS ONLINE
+*/
+
+}
