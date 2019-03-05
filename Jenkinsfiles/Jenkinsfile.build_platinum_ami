@@ -43,8 +43,8 @@ pipeline {
       name: 'INSTANCE_CLASS'
     )
     choice(
-      choices: ['Do Not Deploy', 'dev', 'test', 'impl', 'prod'],
-      description: 'The environment to deploy the BCDA and BCDA Worker AMI to.',
+      choices: 'dev\ntest\nimpl\nprod',
+      description: 'The environment to deploy the BB Platinum AMI to. Required.',
       name: 'ENV'
     )
   }
