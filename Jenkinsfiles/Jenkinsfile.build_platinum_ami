@@ -115,6 +115,7 @@ pipeline {
                     -var 'vault_password_file=${vp}' \
                     -var 'git_branch=${params.BB20_APP_VERSION}' \
                     -var 'subnet_id=${params.SUBNET_ID}' \
+                    -var 'env=${params.ENV}' \
                     -var 'source_ami=${params.GDIT_GOLD_IMAGE_AMI_ID}' \
                     -var 'release_version=${release_version}' \
                     packer/build_platinum_ami.json 2>&1 | tee platinum_packer_output.txt
