@@ -75,10 +75,10 @@ pipeline {
     stage('Set release_version var') {
       steps {
         script {
-          if (params.BB20_APP_VERSION == 'develop' || params.BB20_APP_VERSION == 'master') {
+          if params.BB20_APP_VERSION == 'master') {
             release_version = "latest-${params.BB20_APP_VERSION}"
           } else {
-            // Git tag, commit hash or branch other than master, develop
+            // Git tag, commit hash or branch other than master
             release_version = "${params.BB20_APP_VERSION}"
           }
         }
@@ -104,7 +104,7 @@ pipeline {
           branches: [[
             name: "${params.BB20_DEPLOY_BRANCH}"
           ]],
-          doGenerateSubmoduleConfigurations: false,
+          doGenerateSubmoduleConfigurations: true,
           extensions: [[
             $class: 'RelativeTargetDirectory',
             relativeTargetDir: 'code'
