@@ -1,26 +1,26 @@
 def private_key = ''
+def BB20_PLATINUM_AMI_ID = ''
+def release_version = ''
 def vault_pass = 'vault-pass'
 def aws_creds = 'cbj-deploy'
-def release_version = ''
 def slack_channel = '#bluebutton-alerts'
-def BB20_PLATINUM_AMI_ID = ''
 
 pipeline {
   agent {
     node {
       label ''
-      customWorkspace 'blue-button-build-ami'
+      customWorkspace 'blue-button-build-app-ami'
     }
   }
 
   parameters {
     string(
-      defaultValue: "",
+      defaultValue: "master",
       description: 'The branch of the application repo to build. Required.',
       name: 'BB20_APP_VERSION'
     )
     string(
-      defaultValue: "*/master",
+      defaultValue: "master",
       description: 'The branch of the deployment repo to use for the build.',
       name: 'BB20_DEPLOY_BRANCH'
     )
@@ -30,7 +30,7 @@ pipeline {
       name: 'BB20_PLATINUM_AMI_ID'
     )
     string(
-      defaultValue: "",
+      defaultValue: "subnet-81ecfbab",
       description: 'The subnet ID where the build server will be launched.',
       name: 'SUBNET_ID'
     )
@@ -47,10 +47,10 @@ pipeline {
   }
 
   stages {
-    stage('Ensure BB20_APP_VERSION, ENV, BB20_PLATINUM_AMI_ID and SUBNET_ID') {
+    stage('Ensure BB20_APP_VERSION, ENV and SUBNET_ID') {
       steps {
         sh """
-        if [ -z "${params.BB20_APP_VERSION}" ] || [ -z "${params.ENV}" ] || [ -z "${params.BB20_PLATINUM_AMI_ID}" ] || [ -z "${params.SUBNET_ID}" ]
+        if [ -z "${params.BB20_APP_VERSION}" ] || [ -z "${params.ENV}" ] || [ -z "${params.SUBNET_ID}" ]
         then
           exit 1
         fi
@@ -75,7 +75,7 @@ pipeline {
     stage('Set release_version var') {
       steps {
         script {
-          if params.BB20_APP_VERSION == 'master') {
+          if (params.BB20_APP_VERSION == 'master') {
             release_version = "latest-${params.BB20_APP_VERSION}"
           } else {
             // Git tag, commit hash or branch other than master
@@ -122,16 +122,14 @@ pipeline {
             if (params.BB20_PLATINUM_AMI_ID.startsWith("ami")) {
             BB20_PLATINUM_AMI = params.BB20_PLATINUM_AMI_ID
             } else {
-                withAWS(credentials: aws_creds, region: 'us-east-1') {
-                    BB20_PLATINUM_AMI = sh(
-                        script: "aws --region us-east-1 ec2 describe-images --filters Name=name,Values='bb20-platinum-??????????????' --query 'sort_by(Images,&CreationDate)[-1]' --output json | jq -r .ImageId",
-                        returnStdout: true
-                    ).trim()
+                withAwsCli(credentialsId: aws_creds, region: 'us-east-1') {
+                  BB20_PLATINUM_AMI = sh(
+                          script: "aws --region us-east-1 ec2 describe-images --filters Name=name,Values='bb20-platinum-??????????????' --query 'sort_by(Images,&CreationDate)[-1]' --output json | jq -r .ImageId",
+                          returnStdout: true
+                          ).trim()
+                    println("BB20 PLATINUM AMI ID: = ${BB20_PLATINUM_AMI}")
                   }
               }
-            sh """
-              echo "BB20 PLATINUM AMI ID: ${BB20_PLATINUM_AMI}"
-            """
         }
     }
 }
@@ -156,12 +154,12 @@ pipeline {
 
                   packer build -color=false \
                     -var 'vault_password_file=${vp}' \
-                    -var 'git_branch=${params.BB20_DEPLOY_BRANCH}' \
+                    -var 'git_branch=${params.BB20_APP_VERSION}' \
                     -var 'subnet_id=${params.SUBNET_ID}' \
                     -var 'env=${params.ENV}' \
-                    -var 'source_ami=${params.BB20_PLATINUM_AMI}' \
+                    -var 'source_ami=${BB20_PLATINUM_AMI}' \
                     -var 'release_version=${release_version}' \
-                    packer/build-ami.json
+                    packer/build_app_ami.json
                 """
               }
             }

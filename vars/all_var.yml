@@ -59,8 +59,9 @@
 
 
   # Remote user access account
-  remote_user_account: "{{ env_remote_user_account }}"
-  remote_admin_account: "{{ env_remote_admin_account }}"
+  # [JZ] - This is not needed, each env has the same emore user account, moving to common.yml
+  #remote_user_account: "{{ env_remote_user_account }}"
+  #remote_admin_account: "{{ env_remote_admin_account }}"
 
   ### DJANGO_SECRET_KEY:
   # 8 Character Prefix and Suffix
