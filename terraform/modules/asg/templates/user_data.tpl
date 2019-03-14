@@ -11,6 +11,6 @@ ansible-playbook --vault-password-file=./VAULT_PW \
   -i "localhost" \
   -e "env=${env}" \
   -e "repo=$(cat REPO_URI)" \
-  /var/pyapps/hhs_o_server/env_vars.yml
+  /var/pyapps/hhs_o_server/env_config.yml
 
 rm VAULT_PW REPO_URI
