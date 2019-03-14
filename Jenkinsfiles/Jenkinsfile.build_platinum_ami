@@ -8,7 +8,7 @@ pipeline {
   agent {
     node {
       label ''
-      customWorkspace 'blue-button-build-ami'
+      customWorkspace 'blue-button-build-platinum-ami'
     }
   }
 
@@ -41,11 +41,6 @@ pipeline {
       defaultValue: "m3.medium",
       description: 'The class/size of the EC2 instance to launch.',
       name: 'INSTANCE_CLASS'
-    )
-    choice(
-      choices: 'dev\ntest\nimpl\nprod',
-      description: 'The environment to deploy the BB Platinum AMI to. Required.',
-      name: 'ENV'
     )
   }
 
@@ -115,7 +110,6 @@ pipeline {
                     -var 'vault_password_file=${vp}' \
                     -var 'git_branch=${params.BB20_APP_VERSION}' \
                     -var 'subnet_id=${params.SUBNET_ID}' \
-                    -var 'env=${params.ENV}' \
                     -var 'source_ami=${params.GDIT_GOLD_IMAGE_AMI_ID}' \
                     -var 'release_version=${release_version}' \
                     packer/build_platinum_ami.json 2>&1 | tee platinum_packer_output.txt
