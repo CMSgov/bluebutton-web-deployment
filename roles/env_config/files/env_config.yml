@@ -1,0 +1,25 @@
+---
+- name: Environment Specific Configuration
+  hosts: localhost
+  remote_user: ec2-user
+  gather_facts: no
+  vars:
+    ansible_ssh_pipelining: no
+    env: "dev"
+    azone: "az1"
+    sub_zone: "app"
+    sg_zone: "appserver"
+    env_az: "{{ env }}-{{ azone }}"
+    splunk_target_layer: "app"
+  vars_files:
+    - "./../../vars/common.yml"
+    - "./../../vault/env/{{ env }}/vault.yml"
+    - "./../../vars/env/{{ env }}/env.yml"
+    - "./../../vars/all_var.yml"
+
+
+  roles:
+    - ../../roles/env_var
+    - ../../roles/nessus_update_key
+    - ../../roles/splunk
+    - ../../roles/new_relic
