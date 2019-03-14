@@ -15,6 +15,10 @@ common_cf_tags_business: "OEDA"
 common_cf_tags_application: "BlueButton"
 common_remote_user: "ec2-user"
 
+#Common user accounts
+remote_user_account: "ec2-user"
+remote_admin_account: "root"
+
 # Environment VPC Subnets
 
 common_repository: "https://github.com/transparenthealth/hhs_oauth_server"
