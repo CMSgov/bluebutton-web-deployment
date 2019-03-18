@@ -11,15 +11,66 @@
     sg_zone: "appserver"
     env_az: "{{ env }}-{{ azone }}"
     splunk_target_layer: "app"
+    repo: "https://github.com/CMSgov/bluebutton-web-deployment.git"
+    version: "BLUEBUTTON-314"
   vars_files:
-    - "./../../vars/common.yml"
-    - "./../../vault/env/{{ env }}/vault.yml"
-    - "./../../vars/env/{{ env }}/env.yml"
-    - "./../../vars/all_var.yml"
+    - "vars/common.yml"
+    - "vault/env/{{ env }}/vault.yml"
+    - "vars/env/{{ env }}/env.yml"
+    - "vars/all_var.yml"
 
+  tasks:
+    - name: Remove existing ./code and ./code.zip
+      file:
+        state: absent
+        path: ./code
+      with_items:
+        - ./code
+        - ./code.zip
 
-  roles:
-    - ../../roles/env_var
-    - ../../roles/nessus_update_key
-    - ../../roles/splunk
-    - ../../roles/new_relic
+    - name: Checkout deployment repo
+      git:
+        repo: "{{ repo }}"
+        dest: ./code
+        version: "{{ version }}"
+      when: repo.endswith(".git")
+
+    - name: Download deployment repo archive
+      get_url:
+        url: "{{ repo }}"
+        dest: ./code.zip
+      when: repo.endswith(".zip")
+
+    - name: Creates ./code directory
+      file:
+        path: ./code
+        state: directory
+      when: repo.endswith(".zip")
+
+    - name: Unzip deployment repo archive
+      unarchive:
+        src: ./code.zip
+        dest: ./code
+        remote_src: yes
+      when: repo.endswith(".zip")
+
+    - name: Determine root of repo
+      find:
+        recurse: yes
+        patterns: "LICENSE"
+        paths: ./code
+      register: root_lookup
+
+    - name: Load vars from yaml files
+      include_vars:
+        file: "{{ root_lookup.files[0].path | dirname }}/{{ item }}"
+      with_items: "{{ var_files }}"
+
+    - import_role:
+        name: "{{ root_lookup }}"/roles/env_var
+    - import_role:
+        name: "{{ root_lookup }}"/roles/nessus_update_key
+    - import_role:
+        name: "{{ root_lookup }}"/roles/splunk
+    - import_role:
+        name: "{{ root_lookup }}"/roles/new_relic
