@@ -41,6 +41,7 @@ pipeline {
     )
   }
 
+  stages {
     stage('Set release_version var') {
       steps {
         script {
@@ -66,8 +67,6 @@ pipeline {
       }
     }
 */
-
-  stages {
     stage('Checkout') {
       steps {
         checkout([
