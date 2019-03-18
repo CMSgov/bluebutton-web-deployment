@@ -33,8 +33,7 @@
               "ANSIBLE_VAULT_PASSWORD_FILE={{user `vault_password_file`}}"
             ],
             "extra_arguments": [
-              "-e git_branch={{user `git_branch`}}",
-              "-e env={{user `env`}}"
+              "-e git_branch={{user `git_branch`}}"
             ]
         }
     ]
