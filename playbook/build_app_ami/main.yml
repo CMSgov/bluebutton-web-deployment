@@ -18,16 +18,12 @@
     - "./../../vars/all_var.yml"
 
   roles:
-    - ../../roles/nessus_update_key
-    - ../../roles/splunk
     - ../../roles/aws
     - ../../roles/app_user
     - ../../roles/app_prep
     - ../../roles/app_logs
     - ../../roles/app_install
-    - ../../roles/env_vars
-    - ../../roles/new_relic
+    - ../../roles/env_config
     - ../../roles/nginx
-
     - ../../roles/semanage_apps
     - ../../roles/semanage_virtualenv
