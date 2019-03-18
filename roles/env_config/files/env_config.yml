@@ -67,10 +67,10 @@
       with_items: "{{ var_files }}"
 
     - import_role:
-        name: "{{ root_lookup }}"/roles/env_var
-    - import_role:
         name: "{{ root_lookup }}"/roles/nessus_update_key
     - import_role:
         name: "{{ root_lookup }}"/roles/splunk
     - import_role:
         name: "{{ root_lookup }}"/roles/new_relic
+    - import_role:
+        name: "{{ root_lookup }}"/roles/env_var
