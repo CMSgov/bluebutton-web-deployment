@@ -4,8 +4,7 @@
     "source_ami": "",
     "vault_password_file": "",
     "git_branch": "master",
-    "subnet_id": "",
-    "env": ""
+    "subnet_id": ""
   },
   "builders": [{
     "type": "amazon-ebs",

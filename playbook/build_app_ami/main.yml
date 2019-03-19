@@ -5,11 +5,9 @@
   gather_facts: no
   vars:
     ansible_ssh_pipelining: no
-    env: "dev"
     azone: "az1"
     sub_zone: "app"
     sg_zone: "appserver"
-    env_az: "{{ env }}-{{ azone }}"
     splunk_target_layer: "app"
   vars_files:
     - "./../../vars/common.yml"

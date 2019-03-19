@@ -3,8 +3,6 @@
   hosts: localhost
   vars:
     env: "dev"
-    repo: "https://github.com/CMSgov/bluebutton-web-deployment.git"
-    version: "master"
     yaml_files:
       - "vars/common.yml"
       - "vault/env/{{ env }}/vault.yml"
@@ -12,7 +10,7 @@
       - "vars/all_var.yml"
 
   tasks:
-    - name: Write .env.new file
+    - name: Write .env file
       become_user: "{{ remote_admin_account }}"
       become: yes
       template:

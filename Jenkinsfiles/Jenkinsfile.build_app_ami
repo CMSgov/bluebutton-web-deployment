@@ -59,14 +59,6 @@ pipeline {
 # THIS IS WHERE WE WILL ADD SLACK NOTIFICATIONS ONCE SLACK IS ONLINE
 */
 
-/*    stage('Set private key file') {
-      steps {
-        script {
-          private_key = "${params.ENV}-key"
-        }
-      }
-    }
-*/
     stage('Checkout') {
       steps {
         checkout([
