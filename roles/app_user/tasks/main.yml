@@ -4,4 +4,4 @@
   become: yes
   user:
     name: "{{ app_pyapps_user }}"
-    password: "{{ cf_app_pyapps_pwd | password_hash('sha512') }}"
+#    password: "{{ cf_app_pyapps_pwd | password_hash('sha512') }}"
