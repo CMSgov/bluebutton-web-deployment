@@ -71,7 +71,7 @@
   project_name: "{{ common_project_name }}"
 
   # Virtual Environment location
-  venv: "{{ env_venv }}{{ common_project_dir }}"
+  venv: "{{ venv }}{{ common_project_dir }}"
 
   # git branch to deploy
   git_branch: "master"

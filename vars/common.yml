@@ -51,6 +51,9 @@ python_ver: "3.6"
 python_ver_full: "{{ python_ver }}.6"
 app_py_virtual_env: "/var/virtualenv/{{ project_dir }}"
 
+# Virtual Environment base location - slash terminated
+venv: "/var/virtualenv/"
+
 #Common user accounts
 remote_user_account: "ec2-user"
 remote_admin_account: "root"
