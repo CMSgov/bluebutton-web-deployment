@@ -41,7 +41,7 @@
     force: yes
     clone: yes
 
-- name: "update from git: {{ project_repo }} branch:{{ git_branch }}
+- name: "update from git: {{ project_repo }} branch:{{ git_branch }}"
   become_user: "{{ remote_admin_account }}"
   become: yes
   git:
