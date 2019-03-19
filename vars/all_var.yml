@@ -31,7 +31,7 @@
   env: "{{ env_env }}"
 
   ### AWS Region
-  aws_region: "{{ env_aws_region }}"
+  aws_region: "us-east-1"
 
   ### Cloud Formation Tags:
   cf_tags_business: "{{ common_cf_tags_business }}"
