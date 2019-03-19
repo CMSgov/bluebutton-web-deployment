@@ -31,6 +31,12 @@ app_log_dir: "/var/log/pyapps"
 # eg. /var/virtualenv/hhs_o_server and /var/pyapps/hhs_o_server
 project_dir: "hhs_o_server"
 
+# Project Parent Dir
+# the base path to install to. You should not need to change this.
+# git installs the repo in a folder beneath this path
+# slash terminated folder definition
+project_parent: "/var/pyapps/"
+
 #CSS Settings
 #The CSS Repo to use
 css_repo: "https://github.com/CMSgov/bluebutton-css.git"

@@ -82,14 +82,12 @@
   # Project Parent Dir
   # the base path to install to. You should not need to change this.
   # git installs the repo in a folder beneath this path
-  project_parent: "{{ env_project_parent }}"
-
 
   # the base path to install to. You should not need to change this.
   # git installs the repo in a folder beneath this path
   # files and folders excluded from the repository can be installed here
   # in files and folders alongside the repo.
-  install_root: "{{ env_project_parent }}{{ common_project_dir }}"
+  install_root: "{{ project_parent }}{{ common_project_dir }}"
 
   # the git repository URL for the project
   project_repo: "https://github.com/CMSgov/bluebutton-web-server.git"
