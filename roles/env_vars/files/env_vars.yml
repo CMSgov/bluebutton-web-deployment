@@ -41,7 +41,7 @@
         content: "{{ app_fhir_cert }}"
         dest: "{{ cf_app_pyapp_home }}/certstore/{{ app_fhir_cert_name }}"
         mode: 0640
-        owner: "{{ cf_app_pyapps_user }}"
+        owner: "{{ app_pyapps_user }}"
         group: "{{ app_group }}"
 
     - name: "Copy key({{ app_fhir_key_name }}) to certstore"
@@ -51,7 +51,7 @@
         content: "{{ app_fhir_key }}"
         dest: "{{ cf_app_pyapp_home }}/certstore/{{ app_fhir_key_name }}"
         mode: 0640
-        owner: "{{ cf_app_pyapps_user }}"
+        owner: "{{ app_pyapps_user }}"
         group: "{{ app_group }}"
 
     - name: Restart uwsgi

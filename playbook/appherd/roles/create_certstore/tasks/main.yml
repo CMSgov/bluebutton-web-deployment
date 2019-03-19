@@ -11,7 +11,7 @@
   file:
     dest: "{{ cf_app_pyapp_home }}/certstore"
     mode: 0755
-    owner: "{{ cf_app_pyapps_user }}"
+    owner: "{{ app_pyapps_user }}"
     group: "{{ app_group }}"
     recurse: yes
     state: directory

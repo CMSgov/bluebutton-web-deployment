@@ -18,15 +18,15 @@
     dest: "{{ cf_app_pyapp_home }}"
     state: directory
     recurse: yes
-    owner: "{{ cf_app_pyapps_user }}"
+    owner: "{{ app_pyapps_user }}"
     group: "{{ app_group }}"
     mode: 0755
 
-- name: "set ownership to pyapps:www-data ({{ cf_app_pyapps_user }}:{{ app_group }})"
+- name: "set ownership to pyapps:www-data ({{ app_pyapps_user }}:{{ app_group }})"
   become_user: "{{ remote_admin_account }}"
   become: yes
   file:
-    owner: "{{ cf_app_pyapps_user }}"
+    owner: "{{ app_pyapps_user }}"
     group: "{{ app_group }}"
     dest: "/var/virtualenv"
     state: directory
@@ -59,14 +59,14 @@
     force: yes
     clone: yes
 
-- name: "set permissions to application code ( {{ cf_app_pyapps_user }}:{{ app_group }} )"
+- name: "set permissions to application code ( {{ app_pyapps_user }}:{{ app_group }} )"
   become_user: "{{ remote_admin_account }}"
   become: yes
   file:
     dest: "{{ cf_app_pyapp_home }}"
     state: directory
     recurse: yes
-    owner: "{{ cf_app_pyapps_user }}"
+    owner: "{{ app_pyapps_user }}"
     group: "{{ app_group }}"
     mode: 0755
 

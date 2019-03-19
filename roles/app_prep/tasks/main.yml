@@ -4,8 +4,8 @@
   become: yes
   file:
     dest: "/var/virtualenv"
-    owner: "{{ cf_app_pyapps_user }}"
-    group: "{{ cf_app_pyapps_user }}"
+    owner: "{{ app_pyapps_user }}"
+    group: "{{ app_pyapps_user }}"
     mode: 0755
     state: directory
 
@@ -14,7 +14,7 @@
   become: yes
   file:
     dest: "/var/pyapps"
-    owner: "{{ cf_app_pyapps_user }}"
-    group: "{{ cf_app_pyapps_user }}"
+    owner: "{{ app_pyapps_user }}"
+    group: "{{ app_pyapps_user }}"
     mode: 0755
     state: directory
