@@ -74,7 +74,7 @@
   become_user: "{{ remote_admin_account }}"
   become: yes
   shell: |
-    source {{ cf_app_py_virtual_env }}/bin/activate && make reqs-install
+    source {{ app_py_virtual_env }}/bin/activate && make reqs-install
   args:
     chdir: "{{ app_pyapp_home }}/{{ common_project_name }}"
 

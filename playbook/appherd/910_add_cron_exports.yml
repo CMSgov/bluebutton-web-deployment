@@ -82,7 +82,7 @@
     become: yes
     run_once: yes
     shell: |
-      source {{ cf_app_py_virtual_env }}/bin/activate
+      source {{ app_py_virtual_env }}/bin/activate
       cd {{ install_root }}/{{ project_name }}/
-      echo "$(date --iso-8601=seconds) Active_BBAPI_Applications:$({{ cf_app_py_virtual_env }}/bin/python3 manage.py dumpdata dot_ext.application --indent 2 |grep \"active\": | wc -l ) " >>{{ app_log_dir }}/info.log
+      echo "$(date --iso-8601=seconds) Active_BBAPI_Applications:$({{ app_py_virtual_env }}/bin/python3 manage.py dumpdata dot_ext.application --indent 2 |grep \"active\": | wc -l ) " >>{{ app_log_dir }}/info.log
       chown pyapps:logreader {{ app_log_dir }}/info.log

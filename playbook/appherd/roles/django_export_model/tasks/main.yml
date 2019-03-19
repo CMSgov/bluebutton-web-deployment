@@ -24,8 +24,8 @@
   run_once: yes
   shell: |
     cd {{ app_pyapp_home }}/{{ common_project_name }}
-    source {{ cf_app_py_virtual_env }}/bin/activate
-    export PATH={{ cf_app_py_virtual_env }}/bin:$PATH
+    source {{ app_py_virtual_env }}/bin/activate
+    export PATH={{ app_py_virtual_env }}/bin:$PATH
     ./manage.py model2csv --application {{ export_application }} --model {{ export_app_model }} --add_table_name True --filter_fields id,client_id,user,name,agree,created,updated,client_uri,active | sed '/WARNING:/d' | sed 's/{{ export_application }}.{{ export_app_model }}/{{ export_application }}.{{ export_app_model }}_info/' >{{ app_log_dir }}/bb_{{ env }}_{{ export_app_model }}_list.csv
     chown pyapps:logreader {{ app_log_dir }}/bb_{{ env }}_{{ export_app_model }}_list.csv
   when: ( export_app_model is defined )
@@ -38,8 +38,8 @@
   run_once: yes
   shell: |
     cd {{ app_pyapp_home }}/{{ common_project_name }}
-    source {{ cf_app_py_virtual_env }}/bin/activate
-    export PATH={{ cf_app_py_virtual_env }}/bin:$PATH
+    source {{ app_py_virtual_env }}/bin/activate
+    export PATH={{ app_py_virtual_env }}/bin:$PATH
     ./manage.py model2csv --application {{ export_devuser_application }} --model {{ export_dev_model }} --add_table_name True --filter_fields id,user,organization_name,user_type | sed '/WARNING:/d' | sed 's/{{ export_devuser_application }}.{{ export_dev_model }}/{{ export_devuser_application }}.{{ export_dev_model }}_info/' >{{ app_log_dir }}/bb_{{ env }}_{{ export_dev_model }}_list.csv
     chown pyapps:logreader {{ app_log_dir }}/bb_{{ env }}_{{ export_dev_model }}_list.csv
   when: ( export_dev_model is defined )

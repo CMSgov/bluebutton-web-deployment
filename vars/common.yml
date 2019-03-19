@@ -43,6 +43,8 @@ css_repo: "https://github.com/CMSgov/bluebutton-css.git"
 # the dir to clone to css repo to
 css_dir: "bluebutton-css"
 
+app_py_virtual_env: "/var/virtualenv/{{ project_dir }}"
+
 #Common user accounts
 remote_user_account: "ec2-user"
 remote_admin_account: "root"
