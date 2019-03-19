@@ -86,7 +86,7 @@
     version: 1.9.42
     state: present
     extra_args: " --upgrade {{ pip_extra_args }} "
-    virtualenv: "{{ venv }}"
+    virtualenv: "{{ venv_full }}"
 
 - import_tasks: ./../appherd/roles/create_certstore/tasks/main.yml
 
