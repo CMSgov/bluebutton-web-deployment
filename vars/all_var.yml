@@ -289,7 +289,6 @@
   cf_app_instance_type: "{{ env_cf_app_instance_type }}"
   cf_app_public_server_name: "{{ env_cf_app_public_server_name }}"
   cf_app_pyserver_name: "{{ env_cf_app_pyserver_name }}"
-  app_py_virtual_env: "{{ env_app_py_virtual_env }}"
   cf_app_pyapp_settings: "{{ env_cf_app_pyapp_settings }}"
   cf_app_repo_branch: "{{ env_cf_app_repo_branch }}"
   cf_app_db_user: "{{ env_cf_app_db_user }}"
