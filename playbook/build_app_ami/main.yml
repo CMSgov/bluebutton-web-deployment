@@ -23,6 +23,5 @@
     - ../../roles/app_logs
     - ../../roles/app_install
     - ../../roles/env_config
-    - ../../roles/nginx
     - ../../roles/semanage_apps
     - ../../roles/semanage_virtualenv
