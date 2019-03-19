@@ -13,11 +13,11 @@
     splunk_target_layer: "app"
     repo: "https://github.com/CMSgov/bluebutton-web-deployment.git"
     version: "BLUEBUTTON-314"
-  vars_files:
-    - "vars/common.yml"
-    - "vault/env/{{ env }}/vault.yml"
-    - "vars/env/{{ env }}/env.yml"
-    - "vars/all_var.yml"
+    var_files:
+      - "vars/common.yml"
+      - "vault/env/{{ env }}/vault.yml"
+      - "vars/env/{{ env }}/env.yml"
+      - "vars/all_var.yml"
 
   tasks:
     - name: Remove existing ./code and ./code.zip
@@ -66,11 +66,14 @@
         file: "{{ root_lookup.files[0].path | dirname }}/{{ item }}"
       with_items: "{{ var_files }}"
 
-    - import_role:
-        name: "{{ root_lookup }}"/roles/nessus_update_key
-    - import_role:
-        name: "{{ root_lookup }}"/roles/splunk
-    - import_role:
-        name: "{{ root_lookup }}"/roles/new_relic
-    - import_role:
-        name: "{{ root_lookup }}"/roles/env_var
+    - name: Update Nessus Key
+      include: "{{ root_lookup.files[0].path | dirname }}/roles/nessus_update_key/tasks/main.yml"
+
+    - name: Configure Splunk
+      include: "{{ root_lookup.files[0].path | dirname }}/roles/splunk/tasks/main.yml"
+
+    - name: Configure New Relic
+      include: "{{ root_lookup.files[0].path | dirname }}/roles/new_relic/tasks/main.yml"
+
+    - name: Build .env file for DJANGO
+      include: "{{ root_lookup.files[0].path | dirname }}/roles/env_vars/tasks/main.yml"
