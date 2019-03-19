@@ -9,7 +9,7 @@
   become_user: "{{ remote_admin_account }}"
   become: yes
   file:
-    dest: "{{ cf_app_pyapp_home }}/certstore"
+    dest: "{{ app_pyapp_home }}/certstore"
     mode: 0755
     owner: "{{ app_pyapps_user }}"
     group: "{{ app_group }}"

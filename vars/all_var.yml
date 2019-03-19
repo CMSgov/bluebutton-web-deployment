@@ -83,10 +83,7 @@
   # the base path to install to. You should not need to change this.
   # git installs the repo in a folder beneath this path
   project_parent: "{{ env_project_parent }}"
-  # Set to hhs_o_server
-  # The directory that virtualenv is created in and git is cloned into
-  # eg. /var/virtualenv/hhs_o_server and /var/pyapps/hhs_o_server
-  project_dir: "{{ env_project_dir }}"
+
 
   # the base path to install to. You should not need to change this.
   # git installs the repo in a folder beneath this path
@@ -311,7 +308,6 @@
   cf_app_public_server_name: "{{ env_cf_app_public_server_name }}"
   cf_app_pyserver_name: "{{ env_cf_app_pyserver_name }}"
   cf_app_py_virtual_env: "{{ env_cf_app_py_virtual_env }}"
-  cf_app_pyapp_home: "{{ env_cf_app_pyapp_home }}"
   cf_app_pyapp_settings: "{{ env_cf_app_pyapp_settings }}"
   cf_app_repo_branch: "{{ env_cf_app_repo_branch }}"
   cf_app_db_user: "{{ env_cf_app_db_user }}"

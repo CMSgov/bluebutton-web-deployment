@@ -39,7 +39,7 @@
       become: yes
       copy:
         content: "{{ app_fhir_cert }}"
-        dest: "{{ cf_app_pyapp_home }}/certstore/{{ app_fhir_cert_name }}"
+        dest: "{{ app_pyapp_home }}/certstore/{{ app_fhir_cert_name }}"
         mode: 0640
         owner: "{{ app_pyapps_user }}"
         group: "{{ app_group }}"
@@ -49,7 +49,7 @@
       become: yes
       copy:
         content: "{{ app_fhir_key }}"
-        dest: "{{ cf_app_pyapp_home }}/certstore/{{ app_fhir_key_name }}"
+        dest: "{{ app_pyapp_home }}/certstore/{{ app_fhir_key_name }}"
         mode: 0640
         owner: "{{ app_pyapps_user }}"
         group: "{{ app_group }}"

@@ -24,4 +24,4 @@
 - name: "Make new files executable"
   become_user: "{{ remote_admin_account }}"
   become: yes
-  shell: "chmod +x {{ cf_app_pyapp_home }}"
+  shell: "chmod +x {{ app_pyapp_home }}"

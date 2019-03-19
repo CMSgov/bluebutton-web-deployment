@@ -15,7 +15,7 @@
   become_user: "{{ remote_admin_account }}"
   become: yes
   file:
-    dest: "{{ cf_app_pyapp_home }}"
+    dest: "{{ app_pyapp_home }}"
     state: directory
     recurse: yes
     owner: "{{ app_pyapps_user }}"
@@ -41,7 +41,7 @@
     force: yes
     clone: yes
 
-- name: "update from git: {{ project_repo }} branch:{{ git_branch }} to {{ env }}"
+- name: "update from git: {{ project_repo }} branch:{{ git_branch }}
   become_user: "{{ remote_admin_account }}"
   become: yes
   git:
@@ -63,7 +63,7 @@
   become_user: "{{ remote_admin_account }}"
   become: yes
   file:
-    dest: "{{ cf_app_pyapp_home }}"
+    dest: "{{ app_pyapp_home }}"
     state: directory
     recurse: yes
     owner: "{{ app_pyapps_user }}"
@@ -76,7 +76,7 @@
   shell: |
     source {{ cf_app_py_virtual_env }}/bin/activate && make reqs-install
   args:
-    chdir: "{{ cf_app_pyapp_home }}/{{ common_project_name }}"
+    chdir: "{{ app_pyapp_home }}/{{ common_project_name }}"
 
 - name: "install boto3 for collectstatic"
   become_user: "{{ remote_admin_account }}"
