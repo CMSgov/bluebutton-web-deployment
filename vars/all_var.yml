@@ -42,7 +42,6 @@
   mod_wsgi_processes: "{{ env_mod_wsgi_processes | default(1) }}"
   mod_wsgi_threads: "{{ env_mod_wsgi_threads | default(15) }}"
   mod_wsgi_timeout: "{{ env_mod_wsgi_timeout | default(300) }}"
-  python_bin_dir: "{{ env_python_bin_dir }}"
 
 
   # pip install extra arguments needed:
