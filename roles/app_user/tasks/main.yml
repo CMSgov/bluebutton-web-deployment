@@ -3,5 +3,5 @@
   become_user: "{{ remote_admin_account }}"
   become: yes
   user:
-    name: "{{ cf_app_pyapps_user }}"
-    password: "{{ cf_app_pyapps_pwd | password_hash('sha512') }}"
+    name: "{{ app_pyapps_user }}"
+#    password: "{{ cf_app_pyapps_pwd | password_hash('sha512') }}"

@@ -3,8 +3,8 @@
   become_user: "{{ remote_admin_account }}"
   become: yes
   file:
-    dest: "{{ cf_app_log_dir }}"
-    owner: "{{ cf_app_pyapps_user }}"
+    dest: "{{ app_log_dir }}"
+    owner: "{{ app_pyapps_user }}"
     group: logreader
     state: directory
     mode: 0775
@@ -14,8 +14,8 @@
   become_user: "{{ remote_admin_account }}"
   become: yes
   file:
-    dest: "{{ cf_app_log_dir }}/{{ item }}"
-    owner: "{{ cf_app_pyapps_user }}"
+    dest: "{{ app_log_dir }}/{{ item }}"
+    owner: "{{ app_pyapps_user }}"
     group: logreader
     state: touch
     mode: 0776
@@ -31,7 +31,7 @@
   become_user: "{{ remote_admin_account }}"
   become: yes
   sefcontext:
-    target: "{{ cf_app_log_dir }}(/.*)?"
+    target: "{{ app_log_dir }}(/.*)?"
     setype: httpd_sys_content_t
     state: present
   ignore_errors: True
@@ -42,7 +42,7 @@
   copy:
     dest: "/etc/logrotate.d/pyapps"
     content: |
-      {{ cf_app_log_dir }}/*.log {
+      {{ app_log_dir }}/*.log {
       missingok
       notifempty
       compress
@@ -50,7 +50,7 @@
       rotate 10
       copytruncate
       daily
-      create 0776 {{ cf_app_pyapps_user }} logreader
+      create 0776 {{ app_pyapps_user }} logreader
       }
     owner: root
     group: logreader

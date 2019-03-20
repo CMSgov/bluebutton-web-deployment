@@ -30,22 +30,16 @@
   ### Environment:
   env: "{{ env_env }}"
 
-  ### AWS Region
-  aws_region: "{{ env_aws_region }}"
-
   ### Cloud Formation Tags:
   cf_tags_business: "{{ common_cf_tags_business }}"
   cf_tags_application: "{{ common_cf_tags_application }}"
 
 
   # Make Python and mod_wsgi version parameters
-  python_ver: "{{ env_python_ver }}"
-  python_ver_full: "{{ env_python_ver_full }}"
   mod_wsgi_ver_full: "{{ env_mod_wsgi_ver_full }}"
   mod_wsgi_processes: "{{ env_mod_wsgi_processes | default(1) }}"
   mod_wsgi_threads: "{{ env_mod_wsgi_threads | default(15) }}"
   mod_wsgi_timeout: "{{ env_mod_wsgi_timeout | default(300) }}"
-  python_bin_dir: "{{ env_python_bin_dir }}"
 
 
   # pip install extra arguments needed:
@@ -77,7 +71,7 @@
   project_name: "{{ common_project_name }}"
 
   # Virtual Environment location
-  venv: "{{ env_venv }}{{ common_project_dir }}"
+  venv_full: "{{ venv }}{{ common_project_dir }}"
 
   # git branch to deploy
   git_branch: "master"
@@ -85,33 +79,15 @@
   # Project Parent Dir
   # the base path to install to. You should not need to change this.
   # git installs the repo in a folder beneath this path
-  project_parent: "{{ env_project_parent }}"
-  # Set to hhs_o_server
-  # The directory that virtualenv is created in and git is cloned into
-  # eg. /var/virtualenv/hhs_o_server and /var/pyapps/hhs_o_server
-  project_dir: "{{ env_project_dir }}"
 
   # the base path to install to. You should not need to change this.
   # git installs the repo in a folder beneath this path
   # files and folders excluded from the repository can be installed here
   # in files and folders alongside the repo.
-  install_root: "{{ env_project_parent }}{{ common_project_dir }}"
+  install_root: "{{ project_parent }}{{ common_project_dir }}"
 
   # the git repository URL for the project
-  # Original source forked from work done for ONC:
-  # project_repo: git@github.com:transparenthealth/hhs_oauth_server.git
-  # Forked to:
-  # project_repo: "https://github.com/hhsidealab/hhs_oauth_server.git"
-  # Moved to:
-  # project_repo: "https://github.com/CMSgov/bluebutton-web-server.git"
-
-  project_repo: "{{ env_project_repo }}"
-
-  # the git repository URL for the CSS repo
-  css_repo: "{{ env_css_repo }}"
-
-  # the directory to clone css repo to
-  css_dir: "{{ env_css_dir }}"
+  project_repo: "https://github.com/CMSgov/bluebutton-web-server.git"
 
   # DEBUG Mode
   # False in IMPL / PROD
@@ -313,11 +289,8 @@
   cf_app_instance_type: "{{ env_cf_app_instance_type }}"
   cf_app_public_server_name: "{{ env_cf_app_public_server_name }}"
   cf_app_pyserver_name: "{{ env_cf_app_pyserver_name }}"
-  cf_app_py_virtual_env: "{{ env_cf_app_py_virtual_env }}"
-  cf_app_pyapp_home: "{{ env_cf_app_pyapp_home }}"
   cf_app_pyapp_settings: "{{ env_cf_app_pyapp_settings }}"
   cf_app_repo_branch: "{{ env_cf_app_repo_branch }}"
-  cf_app_pyapps_user: "{{ env_cf_app_pyapps_user }}"
   cf_app_db_user: "{{ env_cf_app_db_user }}"
   cf_app_db_pwd: "{{ env_cf_app_db_pwd }}"
   cf_app_pyapps_email: "{{ env_cf_app_pyapps_email }}"
@@ -330,7 +303,6 @@
   cf_app_aws_content_key_id: "{{ env_cf_app_aws_content_key_id }}"
   cf_app_aws_content_access_key: "{{ env_cf_app_aws_content_access_key }}"
   cf_app_target_vpc_id: "{{ cf_vpc_id }}"
-  cf_app_log_dir: "{{ env_cf_app_log_dir }}"
 
   # Postgres Role related settings
   db_server_account: "postgres"

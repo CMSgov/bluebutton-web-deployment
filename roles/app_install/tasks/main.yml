@@ -15,18 +15,18 @@
   become_user: "{{ remote_admin_account }}"
   become: yes
   file:
-    dest: "{{ cf_app_pyapp_home }}"
+    dest: "{{ app_pyapp_home }}"
     state: directory
     recurse: yes
-    owner: "{{ cf_app_pyapps_user }}"
+    owner: "{{ app_pyapps_user }}"
     group: "{{ app_group }}"
     mode: 0755
 
-- name: "set ownership to pyapps:www-data ({{ cf_app_pyapps_user }}:{{ app_group }})"
+- name: "set ownership to pyapps:www-data ({{ app_pyapps_user }}:{{ app_group }})"
   become_user: "{{ remote_admin_account }}"
   become: yes
   file:
-    owner: "{{ cf_app_pyapps_user }}"
+    owner: "{{ app_pyapps_user }}"
     group: "{{ app_group }}"
     dest: "/var/virtualenv"
     state: directory
@@ -41,7 +41,7 @@
     force: yes
     clone: yes
 
-- name: "update from git: {{ project_repo }} branch:{{ git_branch }} to {{ env }}"
+- name: "update from git: {{ project_repo }} branch:{{ git_branch }}"
   become_user: "{{ remote_admin_account }}"
   become: yes
   git:
@@ -59,14 +59,14 @@
     force: yes
     clone: yes
 
-- name: "set permissions to application code ( {{ cf_app_pyapps_user }}:{{ app_group }} )"
+- name: "set permissions to application code ( {{ app_pyapps_user }}:{{ app_group }} )"
   become_user: "{{ remote_admin_account }}"
   become: yes
   file:
-    dest: "{{ cf_app_pyapp_home }}"
+    dest: "{{ app_pyapp_home }}"
     state: directory
     recurse: yes
-    owner: "{{ cf_app_pyapps_user }}"
+    owner: "{{ app_pyapps_user }}"
     group: "{{ app_group }}"
     mode: 0755
 
@@ -74,9 +74,9 @@
   become_user: "{{ remote_admin_account }}"
   become: yes
   shell: |
-    source {{ cf_app_py_virtual_env }}/bin/activate && make reqs-install
+    source {{ app_py_virtual_env }}/bin/activate && make reqs-install
   args:
-    chdir: "{{ cf_app_pyapp_home }}/{{ common_project_name }}"
+    chdir: "{{ app_pyapp_home }}/{{ common_project_name }}"
 
 - name: "install boto3 for collectstatic"
   become_user: "{{ remote_admin_account }}"
@@ -86,7 +86,7 @@
     version: 1.9.42
     state: present
     extra_args: " --upgrade {{ pip_extra_args }} "
-    virtualenv: "{{ venv }}"
+    virtualenv: "{{ venv_full }}"
 
 - import_tasks: ./../appherd/roles/create_certstore/tasks/main.yml
 

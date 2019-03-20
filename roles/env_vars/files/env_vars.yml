@@ -3,8 +3,6 @@
   hosts: localhost
   vars:
     env: "dev"
-    repo: "https://github.com/CMSgov/bluebutton-web-deployment.git"
-    version: "master"
     yaml_files:
       - "vars/common.yml"
       - "vault/env/{{ env }}/vault.yml"
@@ -12,53 +10,7 @@
       - "vars/all_var.yml"
 
   tasks:
-    - name: Remove existing ./code and ./code.zip
-      file:
-        state: absent
-        path: ./code
-      with_items:
-        - ./code
-        - ./code.zip
-
-    - name: Checkout deployment repo
-      git:
-        repo: "{{ repo }}"
-        dest: ./code
-        version: "{{ version }}"
-      when: repo.endswith(".git")
-
-    - name: Download deployment repo archive
-      get_url:
-        url: "{{ repo }}"
-        dest: ./code.zip
-      when: repo.endswith(".zip")
-
-    - name: Creates ./code directory
-      file:
-        path: ./code
-        state: directory
-      when: repo.endswith(".zip")
-
-    - name: Unzip deployment repo archive
-      unarchive:
-        src: ./code.zip
-        dest: ./code
-        remote_src: yes
-      when: repo.endswith(".zip")
-
-    - name: Determine root of repo
-      find:
-        recurse: yes
-        patterns: "LICENSE"
-        paths: ./code
-      register: root_lookup
-
-    - name: Load vars from yaml files
-      include_vars:
-        file: "{{ root_lookup.files[0].path | dirname }}/{{ item }}"
-      with_items: "{{ yaml_files }}"
-
-    - name: Write .env.new file
+    - name: Write .env file
       become_user: "{{ remote_admin_account }}"
       become: yes
       template:
@@ -87,9 +39,9 @@
       become: yes
       copy:
         content: "{{ app_fhir_cert }}"
-        dest: "{{ cf_app_pyapp_home }}/certstore/{{ app_fhir_cert_name }}"
+        dest: "{{ app_pyapp_home }}/certstore/{{ app_fhir_cert_name }}"
         mode: 0640
-        owner: "{{ cf_app_pyapps_user }}"
+        owner: "{{ app_pyapps_user }}"
         group: "{{ app_group }}"
 
     - name: "Copy key({{ app_fhir_key_name }}) to certstore"
@@ -97,9 +49,9 @@
       become: yes
       copy:
         content: "{{ app_fhir_key }}"
-        dest: "{{ cf_app_pyapp_home }}/certstore/{{ app_fhir_key_name }}"
+        dest: "{{ app_pyapp_home }}/certstore/{{ app_fhir_key_name }}"
         mode: 0640
-        owner: "{{ cf_app_pyapps_user }}"
+        owner: "{{ app_pyapps_user }}"
         group: "{{ app_group }}"
 
     - name: Restart uwsgi

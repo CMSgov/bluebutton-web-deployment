@@ -5,7 +5,6 @@
   gather_facts: no
   vars:
     ansible_ssh_pipelining: no
-    env: "dev"
     azone: "az1"
     sub_zone: "app"
     sg_zone: "appserver"
@@ -18,16 +17,11 @@
     - "./../../vars/all_var.yml"
 
   roles:
-    - ../../roles/nessus_update_key
-    - ../../roles/splunk
     - ../../roles/aws
     - ../../roles/app_user
     - ../../roles/app_prep
     - ../../roles/app_logs
     - ../../roles/app_install
-    - ../../roles/env_vars
-    - ../../roles/new_relic
-    - ../../roles/nginx
-
+    - ../../roles/env_config
     - ../../roles/semanage_apps
     - ../../roles/semanage_virtualenv

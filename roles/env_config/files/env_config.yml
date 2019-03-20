@@ -1,0 +1,85 @@
+---
+- name: Environment Specific Configuration
+  hosts: localhost
+  remote_user: ec2-user
+  gather_facts: no
+  vars:
+    ansible_ssh_pipelining: no
+    env: "dev"
+    sub_zone: "app"
+    sg_zone: "appserver"
+    splunk_target_layer: "app"
+    repo: "https://github.com/CMSgov/bluebutton-web-deployment.git"
+    version: "BLUEBUTTON-314"
+    var_files:
+      - "vars/common.yml"
+      - "vault/env/{{ env }}/vault.yml"
+      - "vars/env/{{ env }}/env.yml"
+      - "vars/all_var.yml"
+
+  tasks:
+    - name: Remove existing ./code and ./code.zip
+      file:
+        state: absent
+        path: ./code
+      with_items:
+        - ./code
+        - ./code.zip
+
+    - name: Checkout deployment repo
+      git:
+        repo: "{{ repo }}"
+        dest: ./code
+        version: "{{ version }}"
+      when: repo.endswith(".git")
+
+    - name: Download deployment repo archive
+      get_url:
+        url: "{{ repo }}"
+        dest: ./code.zip
+      when: repo.endswith(".zip")
+
+    - name: Creates ./code directory
+      file:
+        path: ./code
+        state: directory
+      when: repo.endswith(".zip")
+
+    - name: Unzip deployment repo archive
+      unarchive:
+        src: ./code.zip
+        dest: ./code
+        remote_src: yes
+      when: repo.endswith(".zip")
+
+    - name: Determine root of repo
+      find:
+        recurse: yes
+        patterns: "LICENSE"
+        paths: ./code
+      register: root_lookup
+
+    - name: Load vars from yaml files
+      include_vars:
+        file: "{{ root_lookup.files[0].path | dirname }}/{{ item }}"
+      with_items: "{{ var_files }}"
+
+    - name: Update Nessus Key
+      include_role:
+        name: "{{ root_lookup.files[0].path | dirname }}/roles/nessus_update_key"
+
+    - name: Configure Splunk
+      include_role:
+        name: "{{ root_lookup.files[0].path | dirname }}/roles/splunk"
+
+    - name: Configure New Relic
+      include_role:
+        name: "{{ root_lookup.files[0].path | dirname }}/roles/new_relic"
+
+    - name: Install and Configure Nginx
+      include_role:
+        name: "{{ root_lookup.files[0].path | dirname }}/roles/nginx"
+
+    - name: Build .env file for DJANGO
+      include_role:
+        name: "{{ root_lookup.files[0].path | dirname }}/roles/env_vars"
