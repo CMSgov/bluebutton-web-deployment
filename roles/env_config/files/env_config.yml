@@ -74,9 +74,6 @@
       include: "{{ root_lookup.files[0].path | dirname }}/roles/new_relic/tasks/main.yml"
 
     - name: Install and Configure Nginx
-      include: "{{ root_lookup.files[0].path | dirname }}/roles/nginx/tasks/main.yml"
-
-    - name: Install and Configure Nginx
       include_role:
         name: "{{ root_lookup.files[0].path | dirname }}/roles/nginx"
 
