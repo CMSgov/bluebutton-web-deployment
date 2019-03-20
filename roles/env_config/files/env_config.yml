@@ -73,8 +73,13 @@
     - name: Configure New Relic
       include: "{{ root_lookup.files[0].path | dirname }}/roles/new_relic/tasks/main.yml"
 
-    - name: Install and Configure Nginx 
+    - name: Install and Configure Nginx
       include: "{{ root_lookup.files[0].path | dirname }}/roles/nginx/tasks/main.yml"
 
+    - name: Install and Configure Nginx
+      include_role:
+        name: "{{ root_lookup.files[0].path | dirname }}/roles/nginx"
+
     - name: Build .env file for DJANGO
-      include: "{{ root_lookup.files[0].path | dirname }}/roles/env_vars/tasks/main.yml"
+      include_role:
+        name: "{{ root_lookup.files[0].path | dirname }}/roles/env_vars"
