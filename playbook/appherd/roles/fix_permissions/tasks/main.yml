@@ -11,5 +11,4 @@
   django_manage:
     command: fix_permissions
     app_path: "{{ install_root }}/{{ project_name }}/"
-    virtualenv: "{{ venv }}"
-
+    virtualenv: "{{ venv_full }}"
