@@ -10,7 +10,7 @@
     sg_zone: "appserver"
     splunk_target_layer: "app"
     repo: "https://github.com/CMSgov/bluebutton-web-deployment.git"
-    version: "BLUEBUTTON-314"
+    version: "BLUEBUTTON-851"
     var_files:
       - "vars/common.yml"
       - "vault/env/{{ env }}/vault.yml"
