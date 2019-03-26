@@ -16,7 +16,7 @@
   django_manage:
     command: migrate
     app_path: "{{ install_root }}/{{ project_name }}/"
-    virtualenv: "{{ venv }}"
+    virtualenv: "{{ venv_full }}"
   when: ( migrate is defined ) and ( migrate == 'yes' )
 
 - name: "Add Group roles to database"
@@ -26,7 +26,7 @@
   django_manage:
     command: loaddata apps/accounts/fixtures/groups.json
     app_path: "{{ install_root }}/{{ project_name }}/"
-    virtualenv: "{{ venv }}"
+    virtualenv: "{{ venv_full }}"
   when: ( add_groups is defined ) and ( add_groups|lower == 'yes' )
 
 ############################################################
@@ -44,7 +44,7 @@
   django_manage:
     command:  create_blue_button_scopes
     app_path: "{{ install_root }}/{{ project_name }}/"
-    virtualenv: "{{ venv }}"
+    virtualenv: "{{ venv_full }}"
   when: ( add_scopes is defined ) and ( add_scopes|lower == 'yes' )
 
 - name: "Load ResourceRouter and SupportedResourceType tables"
@@ -54,7 +54,7 @@
   django_manage:
     command: "loaddata apps/fhir/server/fixtures/{{ env|lower }}_install_fixture.json"
     app_path: "{{ install_root }}/{{ project_name }}/"
-    virtualenv: "{{ venv }}"
+    virtualenv: "{{ venv_full }}"
   when: ( add_back_end_resources is defined ) and ( add_back_end_resources == 'yes' )
 
 - name: Django collectstatic
@@ -66,6 +66,6 @@
   django_manage:
     command: collectstatic
     app_path: "{{ install_root }}/{{ project_name }}/"
-    virtualenv: "{{ venv }}"
+    virtualenv: "{{ venv_full }}"
   when: ( collectstatic is undefined ) or
         (( collectstatic is defined ) and ( collectstatic|lower == 'yes' ))
