@@ -6,6 +6,13 @@
 # Perform django migrate and django collectstatic
 # add in group create for first run only.
 
+- name: "Make sure virtualenv installed"
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  pip:
+    name: virtualenv
+    state: present
+
 - name: "Django migrate "
   become_user: "{{ remote_admin_account }}"
   become: yes
