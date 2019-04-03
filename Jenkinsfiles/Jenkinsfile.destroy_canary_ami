@@ -1,0 +1,202 @@
+def aws_creds = 'cbj-deploy'
+def private_key = ''
+def vault_pass = 'vault-pass'
+def backend_config = ''
+def terraform_vars = ''
+def release_version = ''
+def ami_id = ''
+
+pipeline {
+  agent {
+    node {
+      label ''
+      customWorkspace 'blue-button-deploy-canary'
+    }
+  }
+
+  parameters {
+    string(
+      defaultValue: "*/master",
+      description: 'The branch of the deployment repo to use for the job.',
+      name: 'DEPLOY_BRANCH'
+    )
+    string(
+      defaultValue: "",
+      description: 'The Blue Button AMI id that was used for deployment.',
+      name: 'AMI_ID'
+    )
+    choice(
+      choices: 'impl\nprod',
+      description: 'The environment which the canary resides in. Required.',
+      name: 'ENV'
+    )
+    string(
+      defaultValue: "",
+      description: 'The name of the instance to destroy. i.e. impl_canary_1',
+      name: 'INSTANCE_NAME'
+    )
+    string(
+      defaultValue: "0",
+      description: 'The number of Terraform to change actions expected.',
+      name: 'TF_EXPECT_CHANGES'
+    )
+  }
+
+  stages {
+    stage('Ensure ENV') {
+      steps {
+        script {
+          if (params.ENV == "") {
+            sh "exit 1"
+          }
+        }
+      }
+    }
+
+    stage('Clear the working dir') {
+      steps {
+        dir('code') {
+          deleteDir()
+        }
+      }
+    }
+
+    stage('Checkout Repo') {
+      parallel {
+        stage('Checkout Deployment Repo') {
+          steps {
+            checkout([
+              $class: 'GitSCM',
+              branches: [[
+                name: "${params.DEPLOY_BRANCH}"
+              ]],
+              doGenerateSubmoduleConfigurations: false,
+              extensions: [[
+                $class: 'RelativeTargetDirectory',
+                relativeTargetDir: 'code'
+              ]],
+              userRemoteConfigs: [[
+                url: 'https://github.com/CMSgov/bluebutton-web-deployment.git'
+              ]]
+            ])
+          }
+        }
+        stage('Checkout TFENV Repo') {
+          steps {
+            checkout([
+              $class: 'GitSCM',
+              branches: [[
+                name: "*/master"
+              ]],
+              doGenerateSubmoduleConfigurations: false,
+              extensions: [[
+                $class: 'RelativeTargetDirectory',
+                relativeTargetDir: 'tfenv'
+              ]],
+              userRemoteConfigs: [[
+                url: 'https://github.com/tfutils/tfenv.git'
+              ]]
+            ])
+          }
+        }
+      }
+    }
+
+    stage('Install requirements') {
+      steps {
+        dir('code') {
+          script {
+            sh """
+              virtualenv -ppython2.7 venv
+              . venv/bin/activate
+
+              pip install --upgrade pip
+              pip install --upgrade cffi
+            """
+          }
+        }
+      }
+    }
+
+    stage('Install Terraform Version') {
+      steps {
+        dir('tfenv') {
+          script {
+            sh """
+              bin/tfenv install
+              terraform --version
+            """
+          }
+        }
+      }
+    }
+
+    stage('Determine terraform config files') {
+      steps {
+        script {
+          backend_config = "bb-backend-${params.ENV}_canary"
+          terraform_vars = "bb-tf-${params.ENV}_canary"
+        }
+      }
+    }
+
+/*    stage('Sanity check terraform plan') {
+      steps {
+        script {
+          dir('code') {
+            withAwsCli(credentialsId: aws_creds, defaultRegion: 'us-east-1') {
+              withCredentials([
+                file(credentialsId: backend_config, variable: 'bc'),
+                file(credentialsId: terraform_vars, variable: 'tv')
+              ]) {
+                sh """
+                  cd terraform/${params.ENV}_canary
+
+                  export TF_CLI_ARGS="-no-color"
+
+                  terraform init -backend-config=$bc
+
+                  TF_OUT=\$(terraform destroy -target aws_instance.${params.ENV}_canary_app)
+
+                  TF_PLAN_CHECK=\$(echo "\$TF_OUT" | grep "Plan: 0 to add, ${params.TF_EXPECT_CHANGES} to change, 1 to destroy.")
+
+                  if [ -z "\$TF_PLAN_CHECK" ]
+                  then
+                    echo "Terraform plan does not match expectations."
+                    exit 1
+                  fi
+                """
+              }
+            }
+          }
+        }
+      }
+    }*/
+
+    stage('Destroy Canary Instance') {
+      steps {
+        script {
+          dir('code') {
+            withAwsCli(credentialsId: aws_creds, defaultRegion: 'us-east-1') {
+              withCredentials([
+                file(credentialsId: backend_config, variable: 'bc'),
+                file(credentialsId: terraform_vars, variable: 'tv')
+              ]) {
+                sh """
+                  cd terraform/${params.ENV}_canary
+
+                  export TF_CLI_ARGS="-no-color"
+
+                  terraform init -backend-config=$bc
+                  terraform destroy -var-file=$tv \
+                  -target aws_instance.${params.INSTANCE_NAME} \
+                  --auto-approve
+                """
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
