@@ -2,7 +2,7 @@
 
 set -e
 
-exec 2> >(tee -a /var/log/boot.log >&2)
+exec > >(tee -a /var/log/boot.log 2>&1)
 
 aws s3 cp s3://${bucket}/${env}/VAULT_PW .
 aws s3 cp s3://${bucket}/${env}/REPO_URI .
