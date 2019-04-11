@@ -12,3 +12,8 @@
   shell: |
     /opt/splunkforwarder/bin/splunk stop
     /opt/splunkforwarder/bin/splunk clone-prep-clear-config
+
+- name: "Restart splunk"
+  become_user: "{{ remote_admin_account }}"
+  shell: |
+    /opt/splunkforwarder/bin/splunk start
