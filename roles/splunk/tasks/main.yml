@@ -6,9 +6,14 @@
     src: "../templates/splunk_deployment_conf.j2"
     dest: "/opt/splunkforwarder/etc/system/local/deploymentclient.conf"
 
-- name: "initialize splunk configuration"
+- name: "Stop and initialize splunk configuration"
   become_user: "{{ remote_admin_account }}"
   become: yes
   shell: |
     /opt/splunkforwarder/bin/splunk stop
     /opt/splunkforwarder/bin/splunk clone-prep-clear-config
+
+- name: "Start splunk"
+  become_user: "{{ remote_admin_account }}"
+  shell: |
+    /opt/splunkforwarder/bin/splunk start
