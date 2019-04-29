@@ -2,7 +2,7 @@ def private_key = ''
 def vault_pass = 'vault-pass'
 def aws_creds = 'cbj-deploy'
 def release_version = ''
-def slack_channel = '#bluebutton-alerts'
+def helpers
 
 pipeline {
   agent {
@@ -45,7 +45,16 @@ pipeline {
   }
 
   stages {
-    stage('Ensure BB20_APP_VERSION, GDIT_GOLD_IMAGE_AMI_ID and SUBNET_ID') {
+    stage('Notify') {
+      steps {
+        script {
+          helpers = load "Jenkinsfiles/helpers.groovy"
+          helpers.slackNotify "STARTING"
+        }
+      }
+    }
+
+    stage('Ensure Params') {
       steps {
         sh """
         if [ -z "${params.BB20_APP_VERSION}" ] || [ -z "${params.GDIT_GOLD_IMAGE_AMI_ID}" ] || [ -z "${params.SUBNET_ID}" ]
@@ -69,7 +78,7 @@ pipeline {
       }
     }
 
-    stage('Checkout bluebutton-web-deployment') {
+    stage('Setup and Checkout Deployment Repo') {
       steps {
         checkout([
           $class: 'GitSCM',
@@ -85,6 +94,9 @@ pipeline {
             url: 'https://github.com/CMSgov/bluebutton-web-deployment.git'
           ]]
         ])
+        script {
+            helpers = load "Jenkinsfiles/helpers.groovy"
+        }
       }
     }
 
@@ -145,8 +157,26 @@ pipeline {
     }
   }
 
-/*
-# THIS IS WHERE WE WILL ADD SLACK NOTIFICATIONS ONCE SLACK IS ONLINE
-*/
+  post {
+      success {
+        script {
+          helpers.slackNotify("SUCCESS", 'good')
+        }
+      }
 
+      failure {
+        script {
+          try {
+            helpers.slackNotify("FAILED!", 'bad')
+          } catch (err) {
+            emailext body: "A CBJ job failed and we couldn't notify Slack.\n${BUILD_URL}", subject: 'CBJ Build Failure', to: 'bluebutton-dev-alert@fearsol.com'
+          }
+        }
+      }
+
+      always {
+        // Cleanup the workspace
+        deleteDir()
+      }
+  }
 }
