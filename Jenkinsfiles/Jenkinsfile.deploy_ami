@@ -5,6 +5,7 @@ def backend_config = ''
 def terraform_vars = ''
 def release_version = ''
 def ami_id = ''
+def helpers
 
 pipeline {
   agent {
@@ -53,6 +54,15 @@ pipeline {
   }
 
   stages {
+    stage('Notify') {
+      steps {
+        script {
+          helpers = load "Jenkinsfiles/helpers.groovy"
+          helpers.slackNotify "STARTING - Env:${params.ENV}"
+        }
+      }
+    }
+
     stage('Ensure ENV') {
       steps {
         script {
@@ -99,27 +109,6 @@ pipeline {
       steps {
         dir('code') {
           deleteDir()
-        }
-      }
-    }
-
-    stage('Notify HipChat') {
-      steps {
-        withCredentials([
-          string(credentialsId: 'hipchat-room', variable: 'room'),
-          string(credentialsId: 'hipchat-server', variable: 'server'),
-          string(credentialsId: 'hipchat-token', variable: 'token')
-        ]) {
-          hipchatSend(
-            color: 'GRAY',
-            notify: true,
-            message: "STARTED: ${env.JOB_NAME} [${params.ENV}]",
-            room: room,
-            sendAs: '',
-            server: server,
-            token: token,
-            v2enabled: true
-          )
         }
       }
     }
@@ -336,24 +325,8 @@ pipeline {
 
   post {
     success {
-      withCredentials([
-        string(credentialsId: 'hipchat-room', variable: 'room'),
-        string(credentialsId: 'hipchat-server', variable: 'server'),
-        string(credentialsId: 'hipchat-token', variable: 'token')
-      ]) {
-        hipchatSend(
-            color: 'GREEN',
-            notify: true,
-            message: "SUCCESS: ${env.JOB_NAME} [${params.ENV}]",
-            room: room,
-            sendAs: '',
-            server: server,
-            token: token,
-            v2enabled: true
-        )
-      }
-
       script {
+        helpers.slackNotify("SUCCESS - Env:${params.ENV}", 'good')
         if (params.ENV == "prod" || params.ENV == "impl") {
           withAwsCli(credentialsId: aws_creds, defaultRegion: 'us-east-1') {
             release_version = sh(
@@ -378,21 +351,12 @@ pipeline {
     }
 
     failure {
-      withCredentials([
-        string(credentialsId: 'hipchat-room', variable: 'room'),
-        string(credentialsId: 'hipchat-server', variable: 'server'),
-        string(credentialsId: 'hipchat-token', variable: 'token')
-      ]) {
-        hipchatSend(
-          color: 'RED',
-          notify: true,
-          message: "FAILED: ${env.JOB_NAME} [${params.ENV}]",
-          room: room,
-          sendAs: '',
-          server: server,
-          token: token,
-          v2enabled: true
-        )
+      script {
+        try {
+          helpers.slackNotify("FAILED! - Env:${params.ENV}", 'bad')
+        } catch (err) {
+           emailext body: "A CBJ job failed and we couldn't notify Slack.\n${BUILD_URL}", subject: 'CBJ Build Failure', to: 'bluebutton-dev-alert@fearsol.com'
+        }
       }
     }
   }
