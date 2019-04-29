@@ -5,6 +5,7 @@ def backend_config = ''
 def terraform_vars = ''
 def release_version = ''
 def ami_id = ''
+def helpers
 
  pipeline {
   agent {
@@ -38,6 +39,15 @@ def ami_id = ''
   }
 
    stages {
+     stage('Notify') {
+       steps {
+         script {
+           helpers = load "Jenkinsfiles/helpers.groovy"
+           helpers.slackNotify "STARTING - Env:${params.ENV}"
+         }
+       }
+     }
+
     stage('Ensure ENV') {
       steps {
         script {
@@ -218,6 +228,29 @@ def ami_id = ''
           }
         }
       }
+    }
+  }
+
+  post {
+    success {
+      script {
+        helpers.slackNotify("SUCCESS", 'good')
+      }
+    }
+
+    failure {
+      script {
+        try {
+          helpers.slackNotify("FAILED!", 'bad')
+        } catch (err) {
+          emailext body: "A CBJ job failed and we couldn't notify Slack.\n${BUILD_URL}", subject: 'CBJ Build Failure', to: 'bluebutton-dev-alert@fearsol.com'
+        }
+      }
+    }
+
+    always {
+      // Cleanup the workspace
+      deleteDir()
     }
   }
 }
