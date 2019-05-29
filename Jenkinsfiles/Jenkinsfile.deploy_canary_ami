@@ -27,13 +27,13 @@ def helpers
       name: 'AMI_ID'
     )
     choice(
-      choices: 'impl\nprod',
+      choices: 'test\nimpl\nprod',
       description: 'The environment to deploy the canary to. Required.',
       name: 'ENV'
     )
     string(
       defaultValue: "0",
-      description: 'The number of Terraform to change actions expected.',
+      description: 'The number of Terraform changes expected.',
       name: 'TF_EXPECT_CHANGES'
     )
   }
