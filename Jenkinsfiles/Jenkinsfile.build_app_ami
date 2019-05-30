@@ -16,12 +16,12 @@ pipeline {
   parameters {
     string(
       defaultValue: "master",
-      description: 'The branch of the application repo to build. Required.',
+      description: 'The branch of the application repo to build. Required. Defaults to master.',
       name: 'BB20_APP_VERSION'
     )
     string(
       defaultValue: "master",
-      description: 'The branch of the deployment repo to use for the build.',
+      description: 'The branch of the deployment repo to use for the build. Default to master. Required. Defaults to master.',
       name: 'BB20_DEPLOY_BRANCH'
     )
     string(
@@ -31,17 +31,37 @@ pipeline {
     )
     string(
       defaultValue: "subnet-81ecfbab",
-      description: 'The subnet ID where the build server will be launched.',
+      description: 'The subnet ID where the build server will be launched. You are safe to leave this. We are currently use a DEV subnet for builds.',
       name: 'SUBNET_ID'
     )
-    string(
-      defaultValue: "m3.medium",
-      description: 'The class/size of the ec2 instance to launch.',
-      name: 'INSTANCE_CLASS'
+    choice(
+      choices: 'dev\ntest\nimpl\nprod',
+      description: 'The environment to deploy to. Default to DEV.',
+      name: 'ENV'
+    )
+    choice(
+      choices: 'no\nyes',
+      description: 'Should we run database migrations on deploy? Default to No.',
+      name: 'MIGRATE'
+    )
+    choice(
+      choices: 'yes\nno',
+      description: 'Should we run collectstatic on deploy? Default to Yes.',
+      name: 'COLLECT_STATIC'
     )
   }
 
   stages {
+    stage('Ensure BRANCH, ENV, AMI_ID and SUBNET_ID') {
+      steps {
+        sh """
+        if [ -z "${params.BRANCH}" ] || [ -z "${params.ENV}" ] || [ -z "${params.AMI_ID}" ] || [ -z "${params.SUBNET_ID}" ]
+        then
+          exit 1
+        fi
+        """
+      }
+    }
     stage('Notify') {
       steps {
         script {
@@ -126,19 +146,37 @@ pipeline {
                     -var 'source_ami=${BB20_PLATINUM_AMI}' \
                     -var 'release_version=${release_version}' \
                     packer/build_app_ami.json
+
                 """
+                BUILD_AMI_ID = sh(
+                script: "cat manifest.json | jq -r .builds[0].artifact_id |  cut -d':' -f2",
+                returnStdout: true
+                ).trim()
+                println("BUILD_AMI_ID: = ${BUILD_AMI_ID}")
               }
             }
           }
         }
       }
     }
+
+    stage ('Deploy to DEV') {
+      when {
+        allOf {
+          environment name: 'BB20_APP_VERSION', value: 'master'; environment name: 'ENV', value: 'dev'
+        }
+      }
+        steps {
+        echo "Condition met for CD to DEV"
+        build job: 'DEPLOY - BB AMI', propagate: false, wait: false, parameters: [[$class: 'StringParameterValue', name: 'DEPLOY_BRANCH', value: "${BB20_DEPLOY_BRANCH}"], [$class: 'StringParameterValue', name: 'AMI_ID', value: "${BUILD_AMI_ID}"], [$class: 'StringParameterValue', name: 'ENV', value: "${ENV}"], [$class: 'StringParameterValue', name: 'MIGRATE', value: "${MIGRATE}"], [$class: 'StringParameterValue', name: 'COLLECT_STATIC', value: "${COLLECT_STATIC}"], [$class: 'StringParameterValue', name: 'TF_EXPECT_CHANGES', value: "3"]]
+        }
+    }
   }
 
   post {
       success {
         script {
-          helpers.slackNotify("SUCESS", 'good')
+          helpers.slackNotify("SUCCESS", 'good')
         }
       }
 
