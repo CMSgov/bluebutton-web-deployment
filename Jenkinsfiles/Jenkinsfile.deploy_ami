@@ -243,7 +243,7 @@ pipeline {
                   TF_HIGHCPU_CHECK=\$(echo "\$TF_OUT" | grep "aws_autoscaling_policy.high-cpu.*(new resource required)")
                   TF_LOWCPU_CHECK=\$(echo "\$TF_OUT" | grep "aws_autoscaling_policy.low-cpu.*(new resource required)")
 
-                  TF_PLAN_CHECK=\$(echo "\$TF_OUT" | grep "Plan: 4 to add, ${params.TF_EXPECT_CHANGES} to change, 2 to destroy.")
+                  TF_PLAN_CHECK=\$(echo "\$TF_OUT" | grep "Plan: 4 to add, ${params.TF_EXPECT_CHANGES} to change, 4 to destroy.")
 
                   if [ -z "\$TF_ASG_CHECK" ] || [ -z "\$TF_LC_CHECK" ] || [ -z "\$TF_AMI_CHECK" ] || [ -z "\$TF_HIGHCPU_CHECK" ] || [ -z "\$TF_LOWCPU_CHECK" ] || [ -z "\$TF_PLAN_CHECK" ]
                   then
