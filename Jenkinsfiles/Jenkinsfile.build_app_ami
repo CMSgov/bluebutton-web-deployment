@@ -52,10 +52,10 @@ pipeline {
   }
 
   stages {
-    stage('Ensure BRANCH, ENV, AMI_ID and SUBNET_ID') {
+    stage('Ensure BRANCH, ENV, and SUBNET_ID') {
       steps {
         sh """
-        if [ -z "${params.BRANCH}" ] || [ -z "${params.ENV}" ] || [ -z "${params.AMI_ID}" ] || [ -z "${params.SUBNET_ID}" ]
+        if [ -z "${params.BB20_APP_VERSION}" ] || [ -z "${params.ENV}" ] || [ -z "${params.SUBNET_ID}" ]
         then
           exit 1
         fi
