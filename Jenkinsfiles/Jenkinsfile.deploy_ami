@@ -216,7 +216,7 @@ pipeline {
       }
     }
 
-/*    stage('Sanity check terraform plan') {
+    stage('Sanity check terraform plan') {
       steps {
         script {
           dir('code') {
@@ -256,7 +256,7 @@ pipeline {
           }
         }
       }
-    }*/
+    }
 
     stage('Deploy AMI') {
       steps {
