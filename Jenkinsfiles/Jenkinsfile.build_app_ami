@@ -41,12 +41,12 @@ pipeline {
     )
     choice(
       choices: 'no\nyes',
-      description: 'Should we run database migrations on deploy? Default to Yes.',
+      description: 'Should we run database migrations on deploy? Default to No.',
       name: 'MIGRATE'
     )
     choice(
       choices: 'yes\nno',
-      description: 'Should we run collectstatic on deploy? Default to No.',
+      description: 'Should we run collectstatic on deploy? Default to Yes.',
       name: 'COLLECT_STATIC'
     )
   }
