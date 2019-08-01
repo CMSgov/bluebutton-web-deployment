@@ -156,6 +156,9 @@
   # SALT and ITERATIONS
   django_user_id_salt: "{{ env_django_user_id_salt }}"
   django_user_id_iterations: "{{ env_django_user_id_iterations }}"
+  
+  # Default Sample FHIR ID
+  django_default_sample_fhir_id: "{{ env_django_default_sample_fhir_id }}"
 
   # Dynamic client registration Protocol
   # "O" = Open to everyone
