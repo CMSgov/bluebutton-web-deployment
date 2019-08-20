@@ -25,6 +25,7 @@ resource "aws_cloudwatch_metric_alarm" "healthy_hosts" {
   treat_missing_data = "breaching"
   alarm_actions      = ["${var.cloudwatch_notification_arn}"]
   ok_actions         = ["${var.cloudwatch_notification_arn}"]
+  datapoints_to_alarm = "1"
 }
 
 resource "aws_cloudwatch_metric_alarm" "high_latency" {
@@ -49,6 +50,7 @@ resource "aws_cloudwatch_metric_alarm" "high_latency" {
   treat_missing_data = "breaching"
   alarm_actions      = ["${var.cloudwatch_notification_arn}"]
   ok_actions         = ["${var.cloudwatch_notification_arn}"]
+  datapoints_to_alarm = "1"
 }
 
 resource "aws_cloudwatch_metric_alarm" "spillover_count" {
@@ -73,6 +75,7 @@ resource "aws_cloudwatch_metric_alarm" "spillover_count" {
   treat_missing_data = "notBreaching"
   alarm_actions      = ["${var.cloudwatch_notification_arn}"]
   ok_actions         = ["${var.cloudwatch_notification_arn}"]
+  datapoints_to_alarm = "1"
 }
 
 resource "aws_cloudwatch_metric_alarm" "surge_queue_exceeded" {
@@ -99,6 +102,7 @@ resource "aws_cloudwatch_metric_alarm" "surge_queue_exceeded" {
 
   alarm_actions = ["${var.cloudwatch_notification_arn}"]
   ok_actions    = ["${var.cloudwatch_notification_arn}"]
+  datapoints_to_alarm = "1"
 }
 
 resource "aws_cloudwatch_metric_alarm" "httpcode_backend_4xx" {
@@ -123,6 +127,7 @@ resource "aws_cloudwatch_metric_alarm" "httpcode_backend_4xx" {
 
   alarm_actions = ["${var.cloudwatch_notification_arn}"]
   ok_actions    = ["${var.cloudwatch_notification_arn}"]
+  datapoints_to_alarm = "1"
 }
 
 resource "aws_cloudwatch_metric_alarm" "httpcode_backend_5xx" {
@@ -147,6 +152,7 @@ resource "aws_cloudwatch_metric_alarm" "httpcode_backend_5xx" {
 
   alarm_actions = ["${var.cloudwatch_notification_arn}"]
   ok_actions    = ["${var.cloudwatch_notification_arn}"]
+  datapoints_to_alarm = "1"
 }
 
 resource "aws_cloudwatch_metric_alarm" "httpcode_elb_5xx" {
@@ -171,4 +177,5 @@ resource "aws_cloudwatch_metric_alarm" "httpcode_elb_5xx" {
 
   alarm_actions = ["${var.cloudwatch_notification_arn}"]
   ok_actions    = ["${var.cloudwatch_notification_arn}"]
+  datapoints_to_alarm = "1"
 }
