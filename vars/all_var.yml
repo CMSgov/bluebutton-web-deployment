@@ -255,7 +255,8 @@
 
   selinux_policy: "targeted"
   # selinux_state: "permissive"
-  selinux_state: "disabled"
+  # selinux_state: "disabled"
+  selinux_state: "{{ env_selinux_state }}"
 
   #
   # Appserver extra volumes
