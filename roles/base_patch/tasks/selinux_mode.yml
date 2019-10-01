@@ -27,3 +27,7 @@
     policy: "{{ selinux_policy }}"
     state: "{{ selinux_state }}"
   register: check_selinux
+# TEMP lines to help with debugging SELINUX setup. Cleanup later!
+- debug: msg="{{ check_selinux.msg }}"
+- debug: msg="{{ check_selinux.stdout_lines }}"
+- debug: msg="{{ check_selinux.stderr_lines }}"
