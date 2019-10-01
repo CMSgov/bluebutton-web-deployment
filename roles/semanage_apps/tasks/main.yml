@@ -1,5 +1,7 @@
 ---
 - name: "Set SELinux to allow httpd to setrlimit"
+  become_user: "{{ remote_admin_account }}"
+  become: yes
   seboolean:
     name: httpd_setrlimit
     state: yes
