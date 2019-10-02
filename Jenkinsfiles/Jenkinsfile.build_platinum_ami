@@ -28,7 +28,7 @@ pipeline {
       name: 'BB20_DEPLOY_BRANCH'
     )
     string(
-      defaultValue: "ami-06364f70ec759cbe1",
+      defaultValue: "ami-0cb990abf4037fa2b",
       description: 'The AMI ID of the GDIT Gold Image.',
       name: 'GDIT_GOLD_IMAGE_AMI_ID'
     )
