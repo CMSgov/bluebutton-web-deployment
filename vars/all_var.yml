@@ -254,9 +254,8 @@
   cf_data_db_backup_secret_key: "{{ env_cf_data_db_backup_secret_key }}"
 
   selinux_policy: "targeted"
-  # selinux_state: "permissive"
   # selinux_state: "disabled"
-  selinux_state: "{{ env_selinux_state }}"
+  selinux_state: "enforcing"
 
   #
   # Appserver extra volumes

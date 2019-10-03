@@ -1,9 +1,27 @@
 ---
+- name: "Set SELinux to allow httpd to setrlimit"
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  seboolean:
+    name: httpd_setrlimit
+    state: yes
+    persistent: yes
+  ignore_errors: yes
+
 - name: "Set permissions for app under SELinux"
   become_user: "{{ remote_admin_account }}"
   become: yes
   sefcontext:
     target: "{{ project_parent[:-1] }}(/.*)?"
     setype: httpd_sys_content_t
+    state: present
+  ignore_errors: yes
+
+- name: "Set permissions for app /run under SELinux for socks/pid files"
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  sefcontext:
+    target: "{{ project_parent[:-1] }}/run(/.*)?"
+    setype: httpd_sys_rw_content_t
     state: present
   ignore_errors: yes
