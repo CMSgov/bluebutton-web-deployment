@@ -90,6 +90,17 @@
 
 - import_tasks: ./../appherd/roles/create_certstore/tasks/main.yml
 
+- name: "Create run dir for service .sock/.pid files"
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  file:
+    dest: "{{ app_pyapp_home }}/run"
+    mode: 0750
+    owner: "{{ app_pyapps_user }}"
+    group: "{{ app_group }}"
+    recurse: yes
+    state: directory
+
 # change ownership of files
 - name: "Update file ownership"
   become_user: "{{ remote_admin_account }}"
