@@ -4,6 +4,7 @@
     "source_ami": "",
     "vault_password_file": "",
     "git_branch": "master",
+    "deployment_branch": "master",
     "subnet_id": ""
   },
   "builders": [{
@@ -32,7 +33,7 @@
               "ANSIBLE_VAULT_PASSWORD_FILE={{user `vault_password_file`}}"
             ],
             "extra_arguments": [
-              "-e git_branch={{user `git_branch`}}"
+              "-e git_branch={{user `git_branch`}} -e deployment_branch={{user `deployment_branch`}}"
             ]
         }
     ],
