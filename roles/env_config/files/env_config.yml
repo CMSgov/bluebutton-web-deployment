@@ -9,8 +9,6 @@
     sub_zone: "app"
     sg_zone: "appserver"
     splunk_target_layer: "app"
-    repo: "https://github.com/CMSgov/bluebutton-web-deployment.git"
-    version: "master"
     var_files:
       - "vars/common.yml"
       - "vault/env/{{ env }}/vault.yml"
@@ -18,40 +16,6 @@
       - "vars/all_var.yml"
 
   tasks:
-    - name: Remove existing ./code and ./code.zip
-      file:
-        state: absent
-        path: ./code
-      with_items:
-        - ./code
-        - ./code.zip
-
-    - name: Checkout deployment repo
-      git:
-        repo: "{{ repo }}"
-        dest: ./code
-        version: "{{ version }}"
-      when: repo.endswith(".git")
-
-    - name: Download deployment repo archive
-      get_url:
-        url: "{{ repo }}"
-        dest: ./code.zip
-      when: repo.endswith(".zip")
-
-    - name: Creates ./code directory
-      file:
-        path: ./code
-        state: directory
-      when: repo.endswith(".zip")
-
-    - name: Unzip deployment repo archive
-      unarchive:
-        src: ./code.zip
-        dest: ./code
-        remote_src: yes
-      when: repo.endswith(".zip")
-
     - name: Determine root of repo
       find:
         recurse: yes
