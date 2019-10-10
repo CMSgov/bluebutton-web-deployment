@@ -28,7 +28,7 @@
   git:
     repo: "{{ deployment_repo }}"
     dest: "{{ app_pyapp_home }}/code"
-    version: "{{ git_branch }}"
+    version: "{{ deployment_branch }}"
   when: deployment_repo.endswith(".git")
 
 - name: Download deployment repo ZIP archive
