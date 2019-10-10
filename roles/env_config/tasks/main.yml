@@ -54,4 +54,4 @@
     src: "{{ app_pyapp_home }}/code.zip"
     dest: "{{ app_pyapp_home }}/code"
     remote_src: yes
-  when: deploymentrepo.endswith(".zip")
+  when: deployment_repo.endswith(".zip")
