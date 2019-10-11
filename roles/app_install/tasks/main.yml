@@ -98,7 +98,7 @@
   become: yes
   file:
     dest: "{{ app_pyapp_home }}/run"
-    mode: 0750
+    mode: 0755
     owner: "{{ app_pyapps_user }}"
     group: "{{ app_group }}"
     recurse: yes
