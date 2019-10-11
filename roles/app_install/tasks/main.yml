@@ -81,15 +81,15 @@
 
 - debug: var=out.stdout_lines
 
-- name: "install boto3 for collectstatic"
-  become_user: "{{ remote_admin_account }}"
-  become: yes
-  pip:
-    name: boto3
-    version: 1.9.42
-    state: present
-    extra_args: " --upgrade {{ pip_extra_args }} "
-    virtualenv: "{{ venv_full }}"
+#- name: "install boto3 for collectstatic"
+#  become_user: "{{ remote_admin_account }}"
+#  become: yes
+#  pip:
+#    name: boto3
+#    version: 1.9.42
+#    state: present
+#    extra_args: " --upgrade {{ pip_extra_args }} "
+#    virtualenv: "{{ venv_full }}"
 
 - import_tasks: ./../appherd/roles/create_certstore/tasks/main.yml
 
