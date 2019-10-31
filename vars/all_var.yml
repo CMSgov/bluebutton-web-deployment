@@ -89,6 +89,9 @@
   # the git repository URL for the project
   project_repo: "https://github.com/CMSgov/bluebutton-web-server.git"
 
+  # the git repository URL for the deployment
+  deployment_repo: "https://github.com/CMSgov/bluebutton-web-deployment.git"
+
   # DEBUG Mode
   # False in IMPL / PROD
   django_debug: "{{ env_django_debug }}"

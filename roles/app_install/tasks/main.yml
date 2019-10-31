@@ -77,16 +77,9 @@
     source {{ app_py_virtual_env }}/bin/activate && make reqs-install
   args:
     chdir: "{{ app_pyapp_home }}/{{ common_project_name }}"
+  register: out
 
-- name: "install boto3 for collectstatic"
-  become_user: "{{ remote_admin_account }}"
-  become: yes
-  pip:
-    name: boto3
-    version: 1.9.42
-    state: present
-    extra_args: " --upgrade {{ pip_extra_args }} "
-    virtualenv: "{{ venv_full }}"
+- debug: var=out.stdout_lines
 
 - import_tasks: ./../appherd/roles/create_certstore/tasks/main.yml
 
@@ -95,7 +88,7 @@
   become: yes
   file:
     dest: "{{ app_pyapp_home }}/run"
-    mode: 0750
+    mode: 0755
     owner: "{{ app_pyapps_user }}"
     group: "{{ app_group }}"
     recurse: yes

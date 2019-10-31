@@ -142,6 +142,7 @@ pipeline {
                   packer build -color=false \
                     -var 'vault_password_file=${vp}' \
                     -var 'git_branch=${params.BB20_APP_VERSION}' \
+                    -var 'deployment_branch=${params.BB20_DEPLOY_BRANCH}' \
                     -var 'subnet_id=${params.SUBNET_ID}' \
                     -var 'source_ami=${BB20_PLATINUM_AMI}' \
                     -var 'release_version=${release_version}' \

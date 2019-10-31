@@ -11,3 +11,47 @@
     src: files/env_config.yml
     dest: "{{ install_root }}/env_config.yml"
     mode: 0664
+
+- name: Remove existing ./code and ./code.zip
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  file:
+    state: absent
+    path: "{{ app_pyapp_home }}/code"
+  with_items:
+    - "{{ app_pyapp_home }}/code"
+    - "{{ app_pyapp_home }}/code.zip"
+
+- name: "copy deployment git repo for instance boot user_data/env_config.yml: {{ deployment_repo }} branch:{{ deployment_branch }}"
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  git:
+    repo: "{{ deployment_repo }}"
+    dest: "{{ app_pyapp_home }}/code"
+    version: "{{ deployment_branch }}"
+  when: deployment_repo.endswith(".git")
+
+- name: Download deployment repo ZIP archive
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  get_url:
+    url: "{{ deployment_repo }}"
+    dest: "{{ app_pyapp_home }}/code.zip"
+  when: deployment_repo.endswith(".zip")
+
+- name: Creates ./code directory
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  file:
+    path: "{{ app_pyapp_home }}/code"
+    state: directory
+  when: deployment_repo.endswith(".zip")
+
+- name: Unzip deployment repo archive
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  unarchive:
+    src: "{{ app_pyapp_home }}/code.zip"
+    dest: "{{ app_pyapp_home }}/code"
+    remote_src: yes
+  when: deployment_repo.endswith(".zip")
