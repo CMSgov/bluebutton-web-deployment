@@ -108,7 +108,7 @@ pipeline {
         script {
           private_key = "${params.ENV}-key"
           EC2_SSH_PUBKEY = sh(
-                script: "echo TESTING123 key file: ${private_key}",
+                script: "ssh-keygen -f ${private_key} -y",
                 returnStdout: true
                 ).trim()
                 println("EC2_SSH_PUBKEY: = ${EC2_SSH_PUBKEY}")
