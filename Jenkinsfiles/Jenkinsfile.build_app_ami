@@ -103,20 +103,6 @@ pipeline {
       }
     }
 
-    stage('Set private key file') {
-      steps {
-        script {
-          private_key = "${params.ENV}-key"
-          EC2_SSH_PUBKEY = sh(
-                script: "ssh-keygen -f ${private_key} -y",
-                returnStdout: true
-                ).trim()
-                println("EC2_SSH_PUBKEY: = ${EC2_SSH_PUBKEY}")
-          exit 1
-        }
-      }
-    }
-
     stage('Acquire Platinum AMI') {
     steps {
         script {
