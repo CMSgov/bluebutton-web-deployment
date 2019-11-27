@@ -54,6 +54,18 @@ pipeline {
       }
     }
 
+    stage('Acquire Latest Gold AMI'){
+      steps {
+        script {
+          GDIT_GOLD_IMAGE_AMI_ID = sh(returnStdout: true, script: """/usr/local/bin/aws ec2 describe-images --filters \
+          'Name=name,Values=\"EAST-RH 7-? Gold Image V.1.?? (HVM) ??-??-??\"' \
+          'Name=state,Values=available' --region us-east-1 --output json | \
+          jq -r '.Images | sort_by(.CreationDate) | last(.[]).ImageId'""")
+          echo "LATEST GOLD IMAGE AMI: ${GDIT_GOLD_IMAGE_AMI_ID}"
+        }
+      }
+    }
+
     stage('Ensure Params') {
       steps {
         sh """
