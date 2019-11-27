@@ -57,11 +57,18 @@ pipeline {
     stage('Acquire Latest Gold AMI'){
       steps {
         script {
-          GDIT_GOLD_IMAGE_AMI_ID = sh(returnStdout: true, script: """/usr/local/bin/aws ec2 describe-images --filters \
-          'Name=name,Values=\"EAST-RH 7-? Gold Image V.1.?? (HVM) ??-??-??\"' \
-          'Name=state,Values=available' --region us-east-1 --output json | \
-          jq -r '.Images | sort_by(.CreationDate) | last(.[]).ImageId'""")
-          echo "LATEST GOLD IMAGE AMI: ${GDIT_GOLD_IMAGE_AMI_ID}"
+          if (params.GDIT_GOLD_IMAGE_AMI_ID == '') {
+            GDIT_GOLD_IMAGE_AMI_ID = sh(returnStdout: true, script: """/usr/local/bin/aws ec2 describe-images --filters \
+            'Name=name,Values=\"EAST-RH 7-? Gold Image V.1.?? (HVM) ??-??-??\"' \
+            'Name=state,Values=available' --region us-east-1 --output json | \
+            jq -r '.Images | sort_by(.CreationDate) | last(.[]).ImageId'"""
+            ).trim()
+            echo "LATEST GOLD IMAGE AMI: ${GDIT_GOLD_IMAGE_AMI_ID}" 
+          }
+          else {
+            GDIT_GOLD_IMAGE_AMI_ID = params.GDIT_GOLD_IMAGE_AMI_ID
+            echo "USING GOLD IMAGE AMI: ${GDIT_GOLD_IMAGE_AMI_ID}" 
+          }
         }
       }
     }
@@ -69,7 +76,7 @@ pipeline {
     stage('Ensure Params') {
       steps {
         sh """
-        if [ -z "${params.BB20_APP_VERSION}" ] || [ -z "${params.GDIT_GOLD_IMAGE_AMI_ID}" ] || [ -z "${params.SUBNET_ID}" ]
+        if [ -z "${params.BB20_APP_VERSION}" ] || [ -z "${GDIT_GOLD_IMAGE_AMI_ID}" ] || [ -z "${params.SUBNET_ID}" ]
         then
           exit 1
         fi
@@ -135,7 +142,7 @@ pipeline {
                       -var 'vault_password_file=${vp}' \
                       -var 'git_branch=${params.BB20_APP_VERSION}' \
                       -var 'subnet_id=${params.SUBNET_ID}' \
-                      -var 'source_ami=${params.GDIT_GOLD_IMAGE_AMI_ID}' \
+                      -var 'source_ami=${GDIT_GOLD_IMAGE_AMI_ID}' \
                       -var 'release_version=${release_version}' \
                       packer/build_platinum_ami.json 2>&1 | tee platinum_packer_output.txt
                   """
