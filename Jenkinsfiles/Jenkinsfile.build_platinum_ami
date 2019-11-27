@@ -108,24 +108,29 @@ pipeline {
               withCredentials([
                 file(credentialsId: vault_pass, variable: 'vp')
               ]) {
-                sh """
-                  virtualenv -ppython3 venv
-                  . venv/bin/activate
+                try {
+                  sh """
+                    virtualenv -ppython3 venv
+                    . venv/bin/activate
 
-                  pip install --upgrade pip
-                  pip install --upgrade cffi
+                    pip install --upgrade pip
+                    pip install --upgrade cffi
 
-                  pip install ansible==2.4.2.0
-                  pip install boto
+                    pip install ansible==2.4.2.0
+                    pip install boto
 
-                  packer build -color=false \
-                    -var 'vault_password_file=${vp}' \
-                    -var 'git_branch=${params.BB20_APP_VERSION}' \
-                    -var 'subnet_id=${params.SUBNET_ID}' \
-                    -var 'source_ami=${params.GDIT_GOLD_IMAGE_AMI_ID}' \
-                    -var 'release_version=${release_version}' \
-                    packer/build_platinum_ami.json 2>&1 | tee platinum_packer_output.txt
-                """
+                    packer build -color=false \
+                      -var 'vault_password_file=${vp}' \
+                      -var 'git_branch=${params.BB20_APP_VERSION}' \
+                      -var 'subnet_id=${params.SUBNET_ID}' \
+                      -var 'source_ami=${params.GDIT_GOLD_IMAGE_AMI_ID}' \
+                      -var 'release_version=${release_version}' \
+                      packer/build_platinum_ami.json 2>&1 | tee platinum_packer_output.txt
+                  """
+                }
+                catch (Exception e) {
+                  helpers.slackNotify("FAILED!", 'bad')
+                }
               }
             }
           }
