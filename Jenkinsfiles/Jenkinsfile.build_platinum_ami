@@ -7,7 +7,7 @@ def helpers
 pipeline {
   agent {
     node {
-      label ''
+      label 'rhel7-scheduled'
       customWorkspace 'blue-button-build-platinum-ami'
     }
   }
@@ -58,11 +58,13 @@ pipeline {
       steps {
         script {
           if (params.GDIT_GOLD_IMAGE_AMI_ID == '') {
-            GDIT_GOLD_IMAGE_AMI_ID = sh(returnStdout: true, script: """/usr/local/bin/aws ec2 describe-images --filters \
-            'Name=name,Values=\"EAST-RH 7-? Gold Image V.1.?? (HVM) ??-??-??\"' \
-            'Name=state,Values=available' --region us-east-1 --output json | \
-            jq -r '.Images | sort_by(.CreationDate) | last(.[]).ImageId'"""
-            ).trim()
+            GDIT_GOLD_IMAGE_AMI_ID = sh(
+              returnStdout: true, 
+              script: "/usr/local/bin/aws ec2 describe-images --filters \
+              'Name=name,Values=\"EAST-RH 7-? Gold Image V.1.?? (HVM) ??-??-??\"' \
+              'Name=state,Values=available' --region us-east-1 --output json | \
+              jq -r '.Images | sort_by(.CreationDate) | last(.[]).ImageId'"
+              ).trim()
             echo "LATEST GOLD IMAGE AMI: ${GDIT_GOLD_IMAGE_AMI_ID}" 
           }
           else {
@@ -149,6 +151,7 @@ pipeline {
                 }
                 catch (Exception e) {
                   helpers.slackNotify("FAILED!", 'bad')
+                  currentBuild.result = 'FAILURE'
                 }
               }
             }
@@ -163,6 +166,10 @@ pipeline {
                 dir('code') {
                     BB20_PLATINUM_AMI_ID = sh(returnStdout: true, script: """grep 'us-east-1: ami-' platinum_packer_output.txt | cut -d ' ' -f2 | tr '\n' ' ' | sed -e 's/ //g'""")
                     echo "BB20 PLATINUM AMI: ${BB20_PLATINUM_AMI_ID}"
+                    if( "${BB20_PLATINUM_AMI_ID}" == '' ) {
+                    currentBuild.result = 'FAILED'
+                    return
+                    }
                 }
             }
         }
