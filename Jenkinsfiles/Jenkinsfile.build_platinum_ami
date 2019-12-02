@@ -7,7 +7,7 @@ def helpers
 pipeline {
   agent {
     node {
-      label ''
+      label 'rhel7-scheduled'
       customWorkspace 'blue-button-build-platinum-ami'
     }
   }
@@ -28,7 +28,7 @@ pipeline {
       name: 'BB20_DEPLOY_BRANCH'
     )
     string(
-      defaultValue: "ami-0cb990abf4037fa2b",
+      defaultValue: "",
       description: 'The AMI ID of the GDIT Gold Image.',
       name: 'GDIT_GOLD_IMAGE_AMI_ID'
     )
@@ -54,10 +54,31 @@ pipeline {
       }
     }
 
+    stage('Acquire Latest Gold AMI'){
+      steps {
+        script {
+          if (params.GDIT_GOLD_IMAGE_AMI_ID == '') {
+            GDIT_GOLD_IMAGE_AMI_ID = sh(
+              returnStdout: true, 
+              script: "/usr/local/bin/aws ec2 describe-images --filters \
+              'Name=name,Values=\"EAST-RH 7-? Gold Image V.1.?? (HVM) ??-??-??\"' \
+              'Name=state,Values=available' --region us-east-1 --output json | \
+              jq -r '.Images | sort_by(.CreationDate) | last(.[]).ImageId'"
+              ).trim()
+            echo "LATEST GOLD IMAGE AMI: ${GDIT_GOLD_IMAGE_AMI_ID}" 
+          }
+          else {
+            GDIT_GOLD_IMAGE_AMI_ID = params.GDIT_GOLD_IMAGE_AMI_ID
+            echo "USING GOLD IMAGE AMI: ${GDIT_GOLD_IMAGE_AMI_ID}" 
+          }
+        }
+      }
+    }
+
     stage('Ensure Params') {
       steps {
         sh """
-        if [ -z "${params.BB20_APP_VERSION}" ] || [ -z "${params.GDIT_GOLD_IMAGE_AMI_ID}" ] || [ -z "${params.SUBNET_ID}" ]
+        if [ -z "${params.BB20_APP_VERSION}" ] || [ -z "${GDIT_GOLD_IMAGE_AMI_ID}" ] || [ -z "${params.SUBNET_ID}" ]
         then
           exit 1
         fi
@@ -108,24 +129,30 @@ pipeline {
               withCredentials([
                 file(credentialsId: vault_pass, variable: 'vp')
               ]) {
-                sh """
-                  virtualenv -ppython3 venv
-                  . venv/bin/activate
+                try {
+                  sh """
+                    virtualenv -ppython3 venv
+                    . venv/bin/activate
 
-                  pip install --upgrade pip
-                  pip install --upgrade cffi
+                    pip install --upgrade pip
+                    pip install --upgrade cffi
 
-                  pip install ansible==2.4.2.0
-                  pip install boto
+                    pip install ansible==2.4.2.0
+                    pip install boto
 
-                  packer build -color=false \
-                    -var 'vault_password_file=${vp}' \
-                    -var 'git_branch=${params.BB20_APP_VERSION}' \
-                    -var 'subnet_id=${params.SUBNET_ID}' \
-                    -var 'source_ami=${params.GDIT_GOLD_IMAGE_AMI_ID}' \
-                    -var 'release_version=${release_version}' \
-                    packer/build_platinum_ami.json 2>&1 | tee platinum_packer_output.txt
-                """
+                    packer build -color=false \
+                      -var 'vault_password_file=${vp}' \
+                      -var 'git_branch=${params.BB20_APP_VERSION}' \
+                      -var 'subnet_id=${params.SUBNET_ID}' \
+                      -var 'source_ami=${GDIT_GOLD_IMAGE_AMI_ID}' \
+                      -var 'release_version=${release_version}' \
+                      packer/build_platinum_ami.json 2>&1 | tee platinum_packer_output.txt
+                  """
+                }
+                catch (Exception e) {
+                  helpers.slackNotify("FAILED!", 'bad')
+                  currentBuild.result = 'FAILURE'
+                }
               }
             }
           }
@@ -139,6 +166,10 @@ pipeline {
                 dir('code') {
                     BB20_PLATINUM_AMI_ID = sh(returnStdout: true, script: """grep 'us-east-1: ami-' platinum_packer_output.txt | cut -d ' ' -f2 | tr '\n' ' ' | sed -e 's/ //g'""")
                     echo "BB20 PLATINUM AMI: ${BB20_PLATINUM_AMI_ID}"
+                    if( "${BB20_PLATINUM_AMI_ID}" == '' ) {
+                    currentBuild.result = 'FAILED'
+                    return
+                    }
                 }
             }
         }
