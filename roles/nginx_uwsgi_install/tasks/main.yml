@@ -1,5 +1,5 @@
 ---
-- name: Install a list of packages
+- name: Install Nginx and uWSGI
   become_user: "{{ remote_admin_account }}"
   become: yes
   yum:
