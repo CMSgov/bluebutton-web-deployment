@@ -1,0 +1,10 @@
+---
+- name: Install a list of packages
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  yum:
+    name:
+      - nginx
+      - uwsgi
+      - uwsgi-plugin-python36
+    state: present
