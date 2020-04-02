@@ -25,3 +25,4 @@
     - ../../roles/selinux # selinux_state
     - ../../roles/app_tools
     - ../../roles/python
+    - ../../roles/nginx_uwsgi_install

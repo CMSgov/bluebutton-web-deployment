@@ -40,10 +40,10 @@
       include_role:
         name: "{{ root_lookup.files[0].path | dirname }}/roles/new_relic"
 
-    - name: Install and Configure Nginx
+    - name: Configure Nginx and uWSGI
       include_role:
-        name: "{{ root_lookup.files[0].path | dirname }}/roles/nginx"
+        name: "{{ root_lookup.files[0].path | dirname }}/roles/nginx_uwsgi_config"
 
-    - name: Build .env file for DJANGO
+    - name: Build .env file for DJANGO and copy certs
       include_role:
         name: "{{ root_lookup.files[0].path | dirname }}/roles/env_vars"
