@@ -3,9 +3,8 @@
   become_user: "{{ remote_admin_account }}"
   become: yes
   template:
-    src: 'templates/cwagent.json.j2'
-    dest: "/tmp/cwagent-base.json"
-    mode: u=rw,g=r,o=r
+    src: templates/cwagent.json.j2
+    dest: /tmp/cwagent-base.json
 
 - name: Install cloudwatch agent from RPM
   become_user: "{{ remote_admin_account }}"
