@@ -1,9 +1,4 @@
 ---
-- name: Make sure ansible is installed on the target
-  become_user: "{{ remote_admin_account }}"
-  become: yes
-  shell: pip install --upgrade ansible
-
 - name: Copy env config playbook to target
   become_user: "{{ remote_admin_account }}"
   become: yes
