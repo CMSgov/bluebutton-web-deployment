@@ -26,3 +26,4 @@
     - ../../roles/app_tools
     - ../../roles/python
     - ../../roles/nginx_uwsgi_install
+    - ../../roles/ansible_install
