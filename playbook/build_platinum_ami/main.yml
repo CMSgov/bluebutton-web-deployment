@@ -27,4 +27,3 @@
     - ../../roles/python
     - ../../roles/nginx_uwsgi_install
     - ../../roles/cloudwatch_agent_base
-    - ../../roles/ansible_install
