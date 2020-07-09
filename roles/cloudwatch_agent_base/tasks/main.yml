@@ -1,0 +1,20 @@
+---
+- name: Copy cloudwatch agent base config file
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  template:
+    src: templates/cwagent.json.j2
+    dest: /tmp/cwagent-base.json
+
+- name: Install cloudwatch agent from RPM
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  yum:
+    name: https://s3.amazonaws.com/amazoncloudwatch-agent/redhat/amd64/latest/amazon-cloudwatch-agent.rpm
+    state: present
+    disable_gpg_check: true
+
+- name: Start cloudwatch agent with base config
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  shell: "/opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c file:/tmp/cwagent-base.json -s"
