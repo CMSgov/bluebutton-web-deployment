@@ -4,18 +4,6 @@
       "files": {
         "collect_list": [
           {
-            "file_path": "/var/log/messages",
-            "log_group_name": "/bb/{{ env }}/var/log/messages",
-            "log_stream_name": "{instance_id}",
-            "timestamp_format": "%b %d %H:%M:%S"
-          },
-          {
-            "file_path": "/var/log/secure",
-            "log_group_name": "/bb/{{ env }}/var/log/secure",
-            "log_stream_name": "{instance_id}",
-            "timestamp_format": "%b %d %H:%M:%S"
-          },
-          {
             "file_path": "{{ app_log_dir }}/debug.log",
             "log_group_name": "/bb/{{ env }}/app/debug.log",
             "log_stream_name": "{instance_id}",
