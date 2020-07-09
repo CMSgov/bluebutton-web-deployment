@@ -4,51 +4,45 @@
       "files": {
         "collect_list": [
           {
-            "file_path": "/var/log/messages",
-            "log_group_name": "/bb/{{ env }}/var/log/messages",
-            "log_stream_name": "{instance_id}",
-            "timestamp_format": "%b %d %H:%M:%S"
-          },
-          {
-            "file_path": "/var/log/secure",
-            "log_group_name": "/bb/{{ env }}/var/log/secure",
-            "log_stream_name": "{instance_id}",
-            "timestamp_format": "%b %d %H:%M:%S"
-          },
-          {
             "file_path": "{{ app_log_dir }}/debug.log",
             "log_group_name": "/bb/{{ env }}/app/debug.log",
             "log_stream_name": "{instance_id}",
+            "timezone": "UTC",
             "timestamp_format": "%Y-%m-%d %H:%M:%S"
           },
           {
             "file_path": "{{ app_log_dir }}/error.log",
             "log_group_name": "/bb/{{ env }}/app/error.log",
             "log_stream_name": "{instance_id}",
+            "timezone": "UTC",
             "timestamp_format": "%Y-%m-%d %H:%M:%S"
           },
           {
             "file_path": "{{ app_log_dir }}/info.log",
             "log_group_name": "/bb/{{ env }}/app/info.log",
             "log_stream_name": "{instance_id}",
+            "timezone": "UTC",
             "timestamp_format": "%Y-%m-%d %H:%M:%S"
           },
           {
             "file_path": "{{ app_log_dir }}/login_failed.log",
             "log_group_name": "/bb/{{ env }}/app/login_failed.log",
             "log_stream_name": "{instance_id}",
+            "timezone": "UTC",
             "timestamp_format": "%Y-%m-%d %H:%M:%S"
           },
           {
             "file_path": "{{ app_log_dir }}/admin_access.log",
             "log_group_name": "/bb/{{ env }}/app/admin_access.log",
             "log_stream_name": "{instance_id}",
+            "timezone": "UTC",
             "timestamp_format": "%Y-%m-%d %H:%M:%S"
           },
           {
             "file_path": "{{ app_log_dir }}/perf_mon.log",
             "log_group_name": "/bb/{{ env }}/app/perf_mon.log",
             "log_stream_name": "{instance_id}",
+            "timezone": "UTC",
             "timestamp_format": "%Y-%m-%d %H:%M:%S"
           }
         ]
