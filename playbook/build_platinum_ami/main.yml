@@ -25,5 +25,6 @@
     - ../../roles/selinux # selinux_state
     - ../../roles/app_tools
     - ../../roles/python
+    - ../../roles/ansible_install
     - ../../roles/nginx_uwsgi_install
     - ../../roles/cloudwatch_agent_base
