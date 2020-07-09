@@ -47,3 +47,7 @@
     - name: Build .env file for DJANGO and copy certs
       include_role:
         name: "{{ root_lookup.files[0].path | dirname }}/roles/env_vars"
+
+    - name: Configure cloudwatch agent for app logs
+      include_role:
+        name: "{{ root_lookup.files[0].path | dirname }}/roles/cloudwatch_agent_app"
