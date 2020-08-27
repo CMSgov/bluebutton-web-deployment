@@ -12,7 +12,9 @@ variable "ami_id" {}
 
 variable "instance_type" {}
 
-variable "elb_name" {}
+variable "elb_names" {
+  type = "list"
+}
 
 variable "app_sg_id" {}
 
