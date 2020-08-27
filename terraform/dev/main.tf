@@ -16,7 +16,7 @@ module "asg" {
   key_name          = "${var.key_name}"
   ami_id            = "${var.ami_id}"
   instance_type     = "${var.instance_type}"
-  elb_name          = "${var.elb_name}"
+  elb_names         = ["${var.elb_names}"]
   asg_min           = "${var.asg_min}"
   asg_max           = "${var.asg_max}"
   asg_desired       = "${var.asg_desired}"
@@ -36,7 +36,7 @@ module "cloudwatch_alarms_elb_http" {
   env = "${var.env}"
   vpc_name                    = "${var.vpc_id}"
   cloudwatch_notification_arn = "${aws_sns_topic.cloudwatch_alarms_topic.arn}"
-  load_balancer_name          = "${var.elb_name}"
+  load_balancer_name          = "${var.elb_names[0]}"
 
   alarm_elb_no_backend_enable       = "${var.alarm_elb_no_backend_enable}"
   alarm_elb_no_backend_eval_periods = "${var.alarm_elb_no_backend_eval_periods}"
@@ -167,7 +167,7 @@ module "cloudwatch_dashboard" {
   app = "${var.app}"
   env = "${var.env}"
   vpc_name = "${var.vpc_id}"
-  load_balancer_name = "${var.elb_name}"
+  load_balancer_name = "${var.elb_names[0]}"
   asg_name = "${module.asg.asg_id}"
   rds_name = "${var.rds_name}"
   nat_gw_name = "${var.nat_gw_name}"
