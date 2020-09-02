@@ -20,10 +20,6 @@ data "aws_subnet" "app" {
   id    = "${data.aws_subnet_ids.app.ids[count.index]}"
 }
 
-data "aws_elb" "elb" {
-  name = "${var.elb_name}"
-}
-
 data "aws_ami" "image" {
   most_recent = true
   owners      = ["self"]
@@ -93,12 +89,12 @@ resource "aws_autoscaling_group" "main" {
   max_size                  = "${var.asg_max}"
   min_size                  = "${var.asg_min}"
   min_elb_capacity          = "${var.asg_min}"
-  health_check_grace_period = 300
+  health_check_grace_period = 400
   health_check_type         = "ELB"
   wait_for_capacity_timeout = "20m"
   vpc_zone_identifier       = ["${data.aws_subnet_ids.app.ids}"]
   launch_configuration      = "${aws_launch_configuration.app.name}"
-  load_balancers            = ["${data.aws_elb.elb.name}"]
+  load_balancers            = ["${var.elb_names}"]
 
   enabled_metrics = [
     "GroupMinSize",
@@ -147,7 +143,7 @@ resource "aws_autoscaling_policy" "high-cpu" {
   name                   = "${var.app}-${var.env}-high-cpu-scaleup"
   scaling_adjustment     = 2
   adjustment_type        = "ChangeInCapacity"
-  cooldown               = 300
+  cooldown               = 400
   autoscaling_group_name = "${aws_autoscaling_group.main.name}"
 }
 
@@ -173,7 +169,7 @@ resource "aws_autoscaling_policy" "low-cpu" {
   name                   = "${var.app}-${var.env}-low-cpu-scaledown"
   scaling_adjustment     = -1
   adjustment_type        = "ChangeInCapacity"
-  cooldown               = 300
+  cooldown               = 400
   autoscaling_group_name = "${aws_autoscaling_group.main.name}"
 }
 
