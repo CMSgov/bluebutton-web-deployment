@@ -1,0 +1,12 @@
+---
+- name: Remove FIPS from GRUB config
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  replace:
+    path: /etc/default/grub
+    regexp: '\bfips=1'
+
+- name: Regenerate GRUB params for all kernels
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  command: "grub2-mkconfig -o /boot/grub2/grub.cfg"
