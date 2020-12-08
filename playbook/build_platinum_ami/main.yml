@@ -28,4 +28,5 @@
     - ../../roles/ansible_install
     - ../../roles/nginx_uwsgi_install
     - ../../roles/cloudwatch_agent_base
+    # TODO - remove fips140_disable role once Django supports FIPS kernel
     - ../../roles/fips140_disable
