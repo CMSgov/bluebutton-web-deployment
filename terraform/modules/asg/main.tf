@@ -143,7 +143,7 @@ resource "aws_autoscaling_policy" "high-cpu" {
   name                   = "${var.app}-${var.env}-high-cpu-scaleup"
   scaling_adjustment     = 2
   adjustment_type        = "ChangeInCapacity"
-  cooldown               = 400
+  cooldown               = 450
   autoscaling_group_name = "${aws_autoscaling_group.main.name}"
 }
 
@@ -169,7 +169,7 @@ resource "aws_autoscaling_policy" "low-cpu" {
   name                   = "${var.app}-${var.env}-low-cpu-scaledown"
   scaling_adjustment     = -1
   adjustment_type        = "ChangeInCapacity"
-  cooldown               = 400
+  cooldown               = 450
   autoscaling_group_name = "${aws_autoscaling_group.main.name}"
 }
 
