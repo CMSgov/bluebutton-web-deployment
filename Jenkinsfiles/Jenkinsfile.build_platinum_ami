@@ -28,7 +28,8 @@ pipeline {
       name: 'BB20_DEPLOY_BRANCH'
     )
     string(
-      defaultValue: "",
+      //TODO: Use latest RH 7.8 gold image until RH 7.9 gold image is supported
+      defaultValue: "ami-0d716eddcc7b705c1",
       description: 'The AMI ID of the GDIT Gold Image.',
       name: 'GDIT_GOLD_IMAGE_AMI_ID'
     )
