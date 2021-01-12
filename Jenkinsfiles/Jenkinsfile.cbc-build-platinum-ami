@@ -7,10 +7,10 @@ pipeline {
   }
 
   environment {
-    AWS_ACCESS_KEY_ID = credentials("cbj-deploy-aws-key-id")
-    AWS_SECRET_ACCESS_KEY = credentials("cbj-deploy-aws-key-secret")
+    AWS_ACCESS_KEY_ID = credentials("bb2-aws-key-id")
+    AWS_SECRET_ACCESS_KEY = credentials("bb2-aws-key-secret")
     AWS_DEFAULT_REGION = "us-east-1"
-    VAULT_PASSWORD = credentials("vault-password")
+    VAULT_PASSWORD = credentials("bb2-vault-password")
   }
 
   parameters {
