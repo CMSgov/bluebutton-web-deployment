@@ -1,0 +1,49 @@
+def helpers = load("Jenkinsfiles/helpers.groovy")
+
+pipeline {
+  agent {
+    kubernetes {
+      defaultContainer "bb2-cbc-build"
+      yamlFile "Jenkinsfiles/cbc-build.yaml"
+    }
+  }
+
+  environment {
+    AWS_ACCESS_KEY_ID = credentials("cbj-deploy-aws-key-id")
+    AWS_SECRET_ACCESS_KEY = credentials("cbj-deploy-aws-key-secret")
+    AWS_DEFAULT_REGION = "us-east-1"
+    VAULT_PASSWORD = credentials("vault-password")
+  }
+
+  parameters {
+    string(
+      name: "PACKER_SOURCE_AMI",
+      //FIXME: Use latest RH 7.8 gold image until RH 7.9 gold image is supported
+      defaultValue: "ami-0d716eddcc7b705c1",
+      description: "The AMI ID of the Gold Image."
+    )
+  }
+
+  triggers {
+    cron("H 23 * * *")
+  }
+
+  stages {
+    stage('Notify') {
+      steps {
+        helpers.slackNotify "STARTING"
+      }
+    }
+
+    stage("Run Packer") {
+      steps {
+        sh """
+          packer build -color=false \
+            -var 'vault_password_file=${VAULT_PASSWORD}' \
+            -var 'source_ami=${PACKER_SOURCE_AMI}' \
+            packer/build_platinum_ami.json
+        """
+      }
+    }
+  }
+}
