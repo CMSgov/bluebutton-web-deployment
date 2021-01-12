@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
 
-PYTHON_VERSION=${1:-3.6}
-ANSIBLE_VERSION=${2:-2.7.18}
-PACKER_VERSION=${3:-1.6.5}
-TERRAFORM_VERSION=${4:-0.11.14}
-DOCKER_TAG=${5:-py36-tf11-an27}
+DOCKER_TAG=${1:-py36-an27-tf11}
 
-docker build -f Dockerfile.bb2-cbc-build -t public.ecr.aws/f5g8o1y9/bb2-cbc-build:${DOCKER_TAG} .
+docker build --file Dockerfile.bb2-cbc-build \
+  --build-arg PYTHON_VERSION=${2:-3.6} \
+  --build-arg ANSIBLE_VERSION=${3:-2.7.18} \
+  --build-arg PACKER_VERSION=${4:-1.6.5} \
+  --build-arg TERRAFORM_VERSION=${5:-0.11.14} \
+  --tag public.ecr.aws/f5g8o1y9/bb2-cbc-build:${DOCKER_TAG} \
+  .
+
 docker push public.ecr.aws/f5g8o1y9/bb2-cbc-build:${DOCKER_TAG}
