@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-
-PYTHON_VERSION=${1:-}
-ANSIBLE_VERSION=${2:-}
-PACKER_VERSION=${3:-}
-TERRAFORM_VERSION=${4:-}
-
-DOCKER_REPO=${5:-}
-DOCKER_TAG=${6:-}
