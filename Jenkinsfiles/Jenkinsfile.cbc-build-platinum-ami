@@ -31,7 +31,9 @@ pipeline {
   stages {
     stage('Notify') {
       steps {
-        helpers.slackNotify "STARTING"
+        script {
+          helpers.slackNotify "STARTING"
+        }
       }
     }
 
