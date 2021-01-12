@@ -1,9 +1,10 @@
 ARG PYTHON_VERSION
+
+FROM python:${PYTHON_VERSION}
+
 ARG ANSIBLE_VERSION
 ARG PACKER_VERSION
 ARG TERRAFORM_VERSION
-
-FROM python:${PYTHON_VERSION}
 
 RUN pip install ansible==${ANSIBLE_VERSION} awscli boto && \
     curl -L -o packer.zip https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip && \
