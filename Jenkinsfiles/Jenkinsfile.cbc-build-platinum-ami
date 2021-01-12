@@ -1,5 +1,3 @@
-def helpers = load("Jenkinsfiles/helpers.groovy")
-
 pipeline {
   agent {
     kubernetes {
@@ -32,6 +30,7 @@ pipeline {
     stage('Notify') {
       steps {
         script {
+          helpers = load "Jenkinsfiles/helpers.groovy"
           helpers.slackNotify "STARTING"
         }
       }
