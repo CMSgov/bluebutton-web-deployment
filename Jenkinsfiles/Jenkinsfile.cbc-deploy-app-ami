@@ -42,7 +42,7 @@ pipeline {
       }
     }
 
-    stage("Terraform Plan") {
+    stage("Run Terraform Plan") {
       steps {
         sh """
         cd terraform/${APP_ENV}
@@ -62,7 +62,7 @@ pipeline {
       }
     }
 
-    stage("Terraform Apply") {
+    stage("Run Terraform Apply") {
       steps {
         sh """
         cd terraform/${APP_ENV}
