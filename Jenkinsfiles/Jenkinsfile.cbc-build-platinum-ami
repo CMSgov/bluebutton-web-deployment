@@ -24,7 +24,7 @@ pipeline {
     string(
       name: "PACKER_SOURCE_AMI_ID",
       defaultValue: "",
-      description: "The AMI ID for the gold image, overrides search filter string"
+      description: "The AMI ID for the gold image, overrides search filter string."
     )
   }
 
@@ -61,11 +61,10 @@ pipeline {
     stage("Build Platinum AMI") {
       steps {
         sh """
-          echo ${SOURCE_AMI}
-          #packer build -color=false \
-          #  -var 'vault_password_file=${VAULT_PASSWORD}' \
-          #  -var 'source_ami=${SOURCE_AMI}' \
-          #  packer/build_platinum_ami.json
+          packer build -color=false \
+            -var 'vault_password_file=${VAULT_PASSWORD}' \
+            -var 'source_ami=${SOURCE_AMI}' \
+            packer/build_platinum_ami.json
         """
       }
     }
