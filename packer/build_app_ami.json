@@ -3,7 +3,7 @@
     "source_ami": "",
     "vault_password_file": "",
     "subnet_id": "subnet-81ecfbab",
-    "release_version": "none",
+    "release_version": "master",
     "git_branch": "master",
     "deployment_branch": "master"
   },
