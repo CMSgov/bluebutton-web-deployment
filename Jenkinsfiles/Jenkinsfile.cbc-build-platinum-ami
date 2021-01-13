@@ -41,7 +41,7 @@ pipeline {
 
     stage("Build Platinum AMI") {
       steps {
-        sh """
+        sh '''
           if [[ -n "${PACKER_SOURCE_AMI_ID}" ]]; then
             SOURCE_AMI=${PACKER_SOURCE_AMI_ID}
           elif [[ -n "${PACKER_SOURCE_AMI_SEARCH_FILTER}" ]]; then
@@ -56,10 +56,10 @@ pipeline {
 
           echo ${SOURCE_AMI}
           #packer build -color=false \
-          #  -var 'vault_password_file=${VAULT_PASSWORD}' \
-          #  -var 'source_ami=${SOURCE_AMI}' \
+          #  -var "vault_password_file=${VAULT_PASSWORD}" \
+          #  -var "source_ami=${SOURCE_AMI}" \
           #  packer/build_platinum_ami.json
-        """
+        '''
       }
     }
   }
