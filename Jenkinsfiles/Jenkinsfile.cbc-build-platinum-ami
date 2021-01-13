@@ -32,7 +32,7 @@ pipeline {
     stage('Notify Slack') {
       steps {
         script {
-          helpers = load "Jenkinsfiles/helpers.groovy"
+          //helpers = load "Jenkinsfiles/helpers.groovy"
           //helpers.slackNotify "STARTING"
           echo "DEBUG: slackNotify STARTING"
         }
@@ -42,9 +42,9 @@ pipeline {
     stage("Build Platinum AMI") {
       steps {
         sh '''
-          if [[ -n "${PACKER_SOURCE_AMI_ID}" ]]; then
+          if [ -n "${PACKER_SOURCE_AMI_ID}" ]; then
             SOURCE_AMI=${PACKER_SOURCE_AMI_ID}
-          elif [[ -n "${PACKER_SOURCE_AMI_SEARCH_FILTER}" ]]; then
+          elif [ -n "${PACKER_SOURCE_AMI_SEARCH_FILTER}" ]; then
             SOURCE_AMI=${aws ec2 describe-images \
             --filters "Name=name,Values=${PACKER_SOURCE_AMI_SEARCH_FILTER}" \
             --query "sort_by(Images, &CreationDate)[-1].ImageId" \
