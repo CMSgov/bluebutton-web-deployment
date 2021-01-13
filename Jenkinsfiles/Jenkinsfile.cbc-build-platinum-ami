@@ -39,27 +39,35 @@ pipeline {
       }
     }
 
+    stage("Determine Source AMI") {
+      steps {
+        script {
+          if (params.PACKER_SOURCE_AMI_ID != "") {
+            echo("Setting SOURCE_AMI from PACKER_SOURCE_AMI_ID")
+            SOURCE_AMI = params.PACKER_SOURCE_AMI_ID
+          } else if (params.PACKER_SOURCE_AMI_SEARCH_FILTER != "") {
+            echo("Setting SOURCE_AMI from PACKER_SOURCE_AMI_SEARCH_FILTER")
+            SOURCE_AMI = sh(returnStdout: true, script: "aws ec2 describe-images \
+              --filters 'Name=name,Values=${PACKER_SOURCE_AMI_SEARCH_FILTER}' \
+              --query 'sort_by(Images, &CreationDate)[-1].ImageId' \
+              --output text").trim()
+          } else {
+            echo("Please set PACKER_SOURCE_AMI_SEARCH_FILTER or PACKER_SOURCE_AMI_ID")
+            sh("exit 1")
+          }
+        }
+      }
+    }
+
     stage("Build Platinum AMI") {
       steps {
-        sh '''
-          if [ -n "${PACKER_SOURCE_AMI_ID}" ]; then
-            SOURCE_AMI=${PACKER_SOURCE_AMI_ID}
-          elif [ -n "${PACKER_SOURCE_AMI_SEARCH_FILTER}" ]; then
-            SOURCE_AMI=${aws ec2 describe-images \
-            --filters "Name=name,Values=${PACKER_SOURCE_AMI_SEARCH_FILTER}" \
-            --query "sort_by(Images, &CreationDate)[-1].ImageId" \
-            --output text}
-          else
-            echo "Please provide PACKER_SOURCE_AMI_SEARCH_FILTER or PACKER_SOURCE_AMI_ID parameter"
-            exit 1
-          fi
-
+        sh """
           echo ${SOURCE_AMI}
           #packer build -color=false \
-          #  -var "vault_password_file=${VAULT_PASSWORD}" \
-          #  -var "source_ami=${SOURCE_AMI}" \
+          #  -var 'vault_password_file=${VAULT_PASSWORD}' \
+          #  -var 'source_ami=${SOURCE_AMI}' \
           #  packer/build_platinum_ami.json
-        '''
+        """
       }
     }
   }
