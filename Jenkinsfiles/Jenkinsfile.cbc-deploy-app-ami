@@ -21,7 +21,7 @@ pipeline {
     choice(
       name: "APP_ENV",
       choices: ["dev", "test", "impl", "prod"],
-      description: "The environment to deploy to.",
+      description: "The environment to deploy to."
     )
 
     string(
@@ -32,7 +32,7 @@ pipeline {
   }
 
   stages {
-    stage('Notify Slack') {
+    stage("Notify Slack") {
       steps {
         script {
           //helpers = load "Jenkinsfiles/helpers.groovy"
