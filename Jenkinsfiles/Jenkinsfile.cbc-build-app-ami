@@ -44,7 +44,7 @@ pipeline {
       }
     }
 
-    stage("Determine Platinum AMI") {
+    stage("Determine Source AMI") {
       steps {
         script {
           if (params.PLATINUM_AMI_ID != "") {
