@@ -53,7 +53,7 @@ pipeline {
           --vault-password-file '${VAULT_PASSWORD}' \
           --private-key '${SSH_KEY}' \
           #-i inventory/ec2.py \
-          -i '10.224.90.57' \
+          -i '10.224.90.57,' \
           -l 'tag_Function_app_AppServer' \
           -e 'env=${APP_ENV}' \
           -e 'collectstatic=${RUN_COLLECTSTATIC}' \
