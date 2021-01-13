@@ -32,6 +32,12 @@ pipeline {
       choices: ["no", "yes"],
       description: "Run collectstatic (uploads static resources to S3)."
     )
+
+    string(
+      name: "CANARY_IP",
+      defaultValue: "",
+      description: "When this is set, run against a canary IP rather than a tagged deployment instance"
+    )
   }
 
   stages {
@@ -52,8 +58,8 @@ pipeline {
         ansible-playbook playbook/django/main.yml \
           --vault-password-file '${VAULT_PASSWORD}' \
           --private-key '${SSH_KEY}' \
-          -i 'inventory/ec2.py' \
-          -l 'tag_Function_app_AppServer' \
+          -i '10.224.90.57' \
+          -l '' \
           -e 'env=${APP_ENV}' \
           -e 'collectstatic=${RUN_COLLECTSTATIC}' \
           -e 'migrate=${RUN_MIGRATE}'
