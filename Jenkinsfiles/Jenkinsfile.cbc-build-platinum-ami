@@ -22,8 +22,8 @@ pipeline {
     )
 
     string(
-      name: "PACKER_SOURCE_AMI_ID"
-      defaultValue: ""
+      name: "PACKER_SOURCE_AMI_ID",
+      defaultValue: "",
       description: "The AMI ID for the gold image, overrides search filter string"
     )
   }
