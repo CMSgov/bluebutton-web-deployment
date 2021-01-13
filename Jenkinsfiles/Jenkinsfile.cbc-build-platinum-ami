@@ -52,8 +52,7 @@ pipeline {
               --query 'sort_by(Images, &CreationDate)[-1].ImageId' \
               --output text").trim()
           } else {
-            echo("Please set PACKER_SOURCE_AMI_SEARCH_FILTER or PACKER_SOURCE_AMI_ID")
-            sh("exit 1")
+            error("Please set PACKER_SOURCE_AMI_SEARCH_FILTER or PACKER_SOURCE_AMI_ID")
           }
         }
       }
