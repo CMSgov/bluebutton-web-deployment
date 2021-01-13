@@ -58,7 +58,7 @@ pipeline {
         ansible-playbook playbook/django/main.yml \
           --vault-password-file '${VAULT_PASSWORD}' \
           --private-key '${SSH_KEY}' \
-          -i '10.224.90.57' \
+          -i '10.224.90.57,' \
           -l '' \
           -e 'env=${APP_ENV}' \
           -e 'collectstatic=${RUN_COLLECTSTATIC}' \
