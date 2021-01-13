@@ -42,7 +42,6 @@ pipeline {
       }
     }
 
-  stages {
     stage("Terraform Plan") {
       steps {
         sh """
