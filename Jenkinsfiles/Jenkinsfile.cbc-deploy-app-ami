@@ -47,7 +47,7 @@ pipeline {
         sh """
         cd terraform/${APP_ENV}
         terraform init -backend-config='${TF_BACKEND}'
-        terraform plan -out=tfplan -var-file='${TF_VARS}' -var='ami_id=${APP_AMI_ID}' -var='instance_type=m3.medium'
+        terraform plan -out=tfplan -var-file='${TF_VARS}' -var='ami_id=${APP_AMI_ID}'
         """
       }
     }
