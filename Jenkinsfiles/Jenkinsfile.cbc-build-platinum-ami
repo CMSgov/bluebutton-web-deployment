@@ -15,10 +15,16 @@ pipeline {
 
   parameters {
     string(
-      name: "PACKER_SOURCE_AMI",
+      name: "PACKER_SOURCE_AMI_SEARCH_FILTER",
       //FIXME: Use latest RH 7.8 gold image until RH 7.9 gold image is supported
-      defaultValue: "ami-0d716eddcc7b705c1",
-      description: "The AMI ID of the Gold Image."
+      defaultValue: "EAST-RH 7-8*",
+      description: "The search filter string for the gold image."
+    )
+
+    string(
+      name: "PACKER_SOURCE_AMI_ID"
+      defaultValue: ""
+      description: "The AMI ID for the gold image, overrides search filter string"
     )
   }
 
@@ -26,7 +32,7 @@ pipeline {
     stage('Notify Slack') {
       steps {
         script {
-          helpers = load "Jenkinsfiles/helpers.groovy"
+          //helpers = load "Jenkinsfiles/helpers.groovy"
           //helpers.slackNotify "STARTING"
           echo "DEBUG: slackNotify STARTING"
         }
@@ -36,10 +42,23 @@ pipeline {
     stage("Build Platinum AMI") {
       steps {
         sh """
-          packer build -color=false \
-            -var 'vault_password_file=${VAULT_PASSWORD}' \
-            -var 'source_ami=${PACKER_SOURCE_AMI}' \
-            packer/build_platinum_ami.json
+          if [[ -n "${PACKER_SOURCE_AMI_ID}" ]]; then
+            SOURCE_AMI=${PACKER_SOURCE_AMI_ID}
+          elif [[ -n "${PACKER_SOURCE_AMI_SEARCH_FILTER}" ]]; then
+            SOURCE_AMI=${aws ec2 describe-images \
+            --filters "Name=name,Values=${PACKER_SOURCE_AMI_SEARCH_FILTER}" \
+            --query "sort_by(Images, &CreationDate)[-1].ImageId" \
+            --output text}
+          else
+            echo "Please provide PACKER_SOURCE_AMI_SEARCH_FILTER or PACKER_SOURCE_AMI_ID parameter"
+            exit 1
+          fi
+
+          echo ${SOURCE_AMI}
+          #packer build -color=false \
+          #  -var 'vault_password_file=${VAULT_PASSWORD}' \
+          #  -var 'source_ami=${SOURCE_AMI}' \
+          #  packer/build_platinum_ami.json
         """
       }
     }
