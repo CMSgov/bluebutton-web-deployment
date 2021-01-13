@@ -15,14 +15,14 @@ pipeline {
 
   parameters {
     string(
-      name: "PACKER_SOURCE_AMI_SEARCH_FILTER",
+      name: "GOLD_AMI_SEARCH_FILTER",
       //FIXME: Use latest RH 7.8 gold image until RH 7.9 gold image is supported
       defaultValue: "EAST-RH 7-8*",
       description: "The search filter string for the gold image."
     )
 
     string(
-      name: "PACKER_SOURCE_AMI_ID",
+      name: "GOLD_AMI_ID",
       defaultValue: "",
       description: "The AMI ID for the gold image, overrides search filter string."
     )
@@ -42,17 +42,17 @@ pipeline {
     stage("Determine Source AMI") {
       steps {
         script {
-          if (params.PACKER_SOURCE_AMI_ID != "") {
-            echo("Setting SOURCE_AMI from PACKER_SOURCE_AMI_ID")
-            SOURCE_AMI = params.PACKER_SOURCE_AMI_ID
-          } else if (params.PACKER_SOURCE_AMI_SEARCH_FILTER != "") {
-            echo("Setting SOURCE_AMI from PACKER_SOURCE_AMI_SEARCH_FILTER")
+          if (params.GOLD_AMI_ID != "") {
+            echo("Setting SOURCE_AMI from GOLD_AMI_ID")
+            SOURCE_AMI = params.GOLD_AMI_ID
+          } else if (params.GOLD_AMI_SEARCH_FILTER != "") {
+            echo("Setting SOURCE_AMI from GOLD_AMI_SEARCH_FILTER")
             SOURCE_AMI = sh(returnStdout: true, script: "aws ec2 describe-images \
-              --filters 'Name=name,Values=${PACKER_SOURCE_AMI_SEARCH_FILTER}' \
+              --filters 'Name=name,Values=${GOLD_AMI_SEARCH_FILTER}' \
               --query 'sort_by(Images, &CreationDate)[-1].ImageId' \
               --output text").trim()
           } else {
-            error("Please set PACKER_SOURCE_AMI_SEARCH_FILTER or PACKER_SOURCE_AMI_ID")
+            error("Please set GOLD_AMI_SEARCH_FILTER or GOLD_AMI_ID")
           }
         }
       }
