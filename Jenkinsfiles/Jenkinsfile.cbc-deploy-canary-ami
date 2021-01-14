@@ -70,6 +70,16 @@ pipeline {
         """
       }
     }
+
+    stage("Wait For Canary") {
+      steps {
+        sh """
+        cd terraform/${APP_ENV}_canary
+        CANARY_IP=${terraform output private_ip}
+        echo \"Got IP from terraform ${PRIVATE_IP}\"
+        """
+      }
+    }
   }
 
   post {
