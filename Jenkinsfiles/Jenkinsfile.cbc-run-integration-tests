@@ -1,0 +1,68 @@
+pipeline {
+  agent {
+    kubernetes {
+      defaultContainer "bb2-cbc-build"
+      yamlFile "Jenkinsfiles/cbc-run-integration-tests.yaml"
+    }
+  }
+
+  environment {
+    VAULT_PASSWORD = credentials("bb2-vault-password")
+  }
+
+  parameters {
+    string(
+      name: "BRANCH",
+      defaultValue: "master",
+      description: "The branch of the bluebutton-web-server repo to test."
+    )
+    string(
+      name: 'COMMIT_SHA',
+      defaultValue: "",
+      description: 'The commit sha to send status updates for. If specified, this variable overrides BRANCH.'
+    )
+    string(
+      name: 'FHIR_URL',
+      defaultValue: "https://prod-sbx.bfdcloud.net/v1/fhir/",
+      description: 'The default FHIR URL for the back end BFD service.'
+    )
+  }
+
+  stages {
+    stage("Run integration tests") {
+      steps {
+        script {
+          echo("Running integration tests...")
+
+          if (params.COMMIT_SHA != "") {
+            sh """
+              pwd
+              ls -ld *
+              BRANCH=${params.COMMIT_SHA} FHIR_URL=${params.FHIR_URL} ./scripts/cbc-run-integration-tests.sh
+            """
+          } else {
+            sh """
+              pwd
+              ls -ld *
+              BRANCH=${params.BRANCH} FHIR_URL=${params.FHIR_URL} ./scripts/cbc-run-integration-tests.sh
+            """
+          }
+        }
+      }
+    }
+  }
+
+  post {
+    success {
+      script {
+        echo "DEBUG: SUCCESS"
+      }
+    }
+
+    failure {
+      script {
+        echo "DEBUG: FAILURE"
+      }
+    }
+  }
+}
