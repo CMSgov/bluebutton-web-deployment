@@ -14,7 +14,6 @@ pipeline {
     TF_BACKEND = credentials("bb2-terraform-backend-${params.APP_ENV}")
     TF_VARS = credentials("bb2-terraform-vars-${params.APP_ENV}")
     TF_IN_AUTOMATION = true
-    TF_CLI_ARGS = "-no-color -input=false"
   }
 
   parameters {
@@ -46,15 +45,15 @@ pipeline {
       steps {
         sh """
         cd terraform/${APP_ENV}
-        terraform init -backend-config='${TF_BACKEND}'
-        terraform plan -out=tfplan -var-file='${TF_VARS}' -var='ami_id=${APP_AMI_ID}'
+        terraform init -no-color -input=false -backend-config='${TF_BACKEND}'
+        terraform plan -no-color -input=false -out=tfplan -var-file='${TF_VARS}' -var='ami_id=${APP_AMI_ID}'
         """
       }
     }
 
     stage("Confirm Deployment") {
       input {
-        message "Deploy this terraform plan?"
+        message "Deploy this terraform plan to ${param.APP_ENV}?"
         ok "Deploy"
       }
       steps {
@@ -66,7 +65,7 @@ pipeline {
       steps {
         sh """
         cd terraform/${APP_ENV}
-        terraform apply -auto-approve tfplan
+        terraform apply -no-color -input=false -auto-approve tfplan
         """
       }
     }
