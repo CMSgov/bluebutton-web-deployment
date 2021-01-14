@@ -55,9 +55,11 @@ pipeline {
       steps {
         script {
           if (params.CANARY_IP != "") {
+            echo("Setting ansible config for canary IP")
             ANSIBLE_INVENTORY = "${params.CANARY_IP},"
             ANSIBLE_SUBSET = ""
           } else {
+            echo("Setting ansible config for tagged deployment instance")
             ANSIBLE_INVENTORY = "inventory/ec2.py"
             ANSIBLE_SUBSET = "tag_Function_app_AppServer"
           }
