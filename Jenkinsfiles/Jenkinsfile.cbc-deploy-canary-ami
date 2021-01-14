@@ -53,7 +53,7 @@ pipeline {
 
     stage("Confirm Deployment") {
       input {
-        message "Deploy this terraform plan to ${param.APP_ENV}?"
+        message "Deploy this terraform plan to ${params.APP_ENV}?"
         ok "Deploy"
       }
       steps {
