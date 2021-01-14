@@ -78,7 +78,7 @@ pipeline {
         }
 
         sh """
-        curl --insecure --retry 40 --retry-delay 15 --retry-connrefused https://${CANARY_IP}/health
+        curl --silent --insecure --retry 40 --retry-delay 15 --retry-connrefused https://${CANARY_IP}/health
         """
       }
     }
