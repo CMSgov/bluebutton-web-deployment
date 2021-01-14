@@ -51,6 +51,20 @@ pipeline {
       }
     }
 
+    stage("Determine Ansible Config") {
+      steps {
+        script {
+          if (params.CANARY_IP != "") {
+            ANSIBLE_INVENTORY = "${params.CANARY_IP},"
+            ANSIBLE_SUBSET = ""
+          } else {
+            ANSIBLE_INVENTORY = "inventory/ec2.py"
+            ANSIBLE_SUBSET = "tag_Function_app_AppServer"
+          }
+        }
+      }
+    }
+
     stage("Run Post Deploy Playbook") {
       steps {
         sh """
@@ -58,8 +72,8 @@ pipeline {
         ansible-playbook playbook/django/main.yml \
           --vault-password-file '${VAULT_PASSWORD}' \
           --private-key '${SSH_KEY}' \
-          -i '10.224.90.57,' \
-          -l '' \
+          -i '${ANSIBLE_INVENTORY}' \
+          -l '${ANSIBLE_SUBSET}' \
           -e 'env=${APP_ENV}' \
           -e 'collectstatic=${RUN_COLLECTSTATIC}' \
           -e 'migrate=${RUN_MIGRATE}'
