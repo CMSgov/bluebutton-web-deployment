@@ -1,0 +1,90 @@
+pipeline {
+  agent {
+    kubernetes {
+      defaultContainer "bb2-cbc-build"
+      yamlFile "Jenkinsfiles/cbc-build.yaml"
+    }
+  }
+
+  environment {
+    AWS_ACCESS_KEY_ID = credentials("bb2-aws-key-id")
+    AWS_SECRET_ACCESS_KEY = credentials("bb2-aws-key-secret")
+    AWS_DEFAULT_REGION = "us-east-1"
+    VAULT_PASSWORD = credentials("bb2-vault-password")
+    TF_BACKEND = credentials("bb2-terraform-backend-${params.APP_ENV}-canary")
+    TF_VARS = credentials("bb2-terraform-vars-${params.APP_ENV}-canary")
+    TF_IN_AUTOMATION = true
+    TF_CLI_ARGS = "-no-color -input=false"
+  }
+
+  parameters {
+    choice(
+      name: "APP_ENV",
+      choices: ["test", "impl", "prod"],
+      description: "The environment to deploy to."
+    )
+
+    string(
+      name: "APP_AMI_ID",
+      defaultValue: "",
+      description: "The AMI ID for the app image."
+    )
+  }
+
+  stages {
+    stage("Notify Slack") {
+      steps {
+        script {
+          //helpers = load "Jenkinsfiles/helpers.groovy"
+          //helpers.slackNotify "STARTING"
+          echo "DEBUG: slackNotify STARTING"
+        }
+      }
+    }
+
+    stage("Run Terraform Plan") {
+      steps {
+        sh """
+        cd terraform/${APP_ENV}_canary
+        terraform init -backend-config='${TF_BACKEND}'
+        terraform plan -out=tfplan -var-file='${TF_VARS}' -var='ami_id=${APP_AMI_ID}'
+        """
+      }
+    }
+
+    stage("Confirm Deployment") {
+      input {
+        message "Deploy this terraform plan?"
+        ok "Deploy"
+      }
+      steps {
+        echo "Deploy confirmation recieved, proceeding."
+      }
+    }
+
+    stage("Run Terraform Apply") {
+      steps {
+        sh """
+        cd terraform/${APP_ENV}_canary
+        terraform apply -auto-approve tfplan
+        """
+      }
+    }
+  }
+
+  post {
+    success {
+      script {
+        //helpers.slackNotify("SUCCESS", "good")
+        echo "DEBUG: slackNotify SUCCESS"
+      }
+    }
+
+    failure {
+      script {
+        //helpers.slackNotify("FAILURE", "bad")
+        echo "DEBUG: slackNotify FAILURE"
+      }
+    }
+  }
+}
