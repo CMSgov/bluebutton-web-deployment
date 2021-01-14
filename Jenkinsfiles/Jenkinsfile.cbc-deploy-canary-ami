@@ -67,7 +67,6 @@ pipeline {
         sh """
         cd terraform/${APP_ENV}_canary
         terraform apply -auto-approve tfplan
-        terraform output private_ip > canary_ip
         """
       }
     }
@@ -75,7 +74,8 @@ pipeline {
     stage("Wait For Canary") {
       steps {
         script {
-          CANARY_IP = sh(returnStdout: true, script: "cat terraform/${APP_ENV}_canary/canary_ip").trim()
+          env.TF_CLI_ARGS = ""
+          CANARY_IP = sh(returnStdout: true, script: "cd terraform/${APP_ENV}_canary; terraform output private_ip").trim()
         }
 
         sh """
