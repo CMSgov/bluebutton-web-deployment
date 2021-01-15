@@ -23,7 +23,7 @@ echo
 echo
 echo Install Debian packages:
 echo
-sudo apt install python3 python3-venv
+apt install python3 python3-venv
 
 # Cloning the web server repo under ./code directory
 echo
