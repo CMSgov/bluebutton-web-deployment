@@ -32,8 +32,8 @@ pipeline {
     stage("Notify Slack") {
       steps {
         script {
-          //helpers = load "Jenkinsfiles/helpers.groovy"
-          //helpers.slackNotify "STARTING"
+          helpers = load "Jenkinsfiles/helpers.groovy"
+          helpers.slackNotify "STARTING"
           echo "DEBUG: slackNotify STARTING"
         }
       }
@@ -73,14 +73,14 @@ pipeline {
   post {
     success {
       script {
-        //helpers.slackNotify("SUCCESS", "good")
+        helpers.slackNotify("SUCCESS", "good")
         echo "DEBUG: slackNotify SUCCESS"
       }
     }
 
     failure {
       script {
-        //helpers.slackNotify("FAILURE", "bad")
+        helpers.slackNotify("FAILURE", "bad")
         echo "DEBUG: slackNotify FAILURE"
       }
     }
