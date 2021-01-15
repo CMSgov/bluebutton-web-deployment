@@ -19,21 +19,39 @@ echo     FHIR_URL:  ${FHIR_URL}
 echo 
 echo
 
-# Clone the web server repo
+# Install Debian packages
+echo
+echo Install Debian packages:
+echo
+sudo apt install python3 python3-venv
+
+# Cloning the web server repo under ./code directory
+echo
+echo Clone the web server repo under the ./code directory:
+echo
 git clone https://github.com/CMSgov/bluebutton-web-server.git code
 
 # Checkout commit hash or branch
+echo
+echo Checkout commit hash or branch from: branch = ${branch}
+echo
 pushd code
 git fetch origin "+refs/heads/master:refs/remotes/origin/master" "+refs/pull/*:refs/remotes/origin/pr/*"
 git checkout "$branch"
 
-# Install requirements
+# Setup Python virtual env and Install requirements:
+echo
+echo Setup Python virtual env and Install requirements:
+echo
 virtualenv -ppython3 venv
 . venv/bin/activate
 pip install -r requirements/requirements.txt
 pip install sqlparse
 
-# Bootstrap the database, run the server
+# Run the Django web server:
+echo
+echo Run the Django web server:
+echo
 export DJANGO_SETTINGS_MODULE="hhs_oauth_server.settings.dev"
 .././migrate.sh
 python3 manage.py runserver 0.0.0.0:8899 &
@@ -54,6 +72,7 @@ echo
 echo
 echo
 
+# Finish and perform any needed cleanup:
 
 echo SUCCESS
 exit 0
