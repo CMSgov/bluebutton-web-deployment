@@ -34,7 +34,6 @@ pipeline {
         script {
           helpers = load "Jenkinsfiles/helpers.groovy"
           helpers.slackNotify "STARTING"
-          echo "DEBUG: slackNotify STARTING"
         }
       }
     }
@@ -74,14 +73,12 @@ pipeline {
     success {
       script {
         helpers.slackNotify("SUCCESS", "good")
-        echo "DEBUG: slackNotify SUCCESS"
       }
     }
 
     failure {
       script {
         helpers.slackNotify("FAILURE", "bad")
-        echo "DEBUG: slackNotify FAILURE"
       }
     }
   }
