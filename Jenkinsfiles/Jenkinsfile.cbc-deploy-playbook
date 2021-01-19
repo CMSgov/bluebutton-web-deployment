@@ -45,7 +45,7 @@ pipeline {
       steps {
         script {
           helpers = load "Jenkinsfiles/helpers.groovy"
-          helpers.slackNotify "STARTING"
+          helpers.slackNotify "STARTING - ENV:${params.APP_ENV}"
         }
       }
     }
@@ -86,13 +86,13 @@ pipeline {
   post {
     success {
       script {
-        helpers.slackNotify("SUCCESS", "good")
+        helpers.slackNotify("SUCCESS - ENV:${params.APP_ENV}", "good")
       }
     }
 
     failure {
       script {
-        helpers.slackNotify("FAILURE", "bad")
+        helpers.slackNotify("FAILURE - ENV:${params.APP_ENV}", "bad")
       }
     }
   }
