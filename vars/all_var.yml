@@ -389,6 +389,18 @@
   sls_client_id: "{{ env_sls_client_id }}"
   sls_client_secret: "{{ env_sls_client_secret }}"
 
+  #
+  # SLSx / Medicare.gov Authentication Integration
+  #
+  slsx_client_id: "{{ env_slsx_client_id }}"
+  slsx_client_secret: "{{ env_slsx_client_secret }}"
+  medicare_slsx_login_uri: "{{ env_medicare_slsx_login_uri }}"
+  medicare_slsx_redirect_uri: "{{ env_medicare_slsx_redirect_uri }}"
+  slsx_health_check_endpoint: "{{ env_slsx_health_check_endpoint }}"
+  slsx_token_endpoint: "{{ env_slsx_token_endpoint }}"
+  slsx_userinfo_endpoint: "{{ env_slsx_userinfo_endpoint }}"
+  slsx_verify_ssl: "{{ env_slsx_verify_ssl }}"
+
   # Should be set to True in production and False in all other dev and test environments
   django_block_http_redirect: "{{ env_django_block_http_redirect }}"
 
