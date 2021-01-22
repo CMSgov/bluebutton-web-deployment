@@ -394,6 +394,7 @@
   #
   slsx_client_id: "{{ env_slsx_client_id }}"
   slsx_client_secret: "{{ env_slsx_client_secret }}"
+  medicare_slsx_akamai_aca_token: "{{ env_medicare_slsx_akamai_aca_token }}"
   medicare_slsx_login_uri: "{{ env_medicare_slsx_login_uri }}"
   medicare_slsx_redirect_uri: "{{ env_medicare_slsx_redirect_uri }}"
   slsx_health_check_endpoint: "{{ env_slsx_health_check_endpoint }}"
