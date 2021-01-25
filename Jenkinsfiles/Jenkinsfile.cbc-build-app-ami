@@ -1,0 +1,91 @@
+pipeline {
+  agent {
+    kubernetes {
+      defaultContainer "bb2-cbc-build"
+      yamlFile "Jenkinsfiles/cbc-build.yaml"
+    }
+  }
+
+  environment {
+    AWS_ACCESS_KEY_ID = credentials("bb2-aws-key-id")
+    AWS_SECRET_ACCESS_KEY = credentials("bb2-aws-key-secret")
+    AWS_DEFAULT_REGION = "us-east-1"
+    VAULT_PASSWORD = credentials("bb2-vault-password")
+  }
+
+  parameters {
+    string(
+      name: "APP_REPO_BRANCH",
+      defaultValue: "master",
+      description: "The branch of the application repo to build in AMI. Defaults to master."
+    )
+
+    string(
+      name: "DEPLOY_REPO_BRANCH",
+      defaultValue: "master",
+      description: "The branch of the deployment repo to build in AMI. Defaults to master."
+    )
+
+    string(
+      name: "PLATINUM_AMI_ID",
+      defaultValue: "",
+      description: "The AMI ID of the platinum image. If unset, the latest will be pulled from AWS and used."
+    )
+  }
+
+  stages {
+    stage("Notify Slack") {
+      steps {
+        script {
+          helpers = load "Jenkinsfiles/helpers.groovy"
+          helpers.slackNotify "STARTING"
+        }
+      }
+    }
+
+    stage("Determine Source AMI") {
+      steps {
+        script {
+          if (params.PLATINUM_AMI_ID != "") {
+            echo("Setting SOURCE_AMI from PLATINUM_AMI_ID")
+            SOURCE_AMI = params.PLATINUM_AMI_ID
+          } else {
+            echo("Setting SOURCE_AMI from latest platinum built in AWS")
+            SOURCE_AMI = sh(returnStdout: true, script: "aws ec2 describe-images \
+              --filters 'Name=name,Values=bb2-platinum-*' \
+              --query 'sort_by(Images, &CreationDate)[-1].ImageId' \
+              --output text").trim()
+          }
+        }
+      }
+    }
+
+    stage("Build App AMI") {
+      steps {
+        sh """
+          packer build -color=false \
+            -var 'vault_password_file=${VAULT_PASSWORD}' \
+            -var 'source_ami=${SOURCE_AMI}' \
+            -var 'release_version=${APP_REPO_BRANCH}' \
+            -var 'git_branch=${APP_REPO_BRANCH}' \
+            -var 'deployment_branch=${DEPLOY_REPO_BRANCH}' \
+            packer/build_app_ami.json
+        """
+      }
+    }
+  }
+
+  post {
+    success {
+      script {
+        helpers.slackNotify("SUCCESS", "good")
+      }
+    }
+
+    failure {
+      script {
+        helpers.slackNotify("FAILURE", "bad")
+      }
+    }
+  }
+}

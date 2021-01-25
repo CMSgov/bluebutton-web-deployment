@@ -14,4 +14,6 @@ variable "iam_instance_profile" {}
 
 variable "vpc_sg_id" {}
 
+variable "vpc_sg_id_ci" {}
+
 variable "instance_name" {}

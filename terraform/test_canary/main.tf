@@ -26,10 +26,9 @@ resource "aws_instance" "test_canary_app" {
   user_data                   = "${data.template_file.user_data.rendered}"
   iam_instance_profile        = "${var.iam_instance_profile}"
 
-  #   For canary, just needing one for ssh access: vpn
-
   vpc_security_group_ids = [
-    "${var.vpc_sg_id}"
+    "${var.vpc_sg_id}",
+    "${var.vpc_sg_id_ci}"
   ]
 
   associate_public_ip_address = false

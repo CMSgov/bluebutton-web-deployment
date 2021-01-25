@@ -6,12 +6,12 @@
 # Perform django migrate and django collectstatic
 # add in group create for first run only.
 
-- name: "Make sure virtualenv installed"
-  become_user: "{{ remote_admin_account }}"
-  become: yes
-  pip:
-    name: virtualenv
-    state: present
+# - name: "Make sure virtualenv installed"
+#   become_user: "{{ remote_admin_account }}"
+#   become: yes
+#   pip:
+#     name: virtualenv
+#     state: present
 
 - name: "Django migrate "
   become_user: "{{ remote_admin_account }}"
@@ -26,15 +26,15 @@
     virtualenv: "{{ venv_full }}"
   when: ( migrate is defined ) and ( migrate == 'yes' )
 
-- name: "Add Group roles to database"
-  become_user: "{{ remote_admin_account }}"
-  become: yes
-  run_once: yes
-  django_manage:
-    command: loaddata apps/accounts/fixtures/groups.json
-    app_path: "{{ install_root }}/{{ project_name }}/"
-    virtualenv: "{{ venv_full }}"
-  when: ( add_groups is defined ) and ( add_groups|lower == 'yes' )
+# - name: "Add Group roles to database"
+#   become_user: "{{ remote_admin_account }}"
+#   become: yes
+#   run_once: yes
+#   django_manage:
+#     command: loaddata apps/accounts/fixtures/groups.json
+#     app_path: "{{ install_root }}/{{ project_name }}/"
+#     virtualenv: "{{ venv_full }}"
+#   when: ( add_groups is defined ) and ( add_groups|lower == 'yes' )
 
 ############################################################
 #
@@ -44,25 +44,25 @@
 #
 ############################################################
 
-- name: "MGMT Command to Add BlueButton Scopes to database"
-  become_user: "{{ remote_admin_account }}"
-  become: yes
-  run_once: yes
-  django_manage:
-    command:  create_blue_button_scopes
-    app_path: "{{ install_root }}/{{ project_name }}/"
-    virtualenv: "{{ venv_full }}"
-  when: ( add_scopes is defined ) and ( add_scopes|lower == 'yes' )
+# - name: "MGMT Command to Add BlueButton Scopes to database"
+#   become_user: "{{ remote_admin_account }}"
+#   become: yes
+#   run_once: yes
+#   django_manage:
+#     command:  create_blue_button_scopes
+#     app_path: "{{ install_root }}/{{ project_name }}/"
+#     virtualenv: "{{ venv_full }}"
+#   when: ( add_scopes is defined ) and ( add_scopes|lower == 'yes' )
 
-- name: "Load ResourceRouter and SupportedResourceType tables"
-  become_user: "{{ remote_admin_account }}"
-  become: yes
-  run_once: yes
-  django_manage:
-    command: "loaddata apps/fhir/server/fixtures/{{ env|lower }}_install_fixture.json"
-    app_path: "{{ install_root }}/{{ project_name }}/"
-    virtualenv: "{{ venv_full }}"
-  when: ( add_back_end_resources is defined ) and ( add_back_end_resources == 'yes' )
+# - name: "Load ResourceRouter and SupportedResourceType tables"
+#   become_user: "{{ remote_admin_account }}"
+#   become: yes
+#   run_once: yes
+#   django_manage:
+#     command: "loaddata apps/fhir/server/fixtures/{{ env|lower }}_install_fixture.json"
+#     app_path: "{{ install_root }}/{{ project_name }}/"
+#     virtualenv: "{{ venv_full }}"
+#   when: ( add_back_end_resources is defined ) and ( add_back_end_resources == 'yes' )
 
 - name: Django collectstatic
   become_user: "{{ remote_admin_account }}"
