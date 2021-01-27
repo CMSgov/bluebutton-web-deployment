@@ -26,23 +26,6 @@ echo_msg "    FHIR_URL:  ${FHIR_URL}"
 echo_msg 
 echo_msg
 
-# Debugging for CBC 
-echo_msg
-echo_msg
-echo_msg
-echo_msg
-echo_msg "DEBUG:   PWD is:  $PWD"
-echo_msg
-echo_msg
-echo_msg "LS of PWD: start"
-ls -latrd *
-echo_msg
-echo_msg "LS of PWD: end"
-echo_msg 
-echo_msg 
-echo_msg 
-
-
 # Cloning the web server repo under ./code directory.
 echo_msg
 echo_msg "Clone the web server repo under the ./code directory:"
@@ -56,22 +39,6 @@ echo_msg
 cd code
 git fetch origin "+refs/heads/master:refs/remotes/origin/master" "+refs/pull/*:refs/remotes/origin/pr/*"
 git checkout "$branch"
-
-# Debugging for CBC 
-echo_msg
-echo_msg
-echo_msg
-echo_msg
-echo_msg "DEBUG:   PWD is:  $PWD"
-echo_msg
-echo_msg
-echo_msg "LS of PWD: start"
-ls -latrd *
-echo_msg
-echo_msg "LS of PWD: end"
-echo_msg 
-echo_msg 
-echo_msg 
 
 # Call run tests script from webserver repo.
 sh docker-compose/run_integration_tests_inside_cbc_build_docker.sh
