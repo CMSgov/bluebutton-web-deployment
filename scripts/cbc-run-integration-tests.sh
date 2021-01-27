@@ -45,12 +45,16 @@ git checkout "$branch"
 
 # Copy cert files to DJANGO_FHIR_CERTSTORE location
 export DJANGO_FHIR_CERTSTORE=./certstore
+export FHIR_CERT_FILE="cert.pem"
+export FHIR_KEY_FILE="key.pem"
 echo_msg
 echo_msg "Copy CERT files in to DJANGO_FHIR_CERTSTORE: ${DJANGO_FHIR_CERTSTORE}"
 echo_msg
 mkdir ${DJANGO_FHIR_CERTSTORE}
-cp "${CERT_FILE}" ${DJANGO_FHIR_CERTSTORE}
-cp "${KEY_FILE}" ${DJANGO_FHIR_CERTSTORE}
+cp "${CERT_FILE}" "${DJANGO_FHIR_CERTSTORE}/${FHIR_CERT_FILE}"
+cp "${KEY_FILE}" "${DJANGO_FHIR_CERTSTORE}/${FHIR_KEY_FILE}"
+ls -ld "${DJANGO_FHIR_CERTSTORE}/cert.pem"
+ls -ld "${DJANGO_FHIR_CERTSTORE}/key.pem"
 
 # Call run tests script from webserver repo.
 sh docker-compose/run_integration_tests_inside_cbc_build_docker.sh
