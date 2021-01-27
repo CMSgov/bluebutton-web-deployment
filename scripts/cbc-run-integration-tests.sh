@@ -20,10 +20,13 @@ echo_msg "Running script: $0"
 echo_msg
 echo_msg "Using ENV/environment variables:"
 echo_msg
-echo_msg "    BRANCH:  ${branch}"
+echo_msg "      BRANCH:  ${branch}"
 echo_msg 
 echo_msg "    FHIR_URL:  ${FHIR_URL}"
 echo_msg 
+echo_msg "   CERT_FILE: ${CERT_FILE}" 
+echo_msg 
+echo_msg "    KEY_FILE: ${KEY_FILE}" 
 echo_msg
 
 # Cloning the web server repo under ./code directory.
