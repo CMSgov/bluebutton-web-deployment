@@ -44,7 +44,7 @@ git fetch origin "+refs/heads/master:refs/remotes/origin/master" "+refs/pull/*:r
 git checkout "$branch"
 
 # Copy cert files to DJANGO_FHIR_CERTSTORE location
-export DJANGO_FHIR_CERTSTORE=./certstore
+export DJANGO_FHIR_CERTSTORE=./certstore/
 export FHIR_CERT_FILE="cert.pem"
 export FHIR_KEY_FILE="key.pem"
 echo_msg
