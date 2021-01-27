@@ -54,8 +54,10 @@ echo_msg "   Copying cert file to FHIR_CERT_FILE: ${FHIR_CERT_FILE}"
 echo_msg "   Copying key file to  FHIR_KEY_FILE: ${FHIR_KEY_FILE}"
 echo_msg
 mkdir ${DJANGO_FHIR_CERTSTORE}
-cp "${CERT_FILE}" "${DJANGO_FHIR_CERTSTORE}/${FHIR_CERT_FILE}"
-cp "${KEY_FILE}" "${DJANGO_FHIR_CERTSTORE}/${FHIR_KEY_FILE}"
+# TODO: Fix this certstore path issue. Django is looking under ./certstore/./certstore/cert.pem
+mkdir ${DJANGO_FHIR_CERTSTORE}/certstore
+cp "${CERT_FILE}" "${DJANGO_FHIR_CERTSTORE}/certstore/${FHIR_CERT_FILE}"
+cp "${KEY_FILE}" "${DJANGO_FHIR_CERTSTORE}/certstore/${FHIR_KEY_FILE}"
 ls -ld "${DJANGO_FHIR_CERTSTORE}/cert.pem"
 ls -ld "${DJANGO_FHIR_CERTSTORE}/key.pem"
 
