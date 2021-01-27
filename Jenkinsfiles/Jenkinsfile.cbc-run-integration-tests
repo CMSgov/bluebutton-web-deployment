@@ -7,7 +7,8 @@ pipeline {
   }
 
   environment {
-    VAULT_PASSWORD = credentials("bb2-vault-password")
+    DJANGO_USER_ID_SALT = credentials("bb2-integration-tests-bfd-salt")
+    DJANGO_USER_ID_ITERATIONS = credentials("bb2-integration-tests-bfd-iterations")
   }
 
   parameters {
@@ -31,21 +32,26 @@ pipeline {
   stages {
     stage("Run integration tests") {
       steps {
-        script {
-          echo("Running integration tests...")
+        withCredentials([
+          file(credentialsId: "bb2-integration-tests-bfd-cert", variable: 'cf'),
+          file(credentialsId: "bb2-integration-tests-bfd-key", variable: 'kf')
+        ]) {
+          script {
+            echo("Running integration tests...")
 
-          if (params.COMMIT_SHA != "") {
-            sh """
-              pwd
-              ls -ld *
-              BRANCH=${params.COMMIT_SHA} FHIR_URL=${params.FHIR_URL} ./scripts/cbc-run-integration-tests.sh
-            """
-          } else {
-            sh """
-              pwd
-              ls -ld *
-              BRANCH=${params.BRANCH} FHIR_URL=${params.FHIR_URL} ./scripts/cbc-run-integration-tests.sh
-            """
+            if (params.COMMIT_SHA != "") {
+              sh """
+                pwd
+                ls -ld *
+                BRANCH=${params.COMMIT_SHA} FHIR_URL=${params.FHIR_URL} CERT_FILE=${cf} KEY_FILE=${kf} ./scripts/cbc-run-integration-tests.sh
+              """
+            } else {
+              sh """
+                pwd
+                ls -ld *
+                BRANCH=${params.BRANCH} FHIR_URL=${params.FHIR_URL} CERT_FILE=${cf} KEY_FILE=${kf} ./scripts/cbc-run-integration-tests.sh
+              """
+            }
           }
         }
       }
