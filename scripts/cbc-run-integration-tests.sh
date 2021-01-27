@@ -50,6 +50,9 @@ export FHIR_KEY_FILE="key.pem"
 echo_msg
 echo_msg "Copy CERT files in to DJANGO_FHIR_CERTSTORE: ${DJANGO_FHIR_CERTSTORE}"
 echo_msg
+echo_msg "   Copying cert file to FHIR_CERT_FILE: ${FHIR_CERT_FILE}"
+echo_msg "   Copying key file to  FHIR_KEY_FILE: ${FHIR_KEY_FILE}"
+echo_msg
 mkdir ${DJANGO_FHIR_CERTSTORE}
 cp "${CERT_FILE}" "${DJANGO_FHIR_CERTSTORE}/${FHIR_CERT_FILE}"
 cp "${KEY_FILE}" "${DJANGO_FHIR_CERTSTORE}/${FHIR_KEY_FILE}"
