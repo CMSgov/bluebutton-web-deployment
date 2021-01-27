@@ -43,5 +43,14 @@ cd code
 git fetch origin "+refs/heads/master:refs/remotes/origin/master" "+refs/pull/*:refs/remotes/origin/pr/*"
 git checkout "$branch"
 
+# Copy cert files to DJANGO_FHIR_CERTSTORE location
+export DJANGO_FHIR_CERTSTORE=./certstore
+echo_msg
+echo_msg "Copy CERT files in to DJANGO_FHIR_CERTSTORE: ${DJANGO_FHIR_CERTSTORE}"
+echo_msg
+mkdir ${DJANGO_FHIR_CERTSTORE}
+cp "${CERT_FILE}" ${DJANGO_FHIR_CERTSTORE}
+cp "${KEY_FILE}" ${DJANGO_FHIR_CERTSTORE}
+
 # Call run tests script from webserver repo.
 sh docker-compose/run_integration_tests_inside_cbc_build_docker.sh
