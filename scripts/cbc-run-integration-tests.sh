@@ -58,8 +58,8 @@ mkdir ${DJANGO_FHIR_CERTSTORE}
 mkdir ${DJANGO_FHIR_CERTSTORE}/certstore
 cp "${CERT_FILE}" "${DJANGO_FHIR_CERTSTORE}/certstore/${FHIR_CERT_FILE}"
 cp "${KEY_FILE}" "${DJANGO_FHIR_CERTSTORE}/certstore/${FHIR_KEY_FILE}"
-ls -ld "${DJANGO_FHIR_CERTSTORE}/cert.pem"
-ls -ld "${DJANGO_FHIR_CERTSTORE}/key.pem"
+ls -ld "${DJANGO_FHIR_CERTSTORE}/certstore/cert.pem"
+ls -ld "${DJANGO_FHIR_CERTSTORE}/certstore/key.pem"
 
 # Call run tests script from webserver repo.
 sh docker-compose/run_integration_tests_inside_cbc_build_docker.sh
