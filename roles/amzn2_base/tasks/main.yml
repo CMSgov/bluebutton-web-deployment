@@ -1,0 +1,26 @@
+---
+- name: Apply security patches
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  command: "yum update-minimal --security -y"
+- name: Install dependencies
+  become: yes
+  become_user: "{{ remote_admin_account }}"
+  yum:
+    name:
+      - gcc
+      - git
+      - python3-devel
+      - postgresql-devel
+      - zlib-devel
+      - libjpeg-turbo-devel
+      - nginx
+      - ansible
+      - amazon-cloudwatch-agent
+- name: Install uwsgi via pip
+  become: yes
+  become_user: "{{ remote_admin_account }}"
+  pip:
+    name: uwsgi
+    executable: pip3
+    umask: "0022"
