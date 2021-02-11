@@ -2,7 +2,11 @@
 Description=uWSGI - Blue Button 2.0
 
 [Service]
+{% if platinum_source != "amzn2" %}
 ExecStart=/sbin/uwsgi --emperor /etc/uwsgi/vassals
+{% else %}
+ExecStart=/usr/local/bin/uwsgi --emperor /etc/uwsgi/vassals
+{% endif %}
 Restart=always
 KillSignal=SIGQUIT
 Type=notify
