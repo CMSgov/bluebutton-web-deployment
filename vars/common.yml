@@ -56,6 +56,9 @@ venv: "/var/virtualenv/"
 remote_user_account: "ec2-user"
 remote_admin_account: "root"
 
+# Switch that enables compatibility with Amazon Linux 2
+platinum_source: "amzn2"
+
 # Environment VPC Subnets
 
 common_repository: "https://github.com/transparenthealth/hhs_oauth_server"

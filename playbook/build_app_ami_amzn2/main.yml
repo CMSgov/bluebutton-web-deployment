@@ -10,7 +10,6 @@
     sg_zone: "appserver"
     env_az: "{{ env }}-{{ azone }}"
     splunk_target_layer: "app"
-    platinum_source: "amzn2"
   vars_files:
     - "./../../vars/common.yml"
     - "./../../vault/env/{{ env }}/vault.yml"

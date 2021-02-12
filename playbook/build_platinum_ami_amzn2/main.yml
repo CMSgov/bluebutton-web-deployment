@@ -9,7 +9,6 @@
     sub_zone: "app"
     sg_zone: "appserver"
     splunk_target_layer: "app"
-    platinum_source: "amzn2"
   vars_files:
     - "./../../vars/common.yml"
     - "./../../vars/all_var.yml"
