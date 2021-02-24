@@ -12,4 +12,6 @@ RUN pip install ansible==${ANSIBLE_VERSION} awscli boto && \
     rm packer.zip && \
     curl -L -o terraform.zip https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
     unzip terraform.zip -d /usr/local/bin && \
-    rm terraform.zip
+    rm terraform.zip && \
+    curl -L -o /usr/local/bin/jq https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 && \
+    chmod +x /usr/local/bin/jq
