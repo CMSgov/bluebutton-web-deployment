@@ -43,7 +43,7 @@
 - name: "Add uwsgi to system startup"
   become_user: "{{ remote_admin_account }}"
   become: yes
-  copy:
+  template:
     src: files/uwsgi.service
     dest: /etc/systemd/system/uwsgi.service
     mode: "0644"

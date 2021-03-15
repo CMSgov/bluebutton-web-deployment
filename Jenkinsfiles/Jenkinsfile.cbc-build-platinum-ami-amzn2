@@ -1,0 +1,84 @@
+pipeline {
+  agent {
+    kubernetes {
+      defaultContainer "bb2-cbc-build"
+      yamlFile "Jenkinsfiles/cbc-build.yaml"
+    }
+  }
+
+  environment {
+    AWS_ACCESS_KEY_ID = credentials("bb2-aws-key-id")
+    AWS_SECRET_ACCESS_KEY = credentials("bb2-aws-key-secret")
+    AWS_DEFAULT_REGION = "us-east-1"
+    VAULT_PASSWORD = credentials("bb2-vault-password")
+  }
+
+  parameters {
+    string(
+      name: "GOLD_AMI_SEARCH_FILTER",
+      defaultValue: "amzn2legacy*",
+      description: "The search filter string for the gold image."
+    )
+
+    string(
+      name: "GOLD_AMI_ID",
+      defaultValue: "",
+      description: "The AMI ID for the gold image, overrides search filter string."
+    )
+  }
+
+  stages {
+    stage("Notify Slack") {
+      steps {
+        script {
+          helpers = load "Jenkinsfiles/helpers.groovy"
+          helpers.slackNotify "STARTING"
+        }
+      }
+    }
+
+    stage("Determine Source AMI") {
+      steps {
+        script {
+          if (params.GOLD_AMI_ID != "") {
+            echo("Setting SOURCE_AMI from GOLD_AMI_ID")
+            SOURCE_AMI = params.GOLD_AMI_ID
+          } else if (params.GOLD_AMI_SEARCH_FILTER != "") {
+            echo("Setting SOURCE_AMI from GOLD_AMI_SEARCH_FILTER")
+            SOURCE_AMI = sh(returnStdout: true, script: "aws ec2 describe-images \
+              --filters 'Name=name,Values=${GOLD_AMI_SEARCH_FILTER}' \
+              --query 'sort_by(Images, &CreationDate)[-1].ImageId' \
+              --output text").trim()
+          } else {
+            error("Please set GOLD_AMI_SEARCH_FILTER or GOLD_AMI_ID")
+          }
+        }
+      }
+    }
+
+    stage("Build Platinum AMI") {
+      steps {
+        sh """
+          packer build -color=false \
+            -var 'vault_password_file=${VAULT_PASSWORD}' \
+            -var 'source_ami=${SOURCE_AMI}' \
+            packer/build_platinum_ami_amzn2.json
+        """
+      }
+    }
+  }
+
+  post {
+    success {
+      script {
+        helpers.slackNotify("SUCCESS", "good")
+      }
+    }
+
+    failure {
+      script {
+        helpers.slackNotify("FAILURE", "bad")
+      }
+    }
+  }
+}

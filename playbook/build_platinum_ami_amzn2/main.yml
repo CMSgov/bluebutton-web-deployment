@@ -1,0 +1,17 @@
+---
+- name: Provision server
+  hosts: all
+  remote_user: ec2-user
+  gather_facts: no
+  vars:
+    ansible_ssh_pipelining: no
+    azone: "az1"
+    sub_zone: "app"
+    sg_zone: "appserver"
+    splunk_target_layer: "app"
+  vars_files:
+    - "./../../vars/common.yml"
+    - "./../../vars/all_var.yml"
+  roles:
+    - ../../roles/amzn2_base
+    - ../../roles/cloudwatch_agent_base
