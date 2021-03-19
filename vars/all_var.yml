@@ -182,16 +182,7 @@
   django_signup_timeout_days: "{{ env_django_signup_timeout_days }}"
 
   ### S3 Bucket Settings:
-  s3_bucket_account: "{{ env_s3_bucket_account }}"
-  aws_access_id: "{{ env_aws_access_id }}"
-  aws_secret_key: "{{ env_aws_secret_key }}"
   s3_storage_bucket_name: "{{ env_s3_storage_bucket_name }}"
-
-  ### Route53 Settings
-  ## {{ env|upper }}
-  r53_account: "{{ env_r53_account }}"
-  r53_access_id: "{{ env_r53_access_id }}"
-  r53_secret_key: "{{ env_r53_secret_key }}"
 
   apache_cert_store: "{{ env_apache_cert_store }}"
   letsencrypt_cert_store: "/root/certstore"
@@ -258,9 +249,6 @@
   cf_data_ca_file: "{{ env_cf_data_ca_file }}"
   cf_data_crl_file: "{{ env_cf_data_crl_file }}"
 
-  cf_data_db_backup_key_id: "{{ env_cf_data_db_backup_key_id }}"
-  cf_data_db_backup_secret_key: "{{ env_cf_data_db_backup_secret_key }}"
-
   selinux_policy: "targeted"
   # selinux_state: "disabled"
   selinux_state: "enforcing"
@@ -311,8 +299,6 @@
   cf_app_db_type: "{{ env_cf_app_db_type }}"
   cf_app_db_prefix: "{{ env_cf_app_db_prefix }}"
   cf_app_db_host_address: "{{ env_cf_db_host_address }}"
-  cf_app_aws_content_key_id: "{{ env_cf_app_aws_content_key_id }}"
-  cf_app_aws_content_access_key: "{{ env_cf_app_aws_content_access_key }}"
   cf_app_target_vpc_id: "{{ cf_vpc_id }}"
 
   # Postgres Role related settings
