@@ -70,7 +70,7 @@ pipeline {
           -i '${ANSIBLE_INVENTORY}' \
           -l '${ANSIBLE_SUBSET}' \
           -e 'env=${APP_ENV}' \
-          -e 'django_command=${DJANGO_COMMAND}'
+          -e 'django_command="${DJANGO_COMMAND}"'
         """
       }
     }
