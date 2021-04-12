@@ -21,6 +21,8 @@
         command: "{{ django_command }}"
         app_path: "{{ install_root }}/{{ project_name }}/"
         virtualenv: "{{ venv_full }}"
-      register: out
-    - debug:
-        var: out
+      register: django_command_debug
+    - name: "Display command output: {{ django_commmand }}"
+      run_once: yes
+      debug:
+        var: django_command_debug.out
