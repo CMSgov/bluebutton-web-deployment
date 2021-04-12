@@ -1,0 +1,26 @@
+---
+- name: "Run django command"
+  hosts: all
+  remote_user: ec2-user
+  gather_facts: no
+  vars:
+    ansible_ssh_pipelining: no
+  vars_files:
+    - "./../../vars/common.yml"
+    - "./../../vault/env/{{ env }}/vault.yml"
+    - "./../../vars/env/{{ env }}/env.yml"
+    - "./../../vars/all_var.yml"
+  tasks:
+    - name: "Run django command: {{ django_command }}"
+      become_user: "{{ remote_admin_account }}"
+      become: yes
+      run_once: yes
+      environment:
+        DJANGO_DOTENV_FILE: "{{ install_root }}"
+      django_manage:
+        command: "{{ django_command }}"
+        project_path: "{{ install_root }}/{{ project_name }}/"
+        virtualenv: "{{ venv_full }}"
+      register: out
+    - debug:
+        var: out.stdout_lines
