@@ -23,4 +23,4 @@
         virtualenv: "{{ venv_full }}"
       register: out
     - debug:
-        var: out.stdout_lines
+        var: out
