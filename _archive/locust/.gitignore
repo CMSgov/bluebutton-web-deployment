@@ -1,0 +1,4 @@
+Pipfile.lock
+*.pyc
+tmp
+tkns.txt

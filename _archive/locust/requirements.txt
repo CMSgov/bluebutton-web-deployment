@@ -1,0 +1,4 @@
+requests-oauthlib
+flask
+locust
+ipython
