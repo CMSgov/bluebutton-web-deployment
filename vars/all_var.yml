@@ -385,6 +385,7 @@
   medicare_slsx_redirect_uri: "{{ env_medicare_slsx_redirect_uri }}"
   slsx_health_check_endpoint: "{{ env_slsx_health_check_endpoint }}"
   slsx_token_endpoint: "{{ env_slsx_token_endpoint }}"
+  slsx_signout_endpoint: "{{ env_slsx_signout_endpoint }}"
   slsx_userinfo_endpoint: "{{ env_slsx_userinfo_endpoint }}"
   slsx_verify_ssl: "{{ env_slsx_verify_ssl }}"
 
