@@ -19,7 +19,7 @@ pipeline {
   parameters {
     choice(
       name: "APP_ENV",
-      choices: ["dev", "test", "impl", "prod"],
+      choices: ["test", "impl", "prod"],
       description: "The environment to deploy to."
     )
 
