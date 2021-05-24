@@ -365,17 +365,6 @@
   snmp_community_string: "oedabluebuttonsnmpcommunity"
 
   #
-  # MyMedicare Authentication Integration
-  #
-  sls_token_endpoint: "{{ env_sls_token_endpoint }}"
-  sls_userinfo_endpoint: "{{ env_sls_userinfo_endpoint }}"
-  medicare_login_uri: "{{ env_medicare_login_uri }}"
-  medicare_redirect_uri: "{{ env_medicare_redirect_uri }}"
-  sls_verify_ssl: "{{ env_sls_verify_ssl }}"
-  sls_client_id: "{{ env_sls_client_id }}"
-  sls_client_secret: "{{ env_sls_client_secret }}"
-
-  #
   # SLSx / Medicare.gov Authentication Integration
   #
   slsx_client_id: "{{ env_slsx_client_id }}"
@@ -387,7 +376,8 @@
   slsx_token_endpoint: "{{ env_slsx_token_endpoint }}"
   slsx_signout_endpoint: "{{ env_slsx_signout_endpoint }}"
   slsx_userinfo_endpoint: "{{ env_slsx_userinfo_endpoint }}"
-  slsx_verify_ssl: "{{ env_slsx_verify_ssl }}"
+  slsx_verify_ssl_internal: "{{ env_slsx_verify_ssl_internal }}"
+  slsx_verify_ssl_external: "{{ env_slsx_verify_ssl_external }}"
 
   # Should be set to True in production and False in all other dev and test environments
   django_block_http_redirect: "{{ env_django_block_http_redirect }}"
