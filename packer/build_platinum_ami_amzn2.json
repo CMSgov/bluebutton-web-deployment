@@ -2,7 +2,7 @@
   "variables": {
     "source_ami": "",
     "vault_password_file": "",
-    "subnet_id": "subnet-81ecfbab"
+    "subnet_id": "subnet-a0d9c28a"
   },
   "builders": [{
     "type": "amazon-ebs",
