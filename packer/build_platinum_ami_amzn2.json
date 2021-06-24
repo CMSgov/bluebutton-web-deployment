@@ -19,6 +19,7 @@
         "device_name": "/dev/xvda",
         "volume_type": "gp2",
         "volume_size": 30,
+        "encrypted": true,
         "delete_on_termination": true
       }
     ],
