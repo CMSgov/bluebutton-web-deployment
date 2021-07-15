@@ -12,7 +12,7 @@ pipeline {
     AWS_DEFAULT_REGION = "us-east-1"
     VAULT_PASSWORD = credentials("bb2-vault-password")
     TF_BACKEND = credentials("bb2-terraform-backend-${params.APP_ENV}")
-    TF_VARS = credentials("bb2-terraform-vars-${params.APP_ENV}")
+    TF_VARS = credentials("bb2-terraform-vars-${params.APP_ENV}-bb2-739")
     TF_IN_AUTOMATION = true
   }
 
