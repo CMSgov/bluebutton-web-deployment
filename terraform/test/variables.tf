@@ -42,8 +42,6 @@ variable "asg_name" {
 
 variable "app_config_bucket" {}
 
-variable "dashboard_enable" {}
-
 variable "alarm_elb_no_backend_enable" {}
 variable "alarm_elb_no_backend_eval_periods" {}
 variable "alarm_elb_no_backend_period" {}
