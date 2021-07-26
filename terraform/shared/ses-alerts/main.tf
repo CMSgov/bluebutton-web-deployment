@@ -9,7 +9,7 @@ resource "aws_cloudwatch_metric_alarm" "ses_alerts" {
     alarm_actions           = ["arn:aws:sns:us-east-1:501705132200:slack-topic"]
     alarm_description       = "SES bounce rate average is greater than or equal to .01% in a 1 hour time period"
     datapoints_to_alarm     = "1"
-    metric_name             = "Reputation.BounceRateBounce"
+    metric_name             = "Reputation.BounceRate"
     namespace               = "AWS/SES"
     period                  = "3600"
     statistic               = "Average"
