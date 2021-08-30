@@ -37,7 +37,7 @@ pipeline {
   }
 
   stages {
-    stage('Checkout') {
+    stage("Check migration status") {
       steps {
         script {
           if (params.APP_MIGRATIONS == '') {
