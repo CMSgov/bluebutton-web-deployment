@@ -379,6 +379,9 @@
   slsx_verify_ssl_internal: "{{ env_slsx_verify_ssl_internal }}"
   slsx_verify_ssl_external: "{{ env_slsx_verify_ssl_external }}"
 
+  # BFD-Insights settings
+  log_firehose_crossover_role_arn: "{{ env_log_firehose_crossover_role_arn }}"
+
   # Should be set to True in production and False in all other dev and test environments
   django_block_http_redirect: "{{ env_django_block_http_redirect }}"
 
