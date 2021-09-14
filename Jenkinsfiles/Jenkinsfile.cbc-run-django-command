@@ -71,6 +71,7 @@ pipeline {
           -i '${ANSIBLE_INVENTORY}' \
           -l '${ANSIBLE_SUBSET}' \
           -e 'env=${APP_ENV}' \
+          -e 'DJANGO_LOG_FIREHOSE_ENABLE=${DJANGO_LOG_FIREHOSE_ENABLE}' \
           -e 'django_command="${DJANGO_COMMAND}"'
         """
       }
