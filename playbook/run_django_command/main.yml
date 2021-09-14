@@ -17,6 +17,7 @@
       run_once: yes
       environment:
         DJANGO_DOTENV_FILE: "{{ install_root }}"
+        DJANGO_LOG_FIREHOSE_ENABLE: "{{ DJANGO_LOG_FIREHOSE_ENABLE }}"
       django_manage:
         command: "{{ django_command }}"
         app_path: "{{ install_root }}/{{ project_name }}/"
