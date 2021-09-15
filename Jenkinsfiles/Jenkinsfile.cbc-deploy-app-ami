@@ -18,6 +18,12 @@ pipeline {
 
   parameters {
     choice(
+      name: "APP_MIGRATIONS",
+      choices: ["", "Pre-deploy", "Post-deploy", "No Migrations"],
+      description: "Are there any migrations required for this deploy?"
+    )
+
+    choice(
       name: "APP_ENV",
       choices: ["test", "impl", "prod"],
       description: "The environment to deploy to."
@@ -31,6 +37,17 @@ pipeline {
   }
 
   stages {
+    stage("Check migration status") {
+      steps {
+        script {
+          if (params.APP_MIGRATIONS == '') {
+              currentBuild.result = 'ABORTED'
+              error('No app migration selection was made.')
+          }
+        }
+      }
+    }
+
     stage("Notify Slack") {
       steps {
         script {
