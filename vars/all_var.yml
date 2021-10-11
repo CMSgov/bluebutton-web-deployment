@@ -1,70 +1,11 @@
 ---
-# File: all_var.yml
-# Created: 4/4/17
-#
-# Incorporates encrypted vars/common.yml and vars/{{ env }}/env.yml
-# Include all environment variables here.
-# reference source variables from appropriate file:
-# - env_ = environment specific vairables from .env{{ env }}/env.yml
-# - common_ = stored in ./common.yml
-# - vault_env_ = stored in encrypted vault in ../vault/env/{{ env }}/env.yml
-# - vault_ = stored in encrypted vault in ../vault/common.yml
-# VARS Files can't be loaded inside vars files.
-# So the following files need to be included in each playbook
-#  var_files:
-#  - import_tasks: "./common.yml"
-#  - import_tasks: "./env/{{ env }}/env.yml"
-#  - import_tasks: "../vault/env/{{ env }}/vault.yml"
-
-  ami_release: "{{ env_ami_release }}"
-
-      # This image should be updated monthly.
-      # Current version is: EAST-RH 7-3 Gold Image V.1.09 (HVM) 04-21-2017 - ami-fdde41eb
-      # EAST-RH 6-9 Gold Image V.1.01 (PV) 04-21-17 - ami-3dda452b
-      # EAST-RH 6-8 Gold Image V.3.17 (PV)Splunk-CFN-FIPS140-02-24-17 (ami-f070abe6)
-      # EAST-RH 7-3 Gold Image V.1.10 (HVM) 05-18-17 - ami-3aff872c (previous)
-      # EAST-RH 7-4 Gold Image V.1.15 (HVM) 11-2-17 - ami-5a6ac120
-
-  ami_app_gold_image: "{{ env_ami_app_gold_image }}" # Change the AMI, from which you want to launch the server
 
   ### Environment:
   env: "{{ env_env }}"
 
-  ### Cloud Formation Tags:
-  cf_tags_business: "{{ common_cf_tags_business }}"
-  cf_tags_application: "{{ common_cf_tags_application }}"
-
-
-  # Make Python and mod_wsgi version parameters
-  mod_wsgi_ver_full: "{{ env_mod_wsgi_ver_full }}"
-  mod_wsgi_processes: "{{ env_mod_wsgi_processes | default(1) }}"
-  mod_wsgi_threads: "{{ env_mod_wsgi_threads | default(15) }}"
-  mod_wsgi_timeout: "{{ env_mod_wsgi_timeout | default(300) }}"
-
-
-  # pip install extra arguments needed:
-  # when FIPS-140.2 is enabled MD5 checksums are not supported.
-  # This causes pip to fail.
-  # check file: /proc/sys/crypto/fips_enabled
-  # 1 = Enabled | 0 = disabled
-  # If enabled we need to pass -i https://pypi.org/simple/ to extra_args
-  # in ansible pip command
-  pip_extra_args: " -i https://pypi.org/simple/ "
-
-
-  # Remote user access account
-  # [JZ] - This is not needed, each env has the same emore user account, moving to common.yml
-  #remote_user_account: "{{ env_remote_user_account }}"
-  #remote_admin_account: "{{ env_remote_admin_account }}"
-
   ### DJANGO_SECRET_KEY:
-  # 8 Character Prefix and Suffix
-  # Relate Suffix to Deployment Environment
-  secret_pfx: "{{ env_secret_pfx }}"
-  secret_sfx: "{{ env_secret_sfx }}"
   # 50 character Random Key
   # http://www.miniwebtool.com/django-secret-key-generator/
-  rand_secret: "{{ env_rand_secret }}"
   django_secret_key: "{{ env_django_secret_key }}"
 
   # a unix path-friendly name (IE, no spaces or special characters)
@@ -75,10 +16,6 @@
 
   # git branch to deploy
   git_branch: "master"
-
-  # Project Parent Dir
-  # the base path to install to. You should not need to change this.
-  # git installs the repo in a folder beneath this path
 
   # the base path to install to. You should not need to change this.
   # git installs the repo in a folder beneath this path
@@ -96,37 +33,10 @@
   # False in IMPL / PROD
   django_debug: "{{ env_django_debug }}"
 
-  # The value of your django project's STATIC_ROOT settings.
-  # This will be the directory that django's `collectstatic` management command
-  # copies static files to, and it must be an absolute path. The default value
-  # here assumes that STATIC_ROOT is set in your settings.py like so:
-  # STATIC_ROOT = os.path.abspath(os.path.join(BASE_DIR, 'static'))
-  static_root: "{{ install_root }}/{{ project_name }}/{{ env_static_root_dir }}"
-
   # application owner: pyapps
   app_owner: "pyapps"
   # application group: nginx
   app_group: "www-data"
-
-  ### External Internet Domain Name for the platform
-  external_dns_name: "{{ env_external_dns_name }}"
-
-  # settings module
-  django_settings_module: "{{ env_django_settings_module }}"
-  # settings folder in project
-  django_settings_folder: "{{ env_django_settings_folder }}"
-
-  # List of Admin email addresses
-  # Format is: (('Mark Scrimshire[Dev]', 'mark@ekivemark.com'), )
-  django_admins: "{{ env_django_admins }}"
-
-  ### TransparentHealthServer default settings:
-  ths_fhir_server: "{{ env_ths_fhir_server }}"
-  ths_fhir_path: "{{ env_ths_fhir_path }}"
-  ths_fhir_rel: "{{ env_ths_fhir_rel }}"
-  ths_fhir_rewrite_to: "{{ env_ths_fhir_rewrite_to }}"
-  ths_fhir_rewrite_from: "{{ env_ths_fhir_rewrite_from }}"
-  ths_search_expiry: "{{ env_ths_search_expiry }}"
 
   ### HOSTNAME_URL:
   host_url: "{{ env_external_dns_name }}"
@@ -137,24 +47,9 @@
   django_cors_origin_allow_all: "{{ env_django_cors_origin_allow_all }}"
 
   ### Email configuration - AWS SES
-  # email backend options are:
-  # django_email_backend:  'django.core.mail.backends.smtp.EmailBackend'
-  # django_email_backend:  'django.core.mail.backends.filebased.EmailBackend'
-  # django_email_backend:  'django.core.mail.backends.locmem.EmailBackend'
-  # django_email_backend:  'django.core.mail.backends.dummy.EmailBackend'
-  # django_email_backend:  'django_ses.SESBackend'
-
   django_email_backend: "{{ env_django_email_backend }}"
-
-  django_email_region: "{{ env_django_email_region }}"
-  django_email_ses_endpoint: "{{ env_django_email_ses_endpoint }}"
   django_from_email: "{{ env_django_from_email }}"
   django_admin_email: "{{ env_django_admin_email }}"
-
-  # Require Invite to Register
-  # Set to False in NON-PROD Environments
-  # Set to True in PROD Environment
-  django_require_invite_to_register: "{{ env_django_require_invite_to_register }}"
 
   # SALT and ITERATIONS
   django_user_id_salt: "{{ env_django_user_id_salt }}"
@@ -168,25 +63,12 @@
   # Default Sample FHIR ID
   django_default_sample_fhir_id: "{{ env_django_default_sample_fhir_id }}"
 
-  # Dynamic client registration Protocol
-  # "O" = Open to everyone
-  # "" = Disabled.
-  django_dcrp: ""
-
-  # This variable will contain the ID of the Default FHIRServer
-  # in the apps.fhir.bluebutton.server.models.FHIRServer table
-  django_fhirserver_id: 1
-
   django_fhir_certstore_relative: "{{ env_django_fhir_certstore_relative }}"
 
   django_signup_timeout_days: "{{ env_django_signup_timeout_days }}"
 
   ### S3 Bucket Settings:
   s3_storage_bucket_name: "{{ env_s3_storage_bucket_name }}"
-
-  apache_cert_store: "{{ env_apache_cert_store }}"
-  letsencrypt_cert_store: "/root/certstore"
-  letsencrypt_account_store: "{{ letsencrypt_cert_store }}/account"
 
   ### Django Settings:
   django_app_title: "{{ env_django_app_title }}"
@@ -210,56 +92,12 @@
   db_user_name: "{{ env_db_user_name }}"
   db_user_pw: "{{ env_db_user_pw }}"
   db_platform_type: "postgres"
-  db_engine_driver: "django.db.backends.postgresql_psycopg2"
   db_host_address: "db.bluebutton-{{ env }}.local"
   db_host_port: "15432"
   db_host_options: "?sslmode=require&options=-c role={{ env_db_role }}"
 
-  # Database SSL Certificate and Key Files:
-  ca_key: "server.key"
-  ca_cert: "server.crt"
-
+  # legacy value still used in roles, should be renamed for clarity
   cf_region: "{{ aws_region }}"
-  cf_vpc_id: "{{ env_cf_vpc_id }}"
-  cf_platform_version: "{{ env_cf_platform_version }}"
-  cf_data_sg_data_zone_id: "{{ env_cf_data_sg_data_zone_id }}"
-  cf_data_azone: "{{ env_cf_data_azone }}"
-  cf_data_build_image_id: "{{ env_cf_data_build_image_id }}"
-  cf_data_instance_name: "{{ env_cf_data_instance_name }}"
-  cf_data_database_type: "{{ env_cf_data_database_type }}"
-  cf_data_database_prefix: "{{ env_cf_data_database_prefix }}"
-  cf_data_tag_key_stack: "{{ env_cf_data_tag_key_stack }}"
-  cf_data_tag_key_layer: "{{ env_cf_data_tag_key_layer }}"
-  cf_data_key_name: "{{ env_cf_data_key_name }}"
-  cf_data_instance_type: "{{ env_cf_data_instance_type }}"
-  cf_data_pgsql_server_name: "{{ env_cf_data_pgsql_server_name }}"
-  cf_data_pyapps_home: "{{ env_cf_data_pyapps_home }}"
-  cf_data_pgsql_master: "{{ env_cf_data_pgsql_master }}"
-  cf_data_pyapps_email: "{{ env_cf_data_pyapps_email }}"
-  cf_data_pgsql_password: "{{ env_cf_data_pgsql_password }}"
-  cf_data_vpc_id: "{{ cf_vpc_id }}"
-  cf_data_vol_size: "{{ env_cf_data_vol_size }}"
-  cf_data_vol_id: "{{ env_cf_data_vol_id }}"
-  cf_data_device: "xvdb"
-
-  # ssl settings: on | off
-  cf_data_ssl: "{{ env_cf_data_ssl }}"
-  cf_data_cert_file: "{{ env_cf_data_cert_file }}"
-  cf_data_key_file: "{{ env_cf_data_key_file }}"
-  cf_data_ca_file: "{{ env_cf_data_ca_file }}"
-  cf_data_crl_file: "{{ env_cf_data_crl_file }}"
-
-  selinux_policy: "targeted"
-  # selinux_state: "disabled"
-  selinux_state: "enforcing"
-
-  #
-  # Appserver extra volumes
-  # /tmp  /var
-  #
-  app_extra_volume_0: "{{ env_app_extra_volume_0 }}"
-  app_extra_volume_1: "{{ env_app_extra_volume_1 }}"
-  app_extra_volume_2: "{{ env_app_extra_volume_2 }}"
 
   # Nginx cert, key and fullchain files
   # Assigned Certificates and Keys to be copied to /etc/ssl/certs
@@ -273,96 +111,20 @@
   app_fhir_cert_name: "{{ env_app_fhir_cert_name }}"
   app_fhir_key_name: "{{ env_app_fhir_key_name }}"
 
-  # cf_app_selinux_policy sets SELINUXTYPE=targeted
-  cf_app_selinux_policy: "{{ selinux_policy }}"
-  # cf_app_selinux_state set SELINUX=permissive
-  cf_app_selinux_state: "{{ selinux_state }}"
-
-  cf_app_sg_app_zone_id: "{{ env_cf_app_sg_app_zone_id }}"
-  cf_app_azone: "{{env_cf_app_azone }}"
-  cf_app_build_image_id: "{{ env_cf_app_build_image_id }}"
-  cf_app_instance_name: "{{ env_cf_app_instance_name }}"
-  cf_app_tag_key_stack: "{{ env_cf_app_tag_key_stack }}"
+  # legacy values still used in roles, should be renamed for clarity
   cf_app_tag_key_layer: "{{ env_cf_app_tag_key_layer }}"
-  cf_app_key_name: "{{ env_cf_app_key_name }}"
-  cf_app_instance_type: "{{ env_cf_app_instance_type }}"
-  cf_app_public_server_name: "{{ env_cf_app_public_server_name }}"
-  cf_app_pyserver_name: "{{ env_cf_app_pyserver_name }}"
-  cf_app_pyapp_settings: "{{ env_cf_app_pyapp_settings }}"
-  cf_app_repo_branch: "{{ env_cf_app_repo_branch }}"
-  cf_app_db_user: "{{ env_cf_app_db_user }}"
-  cf_app_db_pwd: "{{ env_cf_app_db_pwd }}"
-  cf_app_pyapps_email: "{{ env_cf_app_pyapps_email }}"
   cf_app_pyapps_pwd: "{{ env_cf_app_pyapps_pwd }}"
-  # Removing Herd Member designation
-  # cf_app_herd_member: "{{ env_cf_app_herd_member }}"
-  cf_app_db_type: "{{ env_cf_app_db_type }}"
-  cf_app_db_prefix: "{{ env_cf_app_db_prefix }}"
-  cf_app_db_host_address: "{{ env_cf_db_host_address }}"
-  cf_app_target_vpc_id: "{{ cf_vpc_id }}"
-
-  # Postgres Role related settings
-  db_server_account: "postgres"
-  db_server_data_dir: "/data/pgsql/9.6/data"
-  db_server_temp_dir: "/data/pgbackup"
-  db_server_table_name: "{{ cf_data_database_prefix }}{{ cf_data_tag_key_stack }}_{{ common_db_type[cf_data_database_type]['DbNameTable'] }}"
-  db_server_backup_pub_key: "backup_key.pem.pub"
-  # role_ db_user: "postgres"
-  # role_db_data_dir: "/data/pgsql/9.6/data"
-  # role_db_temp_dir: "/data/pgbackup"
-  # role_db_table_name: "{{ cf_data_database_prefix }}{{ cf_data_tag_key_stack }}_{{ common_db_type[cf_data_database_type]['DbNameTable'] }}"
-  # role_db_backup_pub_key: "backup_key.pem.pub"
-
-  # CA Certificate Root password
-  ca_rootca_password: "{{ env_ca_rootca_password }}"
 
   mon_nessus_user: "{{ env_mon_nessus_user }}"
   mon_nessus_pwd: "{{ env_mon_nessus_pwd }}"
   mon_nessus_pub_key: "{{ env_mon_nessus_pub_key }}"
 
-  # Type of Elastic Load Balancer: app | net | classic | appclassic
-  elastic_load_balancer_type: "{{ env_elastic_load_balancer_type }}"
-
-  # Classic Load Balancer Name:
-  # follows format: BB-{env}-CLB-n
-  app_clb_name: "{{ env_app_clb_name }}"
-
-  app_lb_arn: "{{ env_app_lb_arn}}"
-  app_ssl_lb_arn: "{{ env_app_ssl_lb_arn }}"
-  app_lb_app_protocol: "https"
-
   # splunk configuration
   # Group name = BBAPI
   splunk_group_name: "{{ env_splunk_group_name }}"
   splunk_target_layer: "{{ env_splunk_target_layer }}"
-  splunk_client_name: "{{ env_splunk_client_name }}"
   splunk_target_server: "{{ env_splunk_target_server }}"
   splunk_target_port: "{{ env_splunk_target_port }}"
-
-  # attempt to map groups to SPLUNK type
-  splunk_name_mapper: {
-          "appservers": "APP",
-          "appservers-base": "APP",
-          "dbservers": "DATA",
-          "mgmtservers": "MGMT"
-  }
-
-  # AWS ARN for SNS messaging
-  sns_topic_arn: "{{ env_sns_topic_arn }}"
-  sns_access_key_id: "{{ env_sns_access_key_id }}"
-  sns_secret_access_key: "{{ env_sns_secret_access_key }}"
-
-  # Swagger ui parent directory
-  swagger_ui_parent_dir: "/var/www/doc/swagger-3-4-2"
-  # swagger_ui_repo_source: "https://github.com/alimate/swagger-ui.git"
-  swagger_ui_repo_source: "https://github.com/swagger-api/swagger-ui.git"
-  swagger_apidocs_location: "{{ install_root }}{{ common_project_name }}/apidocs"
-  swagger_external_path: "/devdocs_bbonfhirapi/"
-  swagger_docs_file: "bbonfhir_swagger.yaml"
-  # swagger_docs_file: "bbonfhir_swagger.json"
-
-  # snmp community string
-  snmp_community_string: "oedabluebuttonsnmpcommunity"
 
   #
   # SLSx / Medicare.gov Authentication Integration
@@ -379,19 +141,7 @@
   slsx_verify_ssl_internal: "{{ env_slsx_verify_ssl_internal }}"
   slsx_verify_ssl_external: "{{ env_slsx_verify_ssl_external }}"
 
-  # Should be set to True in production and False in all other dev and test environments
-  django_block_http_redirect: "{{ env_django_block_http_redirect }}"
-
   django_logging: "{{ env_django_logging }}"
-
-  django_no_ui: "{{ env_django_no_ui }}"
-
-  django_oauth2_provider: "{{ env_django_oauth2_provider }}"
-
-  # file to append to in /var/log/pyapps/
-  django_export_model_file: "export.log"
 
   # new relic
   new_relic_license_key: "{{ vault_env_new_relic_license_key }}"
-
-  allowed_ips: "{{ vault_env_allowed_ips }}"
