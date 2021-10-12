@@ -13,7 +13,7 @@ variable "ami_id" {}
 variable "instance_type" {}
 
 variable "elb_names" {
-  type = "list"
+  type = list(string)
 }
 
 variable "app_sg_id" {}
@@ -31,11 +31,11 @@ variable "asg_desired" {}
 variable "app_config_bucket" {}
 
 variable "azs" {
-  type = "list"
+  type = list(string)
 }
 
 variable "ci_cidrs" {
-  type = "list"
+  type = list(string)
 }
 
 variable "sns_topic_arn" {
