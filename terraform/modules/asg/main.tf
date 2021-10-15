@@ -15,17 +15,6 @@ data "aws_subnet_ids" "app" {
   }
 }
 
-data "aws_subnet" "app" {
-  for_each = data.aws_subnet_ids.app.ids
-  id       = each.value
-}
-
-# v 0.12 update - need to create a proper list in order to get the id's
-locals {
-  subnet_ids_string = join(",", data.aws_subnet_ids.app.ids)
-  subnet_ids_list = split(",", local.subnet_ids_string)
-}
-
 data "aws_ami" "image" {
   most_recent = true
   owners      = ["self"]
@@ -98,7 +87,7 @@ resource "aws_autoscaling_group" "main" {
   health_check_grace_period = 400
   health_check_type         = "ELB"
   wait_for_capacity_timeout = "20m"
-  vpc_zone_identifier       = split(",", local.subnet_ids_string)
+  vpc_zone_identifier       = data.aws_subnet_ids.app.ids
   launch_configuration      = aws_launch_configuration.app.name
   load_balancers            = var.elb_names
 
