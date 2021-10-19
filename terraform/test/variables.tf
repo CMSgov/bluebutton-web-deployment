@@ -13,7 +13,7 @@ variable "ami_id" {}
 variable "instance_type" {}
 
 variable "elb_names" {
-  type = "list"
+  type = list(string)
 }
 
 variable "app_sg_id" {}
@@ -29,11 +29,11 @@ variable "asg_max" {}
 variable "asg_desired" {}
 
 variable "azs" {
-  type = "list"
+  type = list(string)
 }
 
 variable "ci_cidrs" {
-  type = "list"
+  type = list(string)
 }
 
 variable "asg_name" {
@@ -42,7 +42,10 @@ variable "asg_name" {
 
 variable "app_config_bucket" {}
 
-variable "alarm_elb_no_backend_enable" {}
+variable "alarm_elb_no_backend_enable" {
+  type    = bool
+}
+
 variable "alarm_elb_no_backend_eval_periods" {}
 variable "alarm_elb_no_backend_period" {}
 variable "alarm_elb_no_backend_threshold" {}

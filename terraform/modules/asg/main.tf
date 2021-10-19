@@ -2,22 +2,17 @@
 # Data providers
 ##
 data "aws_vpc" "selected" {
-  id = "${var.vpc_id}"
+  id = var.vpc_id
 }
 
 data "aws_subnet_ids" "app" {
-  vpc_id = "${var.vpc_id}"
+  vpc_id = var.vpc_id
 
-  tags {
+  tags = {
     Layer       = "app"
-    stack       = "${var.stack}"
-    application = "${var.app}"
+    stack       = var.stack
+    application = var.app
   }
-}
-
-data "aws_subnet" "app" {
-  count = "${length(data.aws_subnet_ids.app.ids)}"
-  id    = "${data.aws_subnet_ids.app.ids[count.index]}"
 }
 
 data "aws_ami" "image" {
@@ -26,7 +21,7 @@ data "aws_ami" "image" {
 
   filter {
     name   = "image-id"
-    values = ["${var.ami_id}"]
+    values = [var.ami_id]
   }
 }
 
@@ -36,13 +31,13 @@ data "aws_ami" "image" {
 resource "aws_security_group" "ci" {
   name        = "ci-to-app-servers"
   description = "Allow CI access to app servers"
-  vpc_id      = "${data.aws_vpc.selected.id}"
+  vpc_id      = data.aws_vpc.selected.id
 
   ingress {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["${var.ci_cidrs}"]
+    cidr_blocks = var.ci_cidrs
   }
 }
 
@@ -50,28 +45,29 @@ resource "aws_security_group" "ci" {
 # Launch configuration
 ##
 data "template_file" "user_data" {
-  template = "${file("${path.module}/templates/user_data.tpl")}"
+  #template = file(path.module/templates/user_data.tpl)
+  template = file("${path.module}/templates/user_data.tpl")
 
-  vars {
-    env    = "${lower(var.env)}"
-    bucket = "${var.app_config_bucket}"
+  vars = {
+    env    = lower(var.env)
+    bucket = var.app_config_bucket
   }
 }
 
 resource "aws_launch_configuration" "app" {
   security_groups = [
-    "${var.app_sg_id}",
-    "${var.vpn_sg_id}",
-    "${var.ent_tools_sg_id}",
+    var.app_sg_id,
+    var.vpn_sg_id,
+    var.ent_tools_sg_id,
     "${aws_security_group.ci.id}",
   ]
 
-  key_name                    = "${var.key_name}"
-  image_id                    = "${var.ami_id}"
-  instance_type               = "${var.instance_type}"
+  key_name                    = var.key_name
+  image_id                    = var.ami_id
+  instance_type               = var.instance_type
   associate_public_ip_address = false
   name_prefix                 = "bb-${var.stack}-app-"
-  user_data                   = "${data.template_file.user_data.rendered}"
+  user_data                   = data.template_file.user_data.rendered
   iam_instance_profile        = "bb-${lower(var.env)}-app-profile"
 
   lifecycle {
@@ -83,18 +79,17 @@ resource "aws_launch_configuration" "app" {
 # Autoscaling group
 ##
 resource "aws_autoscaling_group" "main" {
-  availability_zones        = ["${var.azs}"]
   name                      = "asg-${aws_launch_configuration.app.name}"
-  desired_capacity          = "${var.asg_desired}"
-  max_size                  = "${var.asg_max}"
-  min_size                  = "${var.asg_min}"
-  min_elb_capacity          = "${var.asg_min}"
+  desired_capacity          = var.asg_desired
+  max_size                  = var.asg_max
+  min_size                  = var.asg_min
+  min_elb_capacity          = var.asg_min
   health_check_grace_period = 400
   health_check_type         = "ELB"
   wait_for_capacity_timeout = "20m"
-  vpc_zone_identifier       = ["${data.aws_subnet_ids.app.ids}"]
-  launch_configuration      = "${aws_launch_configuration.app.name}"
-  load_balancers            = ["${var.elb_names}"]
+  vpc_zone_identifier       = data.aws_subnet_ids.app.ids
+  launch_configuration      = aws_launch_configuration.app.name
+  load_balancers            = var.elb_names
 
   enabled_metrics = [
     "GroupMinSize",
@@ -115,7 +110,7 @@ resource "aws_autoscaling_group" "main" {
 
   tag {
     key                 = "Environment"
-    value               = "${var.env}"
+    value               = var.env
     propagate_at_launch = true
   }
 
@@ -127,7 +122,7 @@ resource "aws_autoscaling_group" "main" {
 
   tag {
     key                 = "Release"
-    value               = "${lookup(data.aws_ami.image.tags, "Release", "none")}"
+    value               = lookup(data.aws_ami.image.tags, "Release", "none")
     propagate_at_launch = true
   }
 
@@ -144,7 +139,7 @@ resource "aws_autoscaling_policy" "high-cpu" {
   scaling_adjustment     = 2
   adjustment_type        = "ChangeInCapacity"
   cooldown               = 400
-  autoscaling_group_name = "${aws_autoscaling_group.main.name}"
+  autoscaling_group_name = aws_autoscaling_group.main.name
 }
 
 resource "aws_cloudwatch_metric_alarm" "high-cpu" {
@@ -157,12 +152,12 @@ resource "aws_cloudwatch_metric_alarm" "high-cpu" {
   statistic           = "Average"
   threshold           = "60"
 
-  dimensions {
-    AutoScalingGroupName = "${aws_autoscaling_group.main.name}"
+  dimensions = {
+    AutoScalingGroupName = aws_autoscaling_group.main.name
   }
 
   alarm_description = "CPU usage for ${aws_autoscaling_group.main.name} ASG"
-  alarm_actions     = ["${aws_autoscaling_policy.high-cpu.arn}"]
+  alarm_actions     = [aws_autoscaling_policy.high-cpu.arn]
 }
 
 resource "aws_autoscaling_policy" "low-cpu" {
@@ -170,7 +165,7 @@ resource "aws_autoscaling_policy" "low-cpu" {
   scaling_adjustment     = -1
   adjustment_type        = "ChangeInCapacity"
   cooldown               = 400
-  autoscaling_group_name = "${aws_autoscaling_group.main.name}"
+  autoscaling_group_name = aws_autoscaling_group.main.name
 }
 
 resource "aws_cloudwatch_metric_alarm" "low-cpu" {
@@ -183,22 +178,22 @@ resource "aws_cloudwatch_metric_alarm" "low-cpu" {
   statistic           = "Average"
   threshold           = "20"
 
-  dimensions {
-    AutoScalingGroupName = "${aws_autoscaling_group.main.name}"
+  dimensions = {
+    AutoScalingGroupName = aws_autoscaling_group.main.name
   }
 
   alarm_description = "CPU usage for ${aws_autoscaling_group.main.name} ASG"
-  alarm_actions     = ["${aws_autoscaling_policy.low-cpu.arn}"]
+  alarm_actions     = [aws_autoscaling_policy.low-cpu.arn]
 }
 
 ##
 # Autoscaling notifications
 ##
 resource "aws_autoscaling_notification" "asg_notifications" {
-  count = "${var.sns_topic_arn != "" ? 1 : 0}"
+  count = var.sns_topic_arn != "" ? 1 : 0
 
   group_names = [
-    "${aws_autoscaling_group.main.name}",
+    aws_autoscaling_group.main.name,
   ]
 
   notifications = [
@@ -207,9 +202,9 @@ resource "aws_autoscaling_notification" "asg_notifications" {
     "autoscaling:EC2_INSTANCE_LAUNCH_ERROR",
   ]
 
-  topic_arn = "${var.sns_topic_arn}"
+  topic_arn = var.sns_topic_arn
 }
 
 output "asg_id" {
-  value = "${aws_autoscaling_group.main.name}"
+  value = aws_autoscaling_group.main.name
 }

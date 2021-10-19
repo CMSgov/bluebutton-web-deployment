@@ -3,13 +3,13 @@ variable "env" {}
 variable "ssl_certificate_id" {}
 
 variable "cms_vpn_cidrs" {
-    type = "list"
+    type = list(string)
 }
 
 variable "akamai_prod_cidrs" {
-    type = "list"
+    type = list(string)
 }
 
 variable "akamai_staging_cidrs" {
-    type = "list"
+    type = list(string)
 }
