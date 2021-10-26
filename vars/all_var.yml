@@ -145,3 +145,6 @@
 
   # new relic
   new_relic_license_key: "{{ vault_env_new_relic_license_key }}"
+
+  # SSH developer user/pub_key
+  ssh_users: "{{ vault_env_ssh_users }}"
