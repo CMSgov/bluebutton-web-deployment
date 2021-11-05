@@ -11,7 +11,9 @@
     splunk_target_layer: "app"
   vars_files:
     - "./../../vars/common.yml"
+    - "./../../vault/env/shared/vault.yml"
     - "./../../vars/all_var.yml"
   roles:
     - ../../roles/amzn2_base
     - ../../roles/cloudwatch_agent_base
+    - ../../roles/ssh_users
