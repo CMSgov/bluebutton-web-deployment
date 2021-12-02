@@ -20,3 +20,10 @@ module "impl_perf_mon" {
   bfd_acct        = var.bfd_acct
   log_group_name  = "/bb/impl/app/perf_mon.log"
 }
+
+module "prod_perf_mon" {
+  source          = "../../modules/cwl_subscrip_filter"
+  filter_name     = "prod-perf-mon"
+  bfd_acct        = var.bfd_acct
+  log_group_name  = "/bb/prod/app/perf_mon.log"
+}
