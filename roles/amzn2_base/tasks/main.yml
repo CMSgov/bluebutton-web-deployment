@@ -16,6 +16,8 @@
       - libjpeg-turbo-devel
       - nginx
       - ansible
+      - python2-boto3
+      - python2-botocore
       - amazon-cloudwatch-agent
 - name: Install uwsgi via pip
   become: yes
