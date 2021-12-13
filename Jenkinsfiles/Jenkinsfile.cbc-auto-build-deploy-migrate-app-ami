@@ -86,7 +86,7 @@ pipeline {
         }
       }
     }
-    
+
     stage("Notify Slack") {
       steps {
         script {
@@ -128,7 +128,6 @@ pipeline {
             echo("Setting ansible config for tagged deployment instance")
             ANSIBLE_INVENTORY = "inventory/ec2.py"
             ANSIBLE_SUBSET = "tag_Function_app_AppServer"
-          }
         }
       }
     }
@@ -191,6 +190,7 @@ pipeline {
               --filters 'Name=name,Values=bb2-amzn2-${params.APP_REPO_BRANCH.toLowerCase()}-*' \
               --query 'sort_by(Images, &CreationDate)[-1].ImageId' \
               --output text").trim()
+          }
         }
       }
     }
@@ -218,7 +218,6 @@ pipeline {
             echo("Setting ansible config for tagged deployment instance")
             ANSIBLE_INVENTORY = "inventory/ec2.py"
             ANSIBLE_SUBSET = "tag_Function_app_AppServer"
-          }
         }
       }
     }
@@ -286,5 +285,5 @@ pipeline {
       }
     }
   }
-
+  
 }
