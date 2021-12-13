@@ -221,7 +221,7 @@ pipeline {
     }
 
     // Post-deploy showmigrations
-    stage("Pre-deploy migration: showmigrations") {
+    stage("Post-deploy migration: showmigrations") {
       when {
         expression { params.APP_MIGRATIONS == "Post-deploy" }
       }
@@ -240,7 +240,7 @@ pipeline {
     }
 
     // Post-deploy migrate
-    stage("Pre-deploy migration: Confirm and migrate") {
+    stage("Post-deploy migration: Confirm and migrate") {
       when {
         expression { params.APP_MIGRATIONS == "Post-deploy" }
       }
