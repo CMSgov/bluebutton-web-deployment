@@ -1,4 +1,5 @@
 //*****************************************************************************
+// TODO: Remove this
 // 12/03/2021
 // Blue Button - Full orchestration build & deploy release
 // This Jenkinsfile leverages the existing BUILD - App AMI ans DEPLOY - App AMI
@@ -37,7 +38,7 @@ pipeline {
     choice(
       name: "APP_ENV",
       choices: ["test"],
-      // choices: ["test", "impl", "prod"], uncomment once tests are passing in TEST env
+      // TODO: choices: ["test", "impl", "prod"], uncomment once tests are passing in TEST env
       description: "The environment to deploy to."
     )
 
@@ -96,6 +97,8 @@ pipeline {
     }
 
     // BUILD
+
+    // TODO:
     // ** Think about the scenario where this automated job gets aborted after the build stage - 
     // ** consider an option to use the previously built AMI when running this job again
     // ** The 'when' condition below will skip the build stage if a value is supplied for the APP_AMI_ID
@@ -104,7 +107,7 @@ pipeline {
         expression { params.APP_AMI_ID == "" }
       }
       steps {
-        // Change to production job after testing is complete
+        // TODO: Change to production job after testing is complete
         build job: 'Z BUILD - App AMI (AMZN 2)', 
           parameters: [
             string(name: 'APP_REPO_BRANCH', value: params.APP_REPO_BRANCH.toLowerCase()), 
@@ -116,7 +119,7 @@ pipeline {
 
     // Ansible config - Pre-deploy migrations
     stage("Determine Ansible Config") {
-      // Thinking this will need to be run separately for Pre/Post migrations since instances change post deploy
+      // TODO: Thinking this will need to be run separately for Pre/Post migrations since instances change post deploy
       when {
         expression { params.APP_MIGRATIONS == "Pre-deploy" }
       }
@@ -194,7 +197,7 @@ pipeline {
 
     stage("Deploy this release - Be sure to approve/abort Terraform plan on DEPLOY - App AMI job") {
       steps {
-        // Change to production job after testing is complete
+        // TODO: Change to production job after testing is complete
         build job: 'Z DEPLOY - App AMI', 
           parameters: [
             string(name: 'APP_MIGRATIONS', value: params.APP_MIGRATIONS), 
@@ -206,7 +209,7 @@ pipeline {
 
     // Ansible config - Pre-deploy migrations
     stage("Determine Ansible Config") {
-      // Thinking this will need to be run separately for Pre/Post migrations since instances change post deploy
+      // TODO: Thinking this will need to be run separately for Pre/Post migrations since instances change post deploy
       when {
         expression { params.APP_MIGRATIONS == "Post-deploy" }
       }
@@ -244,6 +247,7 @@ pipeline {
       when {
         expression { params.APP_MIGRATIONS == "Post-deploy" }
       }
+      // TODO:
       // Should we, or should we not allow this choice? I think this should be forced since it is
       // going to be required once a deployment goes into production. Or - is it best to review
       // the showmigrations first and do a rollback in the event of an issue?
