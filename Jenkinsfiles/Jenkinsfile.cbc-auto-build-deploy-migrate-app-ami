@@ -75,15 +75,6 @@ pipeline {
   }
 
   stages {
-    stage("Notify Slack") {
-      steps {
-        script {
-          helpers = load "Jenkinsfiles/helpers.groovy"
-          helpers.slackNotify "STARTING - ENV:${params.APP_ENV}"
-        }
-      }
-    }
-
     // Migration selection check
     stage("Check migration status") {
       steps {
@@ -92,6 +83,15 @@ pipeline {
               currentBuild.result = 'ABORTED'
               error('No app migration selection was made.')
           }
+        }
+      }
+    }
+    
+    stage("Notify Slack") {
+      steps {
+        script {
+          helpers = load "Jenkinsfiles/helpers.groovy"
+          helpers.slackNotify "STARTING - ENV:${params.APP_ENV}"
         }
       }
     }
