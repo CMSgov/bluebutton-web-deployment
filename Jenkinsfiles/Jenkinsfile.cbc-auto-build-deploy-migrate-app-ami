@@ -118,7 +118,7 @@ pipeline {
     }
 
     // Ansible config - Pre-deploy migrations
-    stage("Determine Ansible Config: Post-deploy") {
+    stage("Determine Ansible Config: Pre-deploy") {
       // TODO: Thinking this will need to be run separately for Pre/Post migrations since instances change post deploy
       when {
         expression { params.APP_MIGRATIONS == "Pre-deploy" }
@@ -213,7 +213,7 @@ pipeline {
     }
 
     // Ansible config - Pre-deploy migrations
-    stage("Determine Ansible Config: Pre-deploy") {
+    stage("Determine Ansible Config: Post-deploy") {
       // TODO: Thinking this will need to be run separately for Pre/Post migrations since instances change post deploy
       when {
         expression { params.APP_MIGRATIONS == "Post-deploy" }
