@@ -189,6 +189,7 @@ pipeline {
             echo("Setting APP_SOURCE_AMI_ID from APP_AMI_ID: ${params.APP_AMI_ID}")
             APP_SOURCE_AMI_ID = params.APP_AMI_ID
           } else {
+            
             echo("Setting APP_SOURCE_AMI_ID from AMI just built for ${params.APP_REPO_BRANCH.toLowerCase()}")
             APP_SOURCE_AMI_ID = sh(returnStdout: true, script: "aws ec2 describe-images \
               --filters 'Name=name,Values=bb2-amzn2-${params.APP_REPO_BRANCH.toLowerCase()}-*' \
@@ -206,7 +207,7 @@ pipeline {
           parameters: [
             string(name: 'APP_MIGRATIONS', value: params.APP_MIGRATIONS), 
             string(name: 'APP_ENV', value: params.APP_ENV), 
-            string(name: 'APP_AMI_ID', value: params.APP_SOURCE_AMI_ID)
+            string(name: 'APP_AMI_ID', value: APP_SOURCE_AMI_ID)
           ]
       }
     }
