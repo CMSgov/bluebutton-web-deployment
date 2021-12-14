@@ -156,11 +156,15 @@ pipeline {
       when {
         expression { params.APP_MIGRATIONS == "Pre-deploy" }
       }
-      input {
-        message "Run migrations on ${params.APP_ENV}?"
-        ok "Migrate"
-      }
       steps {
+
+        script {
+            if (params.APP_MIGRATIONS == "Pre-deploy") {
+                input message "Run migrations on ${params.APP_ENV}?"
+                ok "Migrate"
+            }
+        }
+
         echo "Migrate confirmation recieved, proceeding."
 
         sh """
