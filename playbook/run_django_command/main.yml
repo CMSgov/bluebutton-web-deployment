@@ -22,6 +22,8 @@
         app_path: "{{ install_root }}/{{ project_name }}/"
         virtualenv: "{{ venv_full }}"
       register: django_command_debug
+      async: 1800
+      poll: 10
     - name: "Display command output: {{ django_command }}"
       run_once: yes
       debug:
