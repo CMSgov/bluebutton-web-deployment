@@ -80,8 +80,8 @@ pipeline {
       steps {
         script {
           if (params.APP_MIGRATIONS == '') {
-              currentBuild.result = 'ABORTED'
-              error('No app migration selection was made.')
+            currentBuild.result = 'ABORTED'
+            error('No app migration selection was made.')
           }
         }
       }
@@ -125,9 +125,9 @@ pipeline {
       }
       steps {
         script {
-            echo("Setting ansible config for tagged deployment instance")
-            ANSIBLE_INVENTORY = "inventory/ec2.py"
-            ANSIBLE_SUBSET = "tag_Function_app_AppServer"
+          echo("Setting ansible config for tagged deployment instance")
+          ANSIBLE_INVENTORY = "inventory/ec2.py"
+          ANSIBLE_SUBSET = "tag_Function_app_AppServer"
         }
       }
     }
@@ -155,15 +155,20 @@ pipeline {
     stage("Pre-deploy migration: Confirm and migrate") {
       when {
         expression { params.APP_MIGRATIONS == "Pre-deploy" }
+        beforeInput: true
+      }
+      input {
+        message "Run migrations on ${params.APP_ENV}?"
+        ok "Migrate"
       }
       steps {
 
-        script {
-            if (params.APP_MIGRATIONS == "Pre-deploy") {
-                input message: "Run migrations on ${params.APP_ENV}?"
-                ok "Migrate"
-            }
-        }
+        // script {
+        //   if (params.APP_MIGRATIONS == "Pre-deploy") {
+        //     input message: "Run migrations on ${params.APP_ENV}?"
+        //     //ok "Migrate"
+        //   }
+        // }
 
         echo "Migrate confirmation recieved, proceeding."
 
@@ -220,9 +225,9 @@ pipeline {
       }
       steps {
         script {
-            echo("Setting ansible config for tagged deployment instance")
-            ANSIBLE_INVENTORY = "inventory/ec2.py"
-            ANSIBLE_SUBSET = "tag_Function_app_AppServer"
+          echo("Setting ansible config for tagged deployment instance")
+          ANSIBLE_INVENTORY = "inventory/ec2.py"
+          ANSIBLE_SUBSET = "tag_Function_app_AppServer"
         }
       }
     }
@@ -250,18 +255,24 @@ pipeline {
     stage("Post-deploy migration: Confirm and migrate") {
       when {
         expression { params.APP_MIGRATIONS == "Post-deploy" }
+        beforeInput: true
+      }
+
+      input {
+        message "Run migrations on ${params.APP_ENV}?"
+        ok "Migrate"
       }
       // TODO:
       // Should we, or should we not allow this choice? I think this should be forced since it is
       // going to be required once a deployment goes into production. Or - is it best to review
       // the showmigrations first and do a rollback in the event of an issue?
       steps {
-        script {
-            if (params.APP_MIGRATIONS == "Post-deploy") {
-                input message: "Run migrations on ${params.APP_ENV}?"
-                ok "Migrate"
-            }
-        }
+        // script {
+        //   if (params.APP_MIGRATIONS == "Post-deploy") {
+        //     input message: "Run migrations on ${params.APP_ENV}?"
+        //     //ok "Migrate"
+        //   }
+        // }
 
         echo "Migrate confirmation recieved, proceeding."
 
