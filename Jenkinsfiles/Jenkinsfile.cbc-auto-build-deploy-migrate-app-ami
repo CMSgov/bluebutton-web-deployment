@@ -255,11 +255,14 @@ pipeline {
       // Should we, or should we not allow this choice? I think this should be forced since it is
       // going to be required once a deployment goes into production. Or - is it best to review
       // the showmigrations first and do a rollback in the event of an issue?
-      input {
-        message "Run migrations on ${params.APP_ENV}?"
-        ok "Migrate"
-      }
       steps {
+        script {
+            if (params.APP_MIGRATIONS == "Post-deploy") {
+                input message "Run migrations on ${params.APP_ENV}?"
+                ok "Migrate"
+            }
+        }
+
         echo "Migrate confirmation recieved, proceeding."
 
         sh """
