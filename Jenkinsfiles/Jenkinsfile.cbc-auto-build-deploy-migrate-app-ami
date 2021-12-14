@@ -160,7 +160,7 @@ pipeline {
 
         script {
             if (params.APP_MIGRATIONS == "Pre-deploy") {
-                input message "Run migrations on ${params.APP_ENV}?"
+                input message: "Run migrations on ${params.APP_ENV}?"
                 ok "Migrate"
             }
         }
@@ -258,7 +258,7 @@ pipeline {
       steps {
         script {
             if (params.APP_MIGRATIONS == "Post-deploy") {
-                input message "Run migrations on ${params.APP_ENV}?"
+                input message: "Run migrations on ${params.APP_ENV}?"
                 ok "Migrate"
             }
         }
