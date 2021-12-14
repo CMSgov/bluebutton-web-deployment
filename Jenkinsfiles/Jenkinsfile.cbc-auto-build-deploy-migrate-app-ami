@@ -154,8 +154,8 @@ pipeline {
     // Pre-deploy migrate
     stage("Pre-deploy migration: Confirm and migrate") {
       when {
+        beforeInput true
         expression { params.APP_MIGRATIONS == "Pre-deploy" }
-        beforeInput: true
       }
       input {
         message "Run migrations on ${params.APP_ENV}?"
@@ -254,8 +254,8 @@ pipeline {
     // Post-deploy migrate
     stage("Post-deploy migration: Confirm and migrate") {
       when {
+        beforeInput true
         expression { params.APP_MIGRATIONS == "Post-deploy" }
-        beforeInput: true
       }
 
       input {
