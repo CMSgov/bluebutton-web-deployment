@@ -143,13 +143,13 @@ pipeline {
         expression { params.APP_MIGRATIONS == "Pre-deploy" }
       }
       input {
-        message "Terminate the following instance(s)? ${params.TERMINATE_INSTANCES}"
+        message "Terminate the following instance(s)? ${TERMINATE_INSTANCES}"
         ok "Terminate"
       }
       steps {
         script {
           TERMINATED = sh(returnStdout: true, script: "aws ec2 terminate-instances \
-          --instance-ids ${param.TERMINATE_INSTANCES}").trim()
+          --instance-ids ${TERMINATE_INSTANCES}").trim()
         }
       }
     }
