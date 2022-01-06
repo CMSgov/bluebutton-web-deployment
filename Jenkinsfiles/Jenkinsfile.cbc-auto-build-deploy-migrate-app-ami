@@ -139,6 +139,8 @@ pipeline {
           TERMINATED = sh(returnStdout: true, script: "aws ec2 terminate-instances \
           --instance-ids ${param.TERMINATE_INSTANCES}").trim()
         }
+
+        echo "Terminated the following instance(s): ${params.TERMINATE_INSTANCES}"
       }
     }
 
