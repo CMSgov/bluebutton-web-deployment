@@ -119,16 +119,16 @@ pipeline {
       }
     }
 
-    // DEPLOY A CANARY IF PRE_DEPLOY_MIGRATIONS SELECTED
-    stage("Deploy Canary AMI for Pre-Deploy migrations") {
+    // TERMINATE RUNNING CANARIES & DEPLOY A CANARY IF PRE_DEPLOY_MIGRATIONS SELECTED
+    stage("Terminate running canaries") {
       when {
         expression { params.APP_MIGRATIONS == "Pre-deploy" }
       }
       steps {
+        // Get canary instance ID's to terminate
+        // NOTE: alternatively, could run aws cli command to order instances by launch dates
+        // still potential for a stray canary to squeeze in either way.
         script {
-          // Get canary instance ID's to terminate
-          // NOTE: alternatively, could run aws cli command to order instances by launch dates
-          // still potential for a stray canary to squeeze in either way.
           TERMINATE_INSTANCES = sh(returnStdout: true, script: "aws ec2 describe-instances \
           --filters \
           'Name=instance-state-name,Values=running' \
@@ -136,14 +136,31 @@ pipeline {
           --query 'Reservations[*].Instances[*].[InstanceId]' \
           --output text").trim()
           // TERMINATE unwanted canaries
-          sh(returnStdout: true, script: "aws ec2 terminate-instances --instance-ids ${param.TERMINATE_INSTANCES}").trim()
+          TERMINATED = sh(returnStdout: true, script: "aws ec2 terminate-instances \
+          --instance-ids ${param.TERMINATE_INSTANCES}").trim()
+        }
+      }
+    }
 
-          build job: 'DEPLOY - Canary AMI', 
-            parameters: [
-              string(name: 'APP_ENV', value: params.APP_ENV), 
-              string(name: 'APP_AMI_ID', value: params.APP_SOURCE_AMI_ID)
-            ]
+    stage("Deploy Canary AMI for Pre-Deploy migrations") {
+      when {
+        expression { params.APP_MIGRATIONS == "Pre-deploy" }
+      }
+      steps {
+        build job: 'DEPLOY - Canary AMI', 
+          parameters: [
+            string(name: 'APP_ENV', value: params.APP_ENV), 
+            string(name: 'APP_AMI_ID', value: params.APP_SOURCE_AMI_ID)
+          ]
+      }
+    }
 
+    stage("Pre-deploy migration: showmigrations") {
+      when {
+        expression { params.APP_MIGRATIONS == "Pre-deploy" }
+      }
+      steps {
+        script {
           CANARY_IP = sh(returnStdout: true, script: "aws ec2 describe-instances \
           --filters \
           'Name=instance-state-name,Values=running' \
@@ -151,7 +168,7 @@ pipeline {
           --query 'Reservations[*].Instances[*].[PrivateIpAddress]' \
           --output text").trim()
         }
-
+        
         // showmigrations
         // EC2_INI_PATH=inventory/config/${APP_ENV}.ini \
         sh """
@@ -169,7 +186,6 @@ pipeline {
         //     string(name: 'DJANGO_COMMAND', value 'showmigrations'),
         //     string(name: 'CANARY_IP', value: params.CANARY_IP)
         //   ]
-
       }
     }
 
