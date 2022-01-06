@@ -120,7 +120,7 @@ pipeline {
     }
 
     // TERMINATE RUNNING CANARIES & DEPLOY A CANARY IF PRE_DEPLOY_MIGRATIONS SELECTED
-    stage("Terminate running canaries") {
+    stage("Gather list of Canaries to terminate") {
       when {
         expression { params.APP_MIGRATIONS == "Pre-deploy" }
       }
@@ -130,19 +130,30 @@ pipeline {
         // still potential for a stray canary to squeeze in either way.
         script {
           TERMINATE_INSTANCES = sh(returnStdout: true, script: "aws ec2 describe-instances \
-          --filters \
-          'Name=instance-state-name,Values=running' \
-          'Name=tag:Name,Values=bb-${params.APP_ENV}-canary' \
+          --filters 'Name=instance-state-name,Values=running' 'Name=tag:Name,Values=bb-${params.APP_ENV}-canary' \
           --query 'Reservations[*].Instances[*].[InstanceId]' \
           --output text").trim()
-          // TERMINATE unwanted canaries
+        }
+      }
+    }
+
+    stage("Terminate running canaries") {
+      when {
+        beforeInput true
+        expression { params.APP_MIGRATIONS == "Pre-deploy" }
+      }
+      input {
+        message "Terminate the following instance(s)? ${params.TERMINATE_INSTANCES}"
+        ok "Terminate"
+      }
+      steps {
+        script {
           TERMINATED = sh(returnStdout: true, script: "aws ec2 terminate-instances \
           --instance-ids ${param.TERMINATE_INSTANCES}").trim()
         }
-
-        echo "Terminated the following instance(s): ${params.TERMINATE_INSTANCES}"
       }
     }
+    
 
     stage("Deploy Canary AMI for Pre-Deploy migrations") {
       when {
