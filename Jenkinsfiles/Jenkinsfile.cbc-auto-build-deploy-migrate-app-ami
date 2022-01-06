@@ -1,21 +1,3 @@
-//*****************************************************************************
-// TODO: Remove this
-// 12/03/2021
-// Blue Button - Full orchestration build & deploy release
-// This Jenkinsfile leverages the existing BUILD - App AMI ans DEPLOY - App AMI
-// 
-// Parameter requirements per job:
-// Build:
-//  - APP_REPO_BRANCH: (default: master) expecting release - rXX
-//  - DEPLOY_REPO_BRANCH: (default:master)
-//  - PLATINUM_AMI_ID: (default:most recent (blank)), or specified by AMI ID
-//
-// Deploy:
-//  - APP_MIGRATIONS: options: Pre-deploy, Post-deploy, No Migrations
-//  - APP_ENV: options::test, impl, prod
-//  - APP_AMI_ID: Gathered in Deployment step
-//
-//*****************************************************************************
 
 pipeline {
   agent {
@@ -31,6 +13,8 @@ pipeline {
     AWS_DEFAULT_REGION = "us-east-1"
     VAULT_PASSWORD = credentials("bb2-vault-password")
     SSH_KEY = credentials("bb2-ssh-key-${params.APP_ENV}")
+    ANSIBLE_INVENTORY = "inventory/ec2.py"
+    ANSIBLE_SUBSET = "tag_Function_app_AppServer"
   }
 
   parameters {
@@ -75,7 +59,6 @@ pipeline {
   }
 
   stages {
-    // Migration selection check
     stage("Check migration status") {
       steps {
         script {
@@ -117,76 +100,7 @@ pipeline {
       }
     }
 
-    // Ansible config - Pre-deploy migrations
-    stage("Determine Ansible Config: Pre-deploy") {
-      // TODO: Thinking this will need to be run separately for Pre/Post migrations since instances change post deploy
-      when {
-        expression { params.APP_MIGRATIONS == "Pre-deploy" }
-      }
-      steps {
-        script {
-          echo("Setting ansible config for tagged deployment instance")
-          ANSIBLE_INVENTORY = "inventory/ec2.py"
-          ANSIBLE_SUBSET = "tag_Function_app_AppServer"
-        }
-      }
-    }
-
-    // Pre-deploy showmigrations
-    stage("Pre-deploy migration: showmigrations") {
-      when {
-        expression { params.APP_MIGRATIONS == "Pre-deploy" }
-      }
-      steps {
-        sh """
-        EC2_INI_PATH=inventory/config/${APP_ENV}.ini \
-        ansible-playbook playbook/run_django_command/main.yml \
-          --vault-password-file '${VAULT_PASSWORD}' \
-          --private-key '${SSH_KEY}' \
-          -i '${ANSIBLE_INVENTORY}' \
-          -l '${ANSIBLE_SUBSET}' \
-          -e 'env=${APP_ENV}' \
-          -e 'django_command="showmigrations"'
-        """
-      }
-    }
-
-    // Pre-deploy migrate
-    stage("Pre-deploy migration: Confirm and migrate") {
-      when {
-        beforeInput true
-        expression { params.APP_MIGRATIONS == "Pre-deploy" }
-      }
-      input {
-        message "Run migrations on ${params.APP_ENV}?"
-        ok "Migrate"
-      }
-      steps {
-
-        // script {
-        //   if (params.APP_MIGRATIONS == "Pre-deploy") {
-        //     input message: "Run migrations on ${params.APP_ENV}?"
-        //     //ok "Migrate"
-        //   }
-        // }
-
-        echo "Migrate confirmation recieved, proceeding."
-
-        sh """
-        EC2_INI_PATH=inventory/config/${APP_ENV}.ini \
-        ansible-playbook playbook/run_django_command/main.yml \
-          --vault-password-file '${VAULT_PASSWORD}' \
-          --private-key '${SSH_KEY}' \
-          -i '${ANSIBLE_INVENTORY}' \
-          -l '${ANSIBLE_SUBSET}' \
-          -e 'env=${APP_ENV}' \
-          -e 'django_command="migrate"'
-        """
-      }
-    }
-
-
-    // DEPLOY
+    // GET THE APP AMI ID FOR AMI THAT WAS BUILT ON BUILD STAGE
     stage("Determine APP AMI") {
       steps {
         script {
@@ -205,6 +119,90 @@ pipeline {
       }
     }
 
+    // DEPLOY A CANARY IF PRE_DEPLOY_MIGRATIONS SELECTED
+    stage("Deploy Canary AMI for Pre-Deploy migrations") {
+      when {
+        expression { params.APP_MIGRATIONS == "Pre-deploy" }
+      }
+      steps {
+        // Get canary instance ID's to terminate
+        // NOTE: alternatively, could run aws cli command to order instances by launch dates
+        // still potential for a stray canary to squeeze in either way.
+        TERMINATE_INSTANCES = sh(returnStdout: true, script: "aws ec2 describe-instances \
+        --filters \
+        'Name=instance-state-name,Values=running' \
+        'Name=tag:Name,Values=bb-${params.APP_ENV}-canary' \
+        --query 'Reservations[*].Instances[*].[InstanceId]' \
+        --output text").trim()
+        // TERMINATE unwanted canaries
+        sh(returnStdout: true, script: "aws ec2 terminate-instances --instance-ids ${param.TERMINATE_INSTANCES}").trim()
+
+        build job: 'DEPLOY - Canary AMI', 
+          parameters: [
+            string(name: 'APP_ENV', value: params.APP_ENV), 
+            string(name: 'APP_AMI_ID', value: params.APP_SOURCE_AMI_ID)
+          ]
+
+        CANARY_IP = sh(returnStdout: true, script: "aws ec2 describe-instances \
+        --filters \
+        'Name=instance-state-name,Values=running' \
+        'Name=tag:Name,Values=bb-${params.APP_ENV}-canary' \
+        --query 'Reservations[*].Instances[*].[PrivateIpAddress]' \
+        --output text").trim()
+
+        // showmigrations
+        // EC2_INI_PATH=inventory/config/${APP_ENV}.ini \
+        sh """
+        ansible-playbook playbook/run_django_command/main.yml \
+          --vault-password-file '${VAULT_PASSWORD}' \
+          --private-key '${SSH_KEY}' \
+          -i '${CANARY_IP}' \
+          -e 'env=${APP_ENV}' \
+          -e 'django_command="showmigrations"'
+        """
+        // -- OR --
+        // build job: 'RUN - Django Command',
+        //   parameters: [
+        //     string(name: 'APP_ENV', value: params.APP_ENV),
+        //     string(name: 'DJANGO_COMMAND', value 'showmigrations'),
+        //     string(name: 'CANARY_IP', value: params.CANARY_IP)
+        //   ]
+
+      }
+    }
+
+    // Pre-deploy migrate
+    stage("Pre-deploy migration: Confirm and migrate") {
+      when {
+        beforeInput true
+        expression { params.APP_MIGRATIONS == "Pre-deploy" }
+      }
+      input {
+        message "Run migrations on ${params.APP_ENV}?"
+        ok "Migrate"
+      }
+      steps {
+        // migrations
+        // EC2_INI_PATH=inventory/config/${APP_ENV}.ini \
+        sh """
+        ansible-playbook playbook/run_django_command/main.yml \
+          --vault-password-file '${VAULT_PASSWORD}' \
+          --private-key '${SSH_KEY}' \
+          -i '${CANARY_IP}' \
+          -e 'env=${APP_ENV}' \
+          -e 'django_command="migrations"'
+        """
+        // --OR--
+        // build job: 'RUN - Django Command',
+        //   parameters: [
+        //     string(name: 'APP_ENV', value: params.APP_ENV),
+        //     string(name: 'DJANGO_COMMAND', value 'migrate'),
+        //     string(name: 'CANARY_IP', value: params.CANARY_IP)
+        //   ]
+      }
+    }
+
+    // DEPLOY
     stage("Deploy this release - Be sure to approve/abort Terraform plan on DEPLOY - App AMI job") {
       steps {
         // TODO: Change to production job after testing is complete
@@ -214,21 +212,6 @@ pipeline {
             string(name: 'APP_ENV', value: params.APP_ENV), 
             string(name: 'APP_AMI_ID', value: APP_SOURCE_AMI_ID)
           ]
-      }
-    }
-
-    // Ansible config - Pre-deploy migrations
-    stage("Determine Ansible Config: Post-deploy") {
-      // TODO: Thinking this will need to be run separately for Pre/Post migrations since instances change post deploy
-      when {
-        expression { params.APP_MIGRATIONS == "Post-deploy" }
-      }
-      steps {
-        script {
-          echo("Setting ansible config for tagged deployment instance")
-          ANSIBLE_INVENTORY = "inventory/ec2.py"
-          ANSIBLE_SUBSET = "tag_Function_app_AppServer"
-        }
       }
     }
 
@@ -267,12 +250,6 @@ pipeline {
       // going to be required once a deployment goes into production. Or - is it best to review
       // the showmigrations first and do a rollback in the event of an issue?
       steps {
-        // script {
-        //   if (params.APP_MIGRATIONS == "Post-deploy") {
-        //     input message: "Run migrations on ${params.APP_ENV}?"
-        //     //ok "Migrate"
-        //   }
-        // }
 
         echo "Migrate confirmation recieved, proceeding."
 
