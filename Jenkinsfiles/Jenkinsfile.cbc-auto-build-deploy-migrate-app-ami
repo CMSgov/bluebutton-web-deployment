@@ -70,14 +70,14 @@ pipeline {
       }
     }
 
-    stage("Notify Slack") {
-      steps {
-        script {
-          helpers = load "Jenkinsfiles/helpers.groovy"
-          helpers.slackNotify "STARTING - ENV:${params.APP_ENV}"
-        }
-      }
-    }
+    // stage("Notify Slack") {
+    //   steps {
+    //     script {
+    //       helpers = load "Jenkinsfiles/helpers.groovy"
+    //       helpers.slackNotify "STARTING - ENV:${params.APP_ENV}"
+    //     }
+    //   }
+    // }
 
     // BUILD
 
@@ -127,7 +127,7 @@ pipeline {
         build job: 'DEPLOY - Canary AMI', 
           parameters: [
             string(name: 'APP_ENV', value: params.APP_ENV), 
-            string(name: 'APP_AMI_ID', value: params.APP_SOURCE_AMI_ID)
+            string(name: 'APP_AMI_ID', value: APP_SOURCE_AMI_ID)
           ]
       }
     }
