@@ -129,15 +129,6 @@ pipeline {
             string(name: 'APP_ENV', value: params.APP_ENV), 
             string(name: 'APP_AMI_ID', value: params.APP_SOURCE_AMI_ID)
           ]
-        
-        script {
-          CANARY_IP = sh(returnStdout: true, script: "aws ec2 describe-instances \
-          --filters \
-          'Name=instance-state-name,Values=running' \
-          'Name=tag:Name,Values=bb-${APP_ENV}-canary' \
-          --query 'sort_by(Reservations[*].Instances[*][], &LaunchTime)[-1:].{ip: PrivateIpAddress}' \
-          --output text").trim()
-        }
       }
     }
 
@@ -147,6 +138,14 @@ pipeline {
         expression { params.APP_MIGRATIONS == "Pre-deploy" }
       }
       steps {
+        script {
+          CANARY_IP = sh(returnStdout: true, script: "aws ec2 describe-instances \
+          --filters \
+          'Name=instance-state-name,Values=running' \
+          'Name=tag:Name,Values=bb-${APP_ENV}-canary' \
+          --query 'sort_by(Reservations[*].Instances[*][], &LaunchTime)[-1:].{ip: PrivateIpAddress}' \
+          --output text").trim()
+        }
         sh """
         ansible-playbook playbook/run_django_command/main.yml \
           --vault-password-file '${VAULT_PASSWORD}' \
