@@ -70,14 +70,14 @@ pipeline {
       }
     }
 
-    // stage("Notify Slack") {
-    //   steps {
-    //     script {
-    //       helpers = load "Jenkinsfiles/helpers.groovy"
-    //       helpers.slackNotify "STARTING - ENV:${params.APP_ENV}"
-    //     }
-    //   }
-    // }
+    stage("Notify Slack") {
+      steps {
+        script {
+          helpers = load "Jenkinsfiles/helpers.groovy"
+          helpers.slackNotify "STARTING - ENV:${params.APP_ENV}"
+        }
+      }
+    }
 
     // BUILD
 
@@ -146,14 +146,13 @@ pipeline {
           --query 'sort_by(Reservations[*].Instances[*][], &LaunchTime)[-1:].{ip: PrivateIpAddress}' \
           --output text").trim()
         }
-        sh """
-        ansible-playbook playbook/run_django_command/main.yml \
-          --vault-password-file '${VAULT_PASSWORD}' \
-          --private-key '${SSH_KEY}' \
-          -i '${CANARY_IP}' \
-          -e 'env=${APP_ENV}' \
-          -e 'django_command="showmigrations"'
-        """
+
+        build job: 'RUN - Django Command', 
+          parameters: [
+            string(name: 'APP_ENV', value: params.APP_ENV),
+            string(name: 'DJANGO_COMMAND', value: 'showmigrations'), 
+            string(name: 'CANARY_IP', value: CANARY_IP)
+          ]
       }
     }
 
@@ -168,14 +167,12 @@ pipeline {
         ok "Migrate"
       }
       steps {
-        sh """
-        ansible-playbook playbook/run_django_command/main.yml \
-          --vault-password-file '${VAULT_PASSWORD}' \
-          --private-key '${SSH_KEY}' \
-          -i '${CANARY_IP}' \
-          -e 'env=${APP_ENV}' \
-          -e 'django_command="migrate"'
-        """
+        build job: 'RUN - Django Command', 
+          parameters: [
+            string(name: 'APP_ENV', value: params.APP_ENV),
+            string(name: 'DJANGO_COMMAND', value: 'migrate'), 
+            string(name: 'CANARY_IP', value: CANARY_IP)
+          ]
       }
     }
 
