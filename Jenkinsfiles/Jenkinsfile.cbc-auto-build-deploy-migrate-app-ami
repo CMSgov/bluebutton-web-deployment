@@ -70,14 +70,15 @@ pipeline {
       }
     }
 
-    stage("Notify Slack") {
-      steps {
-        script {
-          helpers = load "Jenkinsfiles/helpers.groovy"
-          helpers.slackNotify "STARTING - ENV:${params.APP_ENV}"
-        }
-      }
-    }
+    // TODO: Turn on after testing is complete
+    // stage("Notify Slack") {
+    //   steps {
+    //     script {
+    //       helpers = load "Jenkinsfiles/helpers.groovy"
+    //       helpers.slackNotify "STARTING - ENV:${params.APP_ENV}"
+    //     }
+    //   }
+    // }
 
     // BUILD
 
@@ -108,7 +109,6 @@ pipeline {
             echo("Setting APP_SOURCE_AMI_ID from APP_AMI_ID: ${params.APP_AMI_ID}")
             APP_SOURCE_AMI_ID = params.APP_AMI_ID
           } else {
-            
             echo("Setting APP_SOURCE_AMI_ID from AMI just built for ${params.APP_REPO_BRANCH.toLowerCase()}")
             APP_SOURCE_AMI_ID = sh(returnStdout: true, script: "aws ec2 describe-images \
               --filters 'Name=name,Values=bb2-amzn2-${params.APP_REPO_BRANCH.toLowerCase()}-*' \
@@ -118,43 +118,8 @@ pipeline {
         }
       }
     }
-
-    // TERMINATE RUNNING CANARIES & DEPLOY A CANARY IF PRE_DEPLOY_MIGRATIONS SELECTED
-    stage("Gather list of Canaries to terminate") {
-      when {
-        expression { params.APP_MIGRATIONS == "Pre-deploy" }
-      }
-      steps {
-        // Get canary instance ID's to terminate
-        // NOTE: alternatively, could run aws cli command to order instances by launch dates
-        // still potential for a stray canary to squeeze in either way.
-        script {
-          TERMINATE_INSTANCES = sh(returnStdout: true, script: "aws ec2 describe-instances \
-          --filters 'Name=instance-state-name,Values=running' 'Name=tag:Name,Values=bb-${params.APP_ENV}-canary' \
-          --query 'Reservations[*].Instances[*].[InstanceId]' \
-          --output text").trim()
-        }
-      }
-    }
-
-    stage("Terminate running canaries") {
-      when {
-        beforeInput true
-        expression { params.APP_MIGRATIONS == "Pre-deploy" }
-      }
-      input {
-        message "Terminate the following instance(s)? ${TERMINATE_INSTANCES}"
-        ok "Terminate"
-      }
-      steps {
-        script {
-          TERMINATED = sh(returnStdout: true, script: "aws ec2 terminate-instances \
-          --instance-ids ${TERMINATE_INSTANCES}").trim()
-        }
-      }
-    }
     
-
+    // DEPLOY CANARY TO RUN PRE_DEPLOY MIGRATIONS
     stage("Deploy Canary AMI for Pre-Deploy migrations") {
       when {
         expression { params.APP_MIGRATIONS == "Pre-deploy" }
@@ -165,26 +130,26 @@ pipeline {
             string(name: 'APP_ENV', value: params.APP_ENV), 
             string(name: 'APP_AMI_ID', value: params.APP_SOURCE_AMI_ID)
           ]
-      }
-    }
-
-    stage("Pre-deploy migration: showmigrations") {
-      when {
-        expression { params.APP_MIGRATIONS == "Pre-deploy" }
-      }
-      steps {
+        
         script {
           CANARY_IP = sh(returnStdout: true, script: "aws ec2 describe-instances \
           --filters \
           'Name=instance-state-name,Values=running' \
           'Name=tag:Name,Values=bb-${params.APP_ENV}-canary' \
-          --query 'Reservations[*].Instances[*].[PrivateIpAddress]' \
-          --output text").trim()
+          --query 'Reservations[].Instances[].{ip: PrivateIpAddress, lt: LaunchTime}' \
+          | jq -r 'sort_by(.lt) | reverse | .[0] | .ip'").trim()
         }
-        
-        // showmigrations
-        // EC2_INI_PATH=inventory/config/${APP_ENV}.ini \
+      }
+    }
+
+    // RUN SHOWMIGRATIONS AND MIGRATE ON THE CANARY INSTANCE
+    stage("Pre-deploy migration: showmigrations") {
+      when {
+        expression { params.APP_MIGRATIONS == "Pre-deploy" }
+      }
+      steps {
         sh """
+        EC2_INI_PATH=inventory/config/${APP_ENV}.ini \
         ansible-playbook playbook/run_django_command/main.yml \
           --vault-password-file '${VAULT_PASSWORD}' \
           --private-key '${SSH_KEY}' \
@@ -192,13 +157,6 @@ pipeline {
           -e 'env=${APP_ENV}' \
           -e 'django_command="showmigrations"'
         """
-        // -- OR --
-        // build job: 'RUN - Django Command',
-        //   parameters: [
-        //     string(name: 'APP_ENV', value: params.APP_ENV),
-        //     string(name: 'DJANGO_COMMAND', value 'showmigrations'),
-        //     string(name: 'CANARY_IP', value: params.CANARY_IP)
-        //   ]
       }
     }
 
@@ -213,23 +171,35 @@ pipeline {
         ok "Migrate"
       }
       steps {
-        // migrations
-        // EC2_INI_PATH=inventory/config/${APP_ENV}.ini \
         sh """
+        EC2_INI_PATH=inventory/config/${APP_ENV}.ini \
         ansible-playbook playbook/run_django_command/main.yml \
           --vault-password-file '${VAULT_PASSWORD}' \
           --private-key '${SSH_KEY}' \
           -i '${CANARY_IP}' \
           -e 'env=${APP_ENV}' \
-          -e 'django_command="migrations"'
+          -e 'django_command="migrate"'
         """
-        // --OR--
-        // build job: 'RUN - Django Command',
-        //   parameters: [
-        //     string(name: 'APP_ENV', value: params.APP_ENV),
-        //     string(name: 'DJANGO_COMMAND', value 'migrate'),
-        //     string(name: 'CANARY_IP', value: params.CANARY_IP)
-        //   ]
+      }
+    }
+
+    // terminate the canary instance used for pre-deploy migrations
+    stage("Terminate canary after migrations finish") {
+      steps {
+        script {
+          CANARY_INSTANCE_ID = sh(returnStdout: true, script: "aws ec2 describe-instances \
+          --filters \
+          'Name=private-ip-address,Values=${CANARY_IP}' \
+          'Name=tag:Name,Values=bb-${APP_ENV}-canary' \
+          --query 'Reservations[].Instances[].{id: InstanceId}' \
+          | jq -r '.[0] | .id'").trim()
+        }
+
+        echo "Terminating Canary Instance: ${CANARY_INSTANCE_ID}"
+        
+        sh """
+        aws ec2 terminate-instances --instance-ids ${CANARY_INSTANCE_ID}
+        """
       }
     }
 
