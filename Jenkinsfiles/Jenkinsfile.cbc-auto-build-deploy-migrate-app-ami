@@ -149,6 +149,7 @@ pipeline {
         }
 
         sh """
+        EC2_INI_PATH=inventory/config/${APP_ENV}.ini \
         ansible-playbook playbook/run_django_command/main.yml \
           --vault-password-file '${VAULT_PASSWORD}' \
           --private-key '${SSH_KEY}' \
@@ -172,6 +173,7 @@ pipeline {
       }
       steps {
         sh """
+        EC2_INI_PATH=inventory/config/${APP_ENV}.ini \
         ansible-playbook playbook/run_django_command/main.yml \
           --vault-password-file '${VAULT_PASSWORD}' \
           --private-key '${SSH_KEY}' \
