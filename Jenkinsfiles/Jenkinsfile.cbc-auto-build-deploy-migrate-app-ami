@@ -14,7 +14,6 @@ pipeline {
     VAULT_PASSWORD = credentials("bb2-vault-password")
     SSH_KEY = credentials("bb2-ssh-key-${params.APP_ENV}")
     ANSIBLE_INVENTORY = "inventory/ec2.py"
-    ANSIBLE_SUBSET = "tag_Function_app_AppServer"
   }
 
   parameters {
@@ -153,7 +152,7 @@ pipeline {
         ansible-playbook playbook/run_django_command/main.yml \
           --vault-password-file '${VAULT_PASSWORD}' \
           --private-key '${SSH_KEY}' \
-          -i '${CANARY_IP}' \
+          -i '${CANARY_IP},' \
           -l '${ANSIBLE_SUBSET}' \
           -e 'env=${APP_ENV}' \
           -e 'django_command="showmigrations"'
@@ -224,6 +223,7 @@ pipeline {
         expression { params.APP_MIGRATIONS == "Post-deploy" }
       }
       steps {
+        ANSIBLE_SUBSET = "tag_Function_app_AppServer"
         sh """
         EC2_INI_PATH=inventory/config/${APP_ENV}.ini \
         ansible-playbook playbook/run_django_command/main.yml \
