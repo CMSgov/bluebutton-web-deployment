@@ -223,7 +223,9 @@ pipeline {
         expression { params.APP_MIGRATIONS == "Post-deploy" }
       }
       steps {
-        ANSIBLE_SUBSET = "tag_Function_app_AppServer"
+        script {
+          ANSIBLE_SUBSET = "tag_Function_app_AppServer"
+        }
         sh """
         EC2_INI_PATH=inventory/config/${APP_ENV}.ini \
         ansible-playbook playbook/run_django_command/main.yml \
