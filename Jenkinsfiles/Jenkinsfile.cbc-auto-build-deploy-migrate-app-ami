@@ -88,7 +88,6 @@ pipeline {
         expression { params.APP_AMI_ID == "" }
       }
       steps {
-        // TODO: Change to production job after testing is complete
         build job: 'BUILD - App AMI (AMZN 2)', 
           parameters: [
             string(name: 'APP_REPO_BRANCH', value: params.APP_REPO_BRANCH.toLowerCase()), 
@@ -206,7 +205,6 @@ pipeline {
     // DEPLOY
     stage("Deploy this release - Be sure to approve/abort Terraform plan on DEPLOY - App AMI job") {
       steps {
-        // TODO: Change to production job after testing is complete
         build job: 'DEPLOY - App AMI', 
           parameters: [
             string(name: 'APP_MIGRATIONS', value: params.APP_MIGRATIONS), 
