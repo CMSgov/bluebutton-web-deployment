@@ -145,6 +145,7 @@ pipeline {
           'Name=tag:Name,Values=bb-${APP_ENV}-canary' \
           --query 'sort_by(Reservations[*].Instances[*][], &LaunchTime)[-1:].{ip: PrivateIpAddress}' \
           --output text").trim()
+          ANSIBLE_SUBSET = ""
         }
 
         sh """
@@ -152,6 +153,7 @@ pipeline {
           --vault-password-file '${VAULT_PASSWORD}' \
           --private-key '${SSH_KEY}' \
           -i '${CANARY_IP}' \
+          -l '${ANSIBLE_SUBSET}' \
           -e 'env=${APP_ENV}' \
           -e 'django_command="showmigrations"'
         """
@@ -174,6 +176,7 @@ pipeline {
           --vault-password-file '${VAULT_PASSWORD}' \
           --private-key '${SSH_KEY}' \
           -i '${CANARY_IP}' \
+          -l '${ANSIBLE_SUBSET}' \
           -e 'env=${APP_ENV}' \
           -e 'django_command="migrate"'
         """
