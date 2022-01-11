@@ -147,12 +147,14 @@ pipeline {
           --output text").trim()
         }
 
-        build job: 'RUN - Django Command', 
-          parameters: [
-            string(name: 'APP_ENV', value: params.APP_ENV),
-            string(name: 'DJANGO_COMMAND', value: 'showmigrations'), 
-            string(name: 'CANARY_IP', value: CANARY_IP)
-          ]
+        sh """
+        ansible-playbook playbook/run_django_command/main.yml \
+          --vault-password-file '${VAULT_PASSWORD}' \
+          --private-key '${SSH_KEY}' \
+          -i '${CANARY_IP}' \
+          -e 'env=${APP_ENV}' \
+          -e 'django_command="showmigrations"'
+        """
       }
     }
 
@@ -167,12 +169,14 @@ pipeline {
         ok "Migrate"
       }
       steps {
-        build job: 'RUN - Django Command', 
-          parameters: [
-            string(name: 'APP_ENV', value: params.APP_ENV),
-            string(name: 'DJANGO_COMMAND', value: 'migrate'), 
-            string(name: 'CANARY_IP', value: CANARY_IP)
-          ]
+        sh """
+        ansible-playbook playbook/run_django_command/main.yml \
+          --vault-password-file '${VAULT_PASSWORD}' \
+          --private-key '${SSH_KEY}' \
+          -i '${CANARY_IP}' \
+          -e 'env=${APP_ENV}' \
+          -e 'django_command="migrate"'
+        """
       }
     }
 
