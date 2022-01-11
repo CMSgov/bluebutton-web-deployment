@@ -20,8 +20,7 @@ pipeline {
 
     choice(
       name: "APP_ENV",
-      choices: ["test"],
-      // TODO: choices: ["test", "impl", "prod"], uncomment once tests are passing in TEST env
+      choices: ["test", "impl", "prod"],
       description: "The environment to deploy to."
     )
 
