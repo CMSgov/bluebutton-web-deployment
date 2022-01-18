@@ -1,5 +1,9 @@
 resource "aws_ecr_repository" "fargate_demo" {
-  name = "${var.namespace}-${var.env}-ecr-repo"
+  name = "bb2-fargate-demo"
+}
+
+data "aws_ecr_repository" "fargate_demo" {
+  name = "bb2-fargate-demo"
 }
 
 resource "aws_ecs_cluster" "fargate_demo" {
@@ -25,7 +29,7 @@ resource "aws_ecs_task_definition" "fargate_demo" {
   [
     {
       "name": "${var.namespace}-${var.env}",
-      "image": "${var.image}",
+      "image": "${data.aws_ecr_repository.fargate_demo.repository_url}:latest",
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
