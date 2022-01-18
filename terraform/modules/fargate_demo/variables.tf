@@ -9,7 +9,3 @@ variable "env" {
 variable "cms_vpn_cidrs" {
     type = list(string)
 }
-
-variable "image" {
-  type    = string
-}
