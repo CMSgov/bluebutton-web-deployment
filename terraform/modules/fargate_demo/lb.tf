@@ -1,39 +1,9 @@
-# Data sources
-
-data "aws_vpc" "fargate_demo_lb" {
-  filter {
-    name   = "tag:Name"
-    values = ["bluebutton-${var.env}"]
-  }
-}
-
-data "aws_subnet_ids" "fargate_demo_lb" {
-  vpc_id = data.aws_vpc.fargate_demo_lb.id
-
-  filter {
-    name   = "tag:Name"
-    values = ["bluebutton-${var.env}-az?-dmz"]
-  }
-}
-
-data "aws_ssm_parameter" "fargate_demo_port" {
-  name = "/bb2/test/python-simple-https-server/server-port"
-}
-
-data "aws_ssm_parameter" "fargate_demo_key" {
-  name = "/bb2/test/python-simple-https-server/server-key"
-}
-
-data "aws_ssm_parameter" "fargate_demo_cert" {
-  name = "/bb2/test/python-simple-https-server/server-cert"
-}
-
 # Resources
 
 resource "aws_security_group" "fargate_demo_lb" {
   name        = "${var.namespace}-${var.env}-lb-sg"
   description = "Security group for CMS VPN traffic to fargate demo load balancer"
-  vpc_id      = data.aws_vpc.fargate_demo_lb.id
+  vpc_id      = data.aws_vpc.fargate_demo.id
 
   ingress {
     from_port   = data.aws_ssm_parameter.fargate_demo_port.value
@@ -93,5 +63,5 @@ resource "aws_lb_target_group" "fargate_demo_lb" {
   port        = data.aws_ssm_parameter.fargate_demo_port.value
   protocol    = "HTTPS"
   target_type = "ip"
-  vpc_id      = data.aws_vpc.fargate_demo_lb.id
+  vpc_id      = data.aws_vpc.fargate_demo.id
 }
