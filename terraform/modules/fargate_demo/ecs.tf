@@ -13,14 +13,12 @@ resource "aws_ecs_service" "fargate_demo" {
   launch_type     = "FARGATE"
  }
 
- resource "aws_ecs_task_definition" "fargate_demo" {
-  family = "fargate_demo"
+resource "aws_ecs_task_definition" "fargate_demo" {
+  family = "${var.namespace}-${var.env}"
    # These are the minimum values for Fargate containers.
   cpu = 256
   memory = 512
   requires_compatibilities = ["FARGATE"]
-
-  # This is required for Fargate containers (more on this later).
   network_mode = "awsvpc"
 
   container_definitions = <<EOF
@@ -28,11 +26,6 @@ resource "aws_ecs_service" "fargate_demo" {
     {
       "name": "${var.namespace}-${var.env}",
       "image": "${var.image}",
-      "portMappings": [
-        {
-          "containerPort": 3000
-        }
-      ],
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
