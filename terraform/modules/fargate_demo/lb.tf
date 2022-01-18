@@ -8,7 +8,7 @@ data "aws_vpc" "fargate_demo_lb" {
 }
 
 data "aws_subnet_ids" "fargate_demo_lb" {
-  vpc_id = data.aws_vpc.fargate_demo.id
+  vpc_id = data.aws_vpc.fargate_demo_lb.id
 
   filter {
     name   = "tag:Name"
