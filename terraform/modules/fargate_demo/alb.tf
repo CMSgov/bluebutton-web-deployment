@@ -61,7 +61,7 @@ resource "aws_lb" "fargate_demo" {
   internal           = true
   load_balancer_type = "application"
 
-  security_groups = 
+  security_groups = [aws_security_group.fargate_demo.id]
   subnets         = data.aws_subnet_ids.fargate_demo.ids
 
   tags = {
