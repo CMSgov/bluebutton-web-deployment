@@ -51,11 +51,10 @@ resource "aws_ecs_service" "fargate_demo" {
     #container_port   =
   }
 
-  # TODO: find out if this is needed
-  # network_configuration {
-  #   subnets         = data.aws_subnet_ids.fargate_demo_ecs.ids
-  #   security_groups = [aws_ecs_service.fargate_demo_ecs.id]
-  # }
+  network_configuration {
+    subnets         = data.aws_subnet_ids.fargate_demo_ecs.ids
+    security_groups = [aws_ecs_service.fargate_demo_ecs.id]
+  }
 }
 
 resource "aws_iam_role" "fargate_demo_ecs" {
