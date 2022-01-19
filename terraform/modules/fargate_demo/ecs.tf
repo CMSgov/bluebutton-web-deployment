@@ -46,14 +46,14 @@ resource "aws_ecs_service" "fargate_demo" {
 
   load_balancer {
     target_group_arn = aws_lb_target_group.fargate_demo_lb.arn
-    # TODO: add below once container def is done
-    #container_name   =
-    #container_port   =
+    container_name   = "${var.namespace}-${var.env}"
+    #container_port   = "${data.aws_ssm_parameter.fargate_demo_port.value}"
+    container_port    = 8443
   }
 
   network_configuration {
     subnets         = data.aws_subnet_ids.fargate_demo_ecs.ids
-    security_groups = [aws_ecs_service.fargate_demo_ecs.id]
+    security_groups = [aws_ecs_service.fargate_demo.id]
   }
 }
 
@@ -111,17 +111,26 @@ resource "aws_iam_role_policy_attachment" "fargate_demo_ecs_ssm" {
 
 resource "aws_ecs_task_definition" "fargate_demo" {
   family = "${var.namespace}-${var.env}"
-   # These are the minimum values for Fargate containers.
+  execution_role_arn = aws_iam_role.fargate_demo_ecs.arn
   cpu = 256
   memory = 512
   requires_compatibilities = ["FARGATE"]
   network_mode = "awsvpc"
 
+  #"containerPort": "${data.aws_ssm_parameter.fargate_demo_port.value}"
   container_definitions = <<EOF
   [
     {
       "name": "${var.namespace}-${var.env}",
       "image": "${aws_ecr_repository.fargate_demo.repository_url}:latest",
+      "cpu": 256,
+      "memory": 512,
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 8443
+        }
+      ],
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
