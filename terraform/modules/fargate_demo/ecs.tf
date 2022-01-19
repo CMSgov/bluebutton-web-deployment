@@ -47,8 +47,7 @@ resource "aws_ecs_service" "fargate_demo" {
   load_balancer {
     target_group_arn = aws_lb_target_group.fargate_demo_lb.arn
     container_name   = "${var.namespace}-${var.env}"
-    #container_port   = "${data.aws_ssm_parameter.fargate_demo_port.value}"
-    container_port    = 8443
+    container_port   = data.aws_ssm_parameter.fargate_demo_port.value
   }
 
   network_configuration {
