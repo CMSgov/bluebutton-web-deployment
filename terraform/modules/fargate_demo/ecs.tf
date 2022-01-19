@@ -53,7 +53,7 @@ resource "aws_ecs_service" "fargate_demo" {
 
   network_configuration {
     subnets         = data.aws_subnet_ids.fargate_demo_ecs.ids
-    security_groups = [aws_ecs_service.fargate_demo.id]
+    security_groups = [aws_security_group.fargate_demo_ecs.id]
   }
 }
 
