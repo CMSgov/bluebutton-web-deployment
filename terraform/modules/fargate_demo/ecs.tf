@@ -51,11 +51,64 @@ resource "aws_ecs_service" "fargate_demo" {
     #container_port   =
   }
 
-  network_configuration {
-    subnets         = data.aws_subnet_ids.fargate_demo_ecs.ids
-    security_groups = [aws_ecs_service.fargate_demo_ecs.id]
+  # TODO: find out if this is needed
+  # network_configuration {
+  #   subnets         = data.aws_subnet_ids.fargate_demo_ecs.ids
+  #   security_groups = [aws_ecs_service.fargate_demo_ecs.id]
+  # }
+}
+
+resource "aws_iam_role" "fargate_demo_ecs" {
+  name = "${var.namespace}-${var.env}-ecs-role"
+
+  assume_role_policy = <<EOF
+  {
+    "Version": "2008-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Principal": {
+          "Service": "ecs-tasks.amazonaws.com"
+        },
+        "Action": "sts:AssumeRole"
+      }
+    ]
   }
- }
+  EOF
+}
+
+resource "aws_iam_role_policy_attachment" "fargate_demo_ecs_base" {
+  role       = aws_iam_role.fargate_demo_ecs.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+}
+
+resource "aws_iam_policy" "fargate_demo_ecs_ssm" {
+  name = "${var.namespace}-${var.env}-ecs-ssm-policy"
+
+  policy = <<EOF
+  {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Action": [
+          "ssm:GetParameters"
+        ],
+        "Resource": [
+          "${data.aws_ssm_parameter.fargate_demo_port.arn}",
+          "${data.aws_ssm_parameter.fargate_demo_key.arn}",
+          "${data.aws_ssm_parameter.fargate_demo_cert.arn}"
+        ]
+      }
+    ]
+  }
+  EOF
+}
+
+resource "aws_iam_role_policy_attachment" "fargate_demo_ecs_ssm" {
+  role       = aws_iam_role.fargate_demo_ecs.name
+  policy_arn = aws_iam_policy.fargate_demo_ecs_ssm.arn
+}
 
 resource "aws_ecs_task_definition" "fargate_demo" {
   family = "${var.namespace}-${var.env}"
