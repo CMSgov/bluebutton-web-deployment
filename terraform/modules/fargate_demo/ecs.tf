@@ -122,7 +122,7 @@ resource "aws_ecs_task_definition" "fargate_demo" {
       essential = true
       portMappings = [
         {
-          containerPort = 8443
+          containerPort = tonumber(data.aws_ssm_parameter.fargate_demo_port.value)
         }
       ],
       logConfiguration = {
