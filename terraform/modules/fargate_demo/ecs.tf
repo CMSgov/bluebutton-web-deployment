@@ -114,28 +114,26 @@ resource "aws_ecs_task_definition" "fargate_demo" {
   network_mode = "awsvpc"
 
   #"containerPort": "${data.aws_ssm_parameter.fargate_demo_port.value}"
-  container_definitions = <<EOF
-  [
+  container_definitions = jsonencode([
     {
-      "name": "${var.namespace}-${var.env}",
-      "image": "${aws_ecr_repository.fargate_demo.repository_url}:latest",
-      "cpu": 256,
-      "memory": 512,
-      "essential": true,
-      "portMappings": [
+      name      = "${var.namespace}-${var.env}"
+      image     = "${aws_ecr_repository.fargate_demo.repository_url}:latest"
+      cpu       = 256
+      memory    = 512
+      essential = true
+      portMappings = [
         {
-          "containerPort": 8443
+          containerPort = 8443
         }
       ],
-      "logConfiguration": {
-        "logDriver": "awslogs",
-        "options": {
-          "awslogs-region": "us-east-1",
-          "awslogs-group": "/ecs/${var.namespace}-${var.env}",
-          "awslogs-stream-prefix": "ecs"
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          awslogs-region = "us-east-1",
+          awslogs-group = "/ecs/${var.namespace}-${var.env}",
+          awslogs-stream-prefix = "ecs"
         }
       }
     }
-  ]
-  EOF
+  ])
 }
