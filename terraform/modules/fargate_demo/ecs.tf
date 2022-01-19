@@ -60,20 +60,18 @@ resource "aws_ecs_service" "fargate_demo" {
 resource "aws_iam_role" "fargate_demo_ecs" {
   name = "${var.namespace}-${var.env}-ecs-role"
 
-  assume_role_policy = <<EOF
-  {
-    "Version": "2008-10-17",
-    "Statement": [
+  assume_role_policy = jsonencode({
+    Version = "2008-10-17"
+    Statement = [
       {
-        "Effect": "Allow",
-        "Principal": {
-          "Service": "ecs-tasks.amazonaws.com"
-        },
-        "Action": "sts:AssumeRole"
+        Effect = "Allow"
+        Principal = {
+          Service = "ecs-tasks.amazonaws.com"
+        }
+        Action = "sts:AssumeRole"
       }
     ]
-  }
-  EOF
+  })
 }
 
 resource "aws_iam_role_policy_attachment" "fargate_demo_ecs_base" {
@@ -84,24 +82,22 @@ resource "aws_iam_role_policy_attachment" "fargate_demo_ecs_base" {
 resource "aws_iam_policy" "fargate_demo_ecs_ssm" {
   name = "${var.namespace}-${var.env}-ecs-ssm-policy"
 
-  policy = <<EOF
-  {
-    "Version": "2012-10-17",
-    "Statement": [
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
       {
-        "Effect": "Allow",
-        "Action": [
+        Effect = "Allow"
+        Action = [
           "ssm:GetParameters"
-        ],
-        "Resource": [
+        ]
+        Resource = [
           "${data.aws_ssm_parameter.fargate_demo_port.arn}",
           "${data.aws_ssm_parameter.fargate_demo_key.arn}",
           "${data.aws_ssm_parameter.fargate_demo_cert.arn}"
         ]
       }
     ]
-  }
-  EOF
+  })
 }
 
 resource "aws_iam_role_policy_attachment" "fargate_demo_ecs_ssm" {
