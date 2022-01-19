@@ -136,15 +136,11 @@ resource "aws_ecs_task_definition" "fargate_demo" {
         {
           name = "SERVER_PORT",
           valueFrom = "${data.aws_ssm_parameter.fargate_demo_port.arn}"
-        }
-      ],
-      secrets = [
+        },
         {
           name = "SERVER_KEY",
           valueFrom = "${data.aws_ssm_parameter.fargate_demo_key.arn}"
-        }
-      ],
-      secrets = [
+        },
         {
           name = "SERVER_CERT",
           valueFrom = "${data.aws_ssm_parameter.fargate_demo_cert.arn}"
