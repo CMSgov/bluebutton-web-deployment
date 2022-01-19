@@ -120,16 +120,34 @@ resource "aws_ecs_task_definition" "fargate_demo" {
       cpu       = 256
       memory    = 512
       essential = true
-      secrets = [
-        {
-          SERVER_PORT = "${data.aws_ssm_parameter.fargate_demo_port.arn}",
-          SERVER_KEY = "${data.aws_ssm_parameter.fargate_demo_key.arn}",
-          SERVER_CERT = "${data.aws_ssm_parameter.fargate_demo_cert.arn}"
-        }
-      ],
+      # secrets = [
+      #   {
+      #     SERVER_PORT = "${data.aws_ssm_parameter.fargate_demo_port.arn}",
+      #     SERVER_KEY = "${data.aws_ssm_parameter.fargate_demo_key.arn}",
+      #     SERVER_CERT = "${data.aws_ssm_parameter.fargate_demo_cert.arn}"
+      #   }
+      # ],
       portMappings = [
         {
           containerPort = tonumber(data.aws_ssm_parameter.fargate_demo_port.value)
+        }
+      ],
+      secrets = [
+        {
+          name = "SERVER_PORT",
+          valueFrom = "${data.aws_ssm_parameter.fargate_demo_port.arn}"
+        }
+      ],
+      secrets = [
+        {
+          name = "SERVER_KEY",
+          valueFrom = "${data.aws_ssm_parameter.fargate_demo_key.arn}"
+        }
+      ],
+      secrets = [
+        {
+          name = "SERVER_CERT",
+          valueFrom = "${data.aws_ssm_parameter.fargate_demo_cert.arn}"
         }
       ],
       logConfiguration = {
