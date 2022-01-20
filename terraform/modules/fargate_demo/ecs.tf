@@ -180,7 +180,7 @@ resource "aws_appautoscaling_policy" "fargate_demo_ecs_cpu" {
   service_namespace  = aws_appautoscaling_target.fargate_demo_ecs.service_namespace
 
   target_tracking_scaling_policy_configuration {
-    target_value = 50
+    target_value = 25
 
     predefined_metric_specification {
       predefined_metric_type = "ECSServiceAverageCPUUtilization"
