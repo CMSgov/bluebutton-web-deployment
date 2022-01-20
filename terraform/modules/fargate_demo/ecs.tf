@@ -112,7 +112,6 @@ resource "aws_ecs_task_definition" "fargate_demo" {
   requires_compatibilities = ["FARGATE"]
   network_mode = "awsvpc"
 
-  #"containerPort": "${data.aws_ssm_parameter.fargate_demo_port.value}"
   container_definitions = jsonencode([
     {
       name      = "${var.namespace}-${var.env}"
@@ -120,13 +119,6 @@ resource "aws_ecs_task_definition" "fargate_demo" {
       cpu       = 256
       memory    = 512
       essential = true
-      # secrets = [
-      #   {
-      #     SERVER_PORT = "${data.aws_ssm_parameter.fargate_demo_port.arn}",
-      #     SERVER_KEY = "${data.aws_ssm_parameter.fargate_demo_key.arn}",
-      #     SERVER_CERT = "${data.aws_ssm_parameter.fargate_demo_cert.arn}"
-      #   }
-      # ],
       portMappings = [
         {
           containerPort = tonumber(data.aws_ssm_parameter.fargate_demo_port.value)
