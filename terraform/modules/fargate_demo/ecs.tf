@@ -97,7 +97,8 @@ resource "aws_iam_policy" "fargate_demo_ecs_ssm" {
         Resource = [
           "${data.aws_ssm_parameter.fargate_demo_port.arn}",
           "${data.aws_ssm_parameter.fargate_demo_key.arn}",
-          "${data.aws_ssm_parameter.fargate_demo_cert.arn}"
+          "${data.aws_ssm_parameter.fargate_demo_cert.arn}",
+          "${data.aws_ssm_parameter.fargate_demo_cpu.arn}"
         ]
       }
     ]
