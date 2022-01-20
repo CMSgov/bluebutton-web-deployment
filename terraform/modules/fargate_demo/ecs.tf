@@ -44,6 +44,11 @@ resource "aws_ecs_service" "fargate_demo" {
   desired_count   = 2
   launch_type     = "FARGATE"
 
+  deployment_circuit_breaker {
+    enable   = true
+    rollback = true
+  }
+
   load_balancer {
     target_group_arn = aws_lb_target_group.fargate_demo_lb.arn
     container_name   = "${var.namespace}-${var.env}"
