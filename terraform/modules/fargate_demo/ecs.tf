@@ -112,8 +112,8 @@ resource "aws_iam_role_policy_attachment" "fargate_demo_ecs_ssm" {
 resource "aws_ecs_task_definition" "fargate_demo" {
   family = "${var.namespace}-${var.env}"
   execution_role_arn = aws_iam_role.fargate_demo_ecs.arn
-  cpu = 256
-  memory = 512
+  cpu = 512
+  memory = 1024
   requires_compatibilities = ["FARGATE"]
   network_mode = "awsvpc"
 
@@ -121,8 +121,8 @@ resource "aws_ecs_task_definition" "fargate_demo" {
     {
       name      = "${var.namespace}-${var.env}"
       image     = "${aws_ecr_repository.fargate_demo.repository_url}:latest"
-      cpu       = 256
-      memory    = 512
+      cpu       = 512
+      memory    = 1024
       essential = true
       portMappings = [
         {

@@ -68,7 +68,8 @@ resource "aws_lb_target_group" "fargate_demo_lb" {
   health_check {
     path                = "/health"
     protocol            = "HTTPS"
-    healthy_threshold   = 5
-    unhealthy_threshold = 2
+    healthy_threshold   = 3
+    unhealthy_threshold = 3
+    timeout             = 10
   }
 }
