@@ -149,3 +149,7 @@ resource "aws_ecs_task_definition" "fargate_demo" {
     }
   ])
 }
+
+resource "aws_cloudwatch_log_group" "fargate_demo" {
+  name = "/ecs/${var.namespace}-${var.env}"
+}
