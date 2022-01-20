@@ -141,6 +141,10 @@ resource "aws_ecs_task_definition" "fargate_demo" {
         {
           name = "SERVER_CERT",
           valueFrom = data.aws_ssm_parameter.fargate_demo_cert.arn
+        },
+        {
+          name = "SERVER_CPU_ENDPOINT_ITERATIONS",
+          valueFrom = data.aws_ssm_parameter.fargate_demo_cpu.arn
         }
       ],
       logConfiguration = {

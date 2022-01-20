@@ -19,6 +19,11 @@ data "aws_ssm_parameter" "fargate_demo_cert" {
   name = "/bb2/test/python-simple-https-server/server-cert"
 }
 
+data "aws_ssm_parameter" "fargate_demo_cpu" {
+  name = "/bb2/test/python-simple-https-server/server-cpu-endpoint-iterations"
+}
+
+
 # Data sources for load balancer
 
 data "aws_subnet_ids" "fargate_demo_lb" {
