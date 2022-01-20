@@ -158,3 +158,27 @@ resource "aws_ecs_task_definition" "fargate_demo" {
 resource "aws_cloudwatch_log_group" "fargate_demo" {
   name = "/ecs/${var.namespace}-${var.env}"
 }
+
+resource "aws_appautoscaling_target" "fargate_demo_ecs" {
+  max_capacity       = 6
+  min_capacity       = 2
+  resource_id        = "service/${aws_ecs_cluster.fargate_demo.name}/${aws_ecs_service.fargate_demo.name}"
+  scalable_dimension = "ecs:service:DesiredCount"
+  service_namespace  = "ecs"
+}
+
+resource "aws_appautoscaling_policy" "fargate_demo_ecs_cpu" {
+  name               = "${var.namespace}-${var.env}"
+  policy_type        = "TargetTrackingScaling"
+  resource_id        = aws_appautoscaling_target.fargate_demo_ecs.resource_id
+  scalable_dimension = aws_appautoscaling_target.fargate_demo_ecs.scalable_dimension
+  service_namespace  = aws_appautoscaling_target.fargate_demo_ecs.service_namespace
+
+  target_tracking_scaling_policy_configuration {
+    target_value = 50
+
+    predefined_metric_specification {
+      predefined_metric_type = "ECSServiceAverageCPUUtilization"
+    }
+  }
+}
