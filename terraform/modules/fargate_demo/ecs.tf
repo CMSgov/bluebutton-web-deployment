@@ -44,6 +44,11 @@ resource "aws_ecs_service" "fargate_demo" {
   desired_count   = 2
   launch_type     = "FARGATE"
 
+  deployment_circuit_breaker {
+    enable   = true
+    rollback = true
+  }
+
   load_balancer {
     target_group_arn = aws_lb_target_group.fargate_demo_lb.arn
     container_name   = "${var.namespace}-${var.env}"
@@ -127,15 +132,15 @@ resource "aws_ecs_task_definition" "fargate_demo" {
       secrets = [
         {
           name = "SERVER_PORT",
-          valueFrom = "${data.aws_ssm_parameter.fargate_demo_port.arn}"
+          valueFrom = data.aws_ssm_parameter.fargate_demo_port.arn
         },
         {
           name = "SERVER_KEY",
-          valueFrom = "${data.aws_ssm_parameter.fargate_demo_key.arn}"
+          valueFrom = data.aws_ssm_parameter.fargate_demo_key.arn
         },
         {
           name = "SERVER_CERT",
-          valueFrom = "${data.aws_ssm_parameter.fargate_demo_cert.arn}"
+          valueFrom = data.aws_ssm_parameter.fargate_demo_cert.arn
         }
       ],
       logConfiguration = {
@@ -148,4 +153,8 @@ resource "aws_ecs_task_definition" "fargate_demo" {
       }
     }
   ])
+}
+
+resource "aws_cloudwatch_log_group" "fargate_demo" {
+  name = "/ecs/${var.namespace}-${var.env}"
 }

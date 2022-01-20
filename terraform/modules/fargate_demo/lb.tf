@@ -64,4 +64,11 @@ resource "aws_lb_target_group" "fargate_demo_lb" {
   protocol    = "HTTPS"
   target_type = "ip"
   vpc_id      = data.aws_vpc.fargate_demo.id
+
+  health_check {
+    path                = "/health"
+    protocol            = "HTTPS"
+    healthy_threshold   = 5
+    unhealthy_threshold = 2
+  }
 }
