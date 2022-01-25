@@ -184,6 +184,9 @@ pipeline {
 
     // terminate the canary instance used for pre-deploy migrations
     stage("Terminate canary after migrations finish") {
+      when {
+        expression { params.APP_MIGRATIONS == "Pre-deploy" }
+      }
       steps {
         script {
           CANARY_INSTANCE_ID = sh(returnStdout: true, script: "aws ec2 describe-instances \
