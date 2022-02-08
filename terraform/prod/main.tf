@@ -47,5 +47,5 @@ module "cloudwatch_alarms_elb_http" {
 module "iam_param_store" {
   source = "../modules/iam_param_store"
 
-  env = var.env
+  env = lower(var.env)
 }
