@@ -43,3 +43,9 @@ module "cloudwatch_alarms_elb_http" {
   alarm_elb_no_backend_period       = var.alarm_elb_no_backend_period
   alarm_elb_no_backend_threshold    = var.alarm_elb_no_backend_threshold
 }
+
+module "iam_param_store" {
+  source = "../modules/iam_param_store"
+
+  env = var.env
+}
