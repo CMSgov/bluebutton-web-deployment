@@ -65,7 +65,6 @@ pipeline {
       steps {
         sh """
           packer build -color=false \
-            -var 'vault_password_file=${VAULT_PASSWORD}' \
             -var 'source_ami=${SOURCE_AMI}' \
             -var 'release_version=${APP_REPO_BRANCH}' \
             -var 'git_branch=${APP_REPO_BRANCH}' \
