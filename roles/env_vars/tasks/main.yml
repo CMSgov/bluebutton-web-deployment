@@ -9,7 +9,7 @@
     group: "{{ app_group }}"
     mode: 0640
 
-- name: Copy certs from vault to target
+- name: Copy certs from parameter store to target
   become_user: "{{ remote_admin_account }}"
   become: yes
   copy:
