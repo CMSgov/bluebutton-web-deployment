@@ -11,7 +11,8 @@
     splunk_target_layer: "app"
   vars_files:
     - "./../../vars/common.yml"
-    - "./../../vars/env/shared/env.yml"
+    # - "./../../vars/env/shared/env.yml"
+    - "./../../vault/env/shared/vault.yml"
     - "./../../vars/all_var.yml"
   roles:
     - ../../roles/amzn2_base
