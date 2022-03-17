@@ -16,15 +16,21 @@
       - libjpeg-turbo-devel
       - nginx
       - ansible
-      - python2-boto3
-      - python2-botocore
       - amazon-cloudwatch-agent
-- name: Install uwsgi boto3 and botocore via pip
+- name: Install uwsgi via pip
   become: yes
   become_user: "{{ remote_admin_account }}"
   pip:
     name: 
       - uwsgi
+    executable: pip3
+    umask: "0022"
+- name: Install boto3 and botocore via pip
+  become: yes
+  become_user: "{{ remote_admin_account }}"
+  pip:
+    chdir: /usr/lib/python2.7/site-packages/
+    name: 
       - boto3
       - botocore
     executable: pip3
