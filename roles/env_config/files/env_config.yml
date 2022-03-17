@@ -23,6 +23,8 @@
       register: root_lookup
 
     - name: Load vars from yaml files
+      vars:
+        ansible_python_interpreter: /usr/bin/python3
       include_vars:
         file: "{{ root_lookup.files[0].path | dirname }}/{{ item }}"
       with_items: "{{ var_files }}"

@@ -1,5 +1,7 @@
 ---
 - name: Write .env file
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
   become_user: "{{ remote_admin_account }}"
   become: yes
   template:
@@ -10,6 +12,8 @@
     mode: 0640
 
 - name: Copy certs from parameter store to target
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
   become_user: "{{ remote_admin_account }}"
   become: yes
   copy:
