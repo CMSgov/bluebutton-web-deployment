@@ -28,4 +28,6 @@
     executable: pip3
     umask: "0022"
 - name: add pip3 ansible path to PATH
+  become: yes
+  become_user: "{{ remote_admin_account }}"
   ansible.builtin.command: export PATH=$PATH:/usr/local/bin/
