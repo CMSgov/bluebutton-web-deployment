@@ -59,7 +59,6 @@ pipeline {
       steps {
         sh """
           packer build -color=false \
-            -var 'vault_password_file=${VAULT_PASSWORD}' \
             -var 'source_ami=${SOURCE_AMI}' \
             packer/build_platinum_ami_amzn2.json
         """
