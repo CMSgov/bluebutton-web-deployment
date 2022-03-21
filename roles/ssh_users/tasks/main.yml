@@ -1,5 +1,17 @@
 ---
 
+- name: "Create a List for SSH Users"
+  set_fact:
+    ssh_users:  [ { "{{ lookup('aws_ssm', '/bb2/test/app/ssh_don_seymour', region='us-east-1') }}" }, 
+                  { "{{ lookup('aws_ssm', '/bb2/test/app/ssh_david_tisza', region='us-east-1') }}" }, 
+                  { "{{ lookup('aws_ssm', '/bb2/test/app/ssh_nicholas_bragdon', region='us-east-1') }} " }, 
+                  { "{{ lookup('aws_ssm', '/bb2/test/app/ssh_james_fuqian', region='us-east-1') }}" }
+                ]
+
+- name: "Print the ssh_user records after getting from aws_ssm"
+  debug: 
+    msg: "{{ ssh_users }}"
+
 - name: "Add user"
   user:
     name: "{{ item.username }}"
