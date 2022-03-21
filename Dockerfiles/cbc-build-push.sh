@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-DOCKER_TAG=${1:-py37-an27-tf12}
+DOCKER_TAG=${1:-py37-an27-tf12-boto3}
 
 docker build --file Dockerfile.cbc-build \
   --build-arg PYTHON_VERSION=${2:-3.7} \
