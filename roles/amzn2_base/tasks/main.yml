@@ -27,7 +27,7 @@
       - botocore
     executable: pip3
     umask: "0022"
-- name: add pip3 ansible path to PATH
+- name: Add pip3 ansible path to PATH
+  become_user: "{{ remote_admin_account }}" 
   become: yes
-  become_user: "{{ remote_admin_account }}"
-  ansible.builtin.command: export PATH=$PATH:/usr/local/bin/
+  command: "export PATH=$PATH:/usr/local/bin/"
