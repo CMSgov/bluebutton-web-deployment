@@ -147,4 +147,4 @@
   new_relic_license_key: "{{ env_new_relic_license_key }}"
 
   # SSH developer user/pub_key
-  ssh_users: "{{ env_ssh_users }}"
+  sshfile: "{{ env_sshfile }}"
