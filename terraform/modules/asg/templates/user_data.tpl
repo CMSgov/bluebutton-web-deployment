@@ -2,6 +2,8 @@
 
 set -e
 
+export PATH=$PATH:/usr/local/bin
+
 exec > >(tee -a /var/log/user_data.log 2>&1)
 
 ansible-playbook \
