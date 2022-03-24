@@ -9,20 +9,6 @@
     group: "{{ app_group }}"
     mode: 0640
 
-- name: Copy certs from parameter store to target
-  become_user: "{{ remote_admin_account }}"
-  become: yes
-  copy:
-    content: "{{ item.content }}"
-    dest: "/etc/ssl/certs/{{ item.name }}"
-    mode: "{{ item.mode }}"
-    owner: "root"
-    group: "root"
-  no_log: True
-  with_items:
-    - { "name": "cert.pem", "content": "{{ www_cert_file }}\n{{ www_fullchain_file }}", "mode": "0640" }
-    - { "name": "key.pem", "content": "{{ www_key_file }}", "mode": "0640" }
-
 - name: "Copy cert({{ app_fhir_cert_name }}) to certstore"
   become_user: "{{ remote_admin_account }}"
   become: yes
