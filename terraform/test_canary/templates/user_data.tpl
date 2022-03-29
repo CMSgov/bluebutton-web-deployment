@@ -10,6 +10,10 @@ aws secretsmanager get-secret-value --secret-id /bb2/test/app/www_key_file --que
 
 aws secretsmanager get-secret-value --secret-id /bb2/test/app/www_combined_crt --query 'SecretString' --output text |base64 -d > /etc/ssl/certs/cert.pem
 
+aws secretsmanager get-secret-value --secret-id /bb2/test/app/fhir_cert_pem --query 'SecretString' --output text |base64 -d > /var/pyapps/hhs_o_server/certstore/ca.cert.pem
+
+aws secretsmanager get-secret-value --secret-id /bb2/test/app/fhir_key_pem --query 'SecretString' --output text |base64 -d > /var/pyapps/hhs_o_server/certstore/ca.key.nocrypt.pem
+
 ansible-playbook \
   -i "localhost" \
   -e "env=${env}" \

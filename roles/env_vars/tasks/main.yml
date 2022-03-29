@@ -9,26 +9,6 @@
     group: "{{ app_group }}"
     mode: 0640
 
-- name: "Copy cert({{ app_fhir_cert_name }}) to certstore"
-  become_user: "{{ remote_admin_account }}"
-  become: yes
-  copy:
-    content: "{{ app_fhir_cert }}"
-    dest: "{{ app_pyapp_home }}/certstore/{{ app_fhir_cert_name }}"
-    mode: 0640
-    owner: "{{ app_pyapps_user }}"
-    group: "{{ app_group }}"
-
-- name: "Copy key({{ app_fhir_key_name }}) to certstore"
-  become_user: "{{ remote_admin_account }}"
-  become: yes
-  copy:
-    content: "{{ app_fhir_key }}"
-    dest: "{{ app_pyapp_home }}/certstore/{{ app_fhir_key_name }}"
-    mode: 0640
-    owner: "{{ app_pyapps_user }}"
-    group: "{{ app_group }}"
-
 - name: Restart uwsgi
   become_user: "{{ remote_admin_account }}"
   become: yes
