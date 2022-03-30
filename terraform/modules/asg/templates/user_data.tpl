@@ -14,6 +14,8 @@ aws secretsmanager get-secret-value --secret-id /bb2/${env}/app/fhir_cert_pem --
 
 aws secretsmanager get-secret-value --secret-id /bb2/${env}/app/fhir_key_pem --query 'SecretString' --output text |base64 -d > /var/pyapps/hhs_o_server/certstore/ca.key.nocrypt.pem
 
+chown pyapps:www-data /var/pyapps/hhs_o_server/certstore/ca.* && chmod 0640 /var/pyapps/hhs_o_server/certstore/ca.*
+
 ansible-playbook \
   -i "localhost" \
   -e "env=${env}" \
