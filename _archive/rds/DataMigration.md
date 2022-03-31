@@ -38,7 +38,7 @@ Postgres database instance to Postgres running in AWS RDS.
 
 Gather information for the script from:
 
-- hhs_ansible env.yml or vault.yml files
+- hhs_ansible env.yml file
 - RDS Console
 - AWS Console
 
@@ -81,7 +81,7 @@ Gather information for the script from:
 
     /root/migration/dump_n_restore.sh
     
-* update the hhs_ansible var/env.yml and env/vault.yml files with the settings 
+* update the hhs_ansible var/env.yml file with the settings 
 used to connect to the RDS instance.
 * run the ansible refresh_code script to update the appserver with new settings.
 
