@@ -144,7 +144,7 @@
   django_logging: "{{ env_django_logging }}"
 
   # new relic
-  new_relic_license_key: "{{ vault_env_new_relic_license_key }}"
+  new_relic_license_key: "{{ env_new_relic_license_key }}"
 
   # SSH developer user/pub_key
-  ssh_users: "{{ vault_env_ssh_users }}"
+  sshfile: "{{ env_sshfile }}"

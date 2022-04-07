@@ -10,7 +10,6 @@ pipeline {
     AWS_ACCESS_KEY_ID = credentials("bb2-aws-key-id")
     AWS_SECRET_ACCESS_KEY = credentials("bb2-aws-key-secret")
     AWS_DEFAULT_REGION = "us-east-1"
-    VAULT_PASSWORD = credentials("bb2-vault-password")
   }
 
   parameters {
@@ -60,7 +59,6 @@ pipeline {
       steps {
         sh """
           packer build -color=false \
-            -var 'vault_password_file=${VAULT_PASSWORD}' \
             -var 'source_ami=${SOURCE_AMI}' \
             packer/build_platinum_ami_amzn2.json
         """

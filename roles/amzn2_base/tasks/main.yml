@@ -15,12 +15,15 @@
       - zlib-devel
       - libjpeg-turbo-devel
       - nginx
-      - ansible
       - amazon-cloudwatch-agent
-- name: Install uwsgi via pip
+- name: Install uwsgi ansible boto3 and botocore via pip3
   become: yes
   become_user: "{{ remote_admin_account }}"
   pip:
-    name: uwsgi
+    name: 
+      - uwsgi
+      - ansible
+      - boto3
+      - botocore
     executable: pip3
     umask: "0022"

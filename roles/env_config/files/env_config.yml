@@ -11,7 +11,6 @@
     splunk_target_layer: "app"
     var_files:
       - "vars/common.yml"
-      - "vault/env/{{ env }}/vault.yml"
       - "vars/env/{{ env }}/env.yml"
       - "vars/all_var.yml"
 
