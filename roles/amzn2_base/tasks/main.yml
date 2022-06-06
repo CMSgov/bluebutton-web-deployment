@@ -3,6 +3,7 @@
   become_user: "{{ remote_admin_account }}"
   become: yes
   command: "yum update-minimal --security -y"
+  debugger: always
 - name: Install dependencies
   become: yes
   become_user: "{{ remote_admin_account }}"
