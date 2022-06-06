@@ -40,7 +40,7 @@ platinum_source: "amzn2"
 
 #Python Settings
 python_bin_dir: "/usr/bin/"
-python_ver: "{{ '3.8' if platinum_source == 'amzn2' else '3.6' }}"
+python_ver: "{{ '3.7' if platinum_source == 'amzn2' else '3.6' }}"
 app_py_virtual_env: "/var/virtualenv/{{ project_dir }}"
 
 # Virtual Environment base location - slash terminated
