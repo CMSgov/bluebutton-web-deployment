@@ -1,6 +1,7 @@
 ---
 - name: Provision server
   hosts: all
+  debugger: always
   remote_user: ec2-user
   gather_facts: no
   vars:
