@@ -66,17 +66,17 @@ pipeline {
     }
   }
 
-  post {
-    success {
-      script {
-        helpers.slackNotify("SUCCESS", "good")
-      }
-    }
+  // post {
+  //   success {
+  //     script {
+  //       helpers.slackNotify("SUCCESS", "good")
+  //     }
+  //   }
 
-    failure {
-      script {
-        helpers.slackNotify("FAILURE", "bad")
-      }
-    }
-  }
+  //   failure {
+  //     script {
+  //       helpers.slackNotify("FAILURE", "bad")
+  //     }
+  //   }
+  // }
 }
