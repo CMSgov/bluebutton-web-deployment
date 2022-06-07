@@ -5,7 +5,6 @@
   template:
     src: templates/cwagent.json.j2
     dest: /tmp/cwagent-base.json
-  
 
 # Installed by default in Amazon Linux 2 Platinum
 - name: Install cloudwatch agent from RPM
@@ -16,7 +15,7 @@
     state: present
     disable_gpg_check: true
   when: platinum_source != "amzn2"
-
+  
 - name: Start cloudwatch agent with base config
   become_user: root
   become: yes
