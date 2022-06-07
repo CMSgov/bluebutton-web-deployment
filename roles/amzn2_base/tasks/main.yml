@@ -20,7 +20,7 @@
       - uwsgi
       - ansible
       - boto3
-      - botocore
+      # - botocore
     executable: pip3
     umask: "0022"
   become: yes
