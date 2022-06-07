@@ -19,7 +19,7 @@
     name: 
       - uwsgi
       - ansible
-      - boto3
+      # - boto3
       # - botocore
     executable: pip3
     umask: "0022"
