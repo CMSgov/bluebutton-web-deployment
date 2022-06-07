@@ -21,6 +21,7 @@
       - ansible
       - boto3
       - botocore
+      - jinja2
     executable: pip3
     umask: "0022"
   become: yes

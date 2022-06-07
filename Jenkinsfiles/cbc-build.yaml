@@ -8,4 +8,4 @@ spec:
       command: ["tail", "-f", "/dev/null"]
       imagePullPolicy: Always
   nodeSelector:
-      Agents: true
+    Agents: true
