@@ -2,7 +2,8 @@
 - name: Apply security patches
   become: true
   command: "yum update-minimal --security -y"
-  warn: false
+  args:
+    warn: false
   register: yum_output
 - name: Show yum security update output
   debug:
