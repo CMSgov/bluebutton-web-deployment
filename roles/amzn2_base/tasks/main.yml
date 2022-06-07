@@ -5,9 +5,6 @@
   args:
     warn: false
   register: yum_output
-- name: Show yum security update output
-  debug:
-    var: yum_output
 - name: Install dependencies
   become: yes
   yum:
