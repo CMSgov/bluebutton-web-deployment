@@ -1,6 +1,6 @@
 ---
 - name: Apply security patches
-  become: true
+  become: yes
   command: "yum update-minimal --security -y"
   args:
     warn: false
@@ -9,7 +9,7 @@
   debug:
     var: yum_output
 - name: Install dependencies
-  become: true
+  become: yes
   yum:
     name:
       - gcc
@@ -21,7 +21,7 @@
       - nginx
       - amazon-cloudwatch-agent
 - name: Install uwsgi ansible boto3 and botocore via pip3
-  become: true
+  become: yes
   pip:
     name: 
       - uwsgi
