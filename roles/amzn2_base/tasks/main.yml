@@ -18,7 +18,7 @@
   pip:
     name: 
       - uwsgi
-      - ansible
+      # - ansible
       # - boto3
       # - botocore
     executable: pip3
