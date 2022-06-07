@@ -2,9 +2,6 @@
 - name: Apply security patches
   command: "yum update-minimal --security -y"
   become: yes
-  # args:
-  #   warn: false
-  # register: yum_output
 - name: Install dependencies
   yum:
     name:

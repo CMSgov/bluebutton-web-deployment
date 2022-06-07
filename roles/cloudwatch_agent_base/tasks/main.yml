@@ -1,19 +1,19 @@
 ---
 - name: Copy cloudwatch agent base config file
-  become: true
   template:
     src: templates/cwagent.json.j2
     dest: /tmp/cwagent-base.json
+  become: yes
 
 # Installed by default in Amazon Linux 2 Platinum
 - name: Install cloudwatch agent from RPM
-  become: true
   yum:
     name: https://s3.amazonaws.com/amazoncloudwatch-agent/redhat/amd64/latest/amazon-cloudwatch-agent.rpm
     state: present
     disable_gpg_check: true
   when: platinum_source != "amzn2"
+  become: yes
 
 - name: Start cloudwatch agent with base config
-  become: true
   shell: "/opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c file:/tmp/cwagent-base.json -s"
+  become: yes
