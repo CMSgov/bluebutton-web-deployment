@@ -1,15 +1,12 @@
 ---
 - name: Apply security patches
-  yum:
-    security: yes
-    state: latest
-  # check_mode: yes
-  register: yum_output
   become: true
-  # command: "yum update-minimal --security -y"
+  command: "yum update-minimal --security -y"
+  warn: false
+  register: yum_output
 - name: Show yum security update output
   debug:
-    msg: "{{ yum_output.stdout }}"
+    var: yum_output
 - name: Install dependencies
   become: true
   yum:
