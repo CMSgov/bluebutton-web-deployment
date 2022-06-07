@@ -1,13 +1,9 @@
 ---
 - name: Apply security patches
-  # become_user: "{{ remote_admin_account }}"
-  become_user: root
   become: yes
   command: "yum update-minimal --security -y"
 - name: Install dependencies
   become: yes
-  # become_user: "{{ remote_admin_account }}"
-  become_user: root
   yum:
     name:
       - gcc
@@ -20,8 +16,6 @@
       - amazon-cloudwatch-agent
 - name: Install uwsgi ansible boto3 and botocore via pip3
   become: yes
-  # become_user: "{{ remote_admin_account }}"
-  become_user: root
   pip:
     name: 
       - uwsgi
