@@ -70,6 +70,7 @@
     group: "{{ app_group }}"
     mode: 0755
 
+# upgrade pip
 - name: "upgrade pip"
   shell: |
     pip install --upgrade pip
