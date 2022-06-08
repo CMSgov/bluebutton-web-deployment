@@ -13,12 +13,19 @@
       - libjpeg-turbo-devel
       - nginx
       - amazon-cloudwatch-agent
+      - amazon-linux-extras
+  become: yes
+
+- name: enable python38 from amazon-extras repo
+  command: "/usr/bin/amazon-linux-extras enable python3.8"
   become: yes
 
 - name: install python38 from amazon-extras repo
-  shell: "/usr/bin/amazon-linux-extras enable python3.8 && /usr/bin/yum install python3.8"
+  yum: 
+    name:
+      - python3.8
   become: yes
-  
+
 - name: Install uwsgi ansible boto3 and botocore via pip3
   pip:
     name: 
