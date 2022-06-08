@@ -3,6 +3,9 @@
   become_user: "{{ remote_admin_account }}"
   become: yes
   shell: "cd /var/virtualenv; {{ python_bin_dir }}/python{{ python_ver }} -m venv {{ project_dir }}"
+  register: virtenv
+
+- debug: var=virtenv.stdout_lines
 
 - name: Ensure group "www-data" exists
   become_user: "{{ remote_admin_account }}"
@@ -70,10 +73,10 @@
     group: "{{ app_group }}"
     mode: 0755
 
-# upgrade pip
 - name: "upgrade pip"
   shell: |
     pip install --upgrade pip
+  become: yes
   register: pip_upgrade
 
 - debug: var=pip_upgrade.stdout_lines
