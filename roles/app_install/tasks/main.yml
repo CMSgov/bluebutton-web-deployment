@@ -70,6 +70,13 @@
     group: "{{ app_group }}"
     mode: 0755
 
+- name: "upgrade pip"
+  shell: |
+    pip install --upgrade pip
+  register: pip_upgrade
+
+- debug: var=pip_upgrade.stdout_lines
+
 - name: "install requirements"
   become_user: "{{ remote_admin_account }}"
   become: yes
