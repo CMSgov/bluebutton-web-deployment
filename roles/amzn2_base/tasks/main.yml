@@ -14,13 +14,13 @@
       - nginx
       - amazon-cloudwatch-agent
   become: yes
-# - name: Install uwsgi ansible boto3 and botocore via pip3
-#   pip:
-#     name: 
-#       - uwsgi
-#       # - ansible
-#       # - boto3
-#       # - botocore
-#     executable: pip3
-#     umask: "0022"
-#   become: yes
+- name: Install uwsgi ansible boto3 and botocore via pip3
+  pip:
+    name: 
+      - uwsgi
+      - ansible
+      - boto3
+      - botocore
+    executable: pip3
+    umask: "0022"
+  become: yes
