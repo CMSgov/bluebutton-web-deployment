@@ -14,6 +14,11 @@
       - nginx
       - amazon-cloudwatch-agent
   become: yes
+
+- name: install python38 from amazon-extras repo
+  shell: "/usr/bin/amazon-linux-extras enable python3.8 && /usr/bin/yum install python3.8"
+  become: yes
+  
 - name: Install uwsgi ansible boto3 and botocore via pip3
   pip:
     name: 
