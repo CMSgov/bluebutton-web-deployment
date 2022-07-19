@@ -3,10 +3,6 @@
   become_user: "{{ remote_admin_account }}"
   become: yes
   command: "yum update-minimal --security -y"
-- name: Apply openssl patch - CVE-2022-1292
-  become_user: "{{ remote_admin_account }}"
-  become: yes
-  command: "yum update openssl"
 - name: Install dependencies
   become: yes
   become_user: "{{ remote_admin_account }}"
