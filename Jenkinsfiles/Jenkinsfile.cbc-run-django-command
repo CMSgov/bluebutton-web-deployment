@@ -59,14 +59,6 @@ pipeline {
       }
     }
 
-    stage("source venv") {
-      steps {
-        sh """
-        source /var/virtualenv/hhs_o_server/bin/activate
-        """
-      }
-    }
-
     stage("Run Django Command") {
       steps {
         sh """
