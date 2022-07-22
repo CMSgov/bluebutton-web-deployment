@@ -62,6 +62,7 @@ pipeline {
     stage("Run Django Command") {
       steps {
         sh """
+        source /var/virtualenv/hhs_o_server/bin/activate && \
         EC2_INI_PATH=inventory/config/${APP_ENV}.ini \
         ansible-playbook playbook/run_django_command/main.yml \
           --private-key '${SSH_KEY}' \
