@@ -11,6 +11,8 @@ pipeline {
     AWS_SECRET_ACCESS_KEY = credentials("bb2-aws-key-secret")
     AWS_DEFAULT_REGION = "us-east-1"
     SSH_KEY = credentials("bb2-ssh-key-${params.APP_ENV}")
+    DJANGO_DOTENV_FILE = "/var/pyapps/hhs_o_server/.env"
+    DJANGO_SETTINGS_MODULE = "hhs_oauth_server.settings.base"
   }
 
   parameters {
@@ -62,8 +64,6 @@ pipeline {
     stage("Run Django Command") {
       steps {
         sh """
-        DJANGO_DOTENV_FILE="/var/pyapps/hhs_o_server/.env"
-        DJANGO_SETTINGS_MODULE=hhs_oauth_server.settings.base
         EC2_INI_PATH=inventory/config/${APP_ENV}.ini \
         ansible-playbook playbook/run_django_command/main.yml \
           --private-key '${SSH_KEY}' \
