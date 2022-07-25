@@ -62,12 +62,16 @@ pipeline {
     stage("Run Django Command") {
       steps {
         sh """
+        DJANGO_DOTENV_FILE="/var/pyapps/hhs_o_server/.env"
+        DJANGO_SETTINGS_MODULE=hhs_oauth_server.settings.base
         EC2_INI_PATH=inventory/config/${APP_ENV}.ini \
         ansible-playbook playbook/run_django_command/main.yml \
           --private-key '${SSH_KEY}' \
           -i '${ANSIBLE_INVENTORY}' \
           -l '${ANSIBLE_SUBSET}' \
           -e 'env=${APP_ENV}' \
+          -e 'DJANGO_DOTENV_FILE=${DJANGO_DOTENV_FILE}' \
+          -e 'DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}' \
           -e 'django_command="${DJANGO_COMMAND}"'
         """
       }
