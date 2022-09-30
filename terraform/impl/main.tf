@@ -4,6 +4,7 @@ provider "aws" {
 
 resource "aws_sns_topic" "cloudwatch_alarms_topic" {
   name = "bluebutton-${var.stack}-cloudwatch-alarms"
+  kms_master_key_id = "alias/aws/sns"
 }
 
 module "asg" {
