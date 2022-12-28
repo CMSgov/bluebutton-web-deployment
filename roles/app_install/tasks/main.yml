@@ -59,6 +59,27 @@
     force: yes
     clone: yes
 
+- name: "copy legacy css files from bluebutton-css repo to app directory"
+  become_user: "{{ remote_admin_acct }}"
+  become: yes
+  copy:
+    src: "{{ project_parent }}{{ common_project }}/hhs_oauth_server/bluebutton-css/legacy-preserved.css"
+    dest: "{{ project_parent }}{{ common_project }}/hhs_oauth_server/sitestatic/css/legacy-preserved.css"
+
+- name: "copy dist css files from bluebutton-css repo to app directory"
+  become_user: "{{ remote_admin_acct }}"
+  become: yes
+  copy:
+    src: "{{ project_parent }}{{ common_project }}/hhs_oauth_server/bluebutton-css/dist/sandbox-main.css"
+    dest: "{{ project_parent }}{{ common_project }}/hhs_oauth_server/sitestatic/css/sandbox-main.css"
+
+- name: "copy css files from bluebutton-css repo to app directory"
+  become_user: "{{ remote_admin_acct }}"
+  become: yes
+  copy:
+    src: "{{ project_parent }}{{ common_project }}/hhs_oauth_server/bluebutton-css/dist/static-main.css"
+    dest: "{{ project_parent }}{{ common_project }}/hhs_oauth_server/sitestatic/css/static-main.css"
+
 - name: "set permissions to application code ( {{ app_pyapps_user }}:{{ app_group }} )"
   become_user: "{{ remote_admin_account }}"
   become: yes
