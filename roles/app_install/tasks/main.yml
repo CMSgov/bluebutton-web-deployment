@@ -59,8 +59,7 @@
     force: yes
     clone: yes
 
-
-- name: "Upload/PUT legacy-preserved.css file to TEST content S3 bucket"
+- name: "Upload legacy-preserved.css file to TEST content S3 bucket"
   become_user: "{{ remote_admin_account }}"
   become: yes
   amazon.aws.aws_s3:
@@ -72,7 +71,7 @@
 - debug: msg="{{ putresult.msg }} and the S3 Object URL is {{putresult.url}}"
   when: putresult.changed
 
-- name: "Upload/PUT sandbox-main.css file to TEST content S3 bucket"
+- name: "Upload sandbox-main.css file to TEST content S3 bucket"
   become_user: "{{ remote_admin_account }}"
   become: yes
   amazon.aws.aws_s3:
@@ -84,7 +83,7 @@
 - debug: msg="{{ putresult.msg }} and the S3 Object URL is {{putresult.url}}"
   when: putresult.changed
 
-- name: "Upload/PUT static-main.css file to TEST content S3 bucket"
+- name: "Upload static-main.css file to TEST content S3 bucket"
   become_user: "{{ remote_admin_account }}"
   become: yes
   amazon.aws.aws_s3:
@@ -96,7 +95,7 @@
 - debug: msg="{{ putresult.msg }} and the S3 Object URL is {{putresult.url}}"
   when: putresult.changed
 
-- name: "Upload/PUT legacy-preserved.css file to IMPL content S3 bucket"
+- name: "Upload legacy-preserved.css file to IMPL content S3 bucket"
   become_user: "{{ remote_admin_account }}"
   become: yes
   amazon.aws.aws_s3:
@@ -108,7 +107,7 @@
 - debug: msg="{{ putresult.msg }} and the S3 Object URL is {{putresult.url}}"
   when: putresult.changed
 
-- name: "Upload/PUT sandbox-main.css file to IMPL content S3 bucket"
+- name: "Upload sandbox-main.css file to IMPL content S3 bucket"
   become_user: "{{ remote_admin_account }}"
   become: yes
   amazon.aws.aws_s3:
@@ -120,7 +119,7 @@
 - debug: msg="{{ putresult.msg }} and the S3 Object URL is {{putresult.url}}"
   when: putresult.changed
 
-- name: "Upload/PUT static-main.css file to IMPL content S3 bucket"
+- name: "Upload static-main.css file to IMPL content S3 bucket"
   become_user: "{{ remote_admin_account }}"
   become: yes
   amazon.aws.aws_s3:
@@ -132,7 +131,7 @@
 - debug: msg="{{ putresult.msg }} and the S3 Object URL is {{putresult.url}}"
   when: putresult.changed
 
-- name: "Upload/PUT legacy-preserved.css file to PROD content S3 bucket"
+- name: "Upload legacy-preserved.css file to PROD content S3 bucket"
   become_user: "{{ remote_admin_account }}"
   become: yes
   amazon.aws.aws_s3:
@@ -144,7 +143,7 @@
 - debug: msg="{{ putresult.msg }} and the S3 Object URL is {{putresult.url}}"
   when: putresult.changed
 
-- name: "Upload/PUT sandbox-main.css file to PROD content S3 bucket"
+- name: "Upload sandbox-main.css file to PROD content S3 bucket"
   become_user: "{{ remote_admin_account }}"
   become: yes
   amazon.aws.aws_s3:
@@ -156,7 +155,7 @@
 - debug: msg="{{ putresult.msg }} and the S3 Object URL is {{putresult.url}}"
   when: putresult.changed
 
-- name: "Upload/PUT static-main.css file to PROD content S3 bucket"
+- name: "Upload static-main.css file to PROD content S3 bucket"
   become_user: "{{ remote_admin_account }}"
   become: yes
   amazon.aws.aws_s3:
