@@ -59,26 +59,36 @@
     force: yes
     clone: yes
 
-- name: "copy legacy css files from bluebutton-css repo to app directory"
-  become_user: "{{ remote_admin_acct }}"
-  become: yes
-  copy:
+
+- name: "Upload/PUT legacy-preserved.css file to S3 bucket"
+  amazon.aws.aws_s3:
+    bucket: "{{ s3_storage_bucket_name }}"
+    mode: put
+    object: "static/legacy-preserved.css"
     src: "{{ project_parent }}{{ common_project }}/hhs_oauth_server/bluebutton-css/legacy-preserved.css"
-    dest: "{{ project_parent }}{{ common_project }}/hhs_oauth_server/sitestatic/css/legacy-preserved.css"
+  register: putresult
+- debug: msg="{{ putresult.msg }} and the S3 Object URL is {{putresult.url}}"
+  when: putresult.changed
 
-- name: "copy dist css files from bluebutton-css repo to app directory"
-  become_user: "{{ remote_admin_acct }}"
-  become: yes
-  copy:
-    src: "{{ project_parent }}{{ common_project }}/hhs_oauth_server/bluebutton-css/dist/sandbox-main.css"
-    dest: "{{ project_parent }}{{ common_project }}/hhs_oauth_server/sitestatic/css/sandbox-main.css"
+- name: "Upload/PUT sandbox-main.css file to S3 bucket"
+  amazon.aws.aws_s3:
+    bucket: "{{ s3_storage_bucket_name }}"
+    mode: put
+    object: "static/dist/sandbox-main.css"
+    src: "{{ project_parent }}{{ common_project }}/hhs_oauth_server/sitestatic/css/sandbox-main.css"
+  register: putresult
+- debug: msg="{{ putresult.msg }} and the S3 Object URL is {{putresult.url}}"
+  when: putresult.changed
 
-- name: "copy css files from bluebutton-css repo to app directory"
-  become_user: "{{ remote_admin_acct }}"
-  become: yes
-  copy:
-    src: "{{ project_parent }}{{ common_project }}/hhs_oauth_server/bluebutton-css/dist/static-main.css"
-    dest: "{{ project_parent }}{{ common_project }}/hhs_oauth_server/sitestatic/css/static-main.css"
+- name: "Upload/PUT static-main.css file to S3 bucket"
+  amazon.aws.aws_s3:
+    bucket: "{{ s3_storage_bucket_name }}"
+    mode: put
+    object: "static/dist/static-main.css"
+    src: "{{ project_parent }}{{ common_project }}/hhs_oauth_server/sitestatic/css/static-main.css"
+  register: putresult
+- debug: msg="{{ putresult.msg }} and the S3 Object URL is {{putresult.url}}"
+  when: putresult.changed
 
 - name: "set permissions to application code ( {{ app_pyapps_user }}:{{ app_group }} )"
   become_user: "{{ remote_admin_account }}"
