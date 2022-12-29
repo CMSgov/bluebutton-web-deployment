@@ -59,95 +59,103 @@
     force: yes
     clone: yes
 
-- name: "Upload legacy-preserved.css file to TEST content S3 bucket"
-  become_user: "{{ remote_admin_account }}"
-  become: yes
-  amazon.aws.aws_s3:
-    bucket: "{{ test_s3_storage_bucket_name }}"
-    mode: put
-    object: "static/legacy-preserved.css"
-    src: "{{ project_parent }}{{ common_project }}/hhs_oauth_server/bluebutton-css/legacy-preserved.css"
-  register: putresult
+- name: "Echo ansible version"
+  shell:
+    cmd: ansible --version
 
-- name: "Upload sandbox-main.css file to TEST content S3 bucket"
-  become_user: "{{ remote_admin_account }}"
-  become: yes
-  amazon.aws.aws_s3:
-    bucket: "{{ test_s3_storage_bucket_name }}"
-    mode: put
-    object: "static/dist/sandbox-main.css"
-    src: "{{ project_parent }}{{ common_project }}/hhs_oauth_server/sitestatic/css/sandbox-main.css"
-  register: putresult
+- name: "Display collection list"
+  shell:
+    cmd: ansible-galaxy collection list
 
-- name: "Upload static-main.css file to TEST content S3 bucket"
-  become_user: "{{ remote_admin_account }}"
-  become: yes
-  amazon.aws.aws_s3:
-    bucket: "{{ test_s3_storage_bucket_name }}"
-    mode: put
-    object: "static/dist/static-main.css"
-    src: "{{ project_parent }}{{ common_project }}/hhs_oauth_server/sitestatic/css/static-main.css"
-  register: putresult
+# - name: "Upload legacy-preserved.css file to TEST content S3 bucket"
+#   become_user: "{{ remote_admin_account }}"
+#   become: yes
+#   amazon.aws.aws_s3:
+#     bucket: "{{ test_s3_storage_bucket_name }}"
+#     mode: put
+#     object: "static/legacy-preserved.css"
+#     src: "{{ project_parent }}{{ common_project }}/hhs_oauth_server/bluebutton-css/legacy-preserved.css"
+#   register: putresult
 
-- name: "Upload legacy-preserved.css file to IMPL content S3 bucket"
-  become_user: "{{ remote_admin_account }}"
-  become: yes
-  amazon.aws.aws_s3:
-    bucket: "{{ impl_s3_storage_bucket_name }}"
-    mode: put
-    object: "static/legacy-preserved.css"
-    src: "{{ project_parent }}{{ common_project }}/hhs_oauth_server/bluebutton-css/legacy-preserved.css"
-  register: putresult
+# - name: "Upload sandbox-main.css file to TEST content S3 bucket"
+#   become_user: "{{ remote_admin_account }}"
+#   become: yes
+#   amazon.aws.aws_s3:
+#     bucket: "{{ test_s3_storage_bucket_name }}"
+#     mode: put
+#     object: "static/dist/sandbox-main.css"
+#     src: "{{ project_parent }}{{ common_project }}/hhs_oauth_server/sitestatic/css/sandbox-main.css"
+#   register: putresult
 
-- name: "Upload sandbox-main.css file to IMPL content S3 bucket"
-  become_user: "{{ remote_admin_account }}"
-  become: yes
-  amazon.aws.aws_s3:
-    bucket: "{{ impl_s3_storage_bucket_name }}"
-    mode: put
-    object: "static/dist/sandbox-main.css"
-    src: "{{ project_parent }}{{ common_project }}/hhs_oauth_server/sitestatic/css/sandbox-main.css"
-  register: putresult
-  
-- name: "Upload static-main.css file to IMPL content S3 bucket"
-  become_user: "{{ remote_admin_account }}"
-  become: yes
-  amazon.aws.aws_s3:
-    bucket: "{{ impl_s3_storage_bucket_name }}"
-    mode: put
-    object: "static/dist/static-main.css"
-    src: "{{ project_parent }}{{ common_project }}/hhs_oauth_server/sitestatic/css/static-main.css"
-  register: putresult
+# - name: "Upload static-main.css file to TEST content S3 bucket"
+#   become_user: "{{ remote_admin_account }}"
+#   become: yes
+#   amazon.aws.aws_s3:
+#     bucket: "{{ test_s3_storage_bucket_name }}"
+#     mode: put
+#     object: "static/dist/static-main.css"
+#     src: "{{ project_parent }}{{ common_project }}/hhs_oauth_server/sitestatic/css/static-main.css"
+#   register: putresult
 
-- name: "Upload legacy-preserved.css file to PROD content S3 bucket"
-  become_user: "{{ remote_admin_account }}"
-  become: yes
-  amazon.aws.aws_s3:
-    bucket: "{{ prod_s3_storage_bucket_name }}"
-    mode: put
-    object: "static/legacy-preserved.css"
-    src: "{{ project_parent }}{{ common_project }}/hhs_oauth_server/bluebutton-css/legacy-preserved.css"
-  register: putresult
+# - name: "Upload legacy-preserved.css file to IMPL content S3 bucket"
+#   become_user: "{{ remote_admin_account }}"
+#   become: yes
+#   amazon.aws.aws_s3:
+#     bucket: "{{ impl_s3_storage_bucket_name }}"
+#     mode: put
+#     object: "static/legacy-preserved.css"
+#     src: "{{ project_parent }}{{ common_project }}/hhs_oauth_server/bluebutton-css/legacy-preserved.css"
+#   register: putresult
 
-- name: "Upload sandbox-main.css file to PROD content S3 bucket"
-  become_user: "{{ remote_admin_account }}"
-  become: yes
-  amazon.aws.aws_s3:
-    bucket: "{{ prod_s3_storage_bucket_name }}"
-    mode: put
-    object: "static/dist/sandbox-main.css"
-    src: "{{ project_parent }}{{ common_project }}/hhs_oauth_server/sitestatic/css/sandbox-main.css"
-  register: putresult
+# - name: "Upload sandbox-main.css file to IMPL content S3 bucket"
+#   become_user: "{{ remote_admin_account }}"
+#   become: yes
+#   amazon.aws.aws_s3:
+#     bucket: "{{ impl_s3_storage_bucket_name }}"
+#     mode: put
+#     object: "static/dist/sandbox-main.css"
+#     src: "{{ project_parent }}{{ common_project }}/hhs_oauth_server/sitestatic/css/sandbox-main.css"
+#   register: putresult
 
-- name: "Upload static-main.css file to PROD content S3 bucket"
-  become_user: "{{ remote_admin_account }}"
-  become: yes
-  amazon.aws.aws_s3:
-    bucket: "{{ prod_s3_storage_bucket_name }}"
-    mode: put
-    object: "static/dist/static-main.css"
-    src: "{{ project_parent }}{{ common_project }}/hhs_oauth_server/sitestatic/css/static-main.css"
-  register: putresult
+# - name: "Upload static-main.css file to IMPL content S3 bucket"
+#   become_user: "{{ remote_admin_account }}"
+#   become: yes
+#   amazon.aws.aws_s3:
+#     bucket: "{{ impl_s3_storage_bucket_name }}"
+#     mode: put
+#     object: "static/dist/static-main.css"
+#     src: "{{ project_parent }}{{ common_project }}/hhs_oauth_server/sitestatic/css/static-main.css"
+#   register: putresult
+
+# - name: "Upload legacy-preserved.css file to PROD content S3 bucket"
+#   become_user: "{{ remote_admin_account }}"
+#   become: yes
+#   amazon.aws.aws_s3:
+#     bucket: "{{ prod_s3_storage_bucket_name }}"
+#     mode: put
+#     object: "static/legacy-preserved.css"
+#     src: "{{ project_parent }}{{ common_project }}/hhs_oauth_server/bluebutton-css/legacy-preserved.css"
+#   register: putresult
+
+# - name: "Upload sandbox-main.css file to PROD content S3 bucket"
+#   become_user: "{{ remote_admin_account }}"
+#   become: yes
+#   amazon.aws.aws_s3:
+#     bucket: "{{ prod_s3_storage_bucket_name }}"
+#     mode: put
+#     object: "static/dist/sandbox-main.css"
+#     src: "{{ project_parent }}{{ common_project }}/hhs_oauth_server/sitestatic/css/sandbox-main.css"
+#   register: putresult
+
+# - name: "Upload static-main.css file to PROD content S3 bucket"
+#   become_user: "{{ remote_admin_account }}"
+#   become: yes
+#   amazon.aws.aws_s3:
+#     bucket: "{{ prod_s3_storage_bucket_name }}"
+#     mode: put
+#     object: "static/dist/static-main.css"
+#     src: "{{ project_parent }}{{ common_project }}/hhs_oauth_server/sitestatic/css/static-main.css"
+#   register: putresult
 
 - name: "set permissions to application code ( {{ app_pyapps_user }}:{{ app_group }} )"
   become_user: "{{ remote_admin_account }}"
