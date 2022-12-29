@@ -69,6 +69,13 @@
 
   ### S3 Bucket Settings:
   s3_storage_bucket_name: "{{ env_s3_storage_bucket_name }}"
+  ## TEST
+  test_s3_storage_bucket_name: "{{ lookup('aws_ssm', '/bb2/test/app/s3_storage_bucket_name_pfx', region='us-east-1') }}test{{ lookup('aws_ssm', '/bb2/test/app/s3_storage_bucket_name_sfx', region='us-east-1') }}"
+  ## IMPL
+  impl_s3_storage_bucket_name: "{{ lookup('aws_ssm', '/bb2/impl/app/s3_storage_bucket_name_pfx', region='us-east-1') }}impl{{ lookup('aws_ssm', '/bb2/impl/app/s3_storage_bucket_name_sfx', region='us-east-1') }}"
+  ## PROD
+  prod_s3_storage_bucket_name: "{{ lookup('aws_ssm', '/bb2/prod/app/s3_storage_bucket_name_pfx', region='us-east-1') }}prod{{ lookup('aws_ssm', '/bb2/prod/app/s3_storage_bucket_name_sfx', region='us-east-1') }}"
+
 
   ### Django Settings:
   django_app_title: "{{ env_django_app_title }}"
