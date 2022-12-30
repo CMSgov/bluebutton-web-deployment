@@ -98,17 +98,27 @@
     name: [ "boto3", "botocore"]
     extra_args: "--user"
 
-- name: "Upload legacy-preserved.css file to TEST content S3 bucket"
+- name: "test s3 list files"
   become_user: "{{ remote_admin_account }}"
   become: yes
   aws_s3:
     bucket: "{{ test_s3_storage_bucket_name }}"
-    mode: put
-    object: "static/legacy-preserved.css"
-    src: "{{ project_parent }}{{ common_project_dir }}/{{ common_project_name }}/bluebutton-css/legacy-preserved.css"
-  register: putresult
-- debug: msg="{{ putresult.msg }} and the S3 Object URL is {{putresult.url}}"
-  when: putresult.changed
+    mode: list
+    prefix: "static/dist"
+  register: listresult
+- debug: msg={{listresult.s3_keys}}
+
+# - name: "Upload legacy-preserved.css file to TEST content S3 bucket"
+#   become_user: "{{ remote_admin_account }}"
+#   become: yes
+#   aws_s3:
+#     bucket: "{{ test_s3_storage_bucket_name }}"
+#     mode: put
+#     object: "static/legacy-preserved.css"
+#     src: "{{ project_parent }}{{ common_project_dir }}/{{ common_project_name }}/bluebutton-css/legacy-preserved.css"
+#   register: putresult
+# - debug: msg="{{ putresult.msg }} and the S3 Object URL is {{putresult.url}}"
+#   when: putresult.changed
 
 # - name: "Upload sandbox-main.css file to TEST content S3 bucket"
 #   become_user: "{{ remote_admin_account }}"
