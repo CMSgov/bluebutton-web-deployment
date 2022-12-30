@@ -71,17 +71,17 @@
 - debug:
     var: col_output.stdout_lines
 
-- name: "python version"
-  shell: which python
-  register: python_ver
-- debug:
-    var: python_ver.stdout_lines
+# - name: "python version"
+#   shell: which python
+#   register: python_ver
+# - debug:
+#     var: python_ver.stdout_lines
 
-- name: "boto3 version"
-  shell: python -c 'import boto3; print(boto3.__version__)'
-  register: boto_ver
-- debug:
-    var: boto_ver.stdout_lines
+# - name: "boto3 version"
+#   shell: python -c 'import boto3; print(boto3.__version__)'
+#   register: boto_ver
+# - debug:
+#     var: boto_ver.stdout_lines
 
 - name: "Ensure botocore and boto3 modules are installed"
   become_user: "{{ remote_admin_account }}"
