@@ -84,7 +84,9 @@
 #     var: boto_ver.stdout_lines
 
 - name: "Install pip"
-  shell: python -m pip install --upgrade pip
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  shell: python -m ensurepip --upgrade
   register: pip_install
 - debug:
     var: pip_install.stdout_lines
