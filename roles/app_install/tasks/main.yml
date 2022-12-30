@@ -71,15 +71,17 @@
 - debug:
     var: col_output.stdout_lines
 
-# - name: "Upload legacy-preserved.css file to TEST content S3 bucket"
-#   become_user: "{{ remote_admin_account }}"
-#   become: yes
-#   amazon.aws.aws_s3:
-#     bucket: "{{ test_s3_storage_bucket_name }}"
-#     mode: put
-#     object: "static/legacy-preserved.css"
-#     src: "{{ project_parent }}{{ common_project }}/hhs_oauth_server/bluebutton-css/legacy-preserved.css"
-#   register: putresult
+- name: "Upload legacy-preserved.css file to TEST content S3 bucket"
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  aws_s3:
+    bucket: "{{ test_s3_storage_bucket_name }}"
+    mode: put
+    object: "static/legacy-preserved.css"
+    src: "{{ project_parent }}{{ common_project }}/hhs_oauth_server/bluebutton-css/legacy-preserved.css"
+  register: putresult
+- debug: msg="{{ putresult.msg }} and the S3 Object URL is {{putresult.url}}"
+  when: putresult.changed
 
 # - name: "Upload sandbox-main.css file to TEST content S3 bucket"
 #   become_user: "{{ remote_admin_account }}"
