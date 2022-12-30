@@ -78,7 +78,7 @@
     bucket: "{{ test_s3_storage_bucket_name }}"
     mode: put
     object: "static/legacy-preserved.css"
-    src: "{{ project_parent }}{{ common_project }}/hhs_oauth_server/bluebutton-css/legacy-preserved.css"
+    src: "{{ project_parent }}{{ common_project_dir }}/{{ common_project_name }}/bluebutton-css/legacy-preserved.css"
   register: putresult
 - debug: msg="{{ putresult.msg }} and the S3 Object URL is {{putresult.url}}"
   when: putresult.changed
