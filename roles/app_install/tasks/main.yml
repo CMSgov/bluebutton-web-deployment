@@ -71,18 +71,6 @@
 - debug:
     var: col_output.stdout_lines
 
-- name: "Upload legacy-preserved.css file to TEST content S3 bucket"
-  become_user: "{{ remote_admin_account }}"
-  become: yes
-  aws_s3:
-    bucket: "{{ test_s3_storage_bucket_name }}"
-    mode: put
-    object: "static/legacy-preserved.css"
-    src: "{{ project_parent }}{{ common_project_dir }}/{{ common_project_name }}/bluebutton-css/legacy-preserved.css"
-  register: putresult
-- debug: msg="{{ putresult.msg }} and the S3 Object URL is {{putresult.url}}"
-  when: putresult.changed
-
 # - name: "Upload sandbox-main.css file to TEST content S3 bucket"
 #   become_user: "{{ remote_admin_account }}"
 #   become: yes
@@ -184,6 +172,18 @@
   register: out
 
 - debug: var=out.stdout_lines
+
+- name: "Upload legacy-preserved.css file to TEST content S3 bucket"
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  aws_s3:
+    bucket: "{{ test_s3_storage_bucket_name }}"
+    mode: put
+    object: "static/legacy-preserved.css"
+    src: "{{ project_parent }}{{ common_project_dir }}/{{ common_project_name }}/bluebutton-css/legacy-preserved.css"
+  register: putresult
+- debug: msg="{{ putresult.msg }} and the S3 Object URL is {{putresult.url}}"
+  when: putresult.changed
 
 # Use task directly rather than importing from deprecated location
 - name: "Create a back-end app certstore"
