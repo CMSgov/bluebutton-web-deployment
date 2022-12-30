@@ -98,18 +98,6 @@
     name: [ "boto3", "botocore"]
     extra_args: "--user"
 
-# - name: "python path after"
-#   shell: which python
-#   register: python_path
-# - debug:
-#     var: python_path.stdout_lines
-
-# - name: "boto3 version after"
-#   shell: python -c 'import boto3; print(boto3.__version__)'
-#   register: boto_ver
-# - debug:
-#     var: boto_ver.stdout_lines
-
 - name: "Upload legacy-preserved.css file to TEST content S3 bucket"
   become_user: "{{ remote_admin_account }}"
   become: yes
