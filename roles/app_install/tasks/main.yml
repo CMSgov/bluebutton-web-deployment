@@ -84,7 +84,7 @@
 #     var: boto_ver.stdout_lines
 
 - name: "Install pip"
-  shell: python -m ensurepip --upgrade
+  shell: python -m pip install --upgrade pip
   register: pip_install
 - debug:
     var: pip_install.stdout_lines
