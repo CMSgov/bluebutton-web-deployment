@@ -30,6 +30,8 @@ variable "asg_desired" {}
 
 variable "app_config_bucket" {}
 
+variable "static_content_bucket" {}
+
 variable "azs" {
   type = list(string)
 }
