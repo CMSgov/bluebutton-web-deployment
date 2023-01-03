@@ -25,9 +25,6 @@ aws s3 cp /tmp/legacy-preserved.css s3://${static_content_bucket}/static/legacy-
 aws s3 cp /tmp/sandbox-main.css s3://${static_content_bucket}/static/dist/sandbox-main.css
 aws s3 cp /tmp/static-main.css s3://${static_content_bucket}/static/dist/static-main.css
 
-# cleanup CSS files
-rm /tmp/legacy-preserved.css /tmp/legacy-preserved.css /tmp/static-main.css
-
 ansible-playbook \
   -i "localhost" \
   -e "env=${env}" \
