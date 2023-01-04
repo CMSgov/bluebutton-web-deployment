@@ -42,6 +42,8 @@ variable "asg_name" {
 
 variable "app_config_bucket" {}
 
+variable "static_content_bucket" {}
+
 variable "alarm_elb_no_backend_enable" {
   type    = bool
 }
