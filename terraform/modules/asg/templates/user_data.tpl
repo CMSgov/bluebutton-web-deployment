@@ -17,9 +17,9 @@ chown pyapps:www-data /var/pyapps/hhs_o_server/certstore/ca.* && chmod 0640 /var
 
 
 # Get master branch versions of CSS files then -> copy to content S3 bucket for the deployed environment
-wget https://github.com/CMSgov/bluebutton-css/blob/master/legacy-preserved.css -O /tmp/legacy-preserved.css
-wget https://github.com/CMSgov/bluebutton-css/blob/master/dist/sandbox-main.css -O /tmp/sandbox-main.css
-wget https://github.com/CMSgov/bluebutton-css/blob/master/dist/static-main.css -O /tmp/static-main.css
+wget https://raw.githubusercontent.com/CMSgov/bluebutton-css/master/legacy-preserved.css -O /tmp/legacy-preserved.css
+wget https://raw.githubusercontent.com/CMSgov/bluebutton-css/master/dist/sandbox-main.css -O /tmp/sandbox-main.css
+wget https://raw.githubusercontent.com/CMSgov/bluebutton-css/master/dist/static-main.css -O /tmp/static-main.css
 
 aws s3 cp /tmp/legacy-preserved.css s3://${static_content_bucket}/static/legacy-preserved.css
 aws s3 cp /tmp/sandbox-main.css s3://${static_content_bucket}/static/dist/sandbox-main.css
