@@ -52,7 +52,7 @@ resource "aws_security_group" "allow_ci_ssh" {
     description      = "SSH from test canary CI"
     from_port        = 22
     to_port          = 22
-    protocol         = "ssh"
+    protocol         = "tcp"
     cidr_blocks      = var.ci_cidrs
   }
 
