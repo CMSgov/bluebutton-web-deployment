@@ -73,4 +73,15 @@ resource "aws_config_remediation_configuration" "sg_attached" {
     resource_value = "RESOURCE_ID"
   }
 
+  automatic                  = true
+  maximum_automatic_attempts = 10
+  retry_attempt_seconds      = 600
+
+  execution_controls {
+    ssm_controls {
+      concurrent_execution_rate_percentage = 25
+      error_percentage                     = 20
+    }
+  }
+
 }
