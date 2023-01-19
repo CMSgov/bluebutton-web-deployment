@@ -23,3 +23,5 @@ variable "vpc_sg_id" {}
 variable "vpc_sg_id_ci" {}
 
 variable "instance_name" {}
+
+variable "static_content_bucket" {}
