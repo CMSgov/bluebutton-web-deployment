@@ -8,6 +8,7 @@ data "template_file" "user_data" {
   vars = {
     env         = lower(var.env)
     bucket      = var.app_config_bucket
+    static_content_bucket = var.static_content_bucket
   }
 }
 
