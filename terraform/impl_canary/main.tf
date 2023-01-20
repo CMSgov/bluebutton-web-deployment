@@ -29,7 +29,8 @@ resource "aws_instance" "impl_canary_app" {
 
   vpc_security_group_ids  = [
     var.vpc_sg_id,
-    var.vpc_sg_id_ci
+    aws_security_group.allow_ci_ssh.id
+    #var.vpc_sg_id_ci
   ]
 
   associate_public_ip_address = false
