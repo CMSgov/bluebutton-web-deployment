@@ -2,6 +2,8 @@ variable "env" {}
 
 variable "app_config_bucket" {}
 
+variable "vpc_id" {}
+
 variable "ci_cidrs" {
   type = list(string)
 }
