@@ -38,6 +38,28 @@ resource "aws_instance" "impl_canary_app" {
   }
 }
 
+# create the CI security group for canary deploy.
+# Once canary instance is manually/automatically 
+# terminates the AWS config rule will remove this SG.
+resource "aws_security_group" "allow_ci_ssh" {
+  name        = "ci-to-canary-impl-servers"
+  description = "Allow SSH inbound traffic for CI builds"
+  vpc_id      = var.vpc_id
+
+  ingress {
+    description      = "SSH from impl canary CI"
+    from_port        = 22
+    to_port          = 22
+    protocol         = "tcp"
+    cidr_blocks      = var.ci_cidrs
+  }
+
+  tags = {
+    Name  = "allow_ssh"
+    env   = "impl_canary"
+  }
+}
+
 #Assign Private IP to Output variable
 
   output "private_ip" {
