@@ -1,5 +1,9 @@
+provider "aws" {
+  region = "us-east-1"
+}
+
 resource "aws_config_config_rule" "sg_attached" {
-  name = "ec2-security-group-attached-to-eni-periodic"
+  name = "ec2-security-group-attached-to-eni-periodic-998877a6"
 
   source {
     owner             = "AWS"
@@ -7,6 +11,7 @@ resource "aws_config_config_rule" "sg_attached" {
   }
 }
 
+# Automation role and policies for config rule
 resource "aws_iam_role" "aws_config_sg_attached_remediation_role" {
   name = "aws_config_sg_attached_remediation_role"
 
