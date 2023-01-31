@@ -8,6 +8,7 @@ data "template_file" "user_data" {
   vars = {
     env         = lower(var.env)
     bucket      = var.app_config_bucket
+    static_content_bucket = var.static_content_bucket
   }
 }
 
@@ -27,13 +28,35 @@ resource "aws_instance" "prod_canary_app" {
 
   vpc_security_group_ids  = [
     var.vpc_sg_id,
-    var.vpc_sg_id_ci
+    aws_security_group.allow_ci_ssh.id
   ]
 
   associate_public_ip_address = false
 
   tags = {
     Name = "bb-prod-canary"
+  }
+}
+
+# create the CI security group for canary deploy.
+# Once canary instance is manually/automatically 
+# terminates the AWS config rule will remove this SG.
+resource "aws_security_group" "allow_ci_ssh" {
+  name        = "ci-to-canary-prod-servers"
+  description = "Allow SSH inbound traffic for CI builds"
+  vpc_id      = var.vpc_id
+
+  ingress {
+    description      = "SSH from prod canary CI"
+    from_port        = 22
+    to_port          = 22
+    protocol         = "tcp"
+    cidr_blocks      = var.ci_cidrs
+  }
+
+  tags = {
+    Name  = "allow_ssh"
+    env   = "prod_canary"
   }
 }
 

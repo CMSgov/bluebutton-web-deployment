@@ -1,5 +1,11 @@
 variable "env" {}
 
+variable "vpc_id" {}
+
+variable "ci_cidrs" {
+  type = list(string)
+}
+
 variable "app_config_bucket" {}
 
 variable "ami_id" {}
@@ -14,6 +20,6 @@ variable "iam_instance_profile" {}
 
 variable "vpc_sg_id" {}
 
-variable "vpc_sg_id_ci" {}
-
 variable "instance_name" {}
+
+variable "static_content_bucket" {}
