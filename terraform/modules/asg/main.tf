@@ -77,7 +77,7 @@ resource "aws_launch_configuration" "app" {
 }
 
 ##
-# Autoscaling group
+# Autoscaling group #
 ##
 resource "aws_autoscaling_group" "main" {
   name                      = "asg-${aws_launch_configuration.app.name}"
