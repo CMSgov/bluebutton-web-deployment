@@ -9,11 +9,11 @@
     sub_zone: "app"
     sg_zone: "appserver"
     splunk_target_layer: "app"
-    ssh_users:
+    ssh_group:
       - "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_user_ds', region='us-east-1') }}"
-      - "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_users_dt', region='us-east-1') }}"
-      - "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_users_jf', region='us-east-1') }}"
-      - "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_users_aj', region='us-east-1') }}"
+      - "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_user_dt', region='us-east-1') }}"
+      - "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_user_jf', region='us-east-1') }}"
+      - "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_user_aj', region='us-east-1') }}"
   vars_files:
     - "./../../vars/common.yml"
     - "./../../vars/env/shared/env.yml"
