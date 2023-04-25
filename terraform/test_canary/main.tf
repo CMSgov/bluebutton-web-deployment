@@ -48,7 +48,7 @@ resource "aws_security_group" "allow_ci_ssh" {
   vpc_id      = var.vpc_id
 
   ingress {
-    description      = "SSH from CI"
+    description      = "SSH from test canary CI"
     from_port        = 22
     to_port          = 22
     protocol         = "tcp"
