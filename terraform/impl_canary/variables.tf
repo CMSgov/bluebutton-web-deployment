@@ -8,6 +8,10 @@ variable "ci_cidrs" {
   type = list(string)
 }
 
+variable "prefix_lists" {
+  type = list(string)
+}
+
 variable "ami_id" {}
 
 variable "instance_type" {}
