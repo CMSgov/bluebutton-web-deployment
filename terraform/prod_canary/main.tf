@@ -12,6 +12,15 @@ data "template_file" "user_data" {
   }
 }
 
+data "aws_ec2_managed_prefix_list" "canary_sg_pl" {
+  filter {
+    name   = "prefix-list-name"
+    values = ["cmscloud-oc-management-subnets"]
+  }
+}
+
+
+
 resource "aws_instance" "prod_canary_app" {
 
   ami           = var.ami_id
@@ -59,7 +68,7 @@ resource "aws_security_group" "allow_ci_ssh" {
     from_port        = 443
     to_port          = 443
     protocol         = "tcp"
-    prefix_list_ids  = var.prefix_lists
+    prefix_list_ids  = ["${data.aws_ec2_managed_prefix_list.canary_sg_pl.id}"]
   }
 
   tags = {

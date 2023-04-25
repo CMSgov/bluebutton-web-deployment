@@ -6,10 +6,6 @@ variable "ci_cidrs" {
   type = list(string)
 }
 
-variable "prefix_lists" {
-  type = list(string)
-}
-
 variable "app_config_bucket" {}
 
 variable "ami_id" {}
