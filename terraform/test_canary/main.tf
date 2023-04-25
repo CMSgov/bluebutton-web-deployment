@@ -59,7 +59,7 @@ resource "aws_security_group" "allow_ci_ssh" {
     description      = "HTTPS from CI"
     from_port        = 443
     to_port          = 443
-    protocol         = "https"
+    protocol         = "tcp"
     prefix_list_ids  = var.prefix_lists
   }
 
