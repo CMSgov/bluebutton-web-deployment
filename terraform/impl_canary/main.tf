@@ -67,7 +67,7 @@ resource "aws_security_group" "allow_ci_ssh" {
     from_port        = 443
     to_port          = 443
     protocol         = "tcp"
-    prefix_list_ids  = data.aws_ec2_managed_prefix_list.canary_sg_pl.id
+    prefix_list_ids  = ["${data.aws_ec2_managed_prefix_list.canary_sg_pl.id}"]
   }
 
   tags = {
