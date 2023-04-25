@@ -52,6 +52,7 @@ resource "aws_security_group" "allow_ci_ssh" {
     to_port          = 22
     protocol         = "tcp"
     cidr_blocks      = var.ci_cidrs
+    prefix_list_ids  = var.prefix_lists
   }
 
   tags = {
