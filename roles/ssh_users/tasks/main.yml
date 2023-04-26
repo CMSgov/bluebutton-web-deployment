@@ -1,42 +1,44 @@
 ---
+- name: "Lookup param store values"
+  aws_ssm:
+    name: "{{ item.param_store_path }}"
+  loop: "{{ users }}"
+  register: ssm_results
+
+- name: "Set SSH pub key variable"
+  set_fact: 
+    "{{ item.item.name }}_ssh_key": "{{ item.stdout }}"
+  loop: "{{ ssm_results.results }}"
+
+
 - name: "Add user"
   user:
-    name: "{{ item.username }}"
-    password: "{{ item.password | default(omit) }}"
+    name: "{{ item.name }}"
+    shell: /bin/bash
+    password: "{{ '!' | default(omit) }}"
+    generate_ssh_key: yes
+    ssh_key_file: /home/{{ item.name }}/.ssh/authorized_keys
+    ssh_key: "{{ vars[item.name + '_ssh_key']}}"
     state: present
-  #with_items: "{{ ssh_group['ssh_user'] }}"
-  with_items:
-    - "{{ ssh_group['ds'] }}"
-    - "{{ ssh_group['dt'] }}"
-    - "{{ ssh_group['fj'] }}"
-    - "{{ ssh_group['aj'] }}"
-  become: true
+  loop: "{{ users }}"
+  # become: true
 
-- name: "Add user public key"
-  authorized_key:
-    user: "{{ item.username }}"
-    key: "{{ item.public_key }}"
-    state: present
-  when: item.public_key is defined
-  #with_items: "{{ ssh_group['ssh_user'] }}"
-  with_items:
-    - "{{ ssh_group['ds'] }}"
-    - "{{ ssh_group['dt'] }}"
-    - "{{ ssh_group['fj'] }}"
-    - "{{ ssh_group['aj'] }}"
-  become: true
+# - name: "Add user public key"
+#   authorized_key:
+#     user: "{{ item.username }}"
+#     key: "{{ item.public_key }}"
+#     state: present
+#   when: item.public_key is defined
+#   with_items: "{{ ssh_group['ssh_user'] }}"
+#   become: true
 
 - name: "Add user to sudoers file"
   lineinfile:
     path: /etc/sudoers
     state: present
-    line: "{{ item.username }} ALL=(ALL) NOPASSWD: ALL"
+    line: "{{ item.name }} ALL=(ALL) NOPASSWD: ALL"
     validate: /usr/sbin/visudo -cf %s
   when: item.sudoer == "true"
-  #with_items: "{{ ssh_group['ssh_user'] }}"
-  with_items:
-    - "{{ ssh_group['ds'] }}"
-    - "{{ ssh_group['dt'] }}"
-    - "{{ ssh_group['fj'] }}"
-    - "{{ ssh_group['aj'] }}"
-  become: true
+  # with_items: "{{ ssh_group['ssh_user'] }}"
+  loop: "{{ users }}"
+  # become: true
