@@ -1,10 +1,4 @@
 ---
-# - name: "Lookup param store values"
-#   aws_ssm:
-#     name: "{{ item.param_store_path }}"
-#   loop: "{{ users }}"
-#   register: ssm_results
-
 - name: "Set SSH pub key variable"
   set_fact: 
     "{{ item.name }}_ssh_key": "{{ item.public_key }}"
@@ -17,18 +11,6 @@
     state: present
   loop: "{{ users }}"
   become: true
-
-# - name: "Add user"
-#   user:
-#     name: "{{ item.name }}"
-#     shell: /bin/bash
-#     password: "{{ '!' | default(omit) }}"
-#     generate_ssh_key: yes
-#     ssh_key_file: /home/{{ item.name }}/.ssh/authorized_keys
-#     ssh_key: "{{ vars[item.name + '_ssh_key']}}"
-#     state: present
-#   loop: "{{ users }}"
-  # become: true
 
 - name: "Add user public key"
   authorized_key:
@@ -44,7 +26,5 @@
     state: present
     line: "{{ item.name }} ALL=(ALL) NOPASSWD: ALL"
     validate: /usr/sbin/visudo -cf %s
-  # when: item.sudoer == "true"
-  # with_items: "{{ ssh_group['ssh_user'] }}"
   loop: "{{ users }}"
   become: true
