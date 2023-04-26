@@ -4,7 +4,12 @@
     name: "{{ item.username }}"
     password: "{{ item.password | default(omit) }}"
     state: present
-  with_items: "{{ ssh_group['ssh_user'] }}"
+  #with_items: "{{ ssh_group['ssh_user'] }}"
+  with_items:
+    - "{{ ssh_group['ds'] }}"
+    - "{{ ssh_group['dt'] }}"
+    - "{{ ssh_group['fj'] }}"
+    - "{{ ssh_group['aj'] }}"
   become: true
 
 - name: "Add user public key"
@@ -13,7 +18,12 @@
     key: "{{ item.public_key }}"
     state: present
   when: item.public_key is defined
-  with_items: "{{ ssh_group['ssh_user'] }}"
+  #with_items: "{{ ssh_group['ssh_user'] }}"
+  with_items:
+    - "{{ ssh_group['ds'] }}"
+    - "{{ ssh_group['dt'] }}"
+    - "{{ ssh_group['fj'] }}"
+    - "{{ ssh_group['aj'] }}"
   become: true
 
 - name: "Add user to sudoers file"
@@ -23,5 +33,10 @@
     line: "{{ item.username }} ALL=(ALL) NOPASSWD: ALL"
     validate: /usr/sbin/visudo -cf %s
   when: item.sudoer == "true"
-  with_items: "{{ ssh_group['ssh_user'] }}"
+  #with_items: "{{ ssh_group['ssh_user'] }}"
+  with_items:
+    - "{{ ssh_group['ds'] }}"
+    - "{{ ssh_group['dt'] }}"
+    - "{{ ssh_group['fj'] }}"
+    - "{{ ssh_group['aj'] }}"
   become: true
