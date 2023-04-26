@@ -44,7 +44,7 @@
     state: present
     line: "{{ item.name }} ALL=(ALL) NOPASSWD: ALL"
     validate: /usr/sbin/visudo -cf %s
-  when: item.sudoer == "true"
+  # when: item.sudoer == "true"
   # with_items: "{{ ssh_group['ssh_user'] }}"
   loop: "{{ users }}"
   become: true
