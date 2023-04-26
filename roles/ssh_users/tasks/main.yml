@@ -7,7 +7,7 @@
 
 - name: "Set SSH pub key variable"
   set_fact: 
-    "{{ item.name }}_ssh_key": "{{ item.stdout }}"
+    "{{ item.name }}_ssh_key": "{{ item.param_store_val }}"
   loop: "{{ users }}"
 
 
