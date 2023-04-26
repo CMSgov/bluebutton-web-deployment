@@ -10,13 +10,13 @@
     sg_zone: "appserver"
     splunk_target_layer: "app"
     users:
-      - name: "don.seymour"
+      - name: "don_seymour"
         param_store_val: "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_user_don_seymour', region='us-east-1') }}"
-      - name: "david.tisza"
+      - name: "david_tisza"
         param_store_val: "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_user_david_tisza', region='us-east-1') }}"
-      - name: "james.fuqian"
+      - name: "james_fuqian"
         param_store_val: "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_user_james_fuqian', region='us-east-1') }}"
-      - name: "adrian.jones"
+      - name: "adrian_jones"
         param_store_val: "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_user_adrian_jones', region='us-east-1') }}"
   vars_files:
     - "./../../vars/common.yml"
