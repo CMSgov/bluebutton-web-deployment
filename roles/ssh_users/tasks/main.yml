@@ -7,30 +7,36 @@
 
 - name: "Set SSH pub key variable"
   set_fact: 
-    "{{ item.name }}_ssh_key": "{{ item.param_store_val }}"
+    "{{ item.name }}_ssh_key": "{{ item.public_key }}"
   loop: "{{ users }}"
-
 
 - name: "Add user"
   user:
     name: "{{ item.name }}"
-    shell: /bin/bash
     password: "{{ '!' | default(omit) }}"
-    generate_ssh_key: yes
-    ssh_key_file: /home/{{ item.name }}/.ssh/authorized_keys
-    ssh_key: "{{ vars[item.name + '_ssh_key']}}"
     state: present
   loop: "{{ users }}"
+  become: true
+
+# - name: "Add user"
+#   user:
+#     name: "{{ item.name }}"
+#     shell: /bin/bash
+#     password: "{{ '!' | default(omit) }}"
+#     generate_ssh_key: yes
+#     ssh_key_file: /home/{{ item.name }}/.ssh/authorized_keys
+#     ssh_key: "{{ vars[item.name + '_ssh_key']}}"
+#     state: present
+#   loop: "{{ users }}"
   # become: true
 
-# - name: "Add user public key"
-#   authorized_key:
-#     user: "{{ item.username }}"
-#     key: "{{ item.public_key }}"
-#     state: present
-#   when: item.public_key is defined
-#   with_items: "{{ ssh_group['ssh_user'] }}"
-#   become: true
+- name: "Add user public key"
+  authorized_key:
+    user: "{{ item.name }}"
+    key: "{{ vars[item.name + '_ssh_key']}}"
+    state: present
+  loop: "{{ users }}"
+  become: true
 
 - name: "Add user to sudoers file"
   lineinfile:
@@ -41,4 +47,4 @@
   when: item.sudoer == "true"
   # with_items: "{{ ssh_group['ssh_user'] }}"
   loop: "{{ users }}"
-  # become: true
+  become: true
