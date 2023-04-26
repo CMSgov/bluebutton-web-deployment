@@ -1,14 +1,14 @@
 ---
-- name: "Lookup param store values"
-  aws_ssm:
-    name: "{{ item.param_store_path }}"
-  loop: "{{ users }}"
-  register: ssm_results
+# - name: "Lookup param store values"
+#   aws_ssm:
+#     name: "{{ item.param_store_path }}"
+#   loop: "{{ users }}"
+#   register: ssm_results
 
 - name: "Set SSH pub key variable"
   set_fact: 
-    "{{ item.item.name }}_ssh_key": "{{ item.stdout }}"
-  loop: "{{ ssm_results.results }}"
+    "{{ item.name }}_ssh_key": "{{ item.stdout }}"
+  loop: "{{ users }}"
 
 
 - name: "Add user"
