@@ -1,27 +1,30 @@
 ---
+- name: "Set SSH pub key variable"
+  set_fact: 
+    "{{ item.name }}_ssh_key": "{{ item.public_key }}"
+  loop: "{{ users }}"
+
 - name: "Add user"
   user:
-    name: "{{ item.username }}"
-    password: "{{ item.password | default(omit) }}"
+    name: "{{ item.name }}"
+    password: "{{ '!' | default(omit) }}"
     state: present
-  with_items: "{{ sshfile['ssh_users'] }}"
+  loop: "{{ users }}"
   become: true
 
 - name: "Add user public key"
   authorized_key:
-    user: "{{ item.username }}"
-    key: "{{ item.public_key }}"
+    user: "{{ item.name }}"
+    key: "{{ vars[item.name + '_ssh_key']}}"
     state: present
-  when: item.public_key is defined
-  with_items: "{{ sshfile['ssh_users'] }}"
+  loop: "{{ users }}"
   become: true
 
 - name: "Add user to sudoers file"
   lineinfile:
     path: /etc/sudoers
     state: present
-    line: "{{ item.username }} ALL=(ALL) NOPASSWD: ALL"
+    line: "{{ item.name }} ALL=(ALL) NOPASSWD: ALL"
     validate: /usr/sbin/visudo -cf %s
-  when: item.sudoer == "true"
-  with_items: "{{ sshfile['ssh_users'] }}"
+  loop: "{{ users }}"
   become: true
