@@ -75,7 +75,7 @@ pipeline {
         }
 
         sh """
-        curl --silent --insecure --retry 80 --retry-delay 15 --retry-connrefused https://${CANARY_IP}/.well-known/openid-configuration
+        curl --silent --insecure --retry 120 --retry-delay 15 --retry-connrefused https://${CANARY_IP}/.well-known/openid-configuration
         """
       }
     }

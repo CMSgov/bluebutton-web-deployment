@@ -90,7 +90,7 @@ resource "aws_autoscaling_group" "main" {
   min_elb_capacity          = var.asg_min
   health_check_grace_period = 400
   health_check_type         = "ELB"
-  wait_for_capacity_timeout = "20m"
+  wait_for_capacity_timeout = "30m"
   vpc_zone_identifier       = data.aws_subnets.app.ids
   launch_configuration      = aws_launch_configuration.app.name
   load_balancers            = var.elb_names
