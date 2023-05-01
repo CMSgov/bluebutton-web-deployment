@@ -5,8 +5,11 @@ data "aws_vpc" "default" {
   }
 }
 
-data "aws_subnet_ids" "default" {
-  vpc_id = data.aws_vpc.default.id
+data "aws_subnets" "default" {
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.default.id]
+  }
 
   filter {
     name   = "tag:Name"
@@ -117,7 +120,7 @@ resource "aws_elb" "default" {
 
   security_groups = ["${aws_security_group.akamai_prod.id}", "${aws_security_group.akamai_staging.id}", "${aws_security_group.cms_vpn.id}"]
 
-  subnets = data.aws_subnet_ids.default.ids
+  subnets = data.aws_subnets.default.ids
 
   listener {
     instance_port             = 80

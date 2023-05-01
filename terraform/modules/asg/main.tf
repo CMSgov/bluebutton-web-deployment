@@ -5,8 +5,11 @@ data "aws_vpc" "selected" {
   id = var.vpc_id
 }
 
-data "aws_subnet_ids" "app" {
-  vpc_id = var.vpc_id
+data "aws_subnets" "app" {
+  filter {
+    name   = "vpc-id"
+    values = [var.vpc_id]
+  }
 
   tags = {
     Layer       = "app"
@@ -88,7 +91,7 @@ resource "aws_autoscaling_group" "main" {
   health_check_grace_period = 400
   health_check_type         = "ELB"
   wait_for_capacity_timeout = "20m"
-  vpc_zone_identifier       = data.aws_subnet_ids.app.ids
+  vpc_zone_identifier       = data.aws_subnets.app.ids
   launch_configuration      = aws_launch_configuration.app.name
   load_balancers            = var.elb_names
 
