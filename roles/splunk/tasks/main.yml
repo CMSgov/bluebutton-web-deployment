@@ -16,4 +16,7 @@
 - name: "Start splunk"
   become_user: "{{ remote_admin_account }}"
   shell: |
-    /opt/splunkforwarder/bin/splunk start
+    /opt/splunkforwarder/bin/splunk start --answer-yes --no-prompt --accept-license
+    /opt/splunkforwarder/bin/splunk stop
+    /opt/splunkforwarder/bin/splunk enable boot-start -user splunk
+    /opt/splunkforwarder/bin/splunk restart
