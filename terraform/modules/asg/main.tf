@@ -28,6 +28,13 @@ data "aws_ami" "image" {
   }
 }
 
+data "aws_ec2_managed_prefix_list" "sg_prefix_list" {
+  filter {
+    name   = "prefix-list-name"
+    values = ["cmscloud-oc-management-subnets"]
+  }
+}
+
 ##
 # Security groups
 ##
@@ -41,6 +48,14 @@ resource "aws_security_group" "ci" {
     to_port     = 22
     protocol    = "tcp"
     cidr_blocks = var.ci_cidrs
+  }
+
+  ingress {
+    description      = "HTTPS from CI"
+    from_port        = 443
+    to_port          = 443
+    protocol         = "tcp"
+    prefix_list_ids  = ["${data.aws_ec2_managed_prefix_list.sg_prefix_list.id}"]
   }
 }
 
