@@ -12,14 +12,6 @@ locals {
   }
 
   domain_name = lookup(local.domain_name_value, terraform.workspace, "")
-
-  default_tags = {
-    Environment    = local.env
-    application    = "bb2"
-    business       = "oeda"
-    stack          = local.env
-    Terraform      = true
-  }
 }
 
 data "aws_caller_identity" "current" {}
