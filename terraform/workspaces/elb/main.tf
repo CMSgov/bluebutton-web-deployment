@@ -3,11 +3,11 @@ provider "aws" {
 }
 
 locals {
-  env              = terraform.workspace
+  env = terraform.workspace
   
   domain_name_value = {
     "test"  = "test.bluebutton.cms.gov"
-    "impl"   = "sandbox.bluebutton.cms.gov"
+    "impl"  = "sandbox.bluebutton.cms.gov"
     "prod"  = "api.bluebutton.cms.gov"
   }
 
