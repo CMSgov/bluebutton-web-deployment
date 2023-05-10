@@ -9,3 +9,7 @@ variable "akamai_prod_cidrs" {
 variable "akamai_staging_cidrs" {
     type = list(string)
 }
+
+# variable "domain_name" {
+#   default = lookup(local.domain_name_value, terraform.workspace, "")
+# }
