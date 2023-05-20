@@ -10,8 +10,8 @@ docker build --file Dockerfile.cbc-build \
   --build-arg ANSIBLE_VERSION=${3:-2.7.18} \
   --build-arg PACKER_VERSION=${4:-1.6.5} \
   --build-arg TERRAFORM_VERSION=${5:-0.12.31} \
-  --tag public.ecr.aws/f5g8o1y9/bb2-cbc-build:${DOCKER_TAG} \
+  --tag public.ecr.aws/f5g8o1y9/bb2-cbc-build-p38:${DOCKER_TAG} \
   .
 
-docker push public.ecr.aws/f5g8o1y9/bb2-cbc-build:${DOCKER_TAG}
+docker push public.ecr.aws/f5g8o1y9/bb2-cbc-build-p38:${DOCKER_TAG}
 
