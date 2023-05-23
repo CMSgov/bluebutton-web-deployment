@@ -15,20 +15,20 @@ pipeline {
   parameters {
     string(
       name: "APP_REPO_BRANCH",
-      defaultValue: "jfuqian/BB2-2336-BB2-Python-upgrade-to-3.8-web-server",
+      defaultValue: "master",
       description: "The branch of the application repo to build in AMI. Defaults to master."
     )
 
     string(
       name: "DEPLOY_REPO_BRANCH",
       // FIXME: Temporary value for testing, revert to master prior to merging!
-      defaultValue: "jfuqian/BB2-2336-BB2-Python-upgrade-to-3.8",
+      defaultValue: "master",
       description: "The branch of the deployment repo to build in AMI. Defaults to master."
     )
 
     string(
       name: "PLATINUM_AMI_ID",
-      defaultValue: "ami-00752f5af9dc0eed5",
+      defaultValue: "",
       description: "The AMI ID of the platinum image. If unset, the latest will be pulled from AWS and used."
     )
   }
