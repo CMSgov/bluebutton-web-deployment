@@ -6,7 +6,7 @@
   register: p_ver
 
 - debug:
-  msg: "{{ p_ver }}"
+    msg: "{{ p_ver }}"
 
 - name: "Create Virtualenv"
   become_user: "{{ remote_admin_account }}"
