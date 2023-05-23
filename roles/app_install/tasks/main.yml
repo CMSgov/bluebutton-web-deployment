@@ -3,6 +3,10 @@
   become_user: "{{ remote_admin_account }}"
   become: yes
   shell: python3 --version 2>&1
+  register: p_ver
+
+- debug:
+  msg: "{{ p_ver }}"
 
 - name: "Create Virtualenv"
   become_user: "{{ remote_admin_account }}"
