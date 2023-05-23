@@ -8,6 +8,15 @@
 - debug:
     msg: "{{ p_ver }}"
 
+- name: "Check usr bin python..."
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  shell: ls /usr/bin/python*
+  register: usr_bin_pythons
+
+- debug:
+    msg: "{{ usr_bin_pythons }}"
+
 - name: "Create Virtualenv"
   become_user: "{{ remote_admin_account }}"
   become: yes
