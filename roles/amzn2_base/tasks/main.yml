@@ -6,7 +6,7 @@
 - name: Install extras python3.8
   become_user: "{{ remote_admin_account }}"
   become: yes
-  command: "amazon-linux-extras install python3.8"
+  command: "amazon-linux-extras install python3.8 -y"
 - name: Install dependencies
   become: yes
   become_user: "{{ remote_admin_account }}"
