@@ -2,12 +2,12 @@
 - name: "Check python"
   become_user: "{{ remote_admin_account }}"
   become: yes
-  shell: "cd /var/virtualenv; ls /usr/bin/python*; echo 'which python'; which python; echo 'python --version'; python --version; python3 --version"
+  shell: "cd /var/virtualenv; python3 --version"
 
 - name: "Create Virtualenv"
   become_user: "{{ remote_admin_account }}"
   become: yes
-  shell: "cd /var/virtualenv; {{ python_bin_dir }}/python{{ python_ver }} -m venv {{ project_dir }}"
+  shell: "cd /var/virtualenv; python3 -m venv {{ project_dir }}"
 
 - name: Ensure group "www-data" exists
   become_user: "{{ remote_admin_account }}"
