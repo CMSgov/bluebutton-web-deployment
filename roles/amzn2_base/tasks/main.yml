@@ -10,7 +10,8 @@
     name:
       - gcc
       - git
-      - python3-devel
+      - python38
+      - python38-devel
       - postgresql-devel
       - zlib-devel
       - libjpeg-turbo-devel
