@@ -2,7 +2,7 @@
 - name: "Check python"
   become_user: "{{ remote_admin_account }}"
   become: yes
-  shell: "cd /var/virtualenv; python3 --version"
+  shell: python3 --version 2>&1
 
 - name: "Create Virtualenv"
   become_user: "{{ remote_admin_account }}"
