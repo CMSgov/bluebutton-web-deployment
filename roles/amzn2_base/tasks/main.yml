@@ -22,7 +22,7 @@
     name:
       - gcc
       - git
-      - python3-devel
+      - python3.8-devel
       - postgresql-devel
       - zlib-devel
       - libjpeg-turbo-devel
