@@ -3,6 +3,14 @@
   become_user: "{{ remote_admin_account }}"
   become: yes
   command: "yum update-minimal --security -y"
+- name: List all topics in extras
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  command: "amazon-linux-extras"
+  register: all_extras_topics
+
+- debug: var=all_extras_topics.stdout_lines
+
 - name: Install extras python3.8
   become_user: "{{ remote_admin_account }}"
   become: yes
