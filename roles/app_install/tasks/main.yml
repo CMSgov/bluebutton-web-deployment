@@ -8,6 +8,24 @@
 - debug:
     msg: "{{ p_ver }}"
 
+- name: "Check pip version"
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  shell: pip --version 2>&1
+  register: pip_ver
+
+- debug:
+    msg: "{{ pip_ver }}"
+
+- name: "Check pip3 version"
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  shell: pip3 --version 2>&1
+  register: pip3_ver
+
+- debug:
+    msg: "{{ pip3_ver }}"
+
 - name: "Check python3.8 version"
   become_user: "{{ remote_admin_account }}"
   become: yes
@@ -97,11 +115,22 @@
     group: "{{ app_group }}"
     mode: 0755
 
+- name: "install cryptography"
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  shell: |
+    source {{ app_py_virtual_env }}/bin/activate && pip install --upgrade pip && pip install --upgrade setuptools && pip3 install cryptography
+  args:
+    chdir: "{{ app_pyapp_home }}/{{ common_project_name }}"
+  register: out
+
+- debug: var=out.stdout_lines
+
 - name: "install requirements"
   become_user: "{{ remote_admin_account }}"
   become: yes
   shell: |
-    source {{ app_py_virtual_env }}/bin/activate && pip install --upgrade pip && pip install --upgrade setuptools && make reqs-install
+    make reqs-install
   args:
     chdir: "{{ app_pyapp_home }}/{{ common_project_name }}"
   register: out
