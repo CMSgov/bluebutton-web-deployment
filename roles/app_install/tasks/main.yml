@@ -108,6 +108,8 @@
 
 - debug: var=out.stdout_lines
 
+- debug: var=out.stderr_lines
+
 # Use task directly rather than importing from deprecated location
 - name: "Create a back-end app certstore"
   become_user: "{{ remote_admin_account }}"
