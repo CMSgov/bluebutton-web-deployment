@@ -101,14 +101,12 @@
   become_user: "{{ remote_admin_account }}"
   become: yes
   shell: |
-    source {{ app_py_virtual_env }}/bin/activate && pip install --upgrade pip && pip3 install --upgrade setuptools && make reqs-install
+    source {{ app_py_virtual_env }}/bin/activate && pip install -r requirements/requirements.dev.txt --no-index --find-links ./vendor/
   args:
     chdir: "{{ app_pyapp_home }}/{{ common_project_name }}"
   register: out
 
 - debug: var=out.stdout_lines
-
-- debug: var=out.stderr_lines
 
 # Use task directly rather than importing from deprecated location
 - name: "Create a back-end app certstore"
