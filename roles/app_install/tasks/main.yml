@@ -101,7 +101,7 @@
   become_user: "{{ remote_admin_account }}"
   become: yes
   shell: |
-    source {{ app_py_virtual_env }}/bin/activate && pip install --upgrade pip && pip install --upgrade setuptools && pip3 install cryptography && make reqs-install
+    source {{ app_py_virtual_env }}/bin/activate && pip install --upgrade pip && pip3 install --upgrade setuptools && make reqs-install
   args:
     chdir: "{{ app_pyapp_home }}/{{ common_project_name }}"
   register: out
