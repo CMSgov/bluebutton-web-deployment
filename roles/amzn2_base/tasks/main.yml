@@ -3,18 +3,14 @@
   become_user: "{{ remote_admin_account }}"
   become: yes
   command: "yum update-minimal --security -y"
-- name: List all topics in extras
-  become_user: "{{ remote_admin_account }}"
-  become: yes
-  command: "amazon-linux-extras"
-  register: all_extras_topics
-
-- debug: var=all_extras_topics.stdout_lines
-
 - name: Install extras python3.8
   become_user: "{{ remote_admin_account }}"
   become: yes
   command: "amazon-linux-extras install python3.8 -y"
+- name: Set python3.8 as python3
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  command: "update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.8 1"
 - name: Install dependencies
   become: yes
   become_user: "{{ remote_admin_account }}"
@@ -22,7 +18,7 @@
     name:
       - gcc
       - git
-      - python3.8-devel
+      - python3-devel
       - postgresql-devel
       - zlib-devel
       - libjpeg-turbo-devel
