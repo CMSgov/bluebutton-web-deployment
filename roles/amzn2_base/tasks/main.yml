@@ -7,10 +7,6 @@
   become_user: "{{ remote_admin_account }}"
   become: yes
   command: "amazon-linux-extras install python3.8 -y"
-- name: Set python3.8 as python3
-  become_user: "{{ remote_admin_account }}"
-  become: yes
-  command: "update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.8 1"
 - name: Install dependencies
   become: yes
   become_user: "{{ remote_admin_account }}"
@@ -24,7 +20,7 @@
       - libjpeg-turbo-devel
       - nginx
       - amazon-cloudwatch-agent
-- name: Install uwsgi ansible boto3 and botocore via pip3
+- name: Install uwsgi ansible boto3 and botocore psycopg2-binary==2.9.6 via pip3
   become: yes
   become_user: "{{ remote_admin_account }}"
   pip:
@@ -33,5 +29,6 @@
       - ansible
       - boto3
       - botocore
+      - psycopg2-binary==2.9.6
     executable: pip3
     umask: "0022"
