@@ -2,8 +2,8 @@ apiVersion: v1
 kind: Pod
 spec:
   containers:
-    - name: bb2-cbc-build-p38
-      image: "public.ecr.aws/f5g8o1y9/bb2-cbc-build-p38:py38-an27-tf12-boto3-botocore"
+    - name: bb2-cbc-build
+      image: "public.ecr.aws/f5g8o1y9/bb2-cbc-build:py38-an27-tf12-boto3-botocore"
       tty: true
       command: ["tail", "-f", "/dev/null"]
       imagePullPolicy: Always

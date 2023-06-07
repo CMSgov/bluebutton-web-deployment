@@ -1,7 +1,7 @@
 pipeline {
   agent {
     kubernetes {
-      defaultContainer "bb2-cbc-build-p38"
+      defaultContainer "bb2-cbc-build"
       yamlFile "Jenkinsfiles/cbc-build.yaml"
     }
   }
