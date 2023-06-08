@@ -14,6 +14,8 @@
         public_key: "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_user_don_seymour', region='us-east-1') }}"
       - name: "david_tisza"
         public_key: "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_user_david_tisza', region='us-east-1') }}"
+      - name: "james_fuqian"
+        public_key: "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_user_james_fuqian', region='us-east-1') }}"
       - name: "adrian_jones"
         public_key: "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_user_adrian_jones', region='us-east-1') }}"
   vars_files:
