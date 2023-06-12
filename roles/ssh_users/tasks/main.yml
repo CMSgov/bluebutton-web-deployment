@@ -1,28 +1,27 @@
 ---
-- name: "Set SSH list"
-  set_fact:
-    ssh_users:
-      - name: "don_seymour"
-        public_key: "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_user_don_seymour', region='us-east-1') }}"
-      - name: "david_tisza"
-        public_key: "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_user_david_tisza', region='us-east-1') }}"
-      - name: "adrian_jones"
-        public_key: "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_user_adrian_jones', region='us-east-1') }}"
-
-- name: "Debug"
-  debug:
-    var: ssh_users
-
-- name: "debug SSH list"
-  debug: msg={{ item.name }}
-  with_items: "{{ ssh_users }}"
+- name: "Set SSH pub key variable"
+  set_fact: 
+    "{{ item.name }}_ssh_key": "{{ item.public_key }}"
+  loop:
+    - name: "don_seymour"
+      public_key: "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_user_don_seymour', region='us-east-1') }}"
+    - name: "david_tisza"
+      public_key: "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_user_david_tisza', region='us-east-1') }}"
+    - name: "adrian_jones"
+      public_key: "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_user_adrian_jones', region='us-east-1') }}"
 
 - name: "Add user"
   user:
     name: "{{ item.name }}"
     password: "{{ '!' | default(omit) }}"
     state: present
-  with_items: "{{ ssh_users }}"
+  loop:
+    - name: "don_seymour"
+      public_key: "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_user_don_seymour', region='us-east-1') }}"
+    - name: "david_tisza"
+      public_key: "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_user_david_tisza', region='us-east-1') }}"
+    - name: "adrian_jones"
+      public_key: "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_user_adrian_jones', region='us-east-1') }}"
   become: true
 
 - name: "Add user public key"
@@ -30,7 +29,13 @@
     user: "{{ item.name }}"
     key: "{{ item.public_key }}"
     state: present
-  with_items: "{{ ssh_users }}"
+  loop:
+    - name: "don_seymour"
+      public_key: "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_user_don_seymour', region='us-east-1') }}"
+    - name: "david_tisza"
+      public_key: "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_user_david_tisza', region='us-east-1') }}"
+    - name: "adrian_jones"
+      public_key: "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_user_adrian_jones', region='us-east-1') }}"
   become: true
 
 - name: "Add user to sudoers file"
@@ -39,5 +44,11 @@
     state: present
     line: "{{ item.name }} ALL=(ALL) NOPASSWD: ALL"
     validate: /usr/sbin/visudo -cf %s
-  with_items: "{{ ssh_users }}"
+  loop:
+    - name: "don_seymour"
+      public_key: "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_user_don_seymour', region='us-east-1') }}"
+    - name: "david_tisza"
+      public_key: "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_user_david_tisza', region='us-east-1') }}"
+    - name: "adrian_jones"
+      public_key: "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_user_adrian_jones', region='us-east-1') }}"
   become: true
