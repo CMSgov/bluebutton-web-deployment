@@ -1,8 +1,10 @@
 ---
-- name: "Set SSH pub key variable"
-  set_fact: 
-    "{{ item.name }}_ssh_key": "{{ item.public_key }}"
+- name: "Set SSH list"
+  set_fact:
+    users: "{{ users }}"
   loop: "{{ users }}"
+- debug:
+    var: users
 
 - name: "Add user"
   user:
@@ -15,7 +17,7 @@
 - name: "Add user public key"
   authorized_key:
     user: "{{ item.name }}"
-    key: "{{ vars[item.name + '_ssh_key']}}"
+    key: "{{ item.public_key }}"
     state: present
   loop: "{{ users }}"
   become: true
