@@ -8,8 +8,14 @@
         public_key: "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_user_david_tisza', region='us-east-1') }}"
       - name: "adrian_jones"
         public_key: "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_user_adrian_jones', region='us-east-1') }}"
-- debug:
+
+- name: "Debug"
+  debug:
     var: ssh_users
+
+- name: "debug SSH list"
+  debug: msg={{ item.name }}
+  with_items: "{{ ssh_users }}"
 
 - name: "Add user"
   user:
