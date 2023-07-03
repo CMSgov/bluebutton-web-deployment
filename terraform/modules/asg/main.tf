@@ -60,21 +60,10 @@ resource "aws_security_group" "ci" {
 }
 
 ##
-# Launch configuration
+# Launch template
 ##
-data "template_file" "user_data" {
-  #template = file(path.module/templates/user_data.tpl)
-  template = file("${path.module}/templates/user_data.tpl")
-
-  vars = {
-    env                     = lower(var.env)
-    bucket                  = var.app_config_bucket
-    static_content_bucket   = var.static_content_bucket
-  }
-}
-
-resource "aws_launch_configuration" "app" {
-  security_groups = [
+resource "aws_launch_template" "app" {
+  vpc_security_group_ids = [
     var.app_sg_id,
     var.vpn_sg_id,
     var.ent_tools_sg_id,
@@ -84,21 +73,28 @@ resource "aws_launch_configuration" "app" {
   key_name                    = var.key_name
   image_id                    = var.ami_id
   instance_type               = var.instance_type
-  associate_public_ip_address = false
+
+  network_interfaces {
+    associate_public_ip_address = false
+  }
+
   name_prefix                 = "bb-${var.stack}-app-"
-  user_data                   = data.template_file.user_data.rendered
-  iam_instance_profile        = "bb-${lower(var.env)}-app-profile"
+  user_data                   = filebase64("${path.module}/templates/user_data_64.tpl")
+  iam_instance_profile {
+    name                      = "bb-${lower(var.env)}-app-profile"
+  }
 
   lifecycle {
     create_before_destroy = true
   }
 }
 
+
 ##
 # Autoscaling group
 ##
 resource "aws_autoscaling_group" "main" {
-  name                      = "asg-${aws_launch_configuration.app.name}"
+  name                      = "asg-${aws_launch_template.app.name}"
   desired_capacity          = var.asg_desired
   max_size                  = var.asg_max
   min_size                  = var.asg_min
@@ -107,7 +103,12 @@ resource "aws_autoscaling_group" "main" {
   health_check_type         = "ELB"
   wait_for_capacity_timeout = "30m"
   vpc_zone_identifier       = data.aws_subnets.app.ids
-  launch_configuration      = aws_launch_configuration.app.name
+
+  launch_template {
+    id      = aws_launch_template.app.id
+    version = aws_launch_template.app.latest_version
+  }
+
   load_balancers            = var.elb_names
 
   enabled_metrics = [
