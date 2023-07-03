@@ -73,11 +73,6 @@ resource "aws_launch_template" "app" {
   key_name                    = var.key_name
   image_id                    = var.ami_id
   instance_type               = var.instance_type
-
-  network_interfaces {
-    associate_public_ip_address = false
-  }
-
   name_prefix                 = "bb-${var.stack}-app-"
   user_data                   = filebase64("${path.module}/templates/user_data_64.tpl")
   iam_instance_profile {
