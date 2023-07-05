@@ -62,8 +62,19 @@ resource "aws_security_group" "ci" {
 ##
 # Launch template
 ##
+data "template_file" "user_data" {
+  #template = file(path.module/templates/user_data.tpl)
+  template = file("${path.module}/templates/user_data.tpl")
+
+  vars = {
+    env                     = lower(var.env)
+    bucket                  = var.app_config_bucket
+    static_content_bucket   = var.static_content_bucket
+  }
+}
+
 resource "aws_launch_template" "app" {
-  vpc_security_group_ids = [
+  vpc_security_group_ids  = [
     var.app_sg_id,
     var.vpn_sg_id,
     var.ent_tools_sg_id,
@@ -73,8 +84,9 @@ resource "aws_launch_template" "app" {
   key_name                    = var.key_name
   image_id                    = var.ami_id
   instance_type               = var.instance_type
+
   name_prefix                 = "bb-${var.stack}-app-"
-  user_data                   = filebase64("${path.module}/templates/user_data_64.tpl")
+  user_data                   = base64encode(data.template_file.user_data.rendered)
   iam_instance_profile {
     name                      = "bb-${lower(var.env)}-app-profile"
   }
