@@ -10,6 +10,8 @@
     password: "{{ '!' | default(omit) }}"
     state: present
   when: item.username is defined
+  with_items:
+    - "{{ users }}"
   become: true
 
 - name: "Add user public key"
@@ -18,6 +20,8 @@
     key: "{{ item.ssh_key }}"
     state: present
   when: item.ssh_key is defined
+  with_items:
+    - "{{ users }}"
   become: true
 
 - name: "Add user to sudoers file"
@@ -27,4 +31,6 @@
     line: "{{ item.username }} ALL=(ALL) NOPASSWD: ALL"
     validate: /usr/sbin/visudo -cf %s
   when: item.username is defined
+  with_items:
+    - "{{ users }}"
   become: true
