@@ -2,40 +2,22 @@
 - name: "Set SSH pub key variable"
   set_fact: 
     "{{ item.name }}_ssh_key": "{{ item.public_key }}"
-  loop:
-    - name: "don_seymour"
-      public_key: "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_user_don_seymour', region='us-east-1') }}"
-    - name: "david_tisza"
-      public_key: "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_user_david_tisza', region='us-east-1') }}"
-    - name: "adrian_jones"
-      public_key: "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_user_adrian_jones', region='us-east-1') }}"
+  loop: "{{ lookup('users', 'all', wantlist=True) }}"
 
 - name: "Add user"
   user:
     name: "{{ item.name }}"
     password: "{{ '!' | default(omit) }}"
     state: present
-  loop:
-    - name: "don_seymour"
-      public_key: "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_user_don_seymour', region='us-east-1') }}"
-    - name: "david_tisza"
-      public_key: "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_user_david_tisza', region='us-east-1') }}"
-    - name: "adrian_jones"
-      public_key: "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_user_adrian_jones', region='us-east-1') }}"
+  loop: "{{ lookup('users', 'all', wantlist=True) }}"
   become: true
 
 - name: "Add user public key"
   authorized_key:
     user: "{{ item.name }}"
-    key: "{{ item.public_key }}"
+    key: "{{ vars[item.name + '_ssh_key']}}"
     state: present
-  loop:
-    - name: "don_seymour"
-      public_key: "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_user_don_seymour', region='us-east-1') }}"
-    - name: "david_tisza"
-      public_key: "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_user_david_tisza', region='us-east-1') }}"
-    - name: "adrian_jones"
-      public_key: "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_user_adrian_jones', region='us-east-1') }}"
+  loop: "{{ lookup('users', 'all', wantlist=True) }}"
   become: true
 
 - name: "Add user to sudoers file"
@@ -44,11 +26,5 @@
     state: present
     line: "{{ item.name }} ALL=(ALL) NOPASSWD: ALL"
     validate: /usr/sbin/visudo -cf %s
-  loop:
-    - name: "don_seymour"
-      public_key: "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_user_don_seymour', region='us-east-1') }}"
-    - name: "david_tisza"
-      public_key: "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_user_david_tisza', region='us-east-1') }}"
-    - name: "adrian_jones"
-      public_key: "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_user_adrian_jones', region='us-east-1') }}"
+  loop: "{{ lookup('users', 'all', wantlist=True) }}"
   become: true

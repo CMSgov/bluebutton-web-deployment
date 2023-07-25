@@ -9,6 +9,13 @@
     sub_zone: "app"
     sg_zone: "appserver"
     splunk_target_layer: "app"
+    users:
+      - name: "don_seymour"
+        public_key: "{{ lookup('amazon.aws.aws_secret', '/bb2/allenv/app/ssh_user_don_seymour', region='us-east-1') }}"
+      - name: "david_tisza"
+        public_key: "{{ lookup('amazon.aws.aws_secret', '/bb2/allenv/app/ssh_user_david_tisza', region='us-east-1') }}"
+      - name: "adrian_jones"
+        public_key: "{{ lookup('amazon.aws.aws_secret', '/bb2/allenv/app/ssh_user_adrian_jones', region='us-east-1') }}"
   vars_files:
     - "./../../vars/common.yml"
     - "./../../vars/env/shared/env.yml"
