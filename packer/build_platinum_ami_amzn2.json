@@ -6,6 +6,7 @@
   "builders": [{
     "type": "amazon-ebs",
     "ssh_username": "ec2-user",
+    "ssh_keypair_name": "packer-test",
     "instance_type": "m4.large",
     "region": "us-east-1",
     "subnet_id": "{{user `subnet_id`}}",
