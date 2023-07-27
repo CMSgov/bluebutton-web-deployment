@@ -3,10 +3,10 @@
   become_user: "{{ remote_admin_account }}"
   become: yes
   command: "yum update-minimal --security -y"
-- name: Install extras python3.8
+- name: Install extras python3.9
   become_user: "{{ remote_admin_account }}"
   become: yes
-  command: "amazon-linux-extras install python3.8 -y"
+  command: "amazon-linux-extras install python3.9 -y"
 - name: Install dependencies
   become: yes
   become_user: "{{ remote_admin_account }}"
@@ -14,13 +14,13 @@
     name:
       - gcc
       - git
-      - python38-devel
+      - python39-devel
       - postgresql-devel
       - zlib-devel
       - libjpeg-turbo-devel
       - nginx
       - amazon-cloudwatch-agent
-- name: Install uwsgi ansible boto3 and botocore psycopg2-binary==2.9.6 via pip3.8
+- name: Install uwsgi ansible boto3 and botocore psycopg2-binary==2.9.6 via pip3.9
   become: yes
   become_user: "{{ remote_admin_account }}"
   pip:
@@ -30,5 +30,5 @@
       - boto3
       - botocore
       - psycopg2-binary==2.9.6
-    executable: pip3.8
+    executable: pip3.9
     umask: "0022"
