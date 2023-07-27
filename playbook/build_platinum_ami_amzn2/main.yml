@@ -11,16 +11,16 @@
     splunk_target_layer: "app"
     users:
       - username: "don_seymour"
-        ssh_key: "{{ lookup('amazon.aws.secretsmanager_secret', '/bb2/allenv/app/ssh_user_don_seymour', region='us-east-1') }}"
+        ssh_key: "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_user_don_seymour', region='us-east-1') }}"
       - username: "david_tisza"
-        ssh_key: "{{ lookup('amazon.aws.secretsmanager_secret', '/bb2/allenv/app/ssh_user_david_tisza', region='us-east-1') }}"
+        ssh_key: "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_user_david_tisza', region='us-east-1') }}"
       - username: "adrian_jones"
-        ssh_key: "{{ lookup('amazon.aws.secretsmanager_secret', '/bb2/allenv/app/ssh_user_adrian_jones', region='us-east-1') }}"
+        ssh_key: "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_user_adrian_jones', region='us-east-1') }}"
   vars_files:
     - "./../../vars/common.yml"
     - "./../../vars/env/shared/env.yml"
     - "./../../vars/all_var.yml"
   roles:
+    - ../../roles/ssh_users
     - ../../roles/amzn2_base
     - ../../roles/cloudwatch_agent_base
-    - ../../roles/ssh_users
