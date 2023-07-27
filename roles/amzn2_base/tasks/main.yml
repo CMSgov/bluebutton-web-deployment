@@ -1,7 +1,7 @@
 ---
-- name: Pause for debugging
-  pause:
-    seconds: 1200
+# - name: Pause for debugging
+#   pause:
+#     seconds: 1200
 - name: Apply security patches
   become_user: "{{ remote_admin_account }}"
   become: yes
