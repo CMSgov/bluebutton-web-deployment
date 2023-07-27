@@ -21,6 +21,6 @@
     - "./../../vars/env/shared/env.yml"
     - "./../../vars/all_var.yml"
   roles:
-    - ../../roles/ssh_users
     - ../../roles/amzn2_base
     - ../../roles/cloudwatch_agent_base
+    - ../../roles/ssh_users
