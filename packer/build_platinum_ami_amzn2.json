@@ -35,7 +35,7 @@
             "user": "ec2-user",
             "use_proxy": false,
             "ssh_authorized_key_file": "{{ user `packer-test-pub-key` }}",
-            "extra_arguments": [ "-i", "{{ user `packer-test-key` }}", "-vvvv" ]
+            "extra_arguments": [ "--private-key", "{{ user `packer-test-key` }}", "-vvvv" ]
         }
     ]
 }
