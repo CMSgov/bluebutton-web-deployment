@@ -60,11 +60,11 @@ pipeline {
     stage("Build Platinum AMI") {
       steps {
         //-on-error=abort \ - add this for troubleshooting the ec2 instance, will leave running on error
+        //         -var 'packer-test-key=${PACKER_TEST_KEY}' \
+        // -var 'packer-test-pub-key=${PACKER_TEST_PUB_KEY}' \
         sh """
           packer build -color=false \
             -var 'source_ami=${SOURCE_AMI}' \
-            -var 'packer-test-key=${PACKER_TEST_KEY}' \
-            -var 'packer-test-pub-key=${PACKER_TEST_PUB_KEY}' \
             packer/build_platinum_ami_amzn2.json
         """
       }
