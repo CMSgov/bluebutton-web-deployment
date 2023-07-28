@@ -7,8 +7,8 @@
   },
   "builders": [{
     "type": "amazon-ebs",
-    "ssh_username": "packer-test",
-    "ssh_keypair_name": "packer-test",
+    "ssh_username": "ec2-user",
+    "ssh_keypair_name": "ec2-user",
     "ssh_private_key_file": "{{ user `packer-private-key` }}",
     "instance_type": "m4.large",
     "region": "us-east-1",
@@ -35,7 +35,7 @@
             "type": "ansible",
             "playbook_file": "playbook/build_platinum_ami_amzn2/main.yml",
             "ansible_env_vars": [ "ANSIBLE_SSH_ARGS=-o HostKeyAlgorithms=+ssh-rsa -o PubkeyAcceptedKeyTypes=ssh-rsa", "ANSIBLE_HOST_KEY_CHECKING=False" ],
-            "user": "packer-test",
+            "user": "ec2-user",
             "extra_arguments": [ "-vvvv" ]
         }
     ]
