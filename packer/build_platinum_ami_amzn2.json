@@ -35,7 +35,7 @@
             "type": "ansible",
             "playbook_file": "playbook/build_platinum_ami_amzn2/main.yml",
             "use_proxy": false,
-            "ansible_env_vars": [ "ANSIBLE_SSH_ARGS='-oHostKeyAlgorithms=+ssh-rsa -oPubkeyAcceptedKeyTypes=ssh-rsa', ANSIBLE_HOST_KEY_CHECKING=False, ANSIBLE_SCP_EXTRA_ARGS = '-0'" ],
+            "ansible_env_vars": [ "ANSIBLE_SSH_ARGS=-oHostKeyAlgorithms=+ssh-rsa -oPubkeyAcceptedKeyTypes=ssh-rsa", "ANSIBLE_HOST_KEY_CHECKING=False" ],
             "ssh_authorized_key_file": "{{ user `packer-pub-key` }}",
             "user": "ec2-user",
             "extra_arguments": [ "-vvvv" ]
