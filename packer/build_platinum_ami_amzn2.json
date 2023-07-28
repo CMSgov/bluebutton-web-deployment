@@ -9,7 +9,7 @@
     "type": "amazon-ebs",
     "ssh_username": "ec2-user",
     "ssh_keypair_name": "packer-test",
-    "ssh_private_key_file": "${var.packer-private-key}",
+    "ssh_private_key_file": "{{ user `packer-private-key` }}",
     "instance_type": "m4.large",
     "region": "us-east-1",
     "subnet_id": "{{user `subnet_id`}}",
