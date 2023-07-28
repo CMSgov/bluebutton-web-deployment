@@ -6,8 +6,8 @@
   "builders": [{
     "type": "amazon-ebs",
     "ssh_username": "ec2-user",
-    "ssh_keypair_name": "packer-test",
-    "ssh_private_key_file": "{{ user `packer-test-key` }}",
+    // "ssh_keypair_name": "packer-test",
+    // "ssh_private_key_file": "{{ user `packer-test-key` }}",
     "instance_type": "m4.large",
     "region": "us-east-1",
     "subnet_id": "{{user `subnet_id`}}",
@@ -33,9 +33,9 @@
             "type": "ansible",
             "playbook_file": "playbook/build_platinum_ami_amzn2/main.yml",
             "user": "ec2-user",
-            "use_proxy": false,
-            "ssh_authorized_key_file": "{{ user `packer-test-pub-key` }}",
-            "extra_arguments": [ "--extra-vars", "ansible_python_interpreter=/usr/bin/python", "--private-key", "{{ user `packer-test-key` }}", "-vvvv" ]
+            // "use_proxy": false,
+            // "ssh_authorized_key_file": "{{ user `packer-test-pub-key` }}",
+            "extra_arguments": [ "--extra-vars", "ansible_python_interpreter=/usr/bin/python", "-vvvv" ]
         }
     ]
 }
