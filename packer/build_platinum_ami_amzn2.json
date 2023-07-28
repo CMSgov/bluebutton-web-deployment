@@ -8,7 +8,7 @@
   "builders": [{
     "type": "amazon-ebs",
     "ssh_username": "ec2-user",
-    "ssh_keypair_name": "packer-test",
+    "ssh_keypair_name": "ec2-user",
     "ssh_private_key_file": "{{ user `packer-private-key` }}",
     "instance_type": "m4.large",
     "region": "us-east-1",
