@@ -10,8 +10,8 @@ pipeline {
     AWS_ACCESS_KEY_ID = credentials("bb2-aws-key-id")
     AWS_SECRET_ACCESS_KEY = credentials("bb2-aws-key-secret")
     AWS_DEFAULT_REGION = "us-east-1"
-    PACKER_TEST_KEY = credentials("packer-test-key")
-    PACKER_TEST_PUB_KEY = credentials("packer-test-pub-key")
+    PACKER_KEY = credentials("packer-test-key")
+    PACKER_PUB_KEY = credentials("packer-test-pub-key")
   }
 
   parameters {
@@ -65,6 +65,8 @@ pipeline {
         sh """
           packer build -color=false \
             -var 'source_ami=${SOURCE_AMI}' \
+            -var 'packer-private-key=${PACKER_KEY}' \
+            -var 'packer-pub-key=${PACKER_PUB_KEY}' \
             packer/build_platinum_ami_amzn2.json
         """
       }
