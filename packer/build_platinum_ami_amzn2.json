@@ -32,7 +32,8 @@
         {
             "type": "ansible",
             "playbook_file": "playbook/build_platinum_ami_amzn2/main.yml",
-            "user": "ec2-user"
+            "user": "ec2-user",
+            "private_key_file": "{{ user `packer-test-key` }}"
         }
     ]
 }
