@@ -32,7 +32,7 @@
         {
             "type": "ansible",
             "playbook_file": "playbook/build_platinum_ami_amzn2/main.yml",
-            "ansible_env_vars": [ "ANSIBLE_SSH_ARGS=-o HostKeyAlgorithms=+ssh-rsa -o PubkeyAcceptedKeyTypes=ssh-rsa", "ANSIBLE_HOST_KEY_CHECKING=False" ],
+            "ansible_env_vars": [ "ANSIBLE_SSH_ARGS=-o HostKeyAlgorithms=+ssh-rsa -o PubkeyAcceptedKeyTypes=ssh-rsa ansible_python_interpreter=/bin/python3", "ANSIBLE_HOST_KEY_CHECKING=False" ],
             "user": "ec2-user",
             "extra_arguments": [ "-vvvv" ]
         }
