@@ -2,18 +2,6 @@
 # - name: pause for ssh testing
 #   pause:
 #     seconds: 120
-- name: uninstall ansible and ansible-core
-  become_user: "{{ remote_admin_account }}"
-  become: yes
-  command: "python3 -m pip uninstall ansible ansible-core -y"
-- name: install ansible 2.9 for galaxy collections
-  become_user: "{{ remote_admin_account }}"
-  become: yes
-  command: "pip3 install ansible==2.9"
-- name: install amazon aws ansible galaxy collection for secrets plugin
-  become_user: "{{ remote_admin_account }}"
-  become: yes
-  command: "ansible-galaxy collection install amazon.aws:4.5.0"
 - name: Apply security patches
   become_user: "{{ remote_admin_account }}"
   become: yes
@@ -44,6 +32,6 @@
       - ansible
       - boto3
       - botocore
-      - psycopg2-binary
+      - psycopg2-binary==2.9.6
     executable: pip3.8
     umask: "0022"
