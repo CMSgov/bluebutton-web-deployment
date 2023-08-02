@@ -31,7 +31,7 @@
     "provisioners": [
         {
             "type": "shell",
-            "inline": "ansible-playbook /playbook/build_platinum_ami_amzn2/main.yml"
+            "inline": "ansible-playbook playbook/build_platinum_ami_amzn2/main.yml"
         }
     ]
 }
