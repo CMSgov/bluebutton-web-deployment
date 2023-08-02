@@ -31,10 +31,7 @@
     "provisioners": [
         {
             "type": "shell-local",
-            "inline": "ansible-playbook /playbook/build_platinum_ami_amzn2/main.yml",
-            "ansible_env_vars": [ "ANSIBLE_SSH_ARGS=-o HostKeyAlgorithms=+ssh-rsa -o PubkeyAcceptedKeyTypes=ssh-rsa -o IdentitiesOnly=yes", "ANSIBLE_HOST_KEY_CHECKING=False" ],
-            "extra_arguments": [ "--private-key={{user `ec2-user`}}", "-vv" ],
-            "user": "ec2-user"
+            "inline": "ansible-playbook /playbook/build_platinum_ami_amzn2/main.yml"
         }
     ]
 }
