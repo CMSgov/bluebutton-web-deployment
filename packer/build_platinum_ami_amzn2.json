@@ -30,7 +30,7 @@
         {
           "type": "ansible",
           "playbook_file": "playbook/build_platinum_ami_amzn2/main.yml",
-          "extra_arguments": [ "-e", "ansible_ssh_private_key_file={{user `ec2-user`}}", "-vv" ],
+          "extra_arguments": [ "--extra-vars", "ansible_python_interpreter=/usr/bin/python3", "-e", "ansible_ssh_private_key_file={{user `ec2-user`}}", "-vv" ],
           "use_proxy": false,
           "user": "ec2-user"
         }
