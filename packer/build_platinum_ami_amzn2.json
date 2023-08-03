@@ -12,7 +12,7 @@
     "associate_public_ip_address": "false",
     "source_ami": "{{user `source_ami`}}",
     "ami_name": "bb2-amzn2-platinum-{{isotime \"20060102030405\"}}",
-    "ssh_pty": true,
+    "ssh_pty": false,
     "launch_block_device_mappings": [
       {
         "device_name": "/dev/xvda",
@@ -30,8 +30,8 @@
         {
           "type": "ansible",
           "playbook_file": "playbook/build_platinum_ami_amzn2/main.yml",
-          "extra_arguments": [ "-vv" ],
-          "use_proxy": true,
+          "extra_arguments": [ "-e", "ansible_ssh_private_key_file={{user `ec2-user`}}", "-vv" ],
+          "use_proxy": false,
           "user": "ec2-user"
         }
     ]
