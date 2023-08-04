@@ -59,7 +59,6 @@ pipeline {
 
     stage("Build Platinum AMI") {
       steps {
-        //-on-error=abort \ - add this for troubleshooting the ec2 instance, will leave running on error
         sh """
           packer build -color=false \
             -var 'source_ami=${SOURCE_AMI}' \
