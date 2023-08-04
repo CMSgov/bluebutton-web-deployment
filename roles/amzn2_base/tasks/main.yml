@@ -1,7 +1,4 @@
 ---
-# - name: pause for ssh testing
-#   pause:
-#     seconds: 120
 - name: Apply security patches
   become_user: "{{ remote_admin_account }}"
   become: yes

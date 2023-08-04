@@ -1,9 +1,4 @@
 ---
-# - name: "Set SSH pub key variable"
-#   set_fact: 
-#     "{{ item.name }}_ssh_key": "{{ item.public_key }}"
-#   loop: "{{ lookup('users', 'all', wantlist=True) }}"
-
 - name: "Add user"
   user:
     name: "{{ item.username }}"
