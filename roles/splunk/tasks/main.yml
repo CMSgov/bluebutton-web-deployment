@@ -10,10 +10,10 @@
   become_user: "{{ remote_admin_account }}"
   become: yes
   shell: |
-    /opt/splunkforwarder/bin/splunk stop
+    systemctl stop splunk
     /opt/splunkforwarder/bin/splunk clone-prep-clear-config
 
 - name: "Start splunk"
   become_user: "{{ remote_admin_account }}"
   shell: |
-    /opt/splunkforwarder/bin/splunk start
+    systemctl start splunk
