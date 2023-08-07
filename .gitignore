@@ -6,4 +6,3 @@ terraform.tfstate.backup
 *.retry
 .terraform-version
 .DS_Store
-
