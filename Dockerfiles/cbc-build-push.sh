@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# TO-DO: pin versions on boto3 and botocore if requested.
-# Versions at time of BB2-1124 dev: boto3==1.21.28 botocore==1.24.28
 
 DOCKER_TAG=${1:-py38-an27-tf12-boto3-botocore}
 
