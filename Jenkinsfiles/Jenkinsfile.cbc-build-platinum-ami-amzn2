@@ -29,14 +29,14 @@ pipeline {
   }
 
   stages {
-    // stage("Notify Slack") {
-    //   steps {
-    //     script {
-    //       helpers = load "Jenkinsfiles/helpers.groovy"
-    //       helpers.slackNotify "STARTING"
-    //     }
-    //   }
-    // }
+    stage("Notify Slack") {
+      steps {
+        script {
+          helpers = load "Jenkinsfiles/helpers.groovy"
+          helpers.slackNotify "STARTING"
+        }
+      }
+    }
 
     stage("Determine Source AMI") {
       steps {
@@ -70,17 +70,17 @@ pipeline {
     }
   }
 
-  // post {
-  //   success {
-  //     script {
-  //       helpers.slackNotify("SUCCESS", "good")
-  //     }
-  //   }
+  post {
+    success {
+      script {
+        helpers.slackNotify("SUCCESS", "good")
+      }
+    }
 
-  //   failure {
-  //     script {
-  //       helpers.slackNotify("FAILURE", "bad")
-  //     }
-  //   }
-  // }
+    failure {
+      script {
+        helpers.slackNotify("FAILURE", "bad")
+      }
+    }
+  }
 }
