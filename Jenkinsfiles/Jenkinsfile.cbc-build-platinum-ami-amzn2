@@ -26,6 +26,13 @@ pipeline {
       defaultValue: "",
       description: "The AMI ID for the gold image, overrides search filter string."
     )
+
+    credentials(
+      name: "ec2-user",
+      defaultValue: 'ec2-user',
+      description: "ssh user key for provisioning this build with packer/ansible from the build container",
+      required: true
+    )
   }
 
   stages {
