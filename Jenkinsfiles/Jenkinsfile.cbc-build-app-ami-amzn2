@@ -37,7 +37,7 @@ pipeline {
     credentials(
       name: "ec2-user",
       defaultValue: 'ec2-user',
-      description: "ssh user key for provisioning this build with packer/ansible from the build container"
+      description: "ssh user key for provisioning this build with packer/ansible from the build container",
       required: true
     )
   }
