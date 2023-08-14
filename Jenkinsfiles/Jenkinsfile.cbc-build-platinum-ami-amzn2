@@ -10,6 +10,8 @@ pipeline {
     AWS_ACCESS_KEY_ID = credentials("bb2-aws-key-id")
     AWS_SECRET_ACCESS_KEY = credentials("bb2-aws-key-secret")
     AWS_DEFAULT_REGION = "us-east-1"
+    EC2_KEY = credentials("ec2-user-priv-key")
+    EC2_PUB_KEY = credentials("ec2-user-pub-key")
   }
 
   parameters {
@@ -60,6 +62,8 @@ pipeline {
         sh """
           packer build -color=false \
             -var 'source_ami=${SOURCE_AMI}' \
+            -var 'ec2-user=${EC2_KEY}' \
+            -var 'ec2-user-pub-key=${EC2_PUB_KEY}' \
             packer/build_platinum_ami_amzn2.json
         """
       }

@@ -1,54 +1,31 @@
 ---
-- name: "Set SSH pub key variable"
-  set_fact: 
-    "{{ item.name }}_ssh_key": "{{ item.public_key }}"
-  loop:
-    - name: "don_seymour"
-      public_key: "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_user_don_seymour', region='us-east-1') }}"
-    - name: "david_tisza"
-      public_key: "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_user_david_tisza', region='us-east-1') }}"
-    - name: "adrian_jones"
-      public_key: "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_user_adrian_jones', region='us-east-1') }}"
-
 - name: "Add user"
   user:
-    name: "{{ item.name }}"
+    name: "{{ item.username }}"
     password: "{{ '!' | default(omit) }}"
     state: present
-  loop:
-    - name: "don_seymour"
-      public_key: "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_user_don_seymour', region='us-east-1') }}"
-    - name: "david_tisza"
-      public_key: "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_user_david_tisza', region='us-east-1') }}"
-    - name: "adrian_jones"
-      public_key: "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_user_adrian_jones', region='us-east-1') }}"
+  when: item.username is defined
+  with_items:
+    - "{{ users }}"
   become: true
 
 - name: "Add user public key"
   authorized_key:
-    user: "{{ item.name }}"
-    key: "{{ item.public_key }}"
+    user: "{{ item.username }}"
+    key: "{{ item.ssh_key }}"
     state: present
-  loop:
-    - name: "don_seymour"
-      public_key: "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_user_don_seymour', region='us-east-1') }}"
-    - name: "david_tisza"
-      public_key: "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_user_david_tisza', region='us-east-1') }}"
-    - name: "adrian_jones"
-      public_key: "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_user_adrian_jones', region='us-east-1') }}"
+  when: item.ssh_key is defined
+  with_items:
+    - "{{ users }}"
   become: true
 
 - name: "Add user to sudoers file"
   lineinfile:
     path: /etc/sudoers
     state: present
-    line: "{{ item.name }} ALL=(ALL) NOPASSWD: ALL"
+    line: "{{ item.username }} ALL=(ALL) NOPASSWD: ALL"
     validate: /usr/sbin/visudo -cf %s
-  loop:
-    - name: "don_seymour"
-      public_key: "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_user_don_seymour', region='us-east-1') }}"
-    - name: "david_tisza"
-      public_key: "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_user_david_tisza', region='us-east-1') }}"
-    - name: "adrian_jones"
-      public_key: "{{ lookup('aws_ssm', '/bb2/allenv/app/ssh_user_adrian_jones', region='us-east-1') }}"
+  when: item.username is defined
+  with_items:
+    - "{{ users }}"
   become: true
