@@ -10,6 +10,8 @@ pipeline {
     AWS_ACCESS_KEY_ID = credentials("bb2-aws-key-id")
     AWS_SECRET_ACCESS_KEY = credentials("bb2-aws-key-secret")
     AWS_DEFAULT_REGION = "us-east-1"
+    EC2_KEY = credentials("ec2-user-priv-key")
+    EC2_PUB_KEY = credentials("ec2-user-pub-key")
   }
 
   parameters {
@@ -68,6 +70,8 @@ pipeline {
             -var 'release_version=${APP_REPO_BRANCH}' \
             -var 'git_branch=${APP_REPO_BRANCH}' \
             -var 'deployment_branch=${DEPLOY_REPO_BRANCH}' \
+            -var 'ec2-user=${EC2_KEY}' \
+            -var 'ec2-user-pub-key=${EC2_PUB_KEY}' \
             packer/build_app_ami_amzn2.json
         """
       }
