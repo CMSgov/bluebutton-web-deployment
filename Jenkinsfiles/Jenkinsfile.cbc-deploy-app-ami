@@ -90,7 +90,7 @@ pipeline {
         script {
           def autoScalingGroupName = sh(
             returnStdout: true,
-            script: "aws autoscaling describe-auto-scaling-groups --query 'AutoScalingGroups[?contains(AutoScalingGroupName,\'${params.APP_ENV}\')].AutoScalingGroupName' --output text"
+            script: "aws autoscaling describe-auto-scaling-groups --query \"AutoScalingGroups[?contains(AutoScalingGroupName,\'${params.APP_ENV}\')].AutoScalingGroupName\" --output text"
           ).trim()
 
           env.AUTO_SCALING_GROUP_NAME = autoScalingGroupName
