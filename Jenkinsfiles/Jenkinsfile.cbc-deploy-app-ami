@@ -84,6 +84,15 @@ pipeline {
         """
       }
     }
+
+    stage("Refresh ASG instances after launch config is updated") {
+      steps {
+        sh """
+        asg_name=$(aws autoscaling describe-auto-scaling-groups --query  "AutoScalingGroups[?contains(AutoScalingGroupName,'${params.APP_ENV}')].AutoScalingGroupName" --output text)
+        aws autoscaling start-instance-refresh --auto-scaling-group-name "$asg_name”
+        """
+      }
+    }
   }
 
   post {
