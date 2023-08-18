@@ -98,18 +98,18 @@ pipeline {
       }
     }
 
-    stage("Run the instance refresh for the ASG: ${AUTO_SCALING_GROUP_NAME}") {
+    stage("Run the instance refresh for the ASG: '${AUTO_SCALING_GROUP_NAME}'") {
       steps {
         script {
           def instanceRefreshResult = sh(
             returnStatus: true,
-            script: "aws autoscaling start-instance-refresh --auto-scaling-group-name ${AUTO_SCALING_GROUP_NAME}"
+            script: "aws autoscaling start-instance-refresh --auto-scaling-group-name '${AUTO_SCALING_GROUP_NAME}'"
           )
 
           if(instanceRefreshResult == 0) {
-            echo "Instance Refresh started successfully for ${AUTO_SCALING_GROUP_NAME}"
+            echo "Instance Refresh started successfully for '${AUTO_SCALING_GROUP_NAME}'"
           } else {
-            error "Failed to start instance refresh for ${AUTO_SCALING_GROUP_NAME}"
+            error "Failed to start instance refresh for '${AUTO_SCALING_GROUP_NAME}'"
           }
         }
       }
