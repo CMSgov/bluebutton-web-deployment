@@ -103,7 +103,7 @@ pipeline {
         script {
           def instanceRefreshResult = sh(
             returnStatus: true,
-            script: "aws autoscaling start-instance-refresh --auto-scaling-group-name ${AUTO_SCALING_GROUP_NAME}"
+            script: "aws autoscaling start-instance-refresh --auto-scaling-group-name $AUTO_SCALING_GROUP_NAME"
           )
 
           if(instanceRefreshResult == 0) {
