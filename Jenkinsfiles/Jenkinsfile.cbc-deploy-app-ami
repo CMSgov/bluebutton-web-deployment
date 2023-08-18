@@ -47,14 +47,14 @@ pipeline {
       }
     }
 
-    stage("Notify Slack") {
-      steps {
-        script {
-          helpers = load "Jenkinsfiles/helpers.groovy"
-          helpers.slackNotify "STARTING - ENV:${params.APP_ENV}"
-        }
-      }
-    }
+    // stage("Notify Slack") {
+    //   steps {
+    //     script {
+    //       helpers = load "Jenkinsfiles/helpers.groovy"
+    //       helpers.slackNotify "STARTING - ENV:${params.APP_ENV}"
+    //     }
+    //   }
+    // }
 
     stage("Run Terraform Plan") {
       steps {
@@ -90,7 +90,7 @@ pipeline {
         script {
           def autoScalingGroupName = sh(
             returnStdout: true,
-            script: "aws autoscaling describe-auto-scaling-groups --query  'AutoScalingGroups[?contains(AutoScalingGroupName,\'${params.APP_ENV}\')].AutoScalingGroupName' --output text)"
+            script: "aws autoscaling describe-auto-scaling-groups --query  'AutoScalingGroups[?contains(AutoScalingGroupName,\'${params.APP_ENV}\'].AutoScalingGroupName' --output text)"
           ).trim()
 
           env.AUTO_SCALING_GROUP_NAME = autoScalingGroupName
@@ -116,17 +116,17 @@ pipeline {
     }
   }
 
-  post {
-    success {
-      script {
-        helpers.slackNotify("SUCCESS - ENV:${params.APP_ENV}", "good")
-      }
-    }
+  // post {
+  //   success {
+  //     script {
+  //       helpers.slackNotify("SUCCESS - ENV:${params.APP_ENV}", "good")
+  //     }
+  //   }
 
-    failure {
-      script {
-        helpers.slackNotify("FAILURE - ENV:${params.APP_ENV}", "bad")
-      }
-    }
-  }
+  //   failure {
+  //     script {
+  //       helpers.slackNotify("FAILURE - ENV:${params.APP_ENV}", "bad")
+  //     }
+  //   }
+  // }
 }
