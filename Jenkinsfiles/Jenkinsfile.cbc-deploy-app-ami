@@ -139,11 +139,9 @@ pipeline {
         script {
           def instanceRefreshResult = sh(
             returnStatus: true,
-            script: "
-              aws autoscaling start-instance-refresh --auto-scaling-group-name $AUTO_SCALING_GROUP_NAME \
+            script: "aws autoscaling start-instance-refresh --auto-scaling-group-name $AUTO_SCALING_GROUP_NAME \
               --preferences '{\"InstanceWarmup\": 300, \"MinHealthyPercentage\": 67, \"SkipMatching\": true, \"AutoRollback\": true}' \
-              --desired-configuration '{\"LaunchTemplate\": {\"LaunchTemplateName\": \"$LAUNCH_TEMPLATE_NAME\"}}'
-            "
+              --desired-configuration '{\"LaunchTemplate\": {\"LaunchTemplateName\": \"$LAUNCH_TEMPLATE_NAME\"}}'"
           )
 
           if(instanceRefreshResult == 0) {
