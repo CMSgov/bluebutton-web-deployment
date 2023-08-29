@@ -98,12 +98,52 @@ pipeline {
       }
     }
 
+    stage("Get Launch Template name for this deploy Environment") {
+      steps {
+        script {
+          // groovy scripts can be broken out if determined that we need access to these functions elsewhere
+          def launchTemplateName = sh(
+            returnStdout: true,
+            script: "aws ec2 describe-launch-templates --query \"LaunchTemplates[?contains(LaunchTemplateName,\'${params.APP_ENV}\')].LaunchTemplateName\" --output text"
+          ).trim()
+
+          env.LAUNCH_TEMPLATE_NAME = launchTemplateName
+        }
+      }
+    }
+
+    stage("Get Launch Template latest version number") {
+      steps {
+        script {
+          // groovy scripts can be broken out if determined that we need access to these functions elsewhere
+          def launchTemplateVersion = sh(
+            returnStdout: true,
+            script: "aws ec2 describe-launch-templates --launch-template-name $LAUNCH_TEMPLATE_NAME --query \"LaunchTemplates[].LatestVersionNumber\" --output text"
+          ).trim()
+
+          env.LAUNCH_TEMPLATE_VERSION = launchTemplateVersion
+        }
+      }
+    }
+
+    stage("Set default version for launch template") {
+      steps {
+        sh """
+          aws ec2 modify-launch-template --launch-template-name $LAUNCH_TEMPLATE_NAME --default-version \"$LAUNCH_TEMPLATE_VERSION\"
+        """
+      }
+    }
+
     stage("Run the instance refresh for the ASG") {
       steps {
         script {
           def instanceRefreshResult = sh(
             returnStatus: true,
-            script: "aws autoscaling start-instance-refresh --auto-scaling-group-name $AUTO_SCALING_GROUP_NAME"
+            script: "
+              aws autoscaling start-instance-refresh --auto-scaling-group-name $AUTO_SCALING_GROUP_NAME \
+              --preferences '{\"InstanceWarmup\": 300, \"MinHealthyPercentage\": 67, \"SkipMatching\": true, \"AutoRollback\": true}' \
+              --desired-configuration '{\"LaunchTemplate\": {\"LaunchTemplateName\": \"$LAUNCH_TEMPLATE_NAME\"}}'
+            "
           )
 
           if(instanceRefreshResult == 0) {
