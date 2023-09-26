@@ -9,7 +9,7 @@ Configuration variables and sensitive values are stored in AWS Parameter Store a
 variables are embedded inside the variable defined in this file. Environment specific
 variables are prefixed with "env_".
 - ./vars/env/{environment_name}/env.yml: A mix of Sensitive and Non-sensitive environment specific variables are
-stored in this file. With use of the Ansible "lookup" plugin, values are pulled from aws_ssm during CI/CD.
+stored in this file. With use of the Ansible "lookup" plugin, values are pulled from aws_secret during CI/CD.
 
 Variable files can't embed other variable files as includes. Therefore the
 playbook must load the variables files as includes. A typical include section
@@ -32,7 +32,7 @@ In all_var.yml:
 db_name: "{{ env_db_name }}"
 
 In ./vars/env/{{ env }}/env.yml:
-env_db_name: "{{ lookup('aws_ssm', '/bb2/impl/app/db_name', region='us-east-1') }}"
+env_db_name: "{{ lookup('aws_secret', '/bb2/impl/app/db_name', region='us-east-1') }}"
 
 
 
