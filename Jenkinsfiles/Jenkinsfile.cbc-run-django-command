@@ -11,6 +11,8 @@ pipeline {
     AWS_SECRET_ACCESS_KEY = credentials("bb2-aws-key-secret")
     AWS_DEFAULT_REGION = "us-east-1"
     SSH_KEY = credentials("bb2-ssh-key-${params.APP_ENV}")
+    EC2_KEY = credentials("ec2-user-priv-key")
+    EC2_PUB_KEY = credentials("ec2-user-pub-key")
   }
 
   parameters {
@@ -31,6 +33,14 @@ pipeline {
       defaultValue: "",
       description: "When this is set, run against a canary IP rather than a tagged deployment instance"
     )
+
+    credentials(
+      name: "ec2-user",
+      defaultValue: 'ec2-user',
+      description: "ssh user key for running django commands with packer/ansible from the build container",
+      required: true
+    )
+
   }
 
   stages {
@@ -67,6 +77,8 @@ pipeline {
           --private-key '${SSH_KEY}' \
           -i '${ANSIBLE_INVENTORY}' \
           -l '${ANSIBLE_SUBSET}' \
+          -var 'ec2-user=${EC2_KEY}' \
+          -var 'ec2-user-pub-key=${EC2_PUB_KEY}' \
           -e 'env=${APP_ENV}' \
           -e 'django_command="${DJANGO_COMMAND}"'
         """
