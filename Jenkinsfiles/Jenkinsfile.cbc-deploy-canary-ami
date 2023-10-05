@@ -40,25 +40,25 @@ pipeline {
     // }
 
     // Testing terragrunt in the deploy pipeline
-    stage("Run TERRAGRUNT Plan") {
-      steps {
-        sh """
-        cd terraform/${APP_ENV}_canary
-        terragrunt init -no-color -input=false -backend-config='${TF_BACKEND}'
-        terragrunt plan -no-color -input=false -out=tfplan -var-file='${TF_VARS}' -var='ami_id=${APP_AMI_ID}'
-        """
-      }
-    }
-
-    // stage("Run Terraform Plan") {
+    // stage("Run TERRAGRUNT Plan") {
     //   steps {
     //     sh """
     //     cd terraform/${APP_ENV}_canary
-    //     terraform init -no-color -input=false -backend-config='${TF_BACKEND}'
-    //     terraform plan -no-color -input=false -out=tfplan -var-file='${TF_VARS}' -var='ami_id=${APP_AMI_ID}'
+    //     terragrunt init -no-color -input=false -backend-config='${TF_BACKEND}'
+    //     terragrunt plan -no-color -input=false -out=tfplan -var-file='${TF_VARS}' -var='ami_id=${APP_AMI_ID}'
     //     """
     //   }
     // }
+
+    stage("Run Terraform Plan") {
+      steps {
+        sh """
+        cd terraform/${APP_ENV}_canary
+        terraform init -no-color -input=false -backend-config='${TF_BACKEND}'
+        terraform plan -no-color -input=false -out=tfplan -var-file='${TF_VARS}' -var='ami_id=${APP_AMI_ID}'
+        """
+      }
+    }
 
     stage("Confirm Deployment") {
       input {
