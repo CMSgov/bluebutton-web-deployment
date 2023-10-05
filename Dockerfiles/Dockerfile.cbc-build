@@ -6,6 +6,7 @@ ARG ANSIBLE_VERSION
 ARG PACKER_VERSION
 ARG TERRAFORM_VERSION
 ARG AWS_COLLECTION_VERSION
+ARG TERRAGRUNT_VERSION
 
 RUN python3 -m pip uninstall ansible ansible-core -y
 
@@ -16,5 +17,9 @@ RUN pip3 install ansible==${ANSIBLE_VERSION} awscli boto boto3 botocore && \
     curl -L -o terraform.zip https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
     unzip terraform.zip -d /usr/local/bin && \
     rm terraform.zip
+
+RUN curl -L -o terragrunt https://github.com/gruntwork-io/terragrunt/releases/download/v${TERRAGRUNT_VERSION}/terragrunt_linux_amd64 && \
+    chmod u+x terragrunt && \
+    mv terragrunt /usr/local/bin/
 
 RUN ansible-galaxy collection install amazon.aws:${AWS_COLLECTION_VERSION}
