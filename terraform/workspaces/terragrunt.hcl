@@ -6,12 +6,12 @@ remote_state {
     if_exists = "overwrite_terragrunt"
   }
   config = {
-    bucket = "bucket_name"
+    bucket = "bb-terraform-state"
 
     key = "${path_relative_to_include()}/terraform.tfstate"
     region         = "us-east-1"
     encrypt        = true
-    dynamodb_table = "db_name"
+    dynamodb_table = "bb-terraform-state"
   }
 }
 
