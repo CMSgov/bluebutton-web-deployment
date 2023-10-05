@@ -30,14 +30,14 @@ pipeline {
   }
 
   stages {
-    stage("Notify Slack") {
-      steps {
-        script {
-          helpers = load "Jenkinsfiles/helpers.groovy"
-          helpers.slackNotify "STARTING - ENV:${params.APP_ENV}"
-        }
-      }
-    }
+    // stage("Notify Slack") {
+    //   steps {
+    //     script {
+    //       helpers = load "Jenkinsfiles/helpers.groovy"
+    //       helpers.slackNotify "STARTING - ENV:${params.APP_ENV}"
+    //     }
+    //   }
+    // }
 
     // Testing terragrunt in the deploy pipeline
     stage("Run TERRAGRUNT Plan") {
@@ -102,17 +102,17 @@ pipeline {
     }
   }
 
-  post {
-    success {
-      script {
-        helpers.slackNotify("SUCCESS - ENV:${params.APP_ENV}", "good")
-      }
-    }
+  // post {
+  //   success {
+  //     script {
+  //       helpers.slackNotify("SUCCESS - ENV:${params.APP_ENV}", "good")
+  //     }
+  //   }
 
-    failure {
-      script {
-        helpers.slackNotify("FAILURE - ENV:${params.APP_ENV}", "bad")
-      }
-    }
-  }
+  //   failure {
+  //     script {
+  //       helpers.slackNotify("FAILURE - ENV:${params.APP_ENV}", "bad")
+  //     }
+  //   }
+  // }
 }
