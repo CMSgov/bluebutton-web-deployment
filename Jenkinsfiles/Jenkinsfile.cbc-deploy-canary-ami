@@ -10,7 +10,6 @@ pipeline {
     AWS_ACCESS_KEY_ID = credentials("bb2-aws-key-id")
     AWS_SECRET_ACCESS_KEY = credentials("bb2-aws-key-secret")
     AWS_DEFAULT_REGION = "us-east-1"
-    TF_BACKEND = credentials("bb2-terraform-backend-${params.APP_ENV}-canary")
     TF_VARS = credentials("bb2-terraform-vars-${params.APP_ENV}-canary")
     TF_IN_AUTOMATION = true
   }
@@ -30,14 +29,14 @@ pipeline {
   }
 
   stages {
-    // stage("Notify Slack") {
-    //   steps {
-    //     script {
-    //       helpers = load "Jenkinsfiles/helpers.groovy"
-    //       helpers.slackNotify "STARTING - ENV:${params.APP_ENV}"
-    //     }
-    //   }
-    // }
+    stage("Notify Slack") {
+      steps {
+        script {
+          helpers = load "Jenkinsfiles/helpers.groovy"
+          helpers.slackNotify "STARTING - ENV:${params.APP_ENV}"
+        }
+      }
+    }
 
     stage("Terragrunt version") {
       steps {
@@ -51,16 +50,8 @@ pipeline {
       steps {
         sh """
         cd terraform/${APP_ENV}_canary
-        terragrunt init --terragrunt-log-level debug --terragrunt-disable-bucket-update -no-color -input=false
+        terragrunt init --terragrunt-log-level error --terragrunt-disable-bucket-update -no-color -input=false
         terragrunt plan -no-color -input=false -out=tfplan -var-file='${TF_VARS}' -var='ami_id=${APP_AMI_ID}'
-        """
-      }
-    }
-
-    stage("Terragrunt Version") {
-      steps {
-        sh """
-        terragrunt -v
         """
       }
     }
