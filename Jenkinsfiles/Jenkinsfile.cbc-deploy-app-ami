@@ -56,12 +56,20 @@ pipeline {
       }
     }
 
-    stage("Run Terraform Plan") {
+    stage("Terragrunt version") {
+      steps {
+        sh """
+        terragrunt -v
+        """
+      }
+    }
+
+    stage("Run Terragrunt Plan") {
       steps {
         sh """
         cd terraform/${APP_ENV}
-        terraform init -no-color -input=false -backend-config='${TF_BACKEND}'
-        terraform plan -no-color -input=false -out=tfplan -var-file='${TF_VARS}' -var='ami_id=${APP_AMI_ID}'
+        terragrunt init -no-color -input=false -backend-config='${TF_BACKEND}'
+        terragrunt plan -no-color -input=false -out=tfplan -var-file='${TF_VARS}' -var='ami_id=${APP_AMI_ID}'
         """
       }
     }
@@ -76,11 +84,11 @@ pipeline {
       }
     }
 
-    stage("Run Terraform Apply") {
+    stage("Run Terragrunt Apply") {
       steps {
         sh """
         cd terraform/${APP_ENV}
-        terraform apply -no-color -input=false -auto-approve tfplan
+        terragrut apply -no-color -input=false -auto-approve tfplan
         """
       }
     }
