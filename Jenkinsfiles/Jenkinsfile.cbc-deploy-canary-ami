@@ -50,6 +50,14 @@ pipeline {
     //   }
     // }
 
+    stage("Terragrunt Version") {
+      steps {
+        sh """
+        terragrunt -v
+        """
+      }
+    }
+
     stage("Run Terraform Plan") {
       steps {
         sh """
