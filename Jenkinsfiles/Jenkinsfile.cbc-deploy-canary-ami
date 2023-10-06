@@ -30,40 +30,29 @@ pipeline {
   }
 
   stages {
-    // stage("Notify Slack") {
-    //   steps {
-    //     script {
-    //       helpers = load "Jenkinsfiles/helpers.groovy"
-    //       helpers.slackNotify "STARTING - ENV:${params.APP_ENV}"
-    //     }
-    //   }
-    // }
+    stage("Notify Slack") {
+      steps {
+        script {
+          helpers = load "Jenkinsfiles/helpers.groovy"
+          helpers.slackNotify "STARTING - ENV:${params.APP_ENV}"
+        }
+      }
+    }
 
-    // Testing terragrunt in the deploy pipeline
-    // stage("Run TERRAGRUNT Plan") {
-    //   steps {
-    //     sh """
-    //     cd terraform/${APP_ENV}_canary
-    //     terragrunt init -no-color -input=false -backend-config='${TF_BACKEND}'
-    //     terragrunt plan -no-color -input=false -out=tfplan -var-file='${TF_VARS}' -var='ami_id=${APP_AMI_ID}'
-    //     """
-    //   }
-    // }
+    stage("Run TERRAGRUNT Plan") {
+      steps {
+        sh """
+        cd terraform/${APP_ENV}_canary
+        terragrunt init -no-color -input=false -backend-config='${TF_BACKEND}'
+        terragrunt plan -no-color -input=false -out=tfplan -var-file='${TF_VARS}' -var='ami_id=${APP_AMI_ID}'
+        """
+      }
+    }
 
     stage("Terragrunt Version") {
       steps {
         sh """
         terragrunt -v
-        """
-      }
-    }
-
-    stage("Run Terraform Plan") {
-      steps {
-        sh """
-        cd terraform/${APP_ENV}_canary
-        terraform init -no-color -input=false -backend-config='${TF_BACKEND}'
-        terraform plan -no-color -input=false -out=tfplan -var-file='${TF_VARS}' -var='ami_id=${APP_AMI_ID}'
         """
       }
     }
@@ -88,15 +77,6 @@ pipeline {
       }
     }
 
-    // stage("Run Terraform Apply") {
-    //   steps {
-    //     sh """
-    //     cd terraform/${APP_ENV}_canary
-    //     terraform apply -no-color -input=false -auto-approve tfplan
-    //     """
-    //   }
-    // }
-
     stage("Wait For Canary") {
       steps {
         script {
@@ -110,17 +90,17 @@ pipeline {
     }
   }
 
-  // post {
-  //   success {
-  //     script {
-  //       helpers.slackNotify("SUCCESS - ENV:${params.APP_ENV}", "good")
-  //     }
-  //   }
+  post {
+    success {
+      script {
+        helpers.slackNotify("SUCCESS - ENV:${params.APP_ENV}", "good")
+      }
+    }
 
-  //   failure {
-  //     script {
-  //       helpers.slackNotify("FAILURE - ENV:${params.APP_ENV}", "bad")
-  //     }
-  //   }
-  // }
+    failure {
+      script {
+        helpers.slackNotify("FAILURE - ENV:${params.APP_ENV}", "bad")
+      }
+    }
+  }
 }
