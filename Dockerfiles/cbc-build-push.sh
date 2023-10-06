@@ -10,8 +10,8 @@ docker build --file Dockerfile.cbc-build \
   --build-arg ANSIBLE_VERSION=${3:-2.9} \
   --build-arg PACKER_VERSION=${4:-1.6.5} \
   --build-arg TERRAFORM_VERSION=${5:-0.12.31} \
-  --build-arg AWS_COLLECTION_VERSION=${6-6.2.0} \
-  --build-arg TERRAGRUNT_VERSION=${7-0.51.9} \
+  --build-arg AWS_COLLECTION_VERSION=${6:-6.2.0} \
+  --build-arg TERRAGRUNT_VERSION=${7:-0.51.9} \
   --tag public.ecr.aws/f5g8o1y9/bb2-cbc-build:${DOCKER_TAG} \
   .
 
