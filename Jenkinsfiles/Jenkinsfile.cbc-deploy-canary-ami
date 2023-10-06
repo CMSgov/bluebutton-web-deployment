@@ -51,7 +51,7 @@ pipeline {
       steps {
         sh """
         cd terraform/${APP_ENV}_canary
-        terragrunt init --terragrunt-log-level debug -no-color -input=false
+        terragrunt init --terragrunt-log-level debug --terragrunt-disable-bucket-update -no-color -input=false
         terragrunt plan -no-color -input=false -out=tfplan -var-file='${TF_VARS}' -var='ami_id=${APP_AMI_ID}'
         """
       }
