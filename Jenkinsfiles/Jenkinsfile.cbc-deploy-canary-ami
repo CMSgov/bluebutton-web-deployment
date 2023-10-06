@@ -39,7 +39,7 @@ pipeline {
       }
     }
 
-    stage("Run TERRAGRUNT Plan") {
+    stage("Run terragrunt Plan") {
       steps {
         sh """
         cd terraform/${APP_ENV}_canary
