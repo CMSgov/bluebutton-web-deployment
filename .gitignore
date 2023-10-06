@@ -8,3 +8,4 @@ terraform.tfstate.backup
 .DS_Store
 Dockerfiles/ec2-user.pem
 Dockerfiles/ec2-user.pub
+backend.tf

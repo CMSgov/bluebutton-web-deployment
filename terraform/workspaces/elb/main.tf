@@ -1,6 +1,6 @@
-# provider "aws" {
-#   region = "us-east-1"
-# }
+provider "aws" {
+  region = "us-east-1"
+}
 
 locals {
   env = terraform.workspace
@@ -22,7 +22,7 @@ data "aws_acm_certificate" "cert" {
 }
 
 module "elb_akamai" {
-  source = "../../../modules/elb_akamai"
+  source = "../../modules/elb_akamai"
 
   cms_vpn_cidrs        = var.cms_vpn_cidrs
   akamai_prod_cidrs    = var.akamai_prod_cidrs
