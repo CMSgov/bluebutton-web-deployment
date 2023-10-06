@@ -30,12 +30,20 @@ pipeline {
   }
 
   stages {
-    stage("Notify Slack") {
+    // stage("Notify Slack") {
+    //   steps {
+    //     script {
+    //       helpers = load "Jenkinsfiles/helpers.groovy"
+    //       helpers.slackNotify "STARTING - ENV:${params.APP_ENV}"
+    //     }
+    //   }
+    // }
+
+    stage("Terragrunt version") {
       steps {
-        script {
-          helpers = load "Jenkinsfiles/helpers.groovy"
-          helpers.slackNotify "STARTING - ENV:${params.APP_ENV}"
-        }
+        sh """
+        terragrunt -v
+        """
       }
     }
 
@@ -43,7 +51,7 @@ pipeline {
       steps {
         sh """
         cd terraform/${APP_ENV}_canary
-        terragrunt init -no-color -input=false
+        terragrunt init --terragrunt-log-level debug -no-color -input=false
         terragrunt plan -no-color -input=false -out=tfplan -var-file='${TF_VARS}' -var='ami_id=${APP_AMI_ID}'
         """
       }
