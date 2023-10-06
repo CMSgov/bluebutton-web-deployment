@@ -87,7 +87,7 @@ pipeline {
       steps {
         sh """
         cd terraform/${APP_ENV}
-        terragrut apply -no-color -input=false -auto-approve tfplan
+        terragrunt apply -no-color -input=false -auto-approve tfplan
         """
       }
     }
