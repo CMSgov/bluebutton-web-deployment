@@ -6,8 +6,8 @@ data "template_file" "user_data" {
   template = file("${path.module}/templates/user_data.tpl")
 
   vars = {
-    env         = lower(var.env)
-    bucket      = var.app_config_bucket
+    env                   = lower(var.env)
+    bucket                = var.app_config_bucket
     static_content_bucket = var.static_content_bucket
   }
 }
@@ -27,15 +27,15 @@ resource "aws_instance" "prod_canary_app" {
   instance_type = var.instance_type
   key_name      = var.key_name
 
-  subnet_id     = var.subnet_id
+  subnet_id = var.subnet_id
 
   #user_data = "${file("${path.module}/templates/user_data")}"
 
 
-  user_data               = data.template_file.user_data.rendered
-  iam_instance_profile    = var.iam_instance_profile
+  user_data            = data.template_file.user_data.rendered
+  iam_instance_profile = var.iam_instance_profile
 
-  vpc_security_group_ids  = [
+  vpc_security_group_ids = [
     var.vpc_sg_id,
     aws_security_group.allow_ci_ssh.id
   ]
@@ -56,29 +56,29 @@ resource "aws_security_group" "allow_ci_ssh" {
   vpc_id      = var.vpc_id
 
   ingress {
-    description      = "SSH from prod canary CI"
-    from_port        = 22
-    to_port          = 22
-    protocol         = "tcp"
-    cidr_blocks      = var.ci_cidrs
+    description = "SSH from prod canary CI"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = var.ci_cidrs
   }
 
   ingress {
-    description      = "HTTPS from CI"
-    from_port        = 443
-    to_port          = 443
-    protocol         = "tcp"
-    prefix_list_ids  = ["${data.aws_ec2_managed_prefix_list.canary_sg_pl.id}"]
+    description     = "HTTPS from CI"
+    from_port       = 443
+    to_port         = 443
+    protocol        = "tcp"
+    prefix_list_ids = ["${data.aws_ec2_managed_prefix_list.canary_sg_pl.id}"]
   }
 
   tags = {
-    Name  = "allow_ssh"
-    env   = "prod_canary"
+    Name = "allow_ssh"
+    env  = "prod_canary"
   }
 }
 
 #Assign Private IP to Output variable
 
-  output "private_ip" {
-    value = aws_instance.prod_canary_app.private_ip
-  }
+output "private_ip" {
+  value = aws_instance.prod_canary_app.private_ip
+}

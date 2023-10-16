@@ -8,8 +8,8 @@ provider "aws" {
 # the desired account, we should add some logic here for the account number
 
 module "cwl_subscrip_filter" {
-  source          = "../../modules/cwl_subscrip_filter"
-  filter_name     = "${terraform.workspace}-perf-mon"
-  bfd_acct        = var.bfd_acct
-  log_group_name  = "/bb/${terraform.workspace}/app/perf_mon.log"
+  source         = "../../modules/cwl_subscrip_filter"
+  filter_name    = "${terraform.workspace}-perf-mon"
+  bfd_acct       = var.bfd_acct
+  log_group_name = "/bb/${terraform.workspace}/app/perf_mon.log"
 }

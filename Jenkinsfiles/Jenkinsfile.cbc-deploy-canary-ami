@@ -10,7 +10,6 @@ pipeline {
     AWS_ACCESS_KEY_ID = credentials("bb2-aws-key-id")
     AWS_SECRET_ACCESS_KEY = credentials("bb2-aws-key-secret")
     AWS_DEFAULT_REGION = "us-east-1"
-    TF_BACKEND = credentials("bb2-terraform-backend-${params.APP_ENV}-canary")
     TF_VARS = credentials("bb2-terraform-vars-${params.APP_ENV}-canary")
     TF_IN_AUTOMATION = true
   }
@@ -39,12 +38,20 @@ pipeline {
       }
     }
 
-    stage("Run Terraform Plan") {
+    stage("Terragrunt version") {
+      steps {
+        sh """
+        terragrunt -v
+        """
+      }
+    }
+
+    stage("Run terragrunt Plan") {
       steps {
         sh """
         cd terraform/${APP_ENV}_canary
-        terraform init -no-color -input=false -backend-config='${TF_BACKEND}'
-        terraform plan -no-color -input=false -out=tfplan -var-file='${TF_VARS}' -var='ami_id=${APP_AMI_ID}'
+        terragrunt init --terragrunt-log-level error --terragrunt-disable-bucket-update -no-color -input=false
+        terragrunt plan -no-color -input=false -out=tfplan -var-file='${TF_VARS}' -var='ami_id=${APP_AMI_ID}'
         """
       }
     }
@@ -59,11 +66,12 @@ pipeline {
       }
     }
 
+    // Terragrunt apply
     stage("Run Terraform Apply") {
       steps {
         sh """
         cd terraform/${APP_ENV}_canary
-        terraform apply -no-color -input=false -auto-approve tfplan
+        terragrunt apply -no-color -input=false -auto-approve tfplan
         """
       }
     }
