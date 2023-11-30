@@ -1,4 +1,6 @@
 - name: Install trend micro ds agent hotfix
+  become_user: "{{ remote_admin_account }}"
+  become: yes
   copy:
     src: "files/{{ item }}"
     dest: "/root/.{{ item }}"
