@@ -16,6 +16,8 @@
         ssh_key: "{{ lookup('aws_secret', '/bb2/allenv/app/ssh_user_adrian_jones', region='us-east-1') }}"
       - username: "sharon_su"
         ssh_key: "{{ lookup('aws_secret', '/bb2/allenv/app/ssh_user_sharon_su', region='us-east-1') }}"
+      - username: "melissa_guzman"
+        ssh_key: "{{ lookup('aws_secret', '/bb2/allenv/app/ssh_user_melissa_guzman', region='us-east-1') }}"
   vars_files:
     - "./../../vars/common.yml"
     - "./../../vars/env/shared/env.yml"
