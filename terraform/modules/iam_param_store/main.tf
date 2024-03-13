@@ -20,7 +20,7 @@ resource "aws_iam_policy" "app_secrets_mgr" {
                 "secretsmanager:GetSecretValue"
             ],
             "Resource": [
-                "arn:aws:secretsmanager:us-east-1:${data.aws_caller_identity.current.account_id}:secret:/bb2/test/app/*"
+                "arn:aws:secretsmanager:us-east-1:${data.aws_caller_identity.current.account_id}:secret:/bb2/${var.env}/app/*"
             ]
         }
     ]
