@@ -9,3 +9,5 @@ terraform.tfstate.backup
 Dockerfiles/ec2-user.pem
 Dockerfiles/ec2-user.pub
 backend.tf
+.idea
+bluebutton-web-deployment.iml
