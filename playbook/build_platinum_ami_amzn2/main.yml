@@ -10,12 +10,6 @@
     sg_zone: "appserver"
     splunk_target_layer: "app"
     users:
-      - username: "david_tisza"
-        ssh_key: "{{ lookup('aws_secret', '/bb2/allenv/app/ssh_user_david_tisza', region='us-east-1') }}"
-      - username: "adrian_jones"
-        ssh_key: "{{ lookup('aws_secret', '/bb2/allenv/app/ssh_user_adrian_jones', region='us-east-1') }}"
-      - username: "sharon_su"
-        ssh_key: "{{ lookup('aws_secret', '/bb2/allenv/app/ssh_user_sharon_su', region='us-east-1') }}"
       - username: "melissa_guzman"
         ssh_key: "{{ lookup('aws_secret', '/bb2/allenv/app/ssh_user_melissa_guzman', region='us-east-1') }}"
       - username: "jimmy_fagan"
@@ -26,6 +20,10 @@
         ssh_key: "{{ lookup('aws_secret', '/bb2/allenv/app/ssh_user_jim_fuqian', region='us-east-1') }}"
       - username: "vaishali_cholkar"
         ssh_key: "{{ lookup('aws_secret', '/bb2/allenv/app/ssh_user_vaishali_cholkar', region='us-east-1') }}"
+      - username: "shivam_tiwari"
+        ssh_key: "{{ lookup('aws_secret', '/bb2/allenv/app/ssh_user_shivam_tiwari', region='us-east-1') }}"
+      - username: "noor_shaik"
+        ssh_key: "{{ lookup('aws_secret', '/bb2/allenv/app/ssh_user_noor_shaik', region='us-east-1') }}"
   vars_files:
     - "./../../vars/common.yml"
     - "./../../vars/env/shared/env.yml"
