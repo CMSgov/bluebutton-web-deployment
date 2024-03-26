@@ -4,9 +4,9 @@ data "aws_iam_role" "app" {
   name = "bb-${var.env}-app-role"
 }
 
-resource "aws_iam_policy" "app_param_store" {
-  name        = "bb-${var.env}-app-parameter-store"
-  description = "Read-only permissions to environment scoped parameter store variables"
+resource "aws_iam_policy" "app_secrets_mgr" {
+  name        = "bb-${var.env}-app-secrets-mgr"
+  description = "Read-only permissions to environment scoped secrets manager variables"
 
   policy = <<EOF
 {
@@ -15,14 +15,12 @@ resource "aws_iam_policy" "app_param_store" {
         {
             "Effect": "Allow",
             "Action": [
-                "ssm:DescribeParameters",
-                "ssm:GetParameterHistory",
-                "ssm:GetParametersByPath",
-                "ssm:GetParameters",
-                "ssm:GetParameter"
+                "secretsmanager:ListSecrets",
+                "secretsmanager:DescribeSecret",
+                "secretsmanager:GetSecretValue"
             ],
             "Resource": [
-                "arn:aws:ssm:us-east-1:${data.aws_caller_identity.current.account_id}:parameter/bb2/${var.env}/app/*"
+                "arn:aws:secretsmanager:us-east-1:${data.aws_caller_identity.current.account_id}:secret:/bb2/${var.env}/app/*"
             ]
         }
     ]
@@ -32,5 +30,5 @@ EOF
 
 resource "aws_iam_role_policy_attachment" "app_param_store" {
   role       = data.aws_iam_role.app.id
-  policy_arn = aws_iam_policy.app_param_store.arn
+  policy_arn = aws_iam_policy.app_secrets_mgr.arn
 }
