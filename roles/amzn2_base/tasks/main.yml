@@ -1,12 +1,4 @@
 ---
-- name: Apply security patches
-  become_user: "{{ remote_admin_account }}"
-  become: yes
-  command: "yum update-minimal --security -y"
-- name: Install extras python3.8
-  become_user: "{{ remote_admin_account }}"
-  become: yes
-  command: "amazon-linux-extras install python3.8 -y"
 - name: Install dependencies
   become: yes
   become_user: "{{ remote_admin_account }}"
@@ -34,6 +26,14 @@
     - grub2-tools-minimal-2.06-14.amzn2.0.3*
     - grub2-tools-extra-2.06-14.amzn2.0.3*
     - grub2-tools-efi-2.06-14.amzn2.0.3*
+- name: Apply security patches
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  command: "yum update-minimal --security -y"
+- name: Install extras python3.8
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  command: "amazon-linux-extras install python3.8 -y"
 - name: Install uwsgi ansible boto3 and botocore psycopg2-binary==2.9.6 via pip3.8
   become: yes
   become_user: "{{ remote_admin_account }}"
