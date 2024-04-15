@@ -11,7 +11,3 @@ Dockerfiles/ec2-user.pub
 backend.tf
 .idea
 bluebutton-web-deployment.iml
-parameters.json
-parameters_impl.json
-terraform/test/tfplan
-terraform/impl/tfplan
