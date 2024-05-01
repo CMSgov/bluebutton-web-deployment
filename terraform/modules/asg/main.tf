@@ -55,7 +55,7 @@ resource "aws_security_group" "ci" {
     from_port        = 443
     to_port          = 443
     protocol         = "tcp"
-    prefix_list_ids  = ["${data.aws_ec2_managed_prefix_list.sg_prefix_list.id}"]
+    prefix_list_ids  = [data.aws_ec2_managed_prefix_list.sg_prefix_list.id]
   }
 }
 
@@ -78,7 +78,7 @@ resource "aws_launch_template" "app" {
     var.app_sg_id,
     var.vpn_sg_id,
     var.ent_tools_sg_id,
-    "${aws_security_group.ci.id}",
+    aws_security_group.ci.id,
   ]
 
   key_name                    = var.key_name
