@@ -23,7 +23,6 @@ pipeline {
 
     string(
       name: "DEPLOY_REPO_BRANCH",
-      // FIXME: Temporary value for testing, revert to master prior to merging!
       defaultValue: "master",
       description: "The branch of the deployment repo to build in AMI. Defaults to master."
     )
