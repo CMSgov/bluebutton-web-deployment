@@ -27,6 +27,18 @@ pipeline {
       description: "The AMI ID for the gold image, overrides search filter string."
     )
 
+    string(
+      name: "DEPLOY_REPO_BRANCH",
+      defaultValue: "master",
+      description: "The branch of the deployment repo to build in AMI. Defaults to master."
+    )
+
+    choice(
+      name: "ON_ERROR",
+      choices: ["cleanup", "abort", "ask", "run-cleanup-provisioner"],
+      description: "Selects what to do when the build fails during provisioning. See https://developer.hashicorp.com/packer/docs/commands/build for details."
+    )
+
     credentials(
       name: "ec2-user",
       defaultValue: 'ec2-user',
@@ -68,6 +80,7 @@ pipeline {
       steps {
         sh """
           packer build -color=false \
+            -on-error=${ON_ERROR} \
             -var 'source_ami=${SOURCE_AMI}' \
             -var 'ec2-user=${EC2_KEY}' \
             -var 'ec2-user-pub-key=${EC2_PUB_KEY}' \
