@@ -59,6 +59,7 @@ pipeline {
       steps {
         sh """
         terragrunt -v
+        terraform -v
         """
       }
     }
