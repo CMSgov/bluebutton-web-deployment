@@ -70,8 +70,9 @@ pipeline {
 
     stage("Build App AMI") {
       steps {
+      echo "aws id ${AWS_ACCESS_KEY_ID}"
         sh """
-        echo "${AWS_ACCESS_KEY_ID}"
+
           packer build -color=false \
             -var 'source_ami=${SOURCE_AMI}' \
             -var 'release_version=${APP_REPO_BRANCH}' \
