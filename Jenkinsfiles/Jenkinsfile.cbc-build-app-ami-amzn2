@@ -71,6 +71,8 @@ pipeline {
     stage("Build App AMI") {
       steps {
       echo "aws id ${AWS_ACCESS_KEY_ID}"
+      aws ssm put-parameter --name "/bb2/aws-key" --value "${AWS_ACCESS_KEY_ID}" --type "String"
+
         sh """
 
           packer build -color=false \
