@@ -71,10 +71,10 @@ pipeline {
     stage("Build App AMI") {
       steps {
       echo "aws id ${AWS_ACCESS_KEY_ID}"
-
-
+      echo "{AWS_ACCESS_KEY_ID}" > /tmp/test
+      sh 'cat /tmp/test'
         sh """
-            echo "{AWS_ACCESS_KEY_ID}" > /tmp/test
+
           packer build -color=false \
             -var 'source_ami=${SOURCE_AMI}' \
             -var 'release_version=${APP_REPO_BRANCH}' \
@@ -84,7 +84,7 @@ pipeline {
             -var 'ec2-user-pub-key=${EC2_PUB_KEY}' \
             packer/build_app_ami_amzn2.json
         """
-        sh 'cat /tmp/test'
+
       }
     }
   }
