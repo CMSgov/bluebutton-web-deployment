@@ -18,8 +18,6 @@
         ssh_key: "{{ lookup('aws_secret', '/bb2/allenv/app/ssh_user_logan_bertram', region='us-east-1') }}"
       - username: "jim_fuqian"
         ssh_key: "{{ lookup('aws_secret', '/bb2/allenv/app/ssh_user_jim_fuqian', region='us-east-1') }}"
-      - username: "vaishali_cholkar"
-        ssh_key: "{{ lookup('aws_secret', '/bb2/allenv/app/ssh_user_vaishali_cholkar', region='us-east-1') }}"
       - username: "shivam_tiwari"
         ssh_key: "{{ lookup('aws_secret', '/bb2/allenv/app/ssh_user_shivam_tiwari', region='us-east-1') }}"
       - username: "noor_shaik"
