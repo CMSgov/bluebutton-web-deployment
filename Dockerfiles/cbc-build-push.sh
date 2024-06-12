@@ -6,7 +6,7 @@
 DOCKER_TAG=${1:-py38-ans29-awscol620-tf18-tgrunt-boto3-botocore}
 
 docker build --file Dockerfile.cbc-build \
-  --build-arg PYTHON_VERSION=${2:-3.8} \
+  --build-arg PYTHON_VERSION=${2:-3.11} \
   --build-arg ANSIBLE_VERSION=${3:-2.9} \
   --build-arg PACKER_VERSION=${4:-1.6.5} \
   --build-arg TERRAFORM_VERSION=${5:-1.8.2} \
