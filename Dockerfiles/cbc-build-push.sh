@@ -3,7 +3,7 @@
 # TO-DO: pin versions on boto3 and botocore if requested.
 # Versions at time of BB2-1124 dev: boto3==1.21.28 botocore==1.24.28
 
-DOCKER_TAG=${1:-py38-ans29-awscol620-tf18-tgrunt-boto3-botocore}
+DOCKER_TAG=${1:-py311-ans29-awscol620-tf18-tgrunt-boto3-botocore}
 
 docker build --file Dockerfile.cbc-build \
   --build-arg PYTHON_VERSION=${2:-3.11} \
