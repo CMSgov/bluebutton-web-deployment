@@ -7,6 +7,8 @@
   become_user: "{{ remote_admin_account }}"
   become: yes
   command: "amazon-linux-extras list | grep python"
+  register: out
+- debug: var=out.stdout_lines  
 - name: Install extras python3.11
   become_user: "{{ remote_admin_account }}"
   become: yes
