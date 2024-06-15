@@ -3,6 +3,12 @@
   become_user: "{{ remote_admin_account }}"
   become: yes
   command: "yum update-minimal --security -y"
+- name: Cat iamge ID
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  command: "cat /etc/image-id"
+  register: out
+- debug: var=out.stdout_lines
 - name: Install extras python3.11
   become_user: "{{ remote_admin_account }}"
   become: yes
