@@ -36,11 +36,19 @@
 - name: Build python3.11.9
   become_user: "{{ remote_admin_account }}"
   become: yes
-  command: "cd Python-3.11.9 ; ./configure --enable-optimizations ; make altinstall"
+  command: "{{ item }}"
+  with_items:
+    - cd Python3.11.9
+    - ./configure --enable-optimizations
+    - make make altinstall"
 - name: Cleanup and check version
   become_user: "{{ remote_admin_account }}"
   become: yes
-  command: "rm -f /opt/Python-3.11.8.tgz ; python3.11 --version ; pip3.11 --version"
+  command: "{{ item }}"
+  with_items:
+    - rm -f /opt/Python-3.11.8.tgz
+    - python3.11 --version
+    - pip3.11 --version
 - name: Install uwsgi ansible boto3 and botocore psycopg2-binary==2.9.6 via pip3.11
   become: yes
   become_user: "{{ remote_admin_account }}"
