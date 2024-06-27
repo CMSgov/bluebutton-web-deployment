@@ -16,7 +16,6 @@
     name:
       - gcc
       - git
-      - python38-devel
       - postgresql-devel
       - zlib-devel
       - libjpeg-turbo-devel
