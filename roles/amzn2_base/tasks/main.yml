@@ -33,6 +33,8 @@
   become_user: "{{ remote_admin_account }}"
   become: yes
   command: "tar xzf Python-3.11.9.tgz"
+  register: out1
+- debug: var=out1.stdout_lines
 - name: Build python3.11.9
   become_user: "{{ remote_admin_account }}"
   become: yes
@@ -40,19 +42,24 @@
   with_items:
     - cd Python3.11.9
     - ./configure --enable-optimizations
-    - make make altinstall"
+    - make altinstall"
+  register: out2
+- debug: var=out2.stdout_lines
 - name: Cleanup and check version
   become_user: "{{ remote_admin_account }}"
   become: yes
   command: "{{ item }}"
   with_items:
-    - rm -f /opt/Python-3.11.8.tgz
+    - rm -f Python-3.11.8.tgz
     - python3.11 --version
-    - pip3.11 --version
+  register: out3
+- debug: var=out3.stdout_lines
 - name: Install pip with python 3.11.9
   become_user: "{{ remote_admin_account }}"
   become: yes
   command: "python3.11 -m ensurepip --upgrade"
+  register: out4
+- debug: var=out4.stdout_lines
 - name: Install uwsgi ansible boto3 and botocore psycopg2-binary==2.9.6 via pip3.11
   become: yes
   become_user: "{{ remote_admin_account }}"
