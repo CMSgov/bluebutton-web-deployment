@@ -38,20 +38,13 @@
 - name: Build python3.11.9
   become_user: "{{ remote_admin_account }}"
   become: yes
-  command: "{{ item }}"
-  with_items:
-    - cd Python3.11.9
-    - ./configure --enable-optimizations
-    - make altinstall"
+  command: "cd Python3.11.9 ; ./configure --enable-optimizations ; make altinstall"
   register: out2
 - debug: var=out2.stdout_lines
 - name: Cleanup and check version
   become_user: "{{ remote_admin_account }}"
   become: yes
-  command: "{{ item }}"
-  with_items:
-    - rm -f Python-3.11.8.tgz
-    - python3.11 --version
+  command: "rm -f Python-3.11.8.tgz ; python3.11 --version"
   register: out3
 - debug: var=out3.stdout_lines
 - name: Install pip with python 3.11.9
