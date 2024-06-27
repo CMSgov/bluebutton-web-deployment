@@ -36,7 +36,7 @@
 - name: Build python3.11.9
   become_user: "{{ remote_admin_account }}"
   become: yes
-  command: chdir=Python3.11.9 {{ item }}
+  command: chdir=Python-3.11.9 {{ item }}
   with_items:
     - ./configure --enable-optimizations
     - make altinstall
