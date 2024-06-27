@@ -49,6 +49,10 @@
     - rm -f /opt/Python-3.11.8.tgz
     - python3.11 --version
     - pip3.11 --version
+- name: Install pip with python 3.11.9
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  command: "python3.11 -m ensurepip --upgrade"
 - name: Install uwsgi ansible boto3 and botocore psycopg2-binary==2.9.6 via pip3.11
   become: yes
   become_user: "{{ remote_admin_account }}"
