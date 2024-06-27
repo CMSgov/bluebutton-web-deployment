@@ -33,12 +33,13 @@
   become_user: "{{ remote_admin_account }}"
   become: yes
   command: "tar xzf Python-3.11.9.tgz"
-  register: out1
-- debug: var=out1.stdout_lines
 - name: Build python3.11.9
   become_user: "{{ remote_admin_account }}"
   become: yes
-  command: "cd Python3.11.9 ; ./configure --enable-optimizations ; make altinstall"
+  command: chdir=Python3.11.9 {{ item }}
+  with_items:
+    - ./configure --enable-optimizations
+    - make altinstall
   register: out2
 - debug: var=out2.stdout_lines
 - name: Cleanup and check version
