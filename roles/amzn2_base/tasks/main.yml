@@ -39,7 +39,9 @@
   command: chdir=Python-3.11.9 {{ item }}
   with_items:
     - ./configure --enable-optimizations
-    - make altinstall
+    - which make
+    - make clean
+    - make install
   register: out2
 - debug: var=out2.stdout_lines
 - name: Cleanup and check version
