@@ -41,7 +41,7 @@
     - ./configure --enable-optimizations
     - which make
     - make clean
-    - make install
+    - sudo make altinstall
   register: out2
 - debug: var=out2.stdout_lines
 - name: Cleanup and check version
