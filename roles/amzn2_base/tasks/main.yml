@@ -39,8 +39,6 @@
   command: chdir=Python-3.11.9 {{ item }}
   with_items:
     - ./configure --enable-optimizations
-    - which make
-    - make clean
     - sudo make altinstall
   register: out2
 - debug: var=out2.stdout_lines
