@@ -13,6 +13,7 @@
     "source_ami": "{{user `source_ami`}}",
     "ami_name": "bb2-amzn2-platinum-{{isotime \"20060102030405\"}}",
     "ssh_timeout": "15m",
+    "iam_instance_profile": "AmazonEC2RoleforSSM",
     "ssh_interface": "session_manager",
     "ssh_pty": true,
     "launch_block_device_mappings": [
