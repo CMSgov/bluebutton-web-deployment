@@ -6,19 +6,25 @@
 - name: Install extras python3.11 on Amazon Linux 2
   become_user: "{{ remote_admin_account }}"
   become: yes
-  command: "wget https://www.python.org/ftp/python/3.11.0/Python-3.11.0.tgz"
-  args:
-    chdir: /usr/src
+  get_url:
+     url: https://www.python.org/ftp/python/3.11.0/Python-3.11.0.tgz
+     dest: /usr/src/Python-3.11.0.tgz
+  
 - name: Extract Python 3.11 source
-  command: tar xzf Python-3.11.0.tgz
-  args:
-    chdir: /usr/src
+  become_user: "{{ remote_admin_account }}"
+  unarchive:
+     src: /usr/src/Python-3.11.0.tgz
+     dest: /usr/src
+     remote_src: yes
+  become: yes
 - name: Configure and install Python 3.11
   shell: |
      cd /usr/src/Python-3.11.0
      ./configure --enable-optimizations
      make altinstall
 - name: Python3.11 is available in the path
+  become_user: "{{ remote_admin_account }}"
+  become: yes
   shell: ln -sf /usr/local/bin/python3.11 /usr/bin/python3.11
 
 - name: Install dependencies
