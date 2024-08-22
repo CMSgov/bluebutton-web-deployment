@@ -3,13 +3,27 @@
   become_user: "{{ remote_admin_account }}"
   become: yes
   command: "yum update-minimal --security -y"
+ yum:
+    name:
+      - gcc
+      - make
+      - tar
+      - wget
+      - git
+      - python311
+      - python311-devel
+      - postgresql-devel
+      - zlib-devel
+      - libjpeg-turbo-devel
+      - nginx
+      - amazon-cloudwatch-agent
 - name: Install extras python3.11 on Amazon Linux 2
   become_user: "{{ remote_admin_account }}"
   become: yes
   get_url:
      url: https://www.python.org/ftp/python/3.11.0/Python-3.11.0.tgz
      dest: /usr/src/Python-3.11.0.tgz
-  
+
 - name: Extract Python 3.11 source
   become_user: "{{ remote_admin_account }}"
   unarchive:
