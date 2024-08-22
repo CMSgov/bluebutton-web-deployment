@@ -33,14 +33,20 @@
      dest: /usr/src
      remote_src: yes
   become: yes
-- name: Configure and install Python 3.11
+- name:  Run configure script for Python 3.11
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  command: ./configure --enable-optimizations
+  args:
+    chdir: /usr/src/Python-3.11.0
+- name: Compile and altinstall Python 3.11
   become_user: "{{ remote_admin_account }}"
   become: yes
   command: make altinstall
   args:
     chdir: /usr/src/Python-3.11.0
     creates: /usr/local/bin/python3.11
-    
+
 - name: Python3.11 is available in the path
   become_user: "{{ remote_admin_account }}"
   become: yes
