@@ -17,6 +17,7 @@
       - libjpeg-turbo-devel
       - nginx
       - amazon-cloudwatch-agent
+    state: present
 - name: Install extras python3.11 on Amazon Linux 2
   become_user: "{{ remote_admin_account }}"
   become: yes
