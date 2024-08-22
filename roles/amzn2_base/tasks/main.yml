@@ -3,7 +3,10 @@
   become_user: "{{ remote_admin_account }}"
   become: yes
   command: "yum update-minimal --security -y"
- yum:
+- name: Install dependencies
+  become: yes
+  become_user: "{{ remote_admin_account }}"
+  yum:
     name:
       - gcc
       - make
@@ -41,21 +44,6 @@
   become_user: "{{ remote_admin_account }}"
   become: yes
   shell: ln -sf /usr/local/bin/python3.11 /usr/bin/python3.11
-
-- name: Install dependencies
-  become: yes
-  become_user: "{{ remote_admin_account }}"
-  yum:
-    name:
-      - gcc
-      - git
-      - python311
-      - python311-devel
-      - postgresql-devel
-      - zlib-devel
-      - libjpeg-turbo-devel
-      - nginx
-      - amazon-cloudwatch-agent
 - name: Verify Python3.11 installation
   command: python3.11 --version
   register: python_version
