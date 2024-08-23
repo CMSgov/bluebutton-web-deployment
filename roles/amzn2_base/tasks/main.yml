@@ -10,8 +10,11 @@
     name:
       - gcc
       - make
+      - openssl-devel
       - tar
       - wget
+      - bzip2-devel
+      - libffi-devel
       - git
       - postgresql-devel
       - zlib-devel
@@ -24,13 +27,13 @@
   become: yes
   get_url:
      url: https://www.python.org/ftp/python/3.11.0/Python-3.11.0.tgz
-     dest: /usr/src/Python-3.11.0.tgz
+     dest: /tmp/Python-3.11.0.tgz
 
 - name: Extract Python 3.11 source
   become_user: "{{ remote_admin_account }}"
   unarchive:
-     src: /usr/src/Python-3.11.0.tgz
-     dest: /usr/src
+     src: /tmp/Python-3.11.0.tgz
+     dest: /tmp/
      remote_src: yes
   become: yes
 - name:  Run configure script for Python 3.11
@@ -38,19 +41,16 @@
   become: yes
   command: ./configure --enable-optimizations
   args:
-    chdir: /usr/src/Python-3.11.0
-- name: Compile and altinstall Python 3.11
+    chdir: /tmp/Python-3.11.0
+    notify: make_install
+  handlers:
   #become_user: "{{ remote_admin_account }}"
-  become: yes
-  command: make altinstall
-  args:
-    chdir: /usr/src/Python-3.11.0
-    creates: /usr/local/bin/python3.11
+  #become: yes
+    command: make altinstall
+    args:
+     chdir: /tmp/Python-3.11.0
+    #creates: /usr/local/bin/python3.11
 
-- name: Python3.11 is available in the path
-  become_user: "{{ remote_admin_account }}"
-  become: yes
-  shell: ln -sf /usr/local/bin/python3.11 /usr/bin/python3.11
 - name: Verify Python3.11 installation
   command: python3.11 --version
   register: python_version
