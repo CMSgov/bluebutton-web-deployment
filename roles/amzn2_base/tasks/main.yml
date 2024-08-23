@@ -23,10 +23,19 @@
       - amazon-cloudwatch-agent
     state: present
 
-- name: Verify Python3.11 installation
-  command: python3.11 --version
-  register: python_version
-- name: Install uwsgi ansible boto3 and botocore psycopg2-binary==2.9.6 via pip3.8
+- name: Install Python 3.11 and Pip
+  hosts: all
+  become: yes
+  tasks:
+    - name: Ensure Python 3.11 is installed
+      command: python3.11 --version
+      register: python_version
+      failed_when: python_version.rc != 0
+
+    - name: Print Python 3.11 version
+      debug:
+        msg: "Python 3.11 version is {{ python_version.stdout }}"
+- name: Install uwsgi ansible boto3 and botocore psycopg2-binary==2.9.6 via pip3.11
   become: yes
   become_user: "{{ remote_admin_account }}"
   pip:
@@ -36,5 +45,5 @@
       - boto3
       - botocore
       - psycopg2-binary==2.9.6
-    executable: pip3.8
+    executable: /usr/bin/pip3.11
     umask: "0022"
