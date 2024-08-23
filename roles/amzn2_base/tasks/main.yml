@@ -34,23 +34,18 @@
   unarchive:
      src: /tmp/Python-3.11.0.tgz
      dest: /tmp/
-     remote_src: yes
+     remote_src: true
   become: yes
 - name:  Run configure script for Python 3.11
   become_user: "{{ remote_admin_account }}"
   become: yes
-  command: ./configure --enable-optimizations
+  shell:
+    cd /tmp/Python-3.11.0
+    ./configure --enable-optimizations
+    make altinstall
   args:
-    chdir: /tmp/Python-3.11.0
-    notify: make_install
-  handlers:
-  #become_user: "{{ remote_admin_account }}"
-  #become: yes
-    command: make altinstall
-    args:
-     chdir: /tmp/Python-3.11.0
-    #creates: /usr/local/bin/python3.11
-
+    chdir: /usr/local/bin/python3.11
+    
 - name: Verify Python3.11 installation
   command: python3.11 --version
   register: python_version
