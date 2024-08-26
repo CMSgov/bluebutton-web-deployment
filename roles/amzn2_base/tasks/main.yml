@@ -35,6 +35,13 @@
     - name: Print Python 3.11 version
       debug:
         msg: "Python 3.11 version is {{ python_version.stdout }}"
+    - name: Install pip3.11 if missing
+      command: python3.11 -m ensurepip
+      ignore_errors: yes
+
+    - name: Upgrade pip3.11
+      command: python3.11 -m pip install --upgrade pip
+      ignore_errors: yes
 - name: Install uwsgi ansible boto3 and botocore psycopg2-binary==2.9.6 via pip3.11
   become: yes
   become_user: "{{ remote_admin_account }}"

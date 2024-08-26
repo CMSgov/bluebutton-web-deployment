@@ -39,7 +39,9 @@
         "sudo ./configure --enable-optimizations",
         "sudo make altinstall",
         "sudo ln -s /usr/local/bin/python3.11 /usr/bin/python3.11",
-        "sudo ln -s /usr/local/bin/pip3.11 /usr/bin/pip3.11",
+          "sudo python3.11 -m ensurepip",
+        "sudo python3.11 -m pip install --upgrade pip",
+
         "python3.11 --version",
         "pip3.11 --version"
         ]
