@@ -75,5 +75,5 @@
       - boto3
       - botocore
       - psycopg2-binary==2.9.6
-    executable: /usr/bin/pip3.11
+    executable: /usr/bin/pip3
     umask: "0022"
