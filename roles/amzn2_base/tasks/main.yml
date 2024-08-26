@@ -44,8 +44,8 @@
       ./configure && \
        make && \
        make altinstall
-    chdir: /Python-3.11.9
-    creates: /usr/local/bin/python3.11
+     chdir: /Python-3.11.9
+     creates: /usr/local/bin/python3.11
 
 - name: Create symbolic links
   file:
