@@ -52,7 +52,8 @@
   become: yes
   command: ./configure --with-openssl=/usr/ --enable-optimizations
   args:
-      chdir: /Python-3.11.9
+  chdir: /Python-3.11.9
+
 - name: Build Python 3.11.9
   command: make
   become: yes
