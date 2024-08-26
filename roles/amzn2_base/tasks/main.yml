@@ -4,6 +4,8 @@
   become: yes
   command: "yum update-minimal --security -y"
 - name: Remove the existing openssl package
+  become: yes
+  become_user: "{{ remote_admin_account }}"
   yum:
       name: openssl
       state: absent
