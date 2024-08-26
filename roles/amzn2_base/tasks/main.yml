@@ -61,10 +61,10 @@
   args:
     chdir: /Python-3.11.9
 
-- name: Configure, make, make altinstall python3
-  shell:
-    cmd: |
-      make altinstall
+- name: Install Python 3.11.9
+  command: make altinstall
+  become: yes
+  args:
     chdir: /Python-3.11.9
   creates: /usr/local/bin/python3.11
 
