@@ -54,8 +54,8 @@
       sudo ./configure && \
       sudo make && \
       sudo make altinstall
-    chdir: /Python-3.11
-    
+    chdir: /Python-3.11.9
+
 - name: Create symbolic links
   become: yes
   file:
