@@ -10,7 +10,8 @@
     name:
       - gcc
       - make
-      - openssl-devel
+      - openssl11
+      - openssl11-devel
       - tar
       - wget
       - bzip2-devel
@@ -22,6 +23,7 @@
       - nginx
       - amazon-cloudwatch-agent
     state: present
+    force: true
 
 - name: Download python3 tar
   become: yes
@@ -44,7 +46,7 @@
   become: yes
   shell:
      cmd: |
-      ./configure && \
+      ./configure --with-openssl=/usr/ --enable-optimizations&& \
        make && \
        make altinstall
      chdir: /Python-3.11.9
