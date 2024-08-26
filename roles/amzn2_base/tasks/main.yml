@@ -59,7 +59,7 @@
   command: make
   become: yes
   args:
-  chdir: /tmp/Python-3.11.9
+  chdir: /Python-3.11.9
 - name: Install Python 3.11.9
   command: make altinstall
   args:
