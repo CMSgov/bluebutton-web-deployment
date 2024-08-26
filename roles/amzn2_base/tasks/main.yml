@@ -48,7 +48,8 @@
     #       Optimizations via `--enable-optimizations` in the `configure` step below are
     #       not enabled to avoid lengthy build times.
     #       https://docs.python.org/3/using/configure.html#performance-options
-- name: Configure, make, make altinstall python3
+
+- name: Configure
   become: yes
   command: ./configure --with-openssl=/usr/ --enable-optimizations
   args:
