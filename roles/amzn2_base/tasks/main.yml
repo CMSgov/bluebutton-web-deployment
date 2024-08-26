@@ -28,6 +28,7 @@
     url: https://www.python.org/ftp/python/3.11.9/Python-3.11.9.tgz
     dest: /python3.tgz
 - name: Extract python3.tgz
+  become: yes
   unarchive:
           src: /python3.tgz
           dest: /
@@ -39,6 +40,7 @@
     #       not enabled to avoid lengthy build times.
     #       https://docs.python.org/3/using/configure.html#performance-options
 - name: Configure, make, make altinstall python3
+  become: yes
   shell:
      cmd: |
       ./configure && \
@@ -48,6 +50,7 @@
      creates: /usr/local/bin/python3.11
 
 - name: Create symbolic links
+  become: yes
   file:
         src: "{{ item.src }}"
         path: "{{ item.path }}"
@@ -59,6 +62,7 @@
         - src: /usr/local/bin/pip3.11
           path: /usr/bin/pip3
 - name: Upgrade pip3
+  become: yes
   command: /usr/bin/python3 -m pip install --upgrade pip
 - name: Install uwsgi ansible boto3 and botocore psycopg2-binary==2.9.6 via pip3.11
   become: yes
