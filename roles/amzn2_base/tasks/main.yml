@@ -23,7 +23,6 @@
       - nginx
       - amazon-cloudwatch-agent
     state: present
-    force: true
 
 - name: Download python3 tar
   become: yes
