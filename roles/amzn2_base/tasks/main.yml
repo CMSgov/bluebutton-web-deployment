@@ -24,6 +24,7 @@
     state: present
 
 - name: Download python3 tar
+  become: yes
   get_url:
     url: https://www.python.org/ftp/python/3.11.9/Python-3.11.9.tgz
     dest: /python3.tgz
