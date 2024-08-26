@@ -52,7 +52,7 @@
   become: yes
   shell:
      cmd: |
-      ./configure --with-openssl=/usr/ --enable-optimizations&& \
+      ./configure --with-openssl=/usr/ --enable-optimizations && \
        make && \
        make altinstall
      chdir: /Python-3.11.9
