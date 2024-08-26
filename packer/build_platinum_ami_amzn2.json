@@ -28,24 +28,6 @@
   }],
     "provisioners": [
       {
-        "type": "shell",
-        "inline": [
-        "sudo yum update -y",
-        "sudo yum install -y gcc openssl-devel bzip2-devel libffi-devel zlib-devel",
-        "cd /usr/src",
-        "sudo curl -O https://www.python.org/ftp/python/3.11.0/Python-3.11.0.tgz",
-        "sudo tar xzf Python-3.11.0.tgz",
-        "cd Python-3.11.0",
-        "sudo ./configure --enable-optimizations --with-openssl=/usr/local/ssl",
-        "sudo make altinstall",
-        "sudo ln -s /usr/local/bin/python3.11 /usr/bin/python3.11",
-          "curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py",
-          "sudo python3.11 get-pip.py",
-        "python3.11 --version",
-        "pip3.11 --version"
-        ]
-      },
-      {
           "type": "ansible",
           "playbook_file": "playbook/build_platinum_ami_amzn2/main.yml",
           "extra_arguments": [ "-e", "ansible_ssh_private_key_file={{user `ec2-user`}}" ],
