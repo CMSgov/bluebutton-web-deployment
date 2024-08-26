@@ -48,26 +48,14 @@
     #       Optimizations via `--enable-optimizations` in the `configure` step below are
     #       not enabled to avoid lengthy build times.
     #       https://docs.python.org/3/using/configure.html#performance-options
-
-- name: Configure Configure Python 3.11.9
-  become: yes
-  command: ./configure --with-openssl=/usr --enable-optimizations
-  args:
-    chdir: /Python-3.11.9
-
-- name: Build Python 3.11.9
-  command: make
-  become: yes
-  args:
-    chdir: /Python-3.11.9
-
-- name: Install Python 3.11.9
-  shell: make altinstall
-  become: yes
-  args:
-    chdir: /Python-3.11.9
-  
-
+- name: Configure, make, make altinstall python3
+  shell:
+    cmd: |
+      sudo ./configure && \
+      sudo make && \
+      sudo make altinstall
+    chdir: /Python-3.11
+    
 - name: Create symbolic links
   become: yes
   file:
