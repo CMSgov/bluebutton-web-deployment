@@ -36,12 +36,11 @@
         "sudo curl -O https://www.python.org/ftp/python/3.11.0/Python-3.11.0.tgz",
         "sudo tar xzf Python-3.11.0.tgz",
         "cd Python-3.11.0",
-        "sudo ./configure --enable-optimizations",
+        "sudo ./configure --enable-optimizations --with-openssl=/usr/local/ssl",
         "sudo make altinstall",
         "sudo ln -s /usr/local/bin/python3.11 /usr/bin/python3.11",
-          "sudo python3.11 -m ensurepip",
-        "sudo python3.11 -m pip install --upgrade pip",
-
+          "curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py",
+          "sudo python3.11 get-pip.py",
         "python3.11 --version",
         "pip3.11 --version"
         ]
