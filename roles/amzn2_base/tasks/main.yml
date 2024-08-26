@@ -3,6 +3,11 @@
   become_user: "{{ remote_admin_account }}"
   become: yes
   command: "yum update-minimal --security -y"
+- name: Remove the existing openssl package
+  yum:
+      name: openssl
+      state: absent
+
 - name: Install dependencies
   become: yes
   become_user: "{{ remote_admin_account }}"
