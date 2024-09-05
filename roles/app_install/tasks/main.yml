@@ -74,7 +74,7 @@
   become_user: "{{ remote_admin_account }}"
   become: yes
   shell: |
-    source {{ app_py_virtual_env }}/bin/activate && pip3.11 install -r requirements/requirements.txt --no-index --find-links ./vendor/
+    source {{ app_py_virtual_env }}/bin/activate && pip3 install -r requirements/requirements.txt --no-index --find-links ./vendor/
   args:
     chdir: "{{ app_pyapp_home }}/{{ common_project_name }}"
   register: out
