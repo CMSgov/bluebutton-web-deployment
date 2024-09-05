@@ -74,8 +74,9 @@
   become_user: "{{ remote_admin_account }}"
   become: yes
   shell: |
+    source {{ app_py_virtual_env }}/bin/activate
     python3 -m pip install --upgrade pip setuptools wheel
-    source {{ app_py_virtual_env }}/bin/activate && pip3 install -r requirements/requirements.txt --no-index --find-links ./vendor/
+    pip3 install -r requirements/requirements.txt --no-index --find-links ./vendor/
   args:
     chdir: "{{ app_pyapp_home }}/{{ common_project_name }}"
   register: out
