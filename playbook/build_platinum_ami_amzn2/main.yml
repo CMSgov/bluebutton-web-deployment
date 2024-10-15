@@ -10,8 +10,6 @@
     sg_zone: "appserver"
     splunk_target_layer: "app"
     users:
-      - username: "melissa_guzman"
-        ssh_key: "{{ lookup('aws_secret', '/bb2/allenv/app/ssh_user_melissa_guzman', region='us-east-1') }}"
       - username: "jimmy_fagan"
         ssh_key: "{{ lookup('aws_secret', '/bb2/allenv/app/ssh_user_jimmy_fagan', region='us-east-1') }}"
       - username: "logan_bertram"
