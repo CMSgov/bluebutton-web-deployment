@@ -60,6 +60,9 @@ pipeline {
     stage("Determine Source AMI") {
       steps {
         script {
+                    echo "AWS Access Key: ${env.AWS_ACCESS_KEY_ID}"
+                    echo "AWS Secret Key: ${env.AWS_SECRET_ACCESS_KEY}"
+                    echo "AWS Region: ${env.AWS_DEFAULT_REGION}"
           if (params.GOLD_AMI_ID != "") {
             echo("Setting SOURCE_AMI from GOLD_AMI_ID")
             SOURCE_AMI = params.GOLD_AMI_ID
