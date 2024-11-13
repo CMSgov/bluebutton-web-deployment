@@ -17,7 +17,7 @@ pipeline {
   parameters {
     string(
       name: "GOLD_AMI_SEARCH_FILTER",
-      defaultValue: "al2023*",
+      defaultValue: "al2023-legacy*",
       description: "The search filter string for the gold image."
     )
 
