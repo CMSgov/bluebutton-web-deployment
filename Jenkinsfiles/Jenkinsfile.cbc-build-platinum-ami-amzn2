@@ -79,7 +79,7 @@ pipeline {
     stage("Build Platinum AMI") {
       steps {
         sh """
-          packer build -color=false \
+          PACKER_LOG=1 packer build -color=false \
             -on-error=${ON_ERROR} \
             -var 'source_ami=${SOURCE_AMI}' \
             -var 'ec2-user=${EC2_KEY}' \
