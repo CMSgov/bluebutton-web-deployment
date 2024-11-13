@@ -13,14 +13,14 @@
     "source_ami": "{{user `source_ami`}}",
     "ami_name": "bb2-amzn2-platinum-{{isotime \"20060102030405\"}}",
     "ssh_pty": false,
-    "ssh_timeout": "10m",
+    "ssh_timeout": "30m",
     "launch_block_device_mappings": [
       {
         "device_name": "/dev/xvda",
         "volume_type": "gp2",
         "volume_size": 40,
         "encrypted": true,
-        "delete_on_termination": true
+        "delete_on_termination": false
       }
     ],
     "tags": {
