@@ -13,7 +13,6 @@
     "source_ami": "{{user `source_ami`}}",
     "ami_name": "bb2-amzn2-platinum-{{isotime \"20060102030405\"}}",
     "ssh_pty": true,
-    "pause_before": "60s",
     "temporary_key_pair_type": "ed25519",
     "ssh_timeout": "10m",
     "launch_block_device_mappings": [
