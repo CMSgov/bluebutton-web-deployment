@@ -29,7 +29,7 @@ pipeline {
 
     string(
       name: "DEPLOY_REPO_BRANCH",
-      defaultValue: "master",
+      defaultValue: "noor1028/BB2-3522-GoldImage-POC",
       description: "The branch of the deployment repo to build in AMI. Defaults to master."
     )
 
