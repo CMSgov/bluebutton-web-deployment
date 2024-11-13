@@ -6,7 +6,7 @@
   "builders": [{
     "type": "amazon-ebs",
     "ssh_username": "ec2-user",
-    "instance_type": "m4.large",
+    "instance_type": "m6i.large",
     "region": "us-east-1",
     "subnet_id": "{{user `subnet_id`}}",
     "associate_public_ip_address": "false",
@@ -17,13 +17,13 @@
       {
         "device_name": "/dev/xvda",
         "volume_type": "gp2",
-        "volume_size": 30,
+        "volume_size": 40,
         "encrypted": true,
         "delete_on_termination": true
       }
     ],
     "tags": {
-      "Name": "bb2-amzn2-platinum-{{isotime \"20060102030405\"}}"
+      "Name": "bb2-amzn2023-platinum-{{isotime \"20060102030405\"}}"
     }
   }],
     "provisioners": [
