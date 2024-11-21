@@ -68,6 +68,15 @@
           path: /usr/bin/python3
         - src: /usr/local/bin/pip3.11
           path: /usr/bin/pip3
+
+- name: Exclude python updates in yum
+  become: yes
+  lineinfile:
+    path: /etc/yum.conf
+    regexp: '^exclude='
+    line: "exclude=python3*"
+    state: present
+
 - name: Upgrade pip3
   become: yes
   command: /usr/bin/python3 -m pip install --upgrade pip
