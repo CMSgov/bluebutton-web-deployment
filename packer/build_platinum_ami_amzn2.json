@@ -14,8 +14,6 @@
     "ami_name": "bb2-amzn2-platinum-{{isotime \"20060102030405\"}}",
     "ssh_pty": false,
     "ssh_timeout": "30m",
-    "aws_polling_delay_seconds": 60,
-    "aws_polling_max_attempts": 10,
     "launch_block_device_mappings": [
       {
         "device_name": "/dev/xvda",
