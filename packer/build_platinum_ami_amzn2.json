@@ -1,7 +1,6 @@
 {
   "variables": {
     "source_ami": "",
-    "security_group_ids": "sg-0c6eae734aa732861",
     "subnet_id": "subnet-a0d9c28a"
   },
   "builders": [{
@@ -13,8 +12,12 @@
     "associate_public_ip_address": "false",
     "iam_instance_profile": "bb2-ec2-role",
     "ssh_interface": "session_manager",
-    "security_group_id": "{{user `security_group_ids`}}",
     "source_ami": "{{user `source_ami`}}",
+    "security_group_filter": {
+        "filters": {
+          "tag:Name": "bb2-packer-vpn-private"
+        }
+      },
     "ami_name": "bb2-amzn2-platinum-{{isotime \"20060102030405\"}}",
     "ssh_pty": true,
     "ssh_timeout": "30m",
