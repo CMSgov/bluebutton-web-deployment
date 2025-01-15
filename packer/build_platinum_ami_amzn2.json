@@ -18,6 +18,7 @@
         }
       },
     "ssh_pty": false,
+    "ssh_wait_timeout": "30m",
     "ssh_timeout": "30m",
     "launch_block_device_mappings": [
       {
