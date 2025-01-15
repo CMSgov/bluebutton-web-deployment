@@ -1,6 +1,7 @@
 {
   "variables": {
     "source_ami": "",
+    "ssh_private_key": "-----BEGIN RSA PRIVATE KEY-----\nMIIEpAIBAAKCAQEA5sNIQ2CrdLz+OWtlvj210VkbptTe4pJXP5/s6jyOoF9K3pBY\n5bs0hR5NS5VFIehjT4EQSJjAoKE07IGnGhVRWkymow2XorCEzaQFERRGKFk34LgG\nz3jS5prQu3NJg/6CYbWMZhXQcLaTpQItykT1qS2VSM6/0ZjqpWjbZcXp4lKdka7d\nsnhNn3RqPOAVNQnugS0AEjd3k8mRToPEYLxyhagOglAXUijScXc5gn2x8xP+eS/H\nn7VlscnW2FtLUfFlMf20L4Gj5mRol9aPAHvqVQH38Ku0doHcE7QJNLm0LtpiY32N\nKTQiQipNcpwRSuWjgyjkGk2+8ZzpqGTtv/iUdQIDAQABAoIBAFWSz0ZlH8/Pkfrb\nD8THf5gdkjqAsBKXMBGhDasjP8TK8amtH7o5fNVskj9YIGXdlo5SDybMtooandSi\nk8QBacSxrg3DKZskGGtlypc1zHqD80u7EpN3e8YWXRdWPknbZKA1QdZNepmBqyjC\nsRZUEkFlbPmt6cYhDcq/IrUP+pZ5Vj2xhKiGpEfqR0kOfHny6Ro32b7GcE+N8fh/\nh83Mb+WnQYD23PGK6bnKkBaCXJcnPbSoX5Jyo5e5NDGm1pDk/6uIrurLedjfLYgz\nuOdCZvR4uWPlEq0TWVmotYXIFUqpCA+8KzvIiiET5iMKgHWl72dZK2zv8lq9x1Qs\nplntO4ECgYEA9RIJ9zFkTIkvUODLhVH4UXYPS0nJwsEnXDCWnefxzv+LXyt6xyCO\nxNZdzg6bPXaRgG0sovcA+7zzht2ciKE2Tb5ewQoFRGHfurvSyEoV7hJeF/iq9948\nunsZZsYI3XxgLXGh47m21w5XE1kb37JRtR8ttYQ6L6Gfjg7Oxdz0NVUCgYEA8Q3k\nuxV75mOHT8ifK0vakFwJSCHIpzlQL82iJbW/Vt6NG/XNvZI6jU8LCDFsQWyYWerf\nW512jJZaKdFGEug6EbSGlKTNYYE99lkkQs9ZdWYhqLPbCore9emxEb9EXLAy3Xm9\ndk43Rv41WI2Yoxr4WSV6lCPrQ/KAevWOayYW4qECgYAa2VsWJecjK3Rvm/EwLgbS\nheivCup718WEKB6YNi0bzItsZcsRvdNmZUXpqVgAp9jRBST6xazp542WnPjlTyQv\n6EdhRsPE9iQYxTMWlmdIqeJ9JdU1SrfEhnAF/nRCL7opwGVIGbSaYwvPJtgS7epd\nuYi8djwZs89TNPQaYVav8QKBgQDME/Md4GZw+rpH9ZWr1iBIL2M8Sj3SNVeJ4RHx\n0xkWtnvIvCVe5TnlAJJacV0xVnr1RT+sFHeVNoVG+gHVZ/4hlzCJD61Ba2XF9loY\npesa1UiRxxMercttbleWqtN5lUK69qJMUpPB6t3HBrm+/MpczrokSPSZJelYMCRO\n2oRtgQKBgQCbHKO70BagtGLNfagIsFdCX+sjuQ9ILviiu2e8JdNkKeg9v1UDV14I\nLqALOs5qfX+PCW0nGxlaTSeH2BSWaiJU1B1H0ohCjJA0pDts5Smm7TdwTr7OB3Z6\nCbNTIJK3ZaoUjoW4nVqCBSIUjdXbgf/31kOoUPDKWyTmdZPJwEhKFw==\n-----END RSA PRIVATE KEY-----",
     "subnet_id": "subnet-a0d9c28a",
     "security_group_ids": "sg-0c6eae734aa732861"
   },
@@ -11,6 +12,7 @@
     "region": "us-east-1",
     "subnet_id": "{{user `subnet_id`}}",
     "security_group_id": "{{user `security_group_ids`}}",
+    "ssh_private_key": "{{user `ssh_private_key`}}",
     "associate_public_ip_address": "false",
     "source_ami": "{{user `source_ami`}}",
     "ami_name": "bb2-amzn2-platinum-{{isotime \"20060102030405\"}}",
@@ -40,7 +42,7 @@
       {
           "type": "ansible",
           "playbook_file": "playbook/build_platinum_ami_amzn2/main.yml",
-          "extra_arguments": [ "-e", "ansible_ssh_private_key_file={{user `ec2-user`}}", "ANSIBLE_DEBUG=True" ],
+          "extra_arguments": [ "-e", "ansible_ssh_private_key_file={{user `ssh_private_key`}}", "ANSIBLE_DEBUG=True" ],
           "use_proxy": false,
           "user": "ec2-user"
         }
