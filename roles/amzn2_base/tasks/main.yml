@@ -51,9 +51,13 @@
 - name: Configure, make, make altinstall python3
   shell:
     cmd: |
-      sudo ./configure && \
-      sudo make && \
-      sudo make altinstall
+        echo "Starting configure"
+        sudo ./configure
+        echo "Configure step complete"
+        sudo make
+        echo "Make step complete"
+        sudo make altinstall
+        echo "Altinstall step complete"
     chdir: /Python-3.11.9
 
 - name: Create symbolic links
