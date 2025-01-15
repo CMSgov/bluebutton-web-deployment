@@ -11,7 +11,7 @@
     "region": "us-east-1",
     "subnet_id": "{{user `subnet_id`}}",
     "associate_public_ip_address": "false",
-    "iam_instance_profile": "bb-test-app-role",
+    "iam_instance_profile": "bb2-ec2-role",
     "ssh_interface": "session_manager",
     "security_group_id": "{{user `security_group_ids`}}",
     "source_ami": "{{user `source_ami`}}",
