@@ -11,7 +11,7 @@
     "region": "us-east-1",
     "subnet_id": "{{user `subnet_id`}}",
     "associate_public_ip_address": "false",
-    "iam_instance_profile": "AWSCloud9SSMAccessRole",
+    "iam_instance_profile": "arn:aws:iam::501705132200:role/service-role/AWSCloud9SSMAccessRole",
     "ssh_interface": "session_manager",
     "security_group_id": "{{user `security_group_ids`}}",
     "source_ami": "{{user `source_ami`}}",
