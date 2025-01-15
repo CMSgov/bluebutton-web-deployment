@@ -2,7 +2,7 @@
   "variables": {
     "source_ami": "",
     "subnet_id": "subnet-a0d9c28a",
-    "security_group_ids": ["sg-0c6eae734aa732861"]
+    "security_group_ids": "sg-0c6eae734aa732861"
   },
   "builders": [{
     "type": "amazon-ebs",
