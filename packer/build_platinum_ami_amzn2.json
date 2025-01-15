@@ -10,6 +10,7 @@
     "instance_type": "m6a.large",
     "region": "us-east-1",
     "subnet_id": "{{user `subnet_id`}}",
+    "security_group_id": "{{user `security_group_ids`}}",
     "associate_public_ip_address": "false",
     "source_ami": "{{user `source_ami`}}",
     "ami_name": "bb2-amzn2-platinum-{{isotime \"20060102030405\"}}",
