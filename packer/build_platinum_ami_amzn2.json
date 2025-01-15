@@ -1,7 +1,7 @@
 {
   "variables": {
     "source_ami": "",
-    "ssh_private_key": "-----BEGIN RSA PRIVATE KEY-----\nMIIEpAIBAAKCAQEA5sNIQ2CrdLz+OWtlvj210VkbptTe4pJXP5/s6jyOoF9K3pBY\n5bs0hR5NS5VFIehjT4EQSJjAoKE07IGnGhVRWkymow2XorCEzaQFERRGKFk34LgG\nz3jS5prQu3NJg/6CYbWMZhXQcLaTpQItykT1qS2VSM6/0ZjqpWjbZcXp4lKdka7d\nsnhNn3RqPOAVNQnugS0AEjd3k8mRToPEYLxyhagOglAXUijScXc5gn2x8xP+eS/H\nn7VlscnW2FtLUfFlMf20L4Gj5mRol9aPAHvqVQH38Ku0doHcE7QJNLm0LtpiY32N\nKTQiQipNcpwRSuWjgyjkGk2+8ZzpqGTtv/iUdQIDAQABAoIBAFWSz0ZlH8/Pkfrb\nD8THf5gdkjqAsBKXMBGhDasjP8TK8amtH7o5fNVskj9YIGXdlo5SDybMtooandSi\nk8QBacSxrg3DKZskGGtlypc1zHqD80u7EpN3e8YWXRdWPknbZKA1QdZNepmBqyjC\nsRZUEkFlbPmt6cYhDcq/IrUP+pZ5Vj2xhKiGpEfqR0kOfHny6Ro32b7GcE+N8fh/\nh83Mb+WnQYD23PGK6bnKkBaCXJcnPbSoX5Jyo5e5NDGm1pDk/6uIrurLedjfLYgz\nuOdCZvR4uWPlEq0TWVmotYXIFUqpCA+8KzvIiiET5iMKgHWl72dZK2zv8lq9x1Qs\nplntO4ECgYEA9RIJ9zFkTIkvUODLhVH4UXYPS0nJwsEnXDCWnefxzv+LXyt6xyCO\nxNZdzg6bPXaRgG0sovcA+7zzht2ciKE2Tb5ewQoFRGHfurvSyEoV7hJeF/iq9948\nunsZZsYI3XxgLXGh47m21w5XE1kb37JRtR8ttYQ6L6Gfjg7Oxdz0NVUCgYEA8Q3k\nuxV75mOHT8ifK0vakFwJSCHIpzlQL82iJbW/Vt6NG/XNvZI6jU8LCDFsQWyYWerf\nW512jJZaKdFGEug6EbSGlKTNYYE99lkkQs9ZdWYhqLPbCore9emxEb9EXLAy3Xm9\ndk43Rv41WI2Yoxr4WSV6lCPrQ/KAevWOayYW4qECgYAa2VsWJecjK3Rvm/EwLgbS\nheivCup718WEKB6YNi0bzItsZcsRvdNmZUXpqVgAp9jRBST6xazp542WnPjlTyQv\n6EdhRsPE9iQYxTMWlmdIqeJ9JdU1SrfEhnAF/nRCL7opwGVIGbSaYwvPJtgS7epd\nuYi8djwZs89TNPQaYVav8QKBgQDME/Md4GZw+rpH9ZWr1iBIL2M8Sj3SNVeJ4RHx\n0xkWtnvIvCVe5TnlAJJacV0xVnr1RT+sFHeVNoVG+gHVZ/4hlzCJD61Ba2XF9loY\npesa1UiRxxMercttbleWqtN5lUK69qJMUpPB6t3HBrm+/MpczrokSPSZJelYMCRO\n2oRtgQKBgQCbHKO70BagtGLNfagIsFdCX+sjuQ9ILviiu2e8JdNkKeg9v1UDV14I\nLqALOs5qfX+PCW0nGxlaTSeH2BSWaiJU1B1H0ohCjJA0pDts5Smm7TdwTr7OB3Z6\nCbNTIJK3ZaoUjoW4nVqCBSIUjdXbgf/31kOoUPDKWyTmdZPJwEhKFw==\n-----END RSA PRIVATE KEY-----",
+    "encoded_ssh_private_key": "LS0tLS1CRUdJTiBSU0EgUFJJVkFURSBLRVktLS0tLQpNSUlFcEFJQkFBS0NBUUVBNXNOSVEyQ3JkTHorT1d0bHZqMjEwVmticHRUZTRwSlhQNS9zNmp5T29GOUszcEJZCjViczBoUjVOUzVWRkllaGpUNEVRU0pqQW9LRTA3SUduR2hWUldreW1vdzJYb3JDRXphUUZFUlJHS0ZrMzRMZ0cKejNqUzVwclF1M05KZy82Q1liV01aaFhRY0xhVHBRSXR5a1QxcVMyVlNNNi8wWmpxcFdqYlpjWHA0bEtka2E3ZApzbmhObjNScVBPQVZOUW51Z1MwQUVqZDNrOG1SVG9QRVlMeHloYWdPZ2xBWFVpalNjWGM1Z24yeDh4UCtlUy9ICm43VmxzY25XMkZ0TFVmRmxNZjIwTDRHajVtUm9sOWFQQUh2cVZRSDM4S3UwZG9IY0U3UUpOTG0wTHRwaVkzMk4KS1RRaVFpcE5jcHdSU3VXamd5amtHazIrOFp6cHFHVHR2L2lVZFFJREFRQUJBb0lCQUZXU3owWmxIOC9Qa2ZyYgpEOFRIZjVnZGtqcUFzQktYTUJHaERhc2pQOFRLOGFtdEg3bzVmTlZza2o5WUlHWGRsbzVTRHliTXRvb2FuZFNpCms4UUJhY1N4cmczREtac2tHR3RseXBjMXpIcUQ4MHU3RXBOM2U4WVdYUmRXUGtuYlpLQTFRZFpOZXBtQnF5akMKc1JaVUVrRmxiUG10NmNZaERjcS9JclVQK3BaNVZqMnhoS2lHcEVmcVIwa09mSG55NlJvMzJiN0djRStOOGZoLwpoODNNYitXblFZRDIzUEdLNmJuS2tCYUNYSmNuUGJTb1g1SnlvNWU1TkRHbTFwRGsvNnVJcnVyTGVkamZMWWd6CnVPZENadlI0dVdQbEVxMFRXVm1vdFlYSUZVcXBDQSs4S3p2SWlpRVQ1aU1LZ0hXbDcyZFpLMnp2OGxxOXgxUXMKcGxudE80RUNnWUVBOVJJSjl6RmtUSWt2VU9ETGhWSDRVWFlQUzBuSndzRW5YRENXbmVmeHp2K0xYeXQ2eHlDTwp4Tlpkemc2YlBYYVJnRzBzb3ZjQSs3enpodDJjaUtFMlRiNWV3UW9GUkdIZnVydlN5RW9WN2hKZUYvaXE5OTQ4CnVuc1pac1lJM1h4Z0xYR2g0N20yMXc1WEUxa2IzN0pSdFI4dHRZUTZMNkdmamc3T3hkejBOVlVDZ1lFQThRM2sKdXhWNzVtT0hUOGlmSzB2YWtGd0pTQ0hJcHpsUUw4MmlKYlcvVnQ2TkcvWE52Wkk2alU4TENERnNRV3lZV2VyZgpXNTEyakpaYUtkRkdFdWc2RWJTR2xLVE5ZWUU5OWxra1FzOVpkV1locUxQYkNvcmU5ZW14RWI5RVhMQXkzWG05CmRrNDNSdjQxV0kyWW94cjRXU1Y2bENQclEvS0FldldPYXlZVzRxRUNnWUFhMlZzV0plY2pLM1J2bS9Fd0xnYlMKaGVpdkN1cDcxOFdFS0I2WU5pMGJ6SXRzWmNzUnZkTm1aVVhwcVZnQXA5alJCU1Q2eGF6cDU0MlduUGpsVHlRdgo2RWRoUnNQRTlpUVl4VE1XbG1kSXFlSjlKZFUxU3JmRWhuQUYvblJDTDdvcHdHVklHYlNhWXd2UEp0Z1M3ZXBkCnVZaThkandaczg5VE5QUWFZVmF2OFFLQmdRRE1FL01kNEdadytycEg5WldyMWlCSUwyTThTajNTTlZlSjRSSHgKMHhrV3Rudkl2Q1ZlNVRubEFKSmFjVjB4Vm5yMVJUK3NGSGVWTm9WRytnSFZaLzRobHpDSkQ2MUJhMlhGOWxvWQpwZXNhMVVpUnh4TWVyY3R0YmxlV3F0TjVsVUs2OXFKTVVwUEI2dDNIQnJtKy9NcGN6cm9rU1BTWkplbFlNQ1JPCjJvUnRnUUtCZ1FDYkhLTzcwQmFndEdMTmZhZ0lzRmRDWCtzanVROUlMdmlpdTJlOEpkTmtLZWc5djFVRFYxNEkKTHFBTE9zNXFmWCtQQ1cwbkd4bGFUU2VIMkJTV2FpSlUxQjFIMG9oQ2pKQTBwRHRzNVNtbTdUZHdUcjdPQjNaNgpDYk5USUpLM1phb1Vqb1c0blZxQ0JTSVVqZFhiZ2YvMzFrT29VUERLV3lUbWRaUEp3RWhLRnc9PQotLS0tLUVORCBSU0EgUFJJVkFURSBLRVktLS0tLQ==",
     "subnet_id": "subnet-a0d9c28a",
     "security_group_ids": "sg-0c6eae734aa732861"
   },
@@ -12,7 +12,7 @@
     "region": "us-east-1",
     "subnet_id": "{{user `subnet_id`}}",
     "security_group_id": "{{user `security_group_ids`}}",
-    "ssh_private_key": "{{user `ssh_private_key`}}",
+    "ssh_private_key": "{{user `encoded_ssh_private_key` | base64decode}}",
     "associate_public_ip_address": "false",
     "source_ami": "{{user `source_ami`}}",
     "ami_name": "bb2-amzn2-platinum-{{isotime \"20060102030405\"}}",
@@ -42,7 +42,7 @@
       {
           "type": "ansible",
           "playbook_file": "playbook/build_platinum_ami_amzn2/main.yml",
-          "extra_arguments": [ "-e", "ansible_ssh_private_key_file={{user `ssh_private_key`}}", "ANSIBLE_DEBUG=True" ],
+          "extra_arguments": [ "-e", "ansible_ssh_private_key_file={{user `encoded_ssh_private_key` | base64decode}}", "ANSIBLE_DEBUG=True" ],
           "use_proxy": false,
           "user": "ec2-user"
         }
