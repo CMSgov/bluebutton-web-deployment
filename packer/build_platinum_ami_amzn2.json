@@ -38,10 +38,14 @@
       {
       "type": "shell",
       "inline": [
-        "sudo dnf install crypto-policies-scripts",
-        "sudo update-crypto-policies --set LEGACY",
+        "sudo yum install -y unzip curl",
+        "curl \"https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip\" -o \"awscliv2.zip\"",
+        "unzip awscliv2.zip",
+        "sudo ./aws/install",
+        "curl \"https://d1vvhvl2y92vvt.cloudfront.net/latest/ubuntu_amd64/session-manager-plugin.deb\" -o \"session-manager-plugin.deb\"",
+        "sudo dpkg -i session-manager-plugin.deb",
         "sleep 180",
-        "echo 'Sleep completed...'"
+        "echo 'AWS CLI and Session Manager Plugin installed...'"
       ]
     },
       {
