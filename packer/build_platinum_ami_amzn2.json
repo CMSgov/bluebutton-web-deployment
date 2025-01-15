@@ -10,6 +10,7 @@
     "region": "us-east-1",
     "subnet_id": "{{user `subnet_id`}}",
     "associate_public_ip_address": "false",
+    "temporary_key_pair_type": "ed25519",
     "source_ami": "{{user `source_ami`}}",
     "ami_name": "bb2-amzn2-platinum-{{isotime \"20060102030405\"}}",
     "ssh_pty": false,
