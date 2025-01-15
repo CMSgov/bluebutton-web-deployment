@@ -12,7 +12,7 @@
     "subnet_id": "{{user `subnet_id`}}",
     "associate_public_ip_address": "false",
     "iam_instance_profile": "bb2-ec2-role",
-    "ssh_interface": "session_manager",
+    "communicator": "session_manager",
     "security_group_id": "{{user `security_group_ids`}}",
     "source_ami": "{{user `source_ami`}}",
     "ami_name": "bb2-amzn2-platinum-{{isotime \"20060102030405\"}}",
