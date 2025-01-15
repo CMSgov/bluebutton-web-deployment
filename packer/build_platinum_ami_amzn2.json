@@ -12,7 +12,7 @@
     "region": "us-east-1",
     "subnet_id": "{{user `subnet_id`}}",
     "security_group_id": "{{user `security_group_ids`}}",
-    "ssh_private_key": "{{user `encoded_ssh_private_key` | base64decode}}",
+    "ssh_private_key": "{{user `encoded_ssh_private_key`}}",
     "associate_public_ip_address": "false",
     "source_ami": "{{user `source_ami`}}",
     "ami_name": "bb2-amzn2-platinum-{{isotime \"20060102030405\"}}",
@@ -42,7 +42,7 @@
       {
           "type": "ansible",
           "playbook_file": "playbook/build_platinum_ami_amzn2/main.yml",
-          "extra_arguments": [ "-e", "ansible_ssh_private_key_file={{user `encoded_ssh_private_key` | base64decode}}", "ANSIBLE_DEBUG=True" ],
+          "extra_arguments": [ "-e", "ansible_ssh_private_key_file={{user `ssh_private_key'}}", "ANSIBLE_DEBUG=True" ],
           "use_proxy": false,
           "user": "ec2-user"
         }
