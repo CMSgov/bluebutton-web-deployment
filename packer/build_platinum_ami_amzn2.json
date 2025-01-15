@@ -2,22 +2,21 @@
   "variables": {
     "source_ami": "",
     "security_group_ids": "sg-0c6eae734aa732861",
-    "subnet_id": "subnet-a0d9c28a",
-    "ec2_user_private_key": "",
-    "ec2_user_public_key": ""
+    "subnet_id": "subnet-a0d9c28a"
   },
   "builders": [{
     "type": "amazon-ebs",
     "ssh_username": "ec2-user",
-    "ssh_private_key_file": "{{user `ec2_user_private_key`}}",
     "instance_type": "m6a.large",
     "region": "us-east-1",
     "subnet_id": "{{user `subnet_id`}}",
     "associate_public_ip_address": "false",
+    "iam_instance_profile": "AWSCloud9SSMAccessRole",
+    "ssh_interface": "session_manager",
     "security_group_id": "{{user `security_group_ids`}}",
     "source_ami": "{{user `source_ami`}}",
     "ami_name": "bb2-amzn2-platinum-{{isotime \"20060102030405\"}}",
-    "ssh_pty": false,
+    "ssh_pty": true,
     "ssh_timeout": "30m",
     "launch_block_device_mappings": [
       {
