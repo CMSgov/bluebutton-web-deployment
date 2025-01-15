@@ -2,11 +2,14 @@
   "variables": {
     "source_ami": "",
     "security_group_ids": "sg-0c6eae734aa732861",
-    "subnet_id": "subnet-a0d9c28a"
+    "subnet_id": "subnet-a0d9c28a",
+    "ec2_user_private_key": "",
+    "ec2_user_public_key": ""
   },
   "builders": [{
     "type": "amazon-ebs",
     "ssh_username": "ec2-user",
+    "ssh_private_key_file": "{{user `ec2_user_private_key`}}",
     "instance_type": "m6a.large",
     "region": "us-east-1",
     "subnet_id": "{{user `subnet_id`}}",
@@ -42,7 +45,7 @@
       {
           "type": "ansible",
           "playbook_file": "playbook/build_platinum_ami_amzn2/main.yml",
-          "extra_arguments": [ "-e", "ansible_ssh_private_key_file={{user `ec2-user`}}" ],
+          "extra_arguments": ["-e", "ansible_ssh_private_key_file={{user `ec2_user_private_key`}}", "ANSIBLE_DEBUG=True"],
           "use_proxy": false,
           "user": "ec2-user"
         }
