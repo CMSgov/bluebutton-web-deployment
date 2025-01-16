@@ -48,14 +48,30 @@
     #       Optimizations via `--enable-optimizations` in the `configure` step below are
     #       not enabled to avoid lengthy build times.
     #       https://docs.python.org/3/using/configure.html#performance-options
-- name: Configure, make, make altinstall python3
+- name: Configure Python 3
   shell:
     cmd: |
-      sudo ./configure && \
-      sudo make && \
-      sudo make altinstall
+      echo "Starting configure"
+      sudo ./configure
+      echo "Configure step complete"
     chdir: /Python-3.11.9
-
+  become: yes
+- name: Compile Python 3 (make)
+  shell:
+    cmd: |
+      echo "Starting make"
+      sudo make
+      echo "Make step complete"
+    chdir: /Python-3.11.9
+  become: yes
+- name: Install Python 3 (make altinstall)
+  shell:
+    cmd: |
+      echo "Starting make altinstall"
+      sudo make altinstall
+      echo "Altinstall step complete"
+    chdir: /Python-3.11.9
+  become: yes
 - name: Create symbolic links
   become: yes
   file:
