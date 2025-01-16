@@ -79,7 +79,10 @@ pipeline {
     stage("Build Platinum AMI") {
       steps {
         sh """
-        
+        curl "https://s3.amazonaws.com/session-manager-downloads/plugin/latest/linux_amd64/session-manager-plugin.tar.gz" -o "session-manager-plugin.tar.gz"
+      tar -xvzf session-manager-plugin.tar.gz
+      sudo mv session-manager-plugin /usr/local/bin/
+      session-manager-plugin --version
           PACKER_LOG=1 packer build -color=false \
             -on-error=${ON_ERROR} \
             -var 'source_ami=${SOURCE_AMI}' \
