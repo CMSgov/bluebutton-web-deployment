@@ -79,13 +79,7 @@ pipeline {
     stage("Build Platinum AMI") {
       steps {
         sh """
-
-          sudo dnf update -y
-          curl "https://d1vvhvl2y92vvt.cloudfront.net/latest/ubuntu_amd64/session-manager-plugin.deb" -o "session-manager-plugin.deb"
-            sudo dpkg -i session-manager-plugin.deb
-            sudo dnf install -y libappstream-glib
-            session-manager-plugin --version
-
+        
           PACKER_LOG=1 packer build -color=false \
             -on-error=${ON_ERROR} \
             -var 'source_ami=${SOURCE_AMI}' \
