@@ -84,7 +84,7 @@ pipeline {
          PACKER_LOG=1 packer build -color=false \
             -on-error=${ON_ERROR} \
             -var 'source_ami=${SOURCE_AMI}' \
-            -var 'ec2-user=${EC2_KEY}' \
+            -var 'ssh_private_key_file=${EC2_KEY}' \
             packer/build_platinum_ami_amzn2.json
         """
       }
