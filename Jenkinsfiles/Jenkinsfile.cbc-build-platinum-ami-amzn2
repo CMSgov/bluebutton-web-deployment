@@ -81,7 +81,7 @@ pipeline {
         sh """
         echo "$EC2_KEY" > /tmp/packer_ssh_private_key
         echo "/tmp/packer_ssh_private_key"
-        echo "$${EC2_PUB_KEY}" > /tmp/ssh_packer_public_key
+        echo "${EC2_PUB_KEY}" > /tmp/ssh_packer_public_key
         echo "/tmp/ssh_packer_public_key"
          PACKER_LOG=1 packer build -color=false \
             -on-error=${ON_ERROR} \
