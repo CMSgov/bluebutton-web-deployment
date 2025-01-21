@@ -11,7 +11,6 @@
     "subnet_id": "{{user `subnet_id`}}",
     "associate_public_ip_address": "false",
     "source_ami": "{{user `source_ami`}}",
-    "ssh_private_key_file": "{{env `ssh_private_key_file`}}",
     "ami_name": "bb2-amzn2-platinum-{{isotime \"20060102030405\"}}",
     "security_group_filter": {
         "filters": {
@@ -37,7 +36,7 @@
       {
           "type": "ansible",
           "playbook_file": "playbook/build_platinum_ami_amzn2/main.yml",
-           "extra_argument": ["--private-key={{env `ssh_private_key_file`}}"],
+
           "use_proxy": false,
           "user": "ec2-user"
         }
