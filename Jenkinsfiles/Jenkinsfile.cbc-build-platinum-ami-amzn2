@@ -85,7 +85,6 @@ pipeline {
             -on-error=${ON_ERROR} \
             -var 'source_ami=${SOURCE_AMI}' \
             -var 'ec2-user=${EC2_KEY}' \
-            -var 'ec2-user-pub-key=${EC2_PUB_KEY}' \
             packer/build_platinum_ami_amzn2.json
         """
       }
