@@ -81,7 +81,7 @@ pipeline {
         sh """
         #!/bin/bash
         set -x
-        echo "Using secret for deployment: ${EC2_PUB_KEY"
+        echo "Using secret for deployment: ${EC2_PUB_KEY}"
          PACKER_LOG=1 packer build -color=false \
             -on-error=${ON_ERROR} \
             -var 'source_ami=${SOURCE_AMI}' \
