@@ -80,7 +80,7 @@ pipeline {
       steps {
         sh """
         #!/bin/bash
-     
+         packer plugins install github.com/hashicorp/amazon
          PACKER_LOG=1 packer build -color=false \
             -on-error=${ON_ERROR} \
             -var 'source_ami=${SOURCE_AMI}' \
