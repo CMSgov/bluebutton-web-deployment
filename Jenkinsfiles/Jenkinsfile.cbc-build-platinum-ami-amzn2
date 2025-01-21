@@ -81,7 +81,7 @@ pipeline {
         sh """
         #!/bin/bash
         set -x
-        aws secretsmanager put-secret-value --secret-id '${EC2_KEY}' --secret-string "jenkins_EC2"
+        echo "Using secret for deployment: ${EC2_PUB_KEY"
          PACKER_LOG=1 packer build -color=false \
             -on-error=${ON_ERROR} \
             -var 'source_ami=${SOURCE_AMI}' \
