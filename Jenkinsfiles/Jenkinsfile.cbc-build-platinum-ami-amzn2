@@ -81,6 +81,11 @@ pipeline {
         sh """
         #!/bin/bash
         set -x
+        withCredentials([string(credentialsId: 'ec2-user-priv-key', variable: 'MY_SECRET')]) {
+                        echo "Using secret for deployment."
+                        // Use the secret here (e.g., pass it to a command or a script)
+                        sh "deploy-command --secret ${MY_SECRET}"
+                    }
         echo "Using secret for deployment: ${EC2_PUB_KEY}"
          PACKER_LOG=1 packer build -color=false \
             -on-error=${ON_ERROR} \
