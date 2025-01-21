@@ -79,6 +79,7 @@ pipeline {
     stage("Build Platinum AMI") {
       steps {
         sh """
+        #!/bin/bash
         set -x
         aws secretsmanager put-secret-value --secret-id ${EC2_KEY} --secret-string "jenkins_EC2"
          PACKER_LOG=1 packer build -color=false \
