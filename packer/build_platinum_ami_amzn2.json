@@ -42,7 +42,7 @@
           "use_proxy": false,
           "user": "ec2-user",
           "extra_arguments": [
-            "--vvv"
+            "--extra-vars", "ansible_verbosity={{user `ansible_verbosity`}}"
           ]
         }
     ]
