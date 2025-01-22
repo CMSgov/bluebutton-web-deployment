@@ -13,7 +13,7 @@
     "associate_public_ip_address": "false",
     "source_ami": "{{user `source_ami`}}",
     "ssh_keypair_name": "noor_M7i",
-    "ssh_args": "-vvv -o IdentitiesOnly=yes",
+    "ssh_extra_args": ["-vvv", "-o", "IdentitiesOnly=yes"],
     "ssh_private_key_file": "{{user `ssh_private_key_file`}}",
     "ami_name": "bb2-amzn2-platinum-{{isotime \"20060102030405\"}}",
     "security_group_filter": {
@@ -41,10 +41,7 @@
           "type": "ansible",
           "playbook_file": "playbook/build_platinum_ami_amzn2/main.yml",
           "use_proxy": false,
-          "user": "ec2-user",
-          "extra_arguments": [
-            "--extra-vars", "ansible_verbosity={{user `ansible_verbosity`}}"
-          ]
+          "user": "ec2-user"
         }
     ]
 }
