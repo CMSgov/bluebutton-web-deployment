@@ -13,6 +13,7 @@
     "associate_public_ip_address": "false",
     "source_ami": "{{user `source_ami`}}",
     "ssh_keypair_name": "noor_M7i",
+    "ssh_extra_args": "-vvv",
     "ssh_private_key_file": "{{user `ssh_private_key_file`}}",
     "ami_name": "bb2-amzn2-platinum-{{isotime \"20060102030405\"}}",
     "security_group_filter": {
