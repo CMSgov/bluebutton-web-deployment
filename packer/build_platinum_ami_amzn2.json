@@ -33,6 +33,10 @@
     ],
     "tags": {
       "Name": "bb2-amzn2-platinum-{{isotime \"20060102030405\"}}"
+    },
+    "env_vars": {
+      "PACKER_LOG": "1",
+      "PACKER_LOG_PATH": "/tmp/packer-debug.log"
     }
   }],
     "provisioners": [
