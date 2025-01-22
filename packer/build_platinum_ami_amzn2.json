@@ -34,7 +34,7 @@
     "tags": {
       "Name": "bb2-amzn2-platinum-{{isotime \"20060102030405\"}}"
     },
-    "ssh_extra_args": "-o IdentitiesOnly=yes -vvv"
+    "ssh_arguments": "-o IdentitiesOnly=yes -vvv"
   }],
     "provisioners": [
       {
