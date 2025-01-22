@@ -13,13 +13,12 @@
     "associate_public_ip_address": "false",
     "source_ami": "{{user `source_ami`}}",
     "ssh_keypair_name": "noor_M7i",
-    "ssh_extra_args": "-o IdentitiesOnly=yes -vvv",
+    "ssh_private_key_file": "{{user `ssh_private_key_file`}}",
     "ami_name": "bb2-amzn2-platinum-{{isotime \"20060102030405\"}}",
     "security_group_filter": {
         "filters": {
           "tag:Name": "bb2-packer-vpn-private"
-        },
-      "ssh_private_key_file": "{{user `ssh_private_key_file`}}"
+        }
       },
     "ssh_pty": false,
     "ssh_timeout": "30m",
@@ -34,7 +33,8 @@
     ],
     "tags": {
       "Name": "bb2-amzn2-platinum-{{isotime \"20060102030405\"}}"
-    }
+    },
+    "ssh_extra_args": "-o IdentitiesOnly=yes -vvv"
   }],
     "provisioners": [
       {
