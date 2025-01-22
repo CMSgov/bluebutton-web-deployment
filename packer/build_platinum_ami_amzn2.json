@@ -39,9 +39,14 @@
       {
           "type": "ansible",
           "playbook_file": "playbook/build_platinum_ami_amzn2/main.yml",
-
           "use_proxy": false,
-          "user": "ec2-user"
+          "user": "ec2-user",
+          "extra_arguments": [
+            "--vvv"
+          ],
+          "environment_vars": [
+            "ANSIBLE_DEBUG=true"
+          ]
         }
     ]
 }
