@@ -2,15 +2,17 @@
 - name: Apply security patches
   become_user: "{{ remote_admin_account }}"
   become: yes
-  command: "yum update-minimal --security -y"
-- name: Install extras python3.11
+  command: "dnf update --security -y"  # Use dnf for AL2023, yum for AL2
+
+- name: Install Python 3.11 and pip3.11
   become: yes
   become_user: "{{ remote_admin_account }}"
-  command: "yum install python3.11 python3.11-pip"
+  command: "dnf install -y python3.11 python3.11-pip"  # Adjusted for AL2023
+
 - name: Install dependencies
   become: yes
   become_user: "{{ remote_admin_account }}"
-  yum:
+  dnf:
     name:
       - gcc
       - make
@@ -21,7 +23,7 @@
       - bzip2-devel
       - libffi-devel
       - git
-      - python311-devel
+      - python3.11-devel  # Adjusted for AL2023
       - postgresql-devel
       - zlib-devel
       - libjpeg-turbo-devel
