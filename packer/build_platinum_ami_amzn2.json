@@ -12,7 +12,7 @@
     "subnet_id": "{{user `subnet_id`}}",
     "associate_public_ip_address": "false",
     "source_ami": "{{user `source_ami`}}",
-    "ami_name": "bb2-amzn2-platinum-{{isotime \"20060102030405\"}}",
+    "ami_name": "bb2-amzn2023-platinum-{{isotime \"20060102030405\"}}",
     "security_group_filter": {
         "filters": {
           "tag:Name": "bb2-packer-vpn-private"
@@ -30,7 +30,7 @@
       }
     ],
     "tags": {
-      "Name": "bb2-amzn2-platinum-{{isotime \"20060102030405\"}}"
+      "Name": "bb2-amzn2023-platinum-{{isotime \"20060102030405\"}}"
     }
   }],
     "provisioners": [
