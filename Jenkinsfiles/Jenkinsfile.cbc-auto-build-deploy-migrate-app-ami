@@ -148,7 +148,7 @@ pipeline {
         echo "running in debug mode"
         EC2_INI_PATH=inventory/config/${APP_ENV}.ini \
         ansible-playbook playbook/run_django_command/main.yml -vvvv \
-          --private-key '${SSH_KEY}' \
+          --private-key '/home/ec2-user/.ssh/noor_M7i.pem' \
           -i '${CANARY_IP},' \
           -e 'env=${APP_ENV}' \
           -e 'django_command="showmigrations"'
