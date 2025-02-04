@@ -168,6 +168,7 @@ pipeline {
       }
       steps {
         sh """
+        echo "${SSH_KEY}" > /home/ec2-user/cert.pem
         EC2_INI_PATH=inventory/config/${APP_ENV}.ini \
         ansible-playbook playbook/run_django_command/main.yml \
           --private-key '${SSH_KEY}' \
