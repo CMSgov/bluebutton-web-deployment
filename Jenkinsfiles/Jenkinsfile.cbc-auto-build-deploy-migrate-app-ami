@@ -11,7 +11,7 @@ pipeline {
     AWS_ACCESS_KEY_ID = credentials("bb2-aws-key-id")
     AWS_SECRET_ACCESS_KEY = credentials("bb2-aws-key-secret")
     AWS_DEFAULT_REGION = "us-east-1"
-    SSH_KEY = credentials("bb2-ssh-key-${params.APP_ENV}")
+    SSH_KEY = credentials("ec2-user-priv-key")
     ANSIBLE_INVENTORY = "inventory/ec2.py"
   }
 
