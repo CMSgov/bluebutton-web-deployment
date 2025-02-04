@@ -151,7 +151,8 @@ pipeline {
           -i '${CANARY_IP},' \
           -l '${ANSIBLE_SUBSET}' \
           -e 'env=${APP_ENV}' \
-          -e 'django_command="showmigrations"'
+          -e 'django_command="showmigrations"' \
+           -vvvv
         """
       }
     }
