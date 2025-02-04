@@ -150,7 +150,6 @@ pipeline {
         ansible-playbook playbook/run_django_command/main.yml -vvvv \
           --private-key '${SSH_KEY}' \
           -i '${CANARY_IP},' \
-          -l '"${ANSIBLE_SUBSET}"' \
           -e 'env=${APP_ENV}' \
           -e 'django_command="showmigrations"'
         """
