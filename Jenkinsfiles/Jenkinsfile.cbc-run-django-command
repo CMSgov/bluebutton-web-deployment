@@ -62,8 +62,10 @@ pipeline {
     stage("Run Django Command") {
       steps {
         sh """
+        echo "Running as user: $(whoami)"
+        echo "User ID: $(id -u)"
         EC2_INI_PATH=inventory/config/${APP_ENV}.ini \
-        ansible-playbook playbook/run_django_command/main.yml \
+        ansible-playbook playbook/run_django_command/main.yml -vvvv \
           --private-key '${SSH_KEY}' \
           -i '${ANSIBLE_INVENTORY}' \
           -l '${ANSIBLE_SUBSET}' \
