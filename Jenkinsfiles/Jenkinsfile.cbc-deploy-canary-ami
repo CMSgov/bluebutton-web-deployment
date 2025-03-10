@@ -10,7 +10,7 @@ pipeline {
     AWS_ACCESS_KEY_ID = credentials("bb2-aws-key-id")
     AWS_SECRET_ACCESS_KEY = credentials("bb2-aws-key-secret")
     AWS_DEFAULT_REGION = "us-east-1"
-    TF_VARS = credentials("bb2-terraform-vars-${params.APP_ENV}-canary")
+    TF_VARS = credentials("bb2-terraform-vars-${params.APP_ENV}-canary-2023")
     TF_IN_AUTOMATION = true
   }
 
