@@ -84,7 +84,7 @@ pipeline {
 
         sh """
         sleep 300
-        curl --silent --insecure --retry 120 --retry-delay 15 --retry-connrefused --max-time 600 --connect-timeout 120 https://${CANARY_IP}/.well-known/openid-configuration
+        curl -vvv --silent --insecure --retry 120 --retry-delay 15 --retry-connrefused --max-time 600 --connect-timeout 120 https://${CANARY_IP}/.well-known/openid-configuration
         """
       }
     }
