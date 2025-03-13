@@ -83,11 +83,8 @@ pipeline {
         }
 
         sh """
-        while ! curl --silent --insecure --connect-timeout 5 --max-time 10 https://${CANARY_IP}/.well-known/openid-configuration; do
-        echo "Waiting for canary instance to become available..."
-        sleep 15
-        done
-
+        sleep 300
+        curl --silent --insecure --retry 120 --retry-delay 15 --retry-connrefused --max-time 600 --connect-timeout 120 https://${CANARY_IP}/.well-known/openid-configuration
         """
       }
     }
