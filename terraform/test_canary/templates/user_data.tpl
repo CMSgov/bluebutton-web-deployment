@@ -2,7 +2,7 @@
 sudo su -
 
 set -ex
-
+setenforce 0
 exec 2> >(tee -a /var/log/boot.log >&2)
 
 aws s3 cp s3://${bucket}/${env}/REPO_URI .
