@@ -4,7 +4,18 @@ sudo su -
 set -ex
 setenforce 0
 exec 2> >(tee -a /var/log/boot.log >&2)
+# Configure firewall to allow HTTPS
+sudo firewall-cmd --permanent --add-service=https
+sudo firewall-cmd --permanent --add-service=http
+sudo firewall-cmd --reload
 
+# Restart Nginx to apply changes
+sudo systemctl restart nginx
+
+# Confirm firewall rules
+sudo firewall-cmd --list-all
+
+echo "Firewall rules updated successfully!"
 aws s3 cp s3://${bucket}/${env}/REPO_URI .
 
 aws secretsmanager get-secret-value --secret-id /bb2/${env}/app/www_key_file --query 'SecretString' --output text |base64 -d > /etc/ssl/certs/key.pem
