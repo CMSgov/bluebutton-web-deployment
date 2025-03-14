@@ -2,8 +2,13 @@
 sudo su -
 
 set -ex
-setenforce 0
+
 exec 2> >(tee -a /var/log/boot.log >&2)
+
+# Disable SELinux enforcement at bootup
+sudo setenforce 0
+sudo sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
+
 # Configure firewall to allow HTTPS
 sudo firewall-cmd --permanent --add-service=https
 sudo firewall-cmd --permanent --add-service=http
