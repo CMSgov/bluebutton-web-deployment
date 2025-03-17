@@ -19,7 +19,22 @@ sudo systemctl restart nginx
 
 # Confirm firewall rules
 sudo firewall-cmd --list-all
+# Workaround for openssl until the IDM team upgrades TLS
+echo "Applying workaround to /etc/pki/tls/openssl.cnf"
+sudo sed -i 's/^openssl_conf = openssl_init/openssl_conf = default_conf/' /etc/pki/tls/openssl.cnf
 
+sudo tee -a /etc/pki/tls/openssl.cnf > /dev/null <<EOL
+[default_conf]
+ssl_conf = ssl_section
+[ssl_section]
+system_default = system_default_section
+[system_default_section]
+providers = provider_sect
+ssl_conf = ssl_module
+MaxProtocol = TLSv1.2
+CipherString = ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:...
+Ciphersuites =
+EOL
 echo "Firewall rules updated successfully!"
 aws s3 cp s3://${bucket}/${env}/REPO_URI .
 
