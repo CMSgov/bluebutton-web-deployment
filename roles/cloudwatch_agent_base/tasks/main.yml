@@ -11,7 +11,7 @@
   become_user: "{{ remote_admin_account }}"
   become: yes
   yum:
-    name: https://s3.amazonaws.com/amazoncloudwatch-agent/redhat/amd64/latest/amazon-cloudwatch-agent.rpm
+    name: amazon-cloudwatch-agent-1.300052.1-1.amzn2.x86_64
     state: present
     disable_gpg_check: true
   when: platinum_source != "amzn2"
