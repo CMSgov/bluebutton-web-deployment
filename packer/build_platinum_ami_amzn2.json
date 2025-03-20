@@ -13,11 +13,6 @@
     "associate_public_ip_address": "false",
     "source_ami": "{{user `source_ami`}}",
     "ami_name": "bb2-amzn2023-platinum-{{isotime \"20060102030405\"}}",
-    "security_group_filter": {
-        "filters": {
-          "tag:Name": "bb2-packer-vpn-private"
-        }
-      },
     "ssh_pty": false,
     "ssh_timeout": "30m",
     "launch_block_device_mappings": [
