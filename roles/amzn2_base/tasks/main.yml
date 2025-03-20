@@ -25,6 +25,8 @@
       - git
       - python3.11-devel  # Adjusted for AL2023
       - postgresql-devel
+      - postgresql16
+      - sqlite-devel
       - zlib-devel
       - libjpeg-turbo-devel
       - nginx
