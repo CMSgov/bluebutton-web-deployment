@@ -71,7 +71,7 @@ pipeline {
     stage("Build App AMI") {
       steps {
         sh """
-          packer build -color=false \
+          PACKER_LOG=1 packer build -color=false \
             -var 'source_ami=${SOURCE_AMI}' \
             -var 'release_version=${APP_REPO_BRANCH}' \
             -var 'git_branch=${APP_REPO_BRANCH}' \

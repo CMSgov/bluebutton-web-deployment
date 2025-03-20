@@ -2,7 +2,7 @@
 - name: Apply security patches
   become_user: "{{ remote_admin_account }}"
   become: yes
-  command: "yum update-minimal --security -y"
+  command: "dnf upgrade --security --sec-severity Critical --sec-severity Important -y"
   
 - name: "Create .aws directory"
   become_user: "{{ remote_admin_account }}"
