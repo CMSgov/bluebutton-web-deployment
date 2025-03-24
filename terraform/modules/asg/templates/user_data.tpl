@@ -1,9 +1,39 @@
 #!/bin/bash
-
+sudo su -
 set -e
 
 exec > >(tee -a /var/log/user_data.log 2>&1)
+# Disable SELinux enforcement at bootup
+sudo setenforce 0
+sudo sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
 
+# Configure firewall to allow HTTPS
+sudo firewall-cmd --permanent --add-service=https
+sudo firewall-cmd --permanent --add-service=http
+sudo firewall-cmd --reload
+
+# Restart Nginx to apply changes
+sudo systemctl restart nginx
+
+# Confirm firewall rules
+sudo firewall-cmd --list-all
+# Workaround for openssl until the IDM team upgrades TLS
+echo "Applying workaround to /etc/pki/tls/openssl.cnf"
+sudo sed -i 's/^openssl_conf = openssl_init/openssl_conf = default_conf/' /etc/pki/tls/openssl.cnf
+
+sudo tee -a /etc/pki/tls/openssl.cnf > /dev/null <<EOL
+[default_conf]
+ssl_conf = ssl_section
+[ssl_section]
+system_default = system_default_section
+[system_default_section]
+providers = provider_sect
+ssl_conf = ssl_module
+MaxProtocol = TLSv1.2
+CipherString = ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:...
+Ciphersuites =
+EOL
+echo "Firewall rules updated successfully!"
 export PATH=$PATH:/usr/local/bin
 
 aws secretsmanager get-secret-value --secret-id /bb2/${env}/app/www_key_file --query 'SecretString' --output text |base64 -d > /etc/ssl/certs/key.pem
