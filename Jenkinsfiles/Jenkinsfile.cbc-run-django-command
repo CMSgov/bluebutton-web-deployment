@@ -65,10 +65,10 @@ pipeline {
         echo "Running as user: \$(whoami)"
         echo "User ID: \$(id -u)"
         EC2_INI_PATH=inventory/config/${APP_ENV}.ini \
-        ansible-playbook playbook/run_django_command/main.yml -vvvv \
-          --private-key '/home/ec2-user/.ssh/noor_M7i.pem' \
+        ansible-playbook playbook/run_django_command/main.yml \
+          --private-key '${SSH_KEY}' \
           -i '${ANSIBLE_INVENTORY}' \
-          -l '${ANSIBLE_SUBSET}' \
+          -l "'${ANSIBLE_SUBSET}'" \
           -e 'env=${APP_ENV}' \
           -e 'django_command="${DJANGO_COMMAND}"'
         """
