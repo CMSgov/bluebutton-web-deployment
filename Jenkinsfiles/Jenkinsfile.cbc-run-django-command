@@ -62,6 +62,7 @@ pipeline {
     stage("Run Django Command") {
       steps {
         sh """
+        export AWS_DEFAULT_REGION=us-east-1
         echo "Running as user: \$(whoami)"
         echo "User ID: \$(id -u)"
         EC2_INI_PATH=inventory/config/${APP_ENV}.ini \
