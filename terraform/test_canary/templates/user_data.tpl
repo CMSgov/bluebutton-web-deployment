@@ -36,7 +36,7 @@ CipherString = ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:...
 Ciphersuites =
 EOL
 echo "Firewall rules updated successfully!"
-sudo update-crypto-policies --set DEFAULT:!EMS
+sudo update-crypto-policies --set FIPS:NO-ENFORCE-EMS
 
 aws s3 cp s3://${bucket}/${env}/REPO_URI .
 
