@@ -34,6 +34,8 @@ CipherString = ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:...
 Ciphersuites =
 EOL
 echo "Firewall rules updated successfully!"
+sudo update-crypto-policies --set FIPS:NO-ENFORCE-EMS
+
 export PATH=$PATH:/usr/local/bin
 
 aws secretsmanager get-secret-value --secret-id /bb2/${env}/app/www_key_file --query 'SecretString' --output text |base64 -d > /etc/ssl/certs/key.pem
