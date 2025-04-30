@@ -7,7 +7,8 @@
   "builders": [{
     "type": "amazon-ebs",
      "iam_instance_profile": "AmazonSSMManagedInstanceCore",
-    "communicator": "ssm",
+    "ssh_interface" : "session_manager",
+     "ssh_username"  : "ec2-user",
     "instance_type": "m7i.large",
     "region": "us-east-1",
     "subnet_id": "{{user `subnet_id`}}",
