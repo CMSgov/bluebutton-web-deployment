@@ -63,15 +63,25 @@ pipeline {
             SOURCE_AMI = params.GOLD_AMI_ID
           } else if (params.GOLD_AMI_SEARCH_FILTER != "") {
             echo("Setting SOURCE_AMI from GOLD_AMI_SEARCH_FILTER")
-            SOURCE_AMI = sh(returnStdout: true, script: """#!/bin/bash
+            def result = sh(returnStdout: true, script: """#!/bin/bash
               aws ec2 describe-images \
               --filters 'Name=name,Values=${params.GOLD_AMI_SEARCH_FILTER}' \
               --query 'sort_by(Images, &CreationDate)[-1].ImageId' \
               --output text
             """).trim()
+
+            echo("Result of describe-images command: ${result}")
+
+            if (result == "None") {
+              error("No AMI found for the search filter: ${params.GOLD_AMI_SEARCH_FILTER}")
+            }
+
+            SOURCE_AMI = result
           } else {
-            error("Please set GOLD_AMI_SEARCH_FILTER or GOLD_AMI_ID")
+            error("Please set either GOLD_AMI_SEARCH_FILTER or GOLD_AMI_ID")
           }
+
+          echo("Using AMI ID: ${SOURCE_AMI}")
         }
       }
     }
