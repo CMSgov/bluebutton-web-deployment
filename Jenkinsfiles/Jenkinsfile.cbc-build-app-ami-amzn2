@@ -60,7 +60,7 @@ pipeline {
           } else {
             echo("Setting SOURCE_AMI from latest platinum built in AWS")
             SOURCE_AMI = sh(returnStdout: true, script: "aws ec2 describe-images \
-              --filters 'Name=name,Values=bb2-amzn2-platinum-*' \
+              --filters 'Name=name,Values=bb2-amzn2023-platinum-*' \
               --query 'sort_by(Images, &CreationDate)[-1].ImageId' \
               --output text").trim()
           }
