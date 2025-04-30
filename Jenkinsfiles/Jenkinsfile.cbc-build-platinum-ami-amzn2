@@ -13,7 +13,7 @@ pipeline {
   }
 
   parameters {
-    string(name: "GOLD_AMI_SEARCH_FILTER", defaultValue: "al2023-gi*", description: "The search filter string for the gold image.")
+    string(name: "GOLD_AMI_SEARCH_FILTER", defaultValue: "al2023-legacy*", description: "The search filter string for the gold image.")
     string(name: "GOLD_AMI_ID", defaultValue: "", description: "The AMI ID for the gold image, overrides search filter string.")
     string(name: "DEPLOY_REPO_BRANCH", defaultValue: "master", description: "The branch of the deployment repo to build in AMI. Defaults to master.")
     choice(name: "ON_ERROR", choices: ["cleanup", "abort", "ask", "run-cleanup-provisioner"], description: "Selects what to do when the build fails during provisioning.")
@@ -62,6 +62,7 @@ pipeline {
           } else {
             echo "Using private subnet: ${subnetId}"
             env.PRIVATE_SUBNET_ID = subnetId
+          }
         }
       }
     }
@@ -104,7 +105,7 @@ pipeline {
             -var 'source_ami=${SOURCE_AMI}' \
             -var 'ec2-user=${EC2_KEY}' \
             -var 'ec2-user-pub-key=${EC2_PUB_KEY}' \
-            -var 'subnet_id=${env.SUBNET_ID}' \
+            -var 'subnet_id=${env.PRIVATE_SUBNET_ID}' \
             packer/build_platinum_ami_amzn2.json
         """
       }
