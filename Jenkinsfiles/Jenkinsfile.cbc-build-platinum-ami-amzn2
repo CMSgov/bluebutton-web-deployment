@@ -46,6 +46,29 @@ pipeline {
       }
     }
 
+    stage("Fetch Private Subnet ID") {
+      steps {
+        script {
+          // Query AWS to find a private subnet
+          def privateSubnetId = sh(script: """#!/bin/bash
+            PRIVATE_SUBNET_ID=$(aws ec2 describe-subnets \
+              --filters "Name=tag:Name,Values=*private*" "Name=availabilityZone,Values=us-east-1*" \
+              --query "Subnets[0].SubnetId" \
+              --output text)
+            echo $PRIVATE_SUBNET_ID
+          """, returnStdout: true).trim()
+
+          // Check if a subnet ID was found
+          if (privateSubnetId == "None" || privateSubnetId == "") {
+            error "No private subnet found!"
+          }
+
+          // Set the subnet ID to be used later in the build
+          env.SUBNET_ID = privateSubnetId
+        }
+      }
+    }
+
     stage("Notify Slack") {
       steps {
         script {
@@ -76,32 +99,6 @@ pipeline {
       }
     }
 
-    stage("Fetch Private Subnet ID") {
-      steps {
-        withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-credentials-id']]) {
-          script {
-            echo "Fetching private subnet ID..."
-
-            def subnetId = sh(script: '''
-                aws ec2 describe-subnets \
-                --filters "Name=tag:Name,Values=*private*" "Name=availabilityZone,Values=us-east-1*" \
-                --query "Subnets[0].SubnetId" \
-                --output text
-            ''', returnStdout: true).trim()
-
-            echo "Subnet ID: ${subnetId}"
-
-            if (subnetId == "None") {
-              error "No private subnet found!"
-            } else {
-              echo "Using private subnet: ${subnetId}"
-              env.PRIVATE_SUBNET_ID = subnetId
-            }
-          }
-        }
-      }
-    }
-
     stage("Build Platinum AMI") {
       steps {
         sh """#!/bin/bash
@@ -110,7 +107,7 @@ pipeline {
             -var 'source_ami=${SOURCE_AMI}' \
             -var 'ec2-user=${EC2_KEY}' \
             -var 'ec2-user-pub-key=${EC2_PUB_KEY}' \
-            -var 'subnet_id=${env.PRIVATE_SUBNET_ID}' \
+            -var 'subnet_id=${env.SUBNET_ID}' \
             packer/build_platinum_ami_amzn2.json
         """
       }
