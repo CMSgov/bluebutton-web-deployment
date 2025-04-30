@@ -100,10 +100,16 @@ pipeline {
     stage("Build Platinum AMI") {
       steps {
         sh """#!/bin/bash
-        # Install AWS Session Manager Plugin
+        set -e
+
+      # Install session-manager-plugin if not already available
+      if ! command -v session-manager-plugin &> /dev/null; then
+        echo "Installing session-manager-plugin..."
         curl "https://s3.amazonaws.com/session-manager-downloads/plugin/latest/ubuntu_64bit/session-manager-plugin.deb" -o "session-manager-plugin.deb"
-        sudo dpkg -i session-manager-plugin.deb
-        rm session-manager-plugin.deb
+        dpkg -i session-manager-plugin.deb
+        rm -f session-manager-plugin.deb
+      fi
+      
           packer build -color=false \
             -on-error=${params.ON_ERROR} \
             -var 'source_ami=${SOURCE_AMI}' \
