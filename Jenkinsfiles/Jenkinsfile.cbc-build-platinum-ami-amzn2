@@ -46,6 +46,29 @@ pipeline {
       }
     }
 
+    stage("Fetch Private Subnet ID") {
+      steps {
+        script {
+          // Query AWS to find a private subnet
+          def privateSubnetId = sh(script: """#!/bin/bash
+            PRIVATE_SUBNET_ID=$(aws ec2 describe-subnets \
+              --filters "Name=tag:Name,Values=*private*" "Name=availabilityZone,Values=us-east-1*" \
+              --query "Subnets[0].SubnetId" \
+              --output text)
+            echo $PRIVATE_SUBNET_ID
+          """, returnStdout: true).trim()
+
+          // Check if a subnet ID was found
+          if (privateSubnetId == "None" || privateSubnetId == "") {
+            error "No private subnet found!"
+          }
+
+          // Set the subnet ID to be used later in the build
+          env.SUBNET_ID = privateSubnetId
+        }
+      }
+    }
+
     stage("Notify Slack") {
       steps {
         script {
@@ -63,25 +86,15 @@ pipeline {
             SOURCE_AMI = params.GOLD_AMI_ID
           } else if (params.GOLD_AMI_SEARCH_FILTER != "") {
             echo("Setting SOURCE_AMI from GOLD_AMI_SEARCH_FILTER")
-            def result = sh(returnStdout: true, script: """#!/bin/bash
+            SOURCE_AMI = sh(returnStdout: true, script: """#!/bin/bash
               aws ec2 describe-images \
               --filters 'Name=name,Values=${params.GOLD_AMI_SEARCH_FILTER}' \
               --query 'sort_by(Images, &CreationDate)[-1].ImageId' \
               --output text
             """).trim()
-
-            echo("Result of describe-images command: ${result}")
-
-            if (result == "None") {
-              error("No AMI found for the search filter: ${params.GOLD_AMI_SEARCH_FILTER}")
-            }
-
-            SOURCE_AMI = result
           } else {
-            error("Please set either GOLD_AMI_SEARCH_FILTER or GOLD_AMI_ID")
+            error("Please set GOLD_AMI_SEARCH_FILTER or GOLD_AMI_ID")
           }
-
-          echo("Using AMI ID: ${SOURCE_AMI}")
         }
       }
     }
@@ -94,6 +107,7 @@ pipeline {
             -var 'source_ami=${SOURCE_AMI}' \
             -var 'ec2-user=${EC2_KEY}' \
             -var 'ec2-user-pub-key=${EC2_PUB_KEY}' \
+            -var 'subnet_id=${env.SUBNET_ID}' \
             packer/build_platinum_ami_amzn2.json
         """
       }
