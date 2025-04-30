@@ -6,6 +6,7 @@
   },
   "builders": [{
     "type": "amazon-ebs",
+     "iam_instance_profile": "AmazonSSMManagedInstanceCore",
     "communicator": "ssm",
     "instance_type": "m7i.large",
     "region": "us-east-1",
