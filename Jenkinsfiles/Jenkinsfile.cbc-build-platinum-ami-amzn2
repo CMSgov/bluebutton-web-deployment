@@ -13,7 +13,7 @@ pipeline {
   }
 
   parameters {
-    string(name: "GOLD_AMI_SEARCH_FILTER", defaultValue: "al2023-legacy*", description: "The search filter string for the gold image.")
+    string(name: "GOLD_AMI_SEARCH_FILTER", defaultValue: "al2023-gi*", description: "The search filter string for the gold image.")
     string(name: "GOLD_AMI_ID", defaultValue: "", description: "The AMI ID for the gold image, overrides search filter string.")
     string(name: "DEPLOY_REPO_BRANCH", defaultValue: "master", description: "The branch of the deployment repo to build in AMI. Defaults to master.")
     choice(name: "ON_ERROR", choices: ["cleanup", "abort", "ask", "run-cleanup-provisioner"], description: "Selects what to do when the build fails during provisioning.")
@@ -49,22 +49,19 @@ pipeline {
     stage("Fetch Private Subnet ID") {
       steps {
         script {
-          // Query AWS to find a private subnet
-          def privateSubnetId = sh(script: """#!/bin/bash
-            PRIVATE_SUBNET_ID=$(aws ec2 describe-subnets \
+          echo "Fetching private subnet ID..."
+          def subnetId = sh(script: '''
+              aws ec2 describe-subnets \
               --filters "Name=tag:Name,Values=*private*" "Name=availabilityZone,Values=us-east-1*" \
               --query "Subnets[0].SubnetId" \
-              --output text)
-            echo $PRIVATE_SUBNET_ID
-          """, returnStdout: true).trim()
+              --output text
+          ''', returnStdout: true).trim()
 
-          // Check if a subnet ID was found
-          if (privateSubnetId == "None" || privateSubnetId == "") {
+          if (subnetId == "None") {
             error "No private subnet found!"
-          }
-
-          // Set the subnet ID to be used later in the build
-          env.SUBNET_ID = privateSubnetId
+          } else {
+            echo "Using private subnet: ${subnetId}"
+            env.PRIVATE_SUBNET_ID = subnetId
         }
       }
     }
