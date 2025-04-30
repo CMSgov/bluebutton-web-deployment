@@ -7,47 +7,45 @@ pipeline {
   }
 
   environment {
-    AWS_ACCESS_KEY_ID = credentials("bb2-aws-key-id")
-    AWS_SECRET_ACCESS_KEY = credentials("bb2-aws-key-secret")
     AWS_DEFAULT_REGION = "us-east-1"
     EC2_KEY = credentials("ec2_user_al2023")
     EC2_PUB_KEY = credentials("ec2-user-pub-key_al2023")
   }
 
   parameters {
-    string(
-      name: "GOLD_AMI_SEARCH_FILTER",
-      defaultValue: "al2023-legacy*",
-      description: "The search filter string for the gold image."
-    )
-
-    string(
-      name: "GOLD_AMI_ID",
-      defaultValue: "",
-      description: "The AMI ID for the gold image, overrides search filter string."
-    )
-
-    string(
-      name: "DEPLOY_REPO_BRANCH",
-      defaultValue: "master",
-      description: "The branch of the deployment repo to build in AMI. Defaults to master."
-    )
-
-    choice(
-      name: "ON_ERROR",
-      choices: ["cleanup", "abort", "ask", "run-cleanup-provisioner"],
-      description: "Selects what to do when the build fails during provisioning. See https://developer.hashicorp.com/packer/docs/commands/build for details."
-    )
-
-    credentials(
-      name: "ec2-user",
-      defaultValue: 'ec2-user',
-      description: "ssh user key for provisioning this build with packer/ansible from the build container",
-      required: true
-    )
+    string(name: "GOLD_AMI_SEARCH_FILTER", defaultValue: "al2023-legacy*", description: "The search filter string for the gold image.")
+    string(name: "GOLD_AMI_ID", defaultValue: "", description: "The AMI ID for the gold image, overrides search filter string.")
+    string(name: "DEPLOY_REPO_BRANCH", defaultValue: "master", description: "The branch of the deployment repo to build in AMI. Defaults to master.")
+    choice(name: "ON_ERROR", choices: ["cleanup", "abort", "ask", "run-cleanup-provisioner"], description: "Selects what to do when the build fails during provisioning.")
+    credentials(name: "ec2-user", defaultValue: 'ec2-user', description: "SSH user key for provisioning", required: true)
   }
 
   stages {
+    stage("Assume AWS Role") {
+      steps {
+        withCredentials([string(credentialsId: 'aws-assume-role-arn', variable: 'ROLE_ARN')]) {
+          script {
+            def sessionName = "jenkins-${env.BUILD_ID}"
+            def credsJson = sh(
+              script: """#!/bin/bash
+              aws sts assume-role \
+                --role-arn "$ROLE_ARN" \
+                --role-session-name "$sessionName" \
+                --output json
+              """,
+              returnStdout: true
+            ).trim()
+
+            def creds = readJSON text: credsJson
+
+            env.AWS_ACCESS_KEY_ID = creds.Credentials.AccessKeyId
+            env.AWS_SECRET_ACCESS_KEY = creds.Credentials.SecretAccessKey
+            env.AWS_SESSION_TOKEN = creds.Credentials.SessionToken
+          }
+        }
+      }
+    }
+
     stage("Notify Slack") {
       steps {
         script {
@@ -65,10 +63,12 @@ pipeline {
             SOURCE_AMI = params.GOLD_AMI_ID
           } else if (params.GOLD_AMI_SEARCH_FILTER != "") {
             echo("Setting SOURCE_AMI from GOLD_AMI_SEARCH_FILTER")
-            SOURCE_AMI = sh(returnStdout: true, script: "aws ec2 describe-images \
-              --filters 'Name=name,Values=${GOLD_AMI_SEARCH_FILTER}' \
+            SOURCE_AMI = sh(returnStdout: true, script: """#!/bin/bash
+              aws ec2 describe-images \
+              --filters 'Name=name,Values=${params.GOLD_AMI_SEARCH_FILTER}' \
               --query 'sort_by(Images, &CreationDate)[-1].ImageId' \
-              --output text").trim()
+              --output text
+            """).trim()
           } else {
             error("Please set GOLD_AMI_SEARCH_FILTER or GOLD_AMI_ID")
           }
@@ -78,9 +78,9 @@ pipeline {
 
     stage("Build Platinum AMI") {
       steps {
-        sh """
+        sh """#!/bin/bash
           packer build -color=false \
-            -on-error=${ON_ERROR} \
+            -on-error=${params.ON_ERROR} \
             -var 'source_ami=${SOURCE_AMI}' \
             -var 'ec2-user=${EC2_KEY}' \
             -var 'ec2-user-pub-key=${EC2_PUB_KEY}' \
@@ -96,7 +96,6 @@ pipeline {
         helpers.slackNotify("SUCCESS", "good")
       }
     }
-
     failure {
       script {
         helpers.slackNotify("FAILURE", "bad")
