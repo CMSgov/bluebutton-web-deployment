@@ -109,7 +109,7 @@ pipeline {
         dpkg -i session-manager-plugin.deb
         rm -f session-manager-plugin.deb
       fi
-      
+
           packer build -color=false \
             -on-error=${params.ON_ERROR} \
             -var 'source_ami=${SOURCE_AMI}' \
