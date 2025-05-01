@@ -5,22 +5,26 @@ data "aws_vpc" "selected" {
   id = var.vpc_id
 }
 
-data "aws_subnets" "app" {
+data "aws_subnets" "private_subs" {
+  filter {
+    name   = "tag:Name"
+    values = ["*private*"]
+  }
+
   filter {
     name   = "vpc-id"
     values = [var.vpc_id]
   }
+}
 
-  tags = {
-    Layer       = "app"
-    stack       = var.stack
-    application = var.app
-  }
+data "aws_subnet" "private_sub" {
+  for_each = { for id in data.aws_subnets.private_subs.ids : id => id }
+  id       = each.value
 }
 
 data "aws_ami" "image" {
   most_recent = true
-  owners      = ["self"]
+  #owners      = ["self"]
 
   filter {
     name   = "image-id"
@@ -72,6 +76,10 @@ data "template_file" "user_data" {
     static_content_bucket   = var.static_content_bucket
   }
 }
+resource "aws_iam_instance_profile" "app" {
+  name = "bb-${lower(var.env)}-app-profile"
+  role = "bb-${lower(var.env)}-app-role"  # existing role name
+}
 
 resource "aws_launch_template" "app" {
   vpc_security_group_ids  = [
@@ -109,7 +117,7 @@ resource "aws_autoscaling_group" "main" {
   health_check_grace_period = 400
   health_check_type         = "ELB"
   wait_for_capacity_timeout = "30m"
-  vpc_zone_identifier       = data.aws_subnets.app.ids
+  vpc_zone_identifier       = data.aws_subnets.private_subs.ids
 
   launch_template {
     id      = aws_launch_template.app.id
@@ -217,7 +225,8 @@ resource "aws_cloudwatch_metric_alarm" "low-cpu" {
 # Autoscaling notifications
 ##
 resource "aws_autoscaling_notification" "asg_notifications" {
-  count = var.sns_topic_arn != "" ? 1 : 0
+  count = can(var.sns_topic_arn) && var.sns_topic_arn != "" ? 1 : 0
+
 
   group_names = [
     aws_autoscaling_group.main.name,
