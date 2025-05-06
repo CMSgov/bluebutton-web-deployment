@@ -30,7 +30,10 @@
         {
             "type": "ansible",
             "playbook_file": "playbook/build_app_ami_amzn2/main.yml",
-            "extra_arguments": [ "-e", "-e git_branch={{user `git_branch`}} -e deployment_branch={{user `deployment_branch`}}" ],
+            "extra_arguments": [
+                  "-e", "git_branch={{user `git_branch`}}",
+                  "-e", "deployment_branch={{user `deployment_branch`}}"
+            ],
             "use_proxy": false,
             "user": "ec2-user"
         }
