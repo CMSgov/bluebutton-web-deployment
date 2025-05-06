@@ -7,41 +7,43 @@ pipeline {
   }
 
   environment {
-    AWS_ACCESS_KEY_ID = credentials("bb2-aws-key-id")
-    AWS_SECRET_ACCESS_KEY = credentials("bb2-aws-key-secret")
     AWS_DEFAULT_REGION = "us-east-1"
     EC2_KEY = credentials("ec2-user-priv-key")
     EC2_PUB_KEY = credentials("ec2-user-pub-key")
   }
 
   parameters {
-    string(
-      name: "APP_REPO_BRANCH",
-      defaultValue: "master",
-      description: "The branch of the application repo to build in AMI. Defaults to master."
-    )
-
-    string(
-      name: "DEPLOY_REPO_BRANCH",
-      defaultValue: "master",
-      description: "The branch of the deployment repo to build in AMI. Defaults to master."
-    )
-
-    string(
-      name: "PLATINUM_AMI_ID",
-      defaultValue: "",
-      description: "The AMI ID of the platinum image. If unset, the latest will be pulled from AWS and used."
-    )
-
-    credentials(
-      name: "ec2-user",
-      defaultValue: 'ec2-user',
-      description: "ssh user key for provisioning this build with packer/ansible from the build container",
-      required: true
-    )
+    string(name: "APP_REPO_BRANCH", defaultValue: "master", description: "The branch of the application repo to build in AMI.")
+    string(name: "DEPLOY_REPO_BRANCH", defaultValue: "master", description: "The branch of the deployment repo to build in AMI.")
+    string(name: "PLATINUM_AMI_ID", defaultValue: "", description: "The AMI ID of the platinum image. If unset, the latest will be pulled from AWS.")
+    credentials(name: "ec2-user", defaultValue: "ec2-user", description: "SSH user key for provisioning this build with packer/ansible", required: true)
   }
 
   stages {
+    stage("Assume AWS Role") {
+      steps {
+        withCredentials([string(credentialsId: 'aws-assume-role-arn', variable: 'ROLE_ARN')]) {
+          script {
+            def sessionName = "jenkins-${env.BUILD_ID}"
+            def credsJson = sh(
+              script: """#!/bin/bash
+                aws sts assume-role \
+                  --role-arn "$ROLE_ARN" \
+                  --role-session-name "$sessionName" \
+                  --output json
+              """,
+              returnStdout: true
+            ).trim()
+            def creds = readJSON text: credsJson
+
+            env.AWS_ACCESS_KEY_ID     = creds.Credentials.AccessKeyId
+            env.AWS_SECRET_ACCESS_KEY = creds.Credentials.SecretAccessKey
+            env.AWS_SESSION_TOKEN     = creds.Credentials.SessionToken
+          }
+        }
+      }
+    }
+
     stage("Notify Slack") {
       steps {
         script {
@@ -55,14 +57,20 @@ pipeline {
       steps {
         script {
           if (params.PLATINUM_AMI_ID != "") {
-            echo("Setting SOURCE_AMI from PLATINUM_AMI_ID")
+            echo("Using provided PLATINUM_AMI_ID")
             SOURCE_AMI = params.PLATINUM_AMI_ID
           } else {
-            echo("Setting SOURCE_AMI from latest platinum built in AWS")
-            SOURCE_AMI = sh(returnStdout: true, script: "aws ec2 describe-images \
-              --filters 'Name=name,Values=bb2-amzn2023-platinum-*' \
-              --query 'sort_by(Images, &CreationDate)[-1].ImageId' \
-              --output text").trim()
+            echo("Fetching latest bb2-amzn2023-platinum AMI from AWS")
+            SOURCE_AMI = sh(returnStdout: true, script: """#!/bin/bash
+              aws ec2 describe-images \
+                --filters 'Name=name,Values=bb2-amzn2023-platinum-*' \
+                --query 'sort_by(Images, &CreationDate)[-1].ImageId' \
+                --output text
+            """).trim()
+          }
+
+          if (!SOURCE_AMI || SOURCE_AMI == "None") {
+            error("No suitable SOURCE_AMI found.")
           }
         }
       }
@@ -70,7 +78,17 @@ pipeline {
 
     stage("Build App AMI") {
       steps {
-        sh """
+        sh """#!/bin/bash
+          set -e
+
+          # Install session-manager-plugin if not present
+          if ! command -v session-manager-plugin &> /dev/null; then
+            echo "Installing session-manager-plugin..."
+            curl "https://s3.amazonaws.com/session-manager-downloads/plugin/latest/ubuntu_64bit/session-manager-plugin.deb" -o "session-manager-plugin.deb"
+            dpkg -i session-manager-plugin.deb
+            rm -f session-manager-plugin.deb
+          fi
+
           packer build -color=false \
             -var 'source_ami=${SOURCE_AMI}' \
             -var 'release_version=${APP_REPO_BRANCH}' \
@@ -90,7 +108,6 @@ pipeline {
         helpers.slackNotify("SUCCESS", "good")
       }
     }
-
     failure {
       script {
         helpers.slackNotify("FAILURE", "bad")
