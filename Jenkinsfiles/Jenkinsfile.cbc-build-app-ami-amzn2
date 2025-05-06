@@ -16,7 +16,7 @@ pipeline {
     string(name: "APP_REPO_BRANCH", defaultValue: "master", description: "The branch of the application repo to build in AMI.")
     string(name: "DEPLOY_REPO_BRANCH", defaultValue: "master", description: "The branch of the deployment repo to build in AMI.")
     string(name: "PLATINUM_AMI_ID", defaultValue: "", description: "The AMI ID of the platinum image. If unset, the latest will be pulled from AWS.")
-    credentials(name: "ec2-user", defaultValue: "ec2-user", description: "SSH user key for provisioning this build with packer/ansible", required: true)
+    credentials(name: "ec2-user", defaultValue: "ec2-user", description: "SSH user key for provisioning", required: true)
   }
 
   stages {
@@ -27,13 +27,14 @@ pipeline {
             def sessionName = "jenkins-${env.BUILD_ID}"
             def credsJson = sh(
               script: """#!/bin/bash
-                aws sts assume-role \
-                  --role-arn "$ROLE_ARN" \
-                  --role-session-name "$sessionName" \
-                  --output json
+              aws sts assume-role \
+                --role-arn "$ROLE_ARN" \
+                --role-session-name "$sessionName" \
+                --output json
               """,
               returnStdout: true
             ).trim()
+
             def creds = readJSON text: credsJson
 
             env.AWS_ACCESS_KEY_ID     = creds.Credentials.AccessKeyId
@@ -76,6 +77,27 @@ pipeline {
       }
     }
 
+    stage("Fetch Private Subnet ID") {
+      steps {
+        script {
+          echo "Fetching private subnet ID..."
+          def subnetId = sh(script: '''
+            aws ec2 describe-subnets \
+              --filters "Name=tag:Name,Values=*private*" "Name=availabilityZone,Values=us-east-1*" \
+              --query "Subnets[0].SubnetId" \
+              --output text
+          ''', returnStdout: true).trim()
+
+          if (subnetId == "None" || !subnetId) {
+            error "No private subnet found!"
+          } else {
+            echo "Using private subnet: ${subnetId}"
+            env.PRIVATE_SUBNET_ID = subnetId
+          }
+        }
+      }
+    }
+
     stage("Build App AMI") {
       steps {
         sh """#!/bin/bash
@@ -96,6 +118,7 @@ pipeline {
             -var 'deployment_branch=${DEPLOY_REPO_BRANCH}' \
             -var 'ec2-user=${EC2_KEY}' \
             -var 'ec2-user-pub-key=${EC2_PUB_KEY}' \
+            -var 'subnet_id=${PRIVATE_SUBNET_ID}' \
             packer/build_app_ami_amzn2.json
         """
       }
