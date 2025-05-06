@@ -1,13 +1,15 @@
 {
   "variables": {
     "source_ami": "",
-    "subnet_id": "subnet-a0d9c28a",
+    "subnet_id": "",
     "release_version": "master",
     "git_branch": "master",
     "deployment_branch": "master"
   },
   "builders": [{
     "type": "amazon-ebs",
+    "iam_instance_profile": "packer-ssm-profile",
+    "ssh_interface" : "session_manager",
     "ssh_username": "ec2-user",
     "instance_type": "m7i.large",
     "region": "us-east-1",
@@ -28,7 +30,7 @@
         {
             "type": "ansible",
             "playbook_file": "playbook/build_app_ami_amzn2/main.yml",
-            "extra_arguments": [ "-e", "ansible_ssh_private_key_file={{user `ec2-user`}}", "-e git_branch={{user `git_branch`}} -e deployment_branch={{user `deployment_branch`}}" ],
+            "extra_arguments": [ "-e", "-e git_branch={{user `git_branch`}} -e deployment_branch={{user `deployment_branch`}}" ],
             "use_proxy": false,
             "user": "ec2-user"
         }
