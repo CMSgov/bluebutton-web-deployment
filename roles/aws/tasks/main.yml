@@ -24,6 +24,13 @@
     owner: root
     group: root
     mode: "u+r"
+- name: Ensure SSM Agent is running
+  become: true
+  systemd:
+    name: amazon-ssm-agent
+    enabled: yes
+    state: started
+
 - name: Install Session Manager Plugin on AL2023
   become_user: "{{ remote_admin_account }}"
   become: yes
