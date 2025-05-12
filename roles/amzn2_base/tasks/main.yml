@@ -32,7 +32,18 @@
       - nginx
       - amazon-cloudwatch-agent
     state: present
-
+- name: Install session-manager-plugin if not present
+  become: yes
+  become_user: "{{ remote_admin_account }}"
+  shell: |
+    if ! command -v session-manager-plugin &> /dev/null; then
+      echo "Installing session-manager-plugin..."
+      curl "https://s3.amazonaws.com/session-manager-downloads/plugin/latest/ubuntu_64bit/session-manager-plugin.deb" -o "session-manager-plugin.deb"
+      dpkg -i session-manager-plugin.deb
+      rm -f session-manager-plugin.deb
+    fi
+  args:
+    executable: /bin/bash
 - name: Install uwsgi ansible boto3 and botocore psycopg2-binary==2.9.10 via pip3.11
   become: yes
   become_user: "{{ remote_admin_account }}"
