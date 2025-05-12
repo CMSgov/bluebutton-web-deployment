@@ -24,3 +24,12 @@
     owner: root
     group: root
     mode: "u+r"
+- name: Install Session Manager Plugin on AL2023
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  shell: |
+    curl "https://s3.amazonaws.com/session-manager-downloads/plugin/latest/linux64/session-manager-plugin.rpm" -o "session-manager-plugin.rpm"
+    dnf install -y ./session-manager-plugin.rpm
+    rm -f session-manager-plugin.rpm
+  args:
+    executable: /bin/bash
