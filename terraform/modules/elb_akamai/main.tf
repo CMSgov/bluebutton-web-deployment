@@ -9,7 +9,7 @@ data "aws_subnets" "default" {
 
   filter {
     name   = "tag:Name"
-    values = ["*private*"]
+    values = ["*public*"]
   }
 }
 data "aws_acm_certificate" "selected" {
