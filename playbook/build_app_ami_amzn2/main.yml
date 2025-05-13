@@ -20,4 +20,4 @@
     - ../../roles/app_prep
     - ../../roles/app_logs
     - ../../roles/app_install
-    - ../../roles/env_config
+  
