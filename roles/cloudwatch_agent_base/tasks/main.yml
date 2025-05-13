@@ -10,7 +10,7 @@
 - name: Install cloudwatch agent from RPM
   become_user: "{{ remote_admin_account }}"
   become: yes
-  dnf:
+  yum:
     name: https://s3.amazonaws.com/amazoncloudwatch-agent/redhat/amd64/latest/amazon-cloudwatch-agent.rpm
     state: present
     disable_gpg_check: true
