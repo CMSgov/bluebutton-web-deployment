@@ -1,21 +1,7 @@
 ---
-- name: "Create application group"
-  become_user: "{{ remote_admin_account }}"
-  become: yes
-  group:
-    name: "{{ app_pyapps_user }}"
-    state: present
-- name: "Create additional group"
-  become_user: "{{ remote_admin_account }}"
-  become: yes
-  group:
-    name: "{{ app_group }}"
-    state: present
-
 - name: "Creating Appserver User"
   become_user: "{{ remote_admin_account }}"
   become: yes
   user:
     name: "{{ app_pyapps_user }}"
-    group: "{{ app_pyapps_user }}"
 #    password: "{{ cf_app_pyapps_pwd | password_hash('sha512') }}"
