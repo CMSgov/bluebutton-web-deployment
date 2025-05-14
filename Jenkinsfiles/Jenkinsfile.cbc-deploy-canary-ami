@@ -10,7 +10,7 @@ pipeline {
     AWS_ACCESS_KEY_ID = credentials("bb2-aws-key-id")
     AWS_SECRET_ACCESS_KEY = credentials("bb2-aws-key-secret")
     AWS_DEFAULT_REGION = "us-east-1"
-    TF_VARS = credentials("bb2-terraform-vars-${params.APP_ENV}-canary")
+    TF_VARS = credentials("bb2-terraform-vars-${params.APP_ENV}-canary-2023")
     TF_IN_AUTOMATION = true
   }
 
@@ -83,7 +83,8 @@ pipeline {
         }
 
         sh """
-        curl --silent --insecure --retry 120 --retry-delay 15 --retry-connrefused https://${CANARY_IP}/.well-known/openid-configuration
+        sleep 180
+        curl -v --silent --insecure --retry 120 --retry-delay 15 --retry-connrefused --max-time 600 --connect-timeout 120 https://${CANARY_IP}/.well-known/openid-configuration
         """
       }
     }
