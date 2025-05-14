@@ -15,8 +15,9 @@
     - "./../../vars/env/{{ env }}/env.yml"
     - "./../../vars/all_var.yml"
   roles:
-   # - ../../roles/aws
-   # - ../../roles/app_user
-   # - ../../roles/app_prep
-   # - ../../roles/app_logs
-   #s - ../../roles/app_install
+    - ../../roles/aws
+    - ../../roles/app_user
+    - ../../roles/app_prep
+    - ../../roles/app_logs
+    - ../../roles/app_install
+    - ../../roles/env_config
