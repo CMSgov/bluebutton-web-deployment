@@ -7,8 +7,8 @@ pipeline {
   }
 
   environment {
-    AWS_ACCESS_KEY_ID = credentials("bb2-aws-key-id")
-    AWS_SECRET_ACCESS_KEY = credentials("bb2-aws-key-secret")
+    #AWS_ACCESS_KEY_ID = credentials("bb2-aws-key-id")
+    #AWS_SECRET_ACCESS_KEY = credentials("bb2-aws-key-secret")
     AWS_DEFAULT_REGION = "us-east-1"
     TF_VARS = credentials("bb2-terraform-vars-${params.APP_ENV}-v4")
     TF_IN_AUTOMATION = true
@@ -33,7 +33,31 @@ pipeline {
       description: "The AMI ID for the app image."
     )
   }
+ stages {
+    stage("Assume AWS Role") {
+      steps {
+        withCredentials([string(credentialsId: 'aws-assume-role-arn', variable: 'ROLE_ARN')]) {
+          script {
+            def sessionName = "jenkins-${env.BUILD_ID}"
+            def credsJson = sh(
+              script: """#!/bin/bash
+              aws sts assume-role \
+                --role-arn "$ROLE_ARN" \
+                --role-session-name "$sessionName" \
+                --output json
+              """,
+              returnStdout: true
+            ).trim()
 
+            def creds = readJSON text: credsJson
+
+            env.AWS_ACCESS_KEY_ID     = creds.Credentials.AccessKeyId
+            env.AWS_SECRET_ACCESS_KEY = creds.Credentials.SecretAccessKey
+            env.AWS_SESSION_TOKEN     = creds.Credentials.SessionToken
+          }
+        }
+      }
+    }
   stages {
     stage("Check migration status") {
       steps {
