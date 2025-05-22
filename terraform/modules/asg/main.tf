@@ -77,7 +77,7 @@ data "template_file" "user_data" {
   }
 }
 resource "aws_iam_instance_profile" "app" {
-  name = "bb-${lower(var.env)}-app-profile"
+  name = "bb-${lower(var.env)}-app-profile-v4"
   role = "bb-${lower(var.env)}-app-role"  # existing role name
 }
 
@@ -96,7 +96,7 @@ resource "aws_launch_template" "app" {
   name_prefix                 = "bb-${var.stack}-app-"
   user_data                   = base64encode(data.template_file.user_data.rendered)
   iam_instance_profile {
-    name                      = "bb-${lower(var.env)}-app-profile"
+    name                      = "bb-${lower(var.env)}-app-profile-v4"
   }
 
   lifecycle {
