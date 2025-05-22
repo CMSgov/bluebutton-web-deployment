@@ -31,7 +31,8 @@ pipeline {
       description: "The AMI ID for the app image."
     )
   }
- stages {
+
+  stages {
     stage("Assume AWS Role") {
       steps {
         withCredentials([string(credentialsId: 'aws-assume-role-arn', variable: 'ROLE_ARN')]) {
@@ -56,13 +57,13 @@ pipeline {
         }
       }
     }
-  stages {
+
     stage("Check migration status") {
       steps {
         script {
           if (params.APP_MIGRATIONS == '') {
-              currentBuild.result = 'ABORTED'
-              error('No app migration selection was made.')
+            currentBuild.result = 'ABORTED'
+            error('No app migration selection was made.')
           }
         }
       }
@@ -103,7 +104,7 @@ pipeline {
         ok "Deploy"
       }
       steps {
-        echo "Deploy confirmation recieved, proceeding."
+        echo "Deploy confirmation received, proceeding."
       }
     }
 
@@ -132,7 +133,6 @@ pipeline {
     stage("Get Launch Template name for this deploy Environment") {
       steps {
         script {
-          // groovy scripts can be broken out if determined that we need access to these functions elsewhere
           def launchTemplateName = sh(
             returnStdout: true,
             script: "aws ec2 describe-launch-templates --query \"LaunchTemplates[?contains(LaunchTemplateName,\'${params.APP_ENV}\')].LaunchTemplateName\" --output text"
@@ -146,7 +146,6 @@ pipeline {
     stage("Get Launch Template latest version number") {
       steps {
         script {
-          // groovy scripts can be broken out if determined that we need access to these functions elsewhere
           def launchTemplateVersion = sh(
             returnStdout: true,
             script: "aws ec2 describe-launch-templates --launch-template-name $LAUNCH_TEMPLATE_NAME --query \"LaunchTemplates[].LatestVersionNumber\" --output text"
@@ -160,7 +159,7 @@ pipeline {
     stage("Set default version for launch template") {
       steps {
         sh """
-          aws ec2 modify-launch-template --launch-template-name $LAUNCH_TEMPLATE_NAME --default-version \"$LAUNCH_TEMPLATE_VERSION\"
+        aws ec2 modify-launch-template --launch-template-name $LAUNCH_TEMPLATE_NAME --default-version \"$LAUNCH_TEMPLATE_VERSION\"
         """
       }
     }
@@ -175,7 +174,7 @@ pipeline {
               --desired-configuration '{\"LaunchTemplate\": {\"LaunchTemplateName\": \"$LAUNCH_TEMPLATE_NAME\"}}'"
           )
 
-          if(instanceRefreshResult == 0) {
+          if (instanceRefreshResult == 0) {
             echo "Instance Refresh started successfully"
           } else {
             error "Failed to start instance refresh"
