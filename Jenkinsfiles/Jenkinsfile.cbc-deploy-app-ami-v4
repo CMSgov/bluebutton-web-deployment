@@ -35,7 +35,7 @@ pipeline {
   stages {
     stage("Assume AWS Role") {
       steps {
-        withCredentials([string(credentialsId: 'aws-assume-role-arn', variable: 'ROLE_ARN')]) {
+        withCredentials([string(credentialsId: params.APP_ENV == 'test' ? 'aws-assume-role-arn', : 'aws-assume-role-arn-prod', variable: 'ROLE_ARN')]) {
           script {
             def sessionName = "jenkins-${env.BUILD_ID}"
             def credsJson = sh(
