@@ -60,3 +60,7 @@ module "iam_param_store" {
 
   env = lower(var.env)
 }
+module "kms" {
+  source = "../modules/kms"
+  stack  = var.stack
+}
