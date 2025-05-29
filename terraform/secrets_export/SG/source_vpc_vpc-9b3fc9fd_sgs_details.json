@@ -1,0 +1,1709 @@
+{
+    "SecurityGroups": [
+        {
+            "GroupId": "sg-e12bad9c",
+            "IpPermissionsEgress": [],
+            "VpcId": "vpc-9b3fc9fd",
+            "SecurityGroupArn": "arn:aws:ec2:us-east-1:501705132200:security-group/sg-e12bad9c",
+            "OwnerId": "501705132200",
+            "GroupName": "default",
+            "Description": "default VPC security group",
+            "IpPermissions": []
+        },
+        {
+            "GroupId": "sg-932badee",
+            "IpPermissionsEgress": [
+                {
+                    "IpProtocol": "-1",
+                    "UserIdGroupPairs": [],
+                    "IpRanges": [
+                        {
+                            "CidrIp": "0.0.0.0/0"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": []
+                }
+            ],
+            "Tags": [
+                {
+                    "Key": "ProjectName",
+                    "Value": "prod"
+                },
+                {
+                    "Key": "application",
+                    "Value": "bluebutton"
+                },
+                {
+                    "Key": "Type",
+                    "Value": "private"
+                },
+                {
+                    "Key": "aws:cloudformation:stack-id",
+                    "Value": "arn:aws:cloudformation:us-east-1:501705132200:stack/bluebutton-prod-EnterpriseSgStack-OJQLUEZCL822/d4ee8b10-adce-11e6-8016-50d5cafe7636"
+                },
+                {
+                    "Key": "stack",
+                    "Value": "prod"
+                },
+                {
+                    "Key": "Environment",
+                    "Value": "prod"
+                },
+                {
+                    "Key": "aws:cloudformation:logical-id",
+                    "Value": "PrivateVpnSg"
+                },
+                {
+                    "Key": "Name",
+                    "Value": "bluebutton-prod-vpn-private"
+                },
+                {
+                    "Key": "aws:cloudformation:stack-name",
+                    "Value": "bluebutton-prod-EnterpriseSgStack-OJQLUEZCL822"
+                },
+                {
+                    "Key": "business",
+                    "Value": "oeda"
+                }
+            ],
+            "VpcId": "vpc-9b3fc9fd",
+            "SecurityGroupArn": "arn:aws:ec2:us-east-1:501705132200:security-group/sg-932badee",
+            "OwnerId": "501705132200",
+            "GroupName": "bluebutton-prod-EnterpriseSgStack-OJQLUEZCL822-PrivateVpnSg-10SFKSOUS6MQL",
+            "Description": "aws-prod-vpn-private",
+            "IpPermissions": [
+                {
+                    "IpProtocol": "-1",
+                    "UserIdGroupPairs": [],
+                    "IpRanges": [
+                        {
+                            "CidrIp": "10.251.0.0/16"
+                        },
+                        {
+                            "CidrIp": "10.252.0.0/16"
+                        },
+                        {
+                            "CidrIp": "10.232.32.0/19"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": []
+                },
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": 22,
+                    "ToPort": 22,
+                    "UserIdGroupPairs": [],
+                    "IpRanges": [
+                        {
+                            "Description": "AnyConnect VPN AZ1",
+                            "CidrIp": "10.232.48.0/20"
+                        },
+                        {
+                            "Description": "AnyConnect VPN AZ2",
+                            "CidrIp": "10.232.40.0/21"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": []
+                },
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": 0,
+                    "ToPort": 0,
+                    "UserIdGroupPairs": [],
+                    "IpRanges": [
+                        {
+                            "Description": "JZ VPN",
+                            "CidrIp": "10.232.44.44/32"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": []
+                }
+            ]
+        },
+        {
+            "GroupId": "sg-e491b09b",
+            "IpPermissionsEgress": [
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": 80,
+                    "ToPort": 80,
+                    "UserIdGroupPairs": [],
+                    "IpRanges": [
+                        {
+                            "CidrIp": "0.0.0.0/0"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": []
+                },
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": 8080,
+                    "ToPort": 8080,
+                    "UserIdGroupPairs": [],
+                    "IpRanges": [
+                        {
+                            "CidrIp": "0.0.0.0/0"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": []
+                },
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": 5432,
+                    "ToPort": 5432,
+                    "UserIdGroupPairs": [],
+                    "IpRanges": [
+                        {
+                            "CidrIp": "10.244.140.96/28"
+                        },
+                        {
+                            "CidrIp": "10.244.140.112/28"
+                        },
+                        {
+                            "CidrIp": "10.244.140.128/28"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": []
+                },
+                {
+                    "IpProtocol": "-1",
+                    "UserIdGroupPairs": [],
+                    "IpRanges": [
+                        {
+                            "CidrIp": "10.128.11.0/24"
+                        },
+                        {
+                            "CidrIp": "10.128.111.0/24"
+                        },
+                        {
+                            "CidrIp": "10.244.96.0/19"
+                        },
+                        {
+                            "Description": "Allow all outbound",
+                            "CidrIp": "0.0.0.0/0"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": []
+                },
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": 15432,
+                    "ToPort": 15432,
+                    "UserIdGroupPairs": [],
+                    "IpRanges": [
+                        {
+                            "CidrIp": "10.244.140.112/28"
+                        },
+                        {
+                            "CidrIp": "10.244.140.128/28"
+                        },
+                        {
+                            "CidrIp": "10.244.140.96/28"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": []
+                },
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": 22,
+                    "ToPort": 22,
+                    "UserIdGroupPairs": [],
+                    "IpRanges": [
+                        {
+                            "CidrIp": "10.244.140.192/28"
+                        },
+                        {
+                            "CidrIp": "10.244.140.208/28"
+                        },
+                        {
+                            "CidrIp": "10.244.140.224/28"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": []
+                },
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": 8089,
+                    "ToPort": 8089,
+                    "UserIdGroupPairs": [],
+                    "IpRanges": [
+                        {
+                            "CidrIp": "10.244.112.51/32"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": []
+                },
+                {
+                    "IpProtocol": "udp",
+                    "FromPort": 53,
+                    "ToPort": 53,
+                    "UserIdGroupPairs": [],
+                    "IpRanges": [
+                        {
+                            "CidrIp": "10.0.0.0/8"
+                        },
+                        {
+                            "CidrIp": "172.0.0.0/8"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": []
+                },
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": 443,
+                    "ToPort": 443,
+                    "UserIdGroupPairs": [],
+                    "IpRanges": [
+                        {
+                            "CidrIp": "0.0.0.0/0"
+                        },
+                        {
+                            "Description": "PROD Backend servers",
+                            "CidrIp": "10.3.96.0/19"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": []
+                }
+            ],
+            "Tags": [
+                {
+                    "Key": "Name",
+                    "Value": "bb-sg-prod-appserver-allzones"
+                }
+            ],
+            "VpcId": "vpc-9b3fc9fd",
+            "SecurityGroupArn": "arn:aws:ec2:us-east-1:501705132200:security-group/sg-e491b09b",
+            "OwnerId": "501705132200",
+            "GroupName": "BB-SG-PROD-APPSERVER-ALLZONE",
+            "Description": "BlueButton Security Group PROD App Server All Zones",
+            "IpPermissions": [
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": 80,
+                    "ToPort": 80,
+                    "UserIdGroupPairs": [
+                        {
+                            "UserId": "501705132200",
+                            "GroupId": "sg-00d918688e31ef6f2"
+                        },
+                        {
+                            "UserId": "501705132200",
+                            "GroupId": "sg-07777a953701d4768"
+                        },
+                        {
+                            "UserId": "501705132200",
+                            "GroupId": "sg-0845ff171cc8c285f"
+                        }
+                    ],
+                    "IpRanges": [
+                        {
+                            "CidrIp": "10.244.140.144/28"
+                        },
+                        {
+                            "CidrIp": "10.244.140.160/28"
+                        },
+                        {
+                            "CidrIp": "10.244.140.176/28"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": []
+                },
+                {
+                    "IpProtocol": "-1",
+                    "UserIdGroupPairs": [],
+                    "IpRanges": [
+                        {
+                            "CidrIp": "10.128.11.0/24"
+                        },
+                        {
+                            "CidrIp": "10.128.111.0/24"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": []
+                },
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": 15432,
+                    "ToPort": 15432,
+                    "UserIdGroupPairs": [],
+                    "IpRanges": [
+                        {
+                            "CidrIp": "10.244.140.112/28"
+                        },
+                        {
+                            "CidrIp": "10.244.140.128/28"
+                        },
+                        {
+                            "CidrIp": "10.244.140.96/28"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": []
+                },
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": 22,
+                    "ToPort": 22,
+                    "UserIdGroupPairs": [
+                        {
+                            "Description": "SSH from PROD mgmt server security group",
+                            "UserId": "501705132200",
+                            "GroupId": "sg-d08e4eae"
+                        }
+                    ],
+                    "IpRanges": [
+                        {
+                            "CidrIp": "10.251.0.0/16"
+                        },
+                        {
+                            "CidrIp": "10.252.0.0/16"
+                        },
+                        {
+                            "CidrIp": "10.244.140.192/28"
+                        },
+                        {
+                            "CidrIp": "10.244.140.208/28"
+                        },
+                        {
+                            "CidrIp": "10.244.140.224/28"
+                        },
+                        {
+                            "Description": "SSH from CBJ-1",
+                            "CidrIp": "10.133.128.192/26"
+                        },
+                        {
+                            "Description": "SSH from CBJ-2",
+                            "CidrIp": "10.133.129.0/26"
+                        },
+                        {
+                            "Description": "SSH from CBJ-3",
+                            "CidrIp": "10.133.129.64/26"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": [
+                        {
+                            "PrefixListId": "pl-0622aa3695fb477b3"
+                        }
+                    ]
+                },
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": 8089,
+                    "ToPort": 8089,
+                    "UserIdGroupPairs": [],
+                    "IpRanges": [
+                        {
+                            "CidrIp": "10.244.112.51/32"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": []
+                },
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": 443,
+                    "ToPort": 443,
+                    "UserIdGroupPairs": [
+                        {
+                            "UserId": "501705132200",
+                            "GroupId": "sg-00d918688e31ef6f2"
+                        },
+                        {
+                            "UserId": "501705132200",
+                            "GroupId": "sg-07777a953701d4768"
+                        },
+                        {
+                            "UserId": "501705132200",
+                            "GroupId": "sg-0845ff171cc8c285f"
+                        }
+                    ],
+                    "IpRanges": [
+                        {
+                            "CidrIp": "10.244.140.144/28"
+                        },
+                        {
+                            "CidrIp": "10.244.140.160/28"
+                        },
+                        {
+                            "CidrIp": "10.244.140.176/28"
+                        },
+                        {
+                            "CidrIp": "10.3.96.0/23"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": []
+                }
+            ]
+        },
+        {
+            "GroupId": "sg-00d918688e31ef6f2",
+            "IpPermissionsEgress": [
+                {
+                    "IpProtocol": "-1",
+                    "UserIdGroupPairs": [],
+                    "IpRanges": [
+                        {
+                            "CidrIp": "0.0.0.0/0"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": []
+                }
+            ],
+            "Tags": [
+                {
+                    "Key": "Name",
+                    "Value": "bb-sg-prod-clb-akamai-staging"
+                }
+            ],
+            "VpcId": "vpc-9b3fc9fd",
+            "SecurityGroupArn": "arn:aws:ec2:us-east-1:501705132200:security-group/sg-00d918688e31ef6f2",
+            "OwnerId": "501705132200",
+            "GroupName": "bb-sg-prod-clb-akamai-staging",
+            "Description": "Security group for akamai staging traffic to prod classic load balancer",
+            "IpPermissions": [
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": 80,
+                    "ToPort": 80,
+                    "UserIdGroupPairs": [],
+                    "IpRanges": [
+                        {
+                            "CidrIp": "66.198.8.143/32"
+                        },
+                        {
+                            "CidrIp": "66.198.8.141/32"
+                        },
+                        {
+                            "CidrIp": "67.220.142.20/32"
+                        },
+                        {
+                            "CidrIp": "23.48.168.0/22"
+                        },
+                        {
+                            "CidrIp": "67.220.142.21/32"
+                        },
+                        {
+                            "CidrIp": "66.198.8.144/32"
+                        },
+                        {
+                            "CidrIp": "23.50.48.0/20"
+                        },
+                        {
+                            "CidrIp": "67.220.142.19/32"
+                        },
+                        {
+                            "CidrIp": "66.198.8.142/32"
+                        },
+                        {
+                            "CidrIp": "67.220.142.22/32"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": []
+                },
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": 443,
+                    "ToPort": 443,
+                    "UserIdGroupPairs": [],
+                    "IpRanges": [
+                        {
+                            "CidrIp": "67.220.142.22/32"
+                        },
+                        {
+                            "CidrIp": "66.198.8.144/32"
+                        },
+                        {
+                            "CidrIp": "23.50.48.0/20"
+                        },
+                        {
+                            "CidrIp": "23.48.168.0/22"
+                        },
+                        {
+                            "CidrIp": "66.198.8.141/32"
+                        },
+                        {
+                            "CidrIp": "67.220.142.21/32"
+                        },
+                        {
+                            "CidrIp": "67.220.142.19/32"
+                        },
+                        {
+                            "CidrIp": "66.198.8.142/32"
+                        },
+                        {
+                            "CidrIp": "66.198.8.143/32"
+                        },
+                        {
+                            "CidrIp": "67.220.142.20/32"
+                        },
+                        {
+                            "Description": "WAKA-18466",
+                            "CidrIp": "96.7.74.0/24"
+                        },
+                        {
+                            "Description": "WAKA-18466",
+                            "CidrIp": "96.7.218.0/24"
+                        },
+                        {
+                            "Description": "WAKA-18466",
+                            "CidrIp": "72.247.190.0/24"
+                        },
+                        {
+                            "Description": "WAKA-18466",
+                            "CidrIp": "23.67.78.0/24"
+                        },
+                        {
+                            "Description": "WAKA-18466",
+                            "CidrIp": "23.62.45.0/24"
+                        },
+                        {
+                            "Description": "WAKA-18466",
+                            "CidrIp": "23.52.43.0/24"
+                        },
+                        {
+                            "Description": "WAKA-18466",
+                            "CidrIp": "23.48.94.0/24"
+                        },
+                        {
+                            "Description": "WAKA-18466",
+                            "CidrIp": "23.47.58.0/24"
+                        },
+                        {
+                            "Description": "WAKA-18466",
+                            "CidrIp": "23.47.221.0/24"
+                        },
+                        {
+                            "Description": "WAKA-18466",
+                            "CidrIp": "23.39.229.0/24"
+                        },
+                        {
+                            "Description": "WAKA-18466",
+                            "CidrIp": "23.35.71.0/24"
+                        },
+                        {
+                            "Description": "WAKA-18466",
+                            "CidrIp": "23.34.83.0/24"
+                        },
+                        {
+                            "Description": "WAKA-18466",
+                            "CidrIp": "23.221.213.0/24"
+                        },
+                        {
+                            "Description": "WAKA-18466",
+                            "CidrIp": "23.218.242.0/24"
+                        },
+                        {
+                            "Description": "WAKA-18466",
+                            "CidrIp": "23.211.119.0/24"
+                        },
+                        {
+                            "Description": "WAKA-18466",
+                            "CidrIp": "23.206.193.0/24"
+                        },
+                        {
+                            "Description": "WAKA-18466",
+                            "CidrIp": "23.205.108.0/24"
+                        },
+                        {
+                            "Description": "WAKA-18466",
+                            "CidrIp": "23.205.100.0/24"
+                        },
+                        {
+                            "Description": "WAKA-18466",
+                            "CidrIp": "23.201.57.0/24"
+                        },
+                        {
+                            "Description": "WAKA-18466",
+                            "CidrIp": "23.199.233.0/24"
+                        },
+                        {
+                            "Description": "WAKA-18466",
+                            "CidrIp": "184.51.101.0/24"
+                        },
+                        {
+                            "Description": "WAKA-18466",
+                            "CidrIp": "184.30.41.0/24"
+                        },
+                        {
+                            "Description": "WAKA-18466",
+                            "CidrIp": "184.27.45.0/24"
+                        },
+                        {
+                            "Description": "WAKA-18466",
+                            "CidrIp": "184.25.254.0/24"
+                        },
+                        {
+                            "Description": "WAKA-18466",
+                            "CidrIp": "184.25.237.0/24"
+                        },
+                        {
+                            "Description": "WAKA-18466",
+                            "CidrIp": "184.25.157.0/24"
+                        },
+                        {
+                            "Description": "WAKA-18466",
+                            "CidrIp": "168.143.243.0/24"
+                        },
+                        {
+                            "Description": "WAKA-18466",
+                            "CidrIp": "168.143.242.0/24"
+                        },
+                        {
+                            "Description": "WAKA-18466",
+                            "CidrIp": "104.71.218.0/24"
+                        },
+                        {
+                            "Description": "NOAKA-302",
+                            "CidrIp": "184.24.0.0/13"
+                        },
+                        {
+                            "Description": "NOAKA-302",
+                            "CidrIp": "2.16.0.0/13"
+                        },
+                        {
+                            "Description": "NOAKA-302",
+                            "CidrIp": "23.0.0.0/12"
+                        },
+                        {
+                            "Description": "NOAKA-302",
+                            "CidrIp": "23.192.0.0/11"
+                        },
+                        {
+                            "Description": "NOAKA-302",
+                            "CidrIp": "23.32.0.0/11"
+                        },
+                        {
+                            "Description": "NOAKA-302",
+                            "CidrIp": "95.100.0.0/15"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": []
+                }
+            ]
+        },
+        {
+            "GroupId": "sg-07777a953701d4768",
+            "IpPermissionsEgress": [
+                {
+                    "IpProtocol": "-1",
+                    "UserIdGroupPairs": [],
+                    "IpRanges": [
+                        {
+                            "CidrIp": "0.0.0.0/0"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": []
+                }
+            ],
+            "Tags": [
+                {
+                    "Key": "Name",
+                    "Value": "bb-sg-prod-clb-akamai-prod"
+                }
+            ],
+            "VpcId": "vpc-9b3fc9fd",
+            "SecurityGroupArn": "arn:aws:ec2:us-east-1:501705132200:security-group/sg-07777a953701d4768",
+            "OwnerId": "501705132200",
+            "GroupName": "bb-sg-prod-clb-akamai-prod",
+            "Description": "Security group for akamai prod traffic to prod classic load balancer",
+            "IpPermissions": [
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": 80,
+                    "ToPort": 80,
+                    "UserIdGroupPairs": [],
+                    "IpRanges": [
+                        {
+                            "CidrIp": "72.247.190.0/24"
+                        },
+                        {
+                            "CidrIp": "184.27.45.0/24"
+                        },
+                        {
+                            "CidrIp": "184.51.101.0/24"
+                        },
+                        {
+                            "CidrIp": "184.25.157.0/24"
+                        },
+                        {
+                            "CidrIp": "23.48.94.0/24"
+                        },
+                        {
+                            "CidrIp": "168.143.243.0/24"
+                        },
+                        {
+                            "CidrIp": "23.48.209.0/24"
+                        },
+                        {
+                            "CidrIp": "23.54.169.0/24"
+                        },
+                        {
+                            "CidrIp": "184.25.237.0/24"
+                        },
+                        {
+                            "CidrIp": "184.30.41.0/24"
+                        },
+                        {
+                            "CidrIp": "168.143.242.0/24"
+                        },
+                        {
+                            "CidrIp": "23.35.71.0/24"
+                        },
+                        {
+                            "CidrIp": "23.52.43.0/24"
+                        },
+                        {
+                            "CidrIp": "96.17.103.0/24"
+                        },
+                        {
+                            "CidrIp": "23.201.57.0/24"
+                        },
+                        {
+                            "CidrIp": "23.205.108.0/24"
+                        },
+                        {
+                            "CidrIp": "23.63.251.0/24"
+                        },
+                        {
+                            "CidrIp": "96.7.74.0/24"
+                        },
+                        {
+                            "CidrIp": "104.71.218.0/24"
+                        },
+                        {
+                            "CidrIp": "104.112.229.0/24"
+                        },
+                        {
+                            "CidrIp": "23.200.236.0/24"
+                        },
+                        {
+                            "CidrIp": "23.206.193.0/24"
+                        },
+                        {
+                            "CidrIp": "104.107.61.0/24"
+                        },
+                        {
+                            "CidrIp": "201.33.187.0/25"
+                        },
+                        {
+                            "CidrIp": "186.211.197.0/24"
+                        },
+                        {
+                            "CidrIp": "23.47.221.0/24"
+                        },
+                        {
+                            "CidrIp": "104.107.60.0/24"
+                        },
+                        {
+                            "CidrIp": "72.247.240.0/24"
+                        },
+                        {
+                            "CidrIp": "184.29.53.0/24"
+                        },
+                        {
+                            "CidrIp": "23.205.100.0/24"
+                        },
+                        {
+                            "CidrIp": "96.7.218.0/24"
+                        },
+                        {
+                            "CidrIp": "184.28.224.0/24"
+                        },
+                        {
+                            "CidrIp": "23.47.58.0/24"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": []
+                },
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": 443,
+                    "ToPort": 443,
+                    "UserIdGroupPairs": [],
+                    "IpRanges": [
+                        {
+                            "CidrIp": "184.27.45.0/24"
+                        },
+                        {
+                            "CidrIp": "72.247.190.0/24"
+                        },
+                        {
+                            "CidrIp": "184.51.101.0/24"
+                        },
+                        {
+                            "CidrIp": "184.25.157.0/24"
+                        },
+                        {
+                            "CidrIp": "23.54.169.0/24"
+                        },
+                        {
+                            "CidrIp": "23.48.209.0/24"
+                        },
+                        {
+                            "CidrIp": "23.52.43.0/24"
+                        },
+                        {
+                            "CidrIp": "168.143.243.0/24"
+                        },
+                        {
+                            "CidrIp": "23.35.71.0/24"
+                        },
+                        {
+                            "CidrIp": "184.30.41.0/24"
+                        },
+                        {
+                            "CidrIp": "168.143.242.0/24"
+                        },
+                        {
+                            "CidrIp": "184.25.237.0/24"
+                        },
+                        {
+                            "CidrIp": "23.48.94.0/24"
+                        },
+                        {
+                            "CidrIp": "23.201.57.0/24"
+                        },
+                        {
+                            "CidrIp": "96.7.74.0/24"
+                        },
+                        {
+                            "CidrIp": "96.17.103.0/24"
+                        },
+                        {
+                            "CidrIp": "23.205.108.0/24"
+                        },
+                        {
+                            "CidrIp": "23.63.251.0/24"
+                        },
+                        {
+                            "CidrIp": "96.7.218.0/24"
+                        },
+                        {
+                            "CidrIp": "23.200.236.0/24"
+                        },
+                        {
+                            "CidrIp": "104.71.218.0/24"
+                        },
+                        {
+                            "CidrIp": "23.47.58.0/24"
+                        },
+                        {
+                            "CidrIp": "23.206.193.0/24"
+                        },
+                        {
+                            "CidrIp": "104.107.61.0/24"
+                        },
+                        {
+                            "CidrIp": "23.47.221.0/24"
+                        },
+                        {
+                            "CidrIp": "201.33.187.0/25"
+                        },
+                        {
+                            "CidrIp": "184.28.224.0/24"
+                        },
+                        {
+                            "CidrIp": "184.29.53.0/24"
+                        },
+                        {
+                            "CidrIp": "186.211.197.0/24"
+                        },
+                        {
+                            "CidrIp": "104.107.60.0/24"
+                        },
+                        {
+                            "CidrIp": "23.205.100.0/24"
+                        },
+                        {
+                            "CidrIp": "104.112.229.0/24"
+                        },
+                        {
+                            "CidrIp": "72.247.240.0/24"
+                        },
+                        {
+                            "Description": "WAKA-18466",
+                            "CidrIp": "184.25.254.0/24"
+                        },
+                        {
+                            "Description": "WAKA-18466",
+                            "CidrIp": "23.199.233.0/24"
+                        },
+                        {
+                            "Description": "WAKA-18466",
+                            "CidrIp": "23.211.119.0/24"
+                        },
+                        {
+                            "Description": "WAKA-18466",
+                            "CidrIp": "23.218.242.0/24"
+                        },
+                        {
+                            "Description": "WAKA-18466",
+                            "CidrIp": "23.221.213.0/24"
+                        },
+                        {
+                            "Description": "WAKA-18466",
+                            "CidrIp": "23.34.83.0/24"
+                        },
+                        {
+                            "Description": "WAKA-18466",
+                            "CidrIp": "23.39.229.0/24"
+                        },
+                        {
+                            "Description": "WAKA-18466",
+                            "CidrIp": "23.62.45.0/24"
+                        },
+                        {
+                            "Description": "WAKA-18466",
+                            "CidrIp": "23.67.78.0/24"
+                        },
+                        {
+                            "Description": "WAKA-18466",
+                            "CidrIp": "67.220.142.19/32"
+                        },
+                        {
+                            "Description": "WAKA-18466",
+                            "CidrIp": "67.220.142.20/32"
+                        },
+                        {
+                            "Description": "WAKA-18466",
+                            "CidrIp": "67.220.142.21/32"
+                        },
+                        {
+                            "Description": "WAKA-18466",
+                            "CidrIp": "67.220.142.22/32"
+                        },
+                        {
+                            "Description": "WAKA-18466",
+                            "CidrIp": "66.198.8.141/32"
+                        },
+                        {
+                            "Description": "WAKA-18466",
+                            "CidrIp": "66.198.8.142/32"
+                        },
+                        {
+                            "Description": "WAKA-18466",
+                            "CidrIp": "66.198.8.143/32"
+                        },
+                        {
+                            "Description": "WAKA-18466",
+                            "CidrIp": "66.198.8.144/32"
+                        },
+                        {
+                            "Description": "WAKA-18466",
+                            "CidrIp": "23.48.168.0/22"
+                        },
+                        {
+                            "Description": "WAKA-18466",
+                            "CidrIp": "23.50.48.0/20"
+                        },
+                        {
+                            "Description": "NOAKA-302",
+                            "CidrIp": "184.24.0.0/13"
+                        },
+                        {
+                            "Description": "NOAKA-302",
+                            "CidrIp": "2.16.0.0/13"
+                        },
+                        {
+                            "Description": "NOAKA-302",
+                            "CidrIp": "23.0.0.0/12"
+                        },
+                        {
+                            "Description": "NOAKA-302",
+                            "CidrIp": "23.192.0.0/11"
+                        },
+                        {
+                            "Description": "NOAKA-302",
+                            "CidrIp": "23.32.0.0/11"
+                        },
+                        {
+                            "Description": "NOAKA-302",
+                            "CidrIp": "95.100.0.0/15"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": []
+                }
+            ]
+        },
+        {
+            "GroupId": "sg-4dc2c63a",
+            "IpPermissionsEgress": [],
+            "VpcId": "vpc-9b3fc9fd",
+            "SecurityGroupArn": "arn:aws:ec2:us-east-1:501705132200:security-group/sg-4dc2c63a",
+            "OwnerId": "501705132200",
+            "GroupName": "ci-to-app-servers",
+            "Description": "Allow CI access to app servers",
+            "IpPermissions": [
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": 22,
+                    "ToPort": 22,
+                    "UserIdGroupPairs": [],
+                    "IpRanges": [
+                        {
+                            "CidrIp": "10.244.136.0/23"
+                        },
+                        {
+                            "CidrIp": "10.252.51.0/24"
+                        },
+                        {
+                            "CidrIp": "10.133.128.0/22"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": []
+                },
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": 443,
+                    "ToPort": 443,
+                    "UserIdGroupPairs": [],
+                    "IpRanges": [],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": [
+                        {
+                            "Description": "HTTPS from CI",
+                            "PrefixListId": "pl-0622aa3695fb477b3"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "GroupId": "sg-6892b317",
+            "IpPermissionsEgress": [
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": 80,
+                    "ToPort": 80,
+                    "UserIdGroupPairs": [],
+                    "IpRanges": [
+                        {
+                            "CidrIp": "0.0.0.0/0"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": []
+                },
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": 5432,
+                    "ToPort": 5432,
+                    "UserIdGroupPairs": [],
+                    "IpRanges": [
+                        {
+                            "CidrIp": "10.244.140.48/28"
+                        },
+                        {
+                            "CidrIp": "10.244.140.64/28"
+                        },
+                        {
+                            "CidrIp": "10.244.140.80/28"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": []
+                },
+                {
+                    "IpProtocol": "-1",
+                    "UserIdGroupPairs": [],
+                    "IpRanges": [
+                        {
+                            "CidrIp": "10.128.11.0/24"
+                        },
+                        {
+                            "CidrIp": "10.128.111.0/24"
+                        },
+                        {
+                            "CidrIp": "10.244.96.0/19"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": []
+                },
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": 15432,
+                    "ToPort": 15432,
+                    "UserIdGroupPairs": [],
+                    "IpRanges": [
+                        {
+                            "CidrIp": "10.244.140.48/28"
+                        },
+                        {
+                            "CidrIp": "10.244.140.64/28"
+                        },
+                        {
+                            "CidrIp": "10.244.140.80/28"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": []
+                },
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": 22,
+                    "ToPort": 22,
+                    "UserIdGroupPairs": [],
+                    "IpRanges": [
+                        {
+                            "CidrIp": "10.244.140.192/28"
+                        },
+                        {
+                            "CidrIp": "10.244.140.208/28"
+                        },
+                        {
+                            "CidrIp": "10.244.140.224/28"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": []
+                },
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": 8089,
+                    "ToPort": 8089,
+                    "UserIdGroupPairs": [],
+                    "IpRanges": [
+                        {
+                            "CidrIp": "10.244.112.51/32"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": []
+                },
+                {
+                    "IpProtocol": "udp",
+                    "FromPort": 53,
+                    "ToPort": 53,
+                    "UserIdGroupPairs": [],
+                    "IpRanges": [
+                        {
+                            "CidrIp": "10.0.0.0/8"
+                        },
+                        {
+                            "CidrIp": "172.0.0.0/8"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": []
+                },
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": 443,
+                    "ToPort": 443,
+                    "UserIdGroupPairs": [],
+                    "IpRanges": [
+                        {
+                            "CidrIp": "0.0.0.0/0"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": []
+                }
+            ],
+            "Tags": [
+                {
+                    "Key": "Name",
+                    "Value": "bb-sg-prod-data-allzones"
+                }
+            ],
+            "VpcId": "vpc-9b3fc9fd",
+            "SecurityGroupArn": "arn:aws:ec2:us-east-1:501705132200:security-group/sg-6892b317",
+            "OwnerId": "501705132200",
+            "GroupName": "BB-SG-PROD-DATA-ALLZONE",
+            "Description": "BlueButton Security Group PROD Data All Zones",
+            "IpPermissions": [
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": 5432,
+                    "ToPort": 5432,
+                    "UserIdGroupPairs": [],
+                    "IpRanges": [
+                        {
+                            "CidrIp": "10.244.140.48/28"
+                        },
+                        {
+                            "CidrIp": "10.244.140.64/28"
+                        },
+                        {
+                            "CidrIp": "10.244.140.80/28"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": []
+                },
+                {
+                    "IpProtocol": "-1",
+                    "UserIdGroupPairs": [],
+                    "IpRanges": [
+                        {
+                            "CidrIp": "10.128.11.0/24"
+                        },
+                        {
+                            "CidrIp": "10.128.111.0/24"
+                        },
+                        {
+                            "CidrIp": "10.244.96.0/19"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": []
+                },
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": 15432,
+                    "ToPort": 15432,
+                    "UserIdGroupPairs": [],
+                    "IpRanges": [
+                        {
+                            "CidrIp": "10.244.140.48/28"
+                        },
+                        {
+                            "CidrIp": "10.244.140.64/28"
+                        },
+                        {
+                            "CidrIp": "10.244.140.80/28"
+                        },
+                        {
+                            "Description": "BB Admin Jump Box",
+                            "CidrIp": "10.246.44.53/32"
+                        },
+                        {
+                            "Description": "VPN",
+                            "CidrIp": "10.232.32.0/19"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": []
+                },
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": 22,
+                    "ToPort": 22,
+                    "UserIdGroupPairs": [],
+                    "IpRanges": [
+                        {
+                            "CidrIp": "10.251.0.0/16"
+                        },
+                        {
+                            "CidrIp": "10.252.0.0/16"
+                        },
+                        {
+                            "CidrIp": "10.244.140.192/28"
+                        },
+                        {
+                            "CidrIp": "10.244.140.208/28"
+                        },
+                        {
+                            "CidrIp": "10.244.140.224/28"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": []
+                },
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": 8089,
+                    "ToPort": 8089,
+                    "UserIdGroupPairs": [],
+                    "IpRanges": [
+                        {
+                            "CidrIp": "10.244.112.51/32"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": []
+                }
+            ]
+        },
+        {
+            "GroupId": "sg-972badea",
+            "IpPermissionsEgress": [
+                {
+                    "IpProtocol": "-1",
+                    "UserIdGroupPairs": [],
+                    "IpRanges": [
+                        {
+                            "CidrIp": "0.0.0.0/0"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": []
+                }
+            ],
+            "Tags": [
+                {
+                    "Key": "business",
+                    "Value": "oeda"
+                },
+                {
+                    "Key": "aws:cloudformation:stack-id",
+                    "Value": "arn:aws:cloudformation:us-east-1:501705132200:stack/bluebutton-prod-EnterpriseSgStack-OJQLUEZCL822/d4ee8b10-adce-11e6-8016-50d5cafe7636"
+                },
+                {
+                    "Key": "stack",
+                    "Value": "prod"
+                },
+                {
+                    "Key": "Name",
+                    "Value": "bluebutton-prod-enterprise-tools"
+                },
+                {
+                    "Key": "application",
+                    "Value": "bluebutton"
+                },
+                {
+                    "Key": "aws:cloudformation:stack-name",
+                    "Value": "bluebutton-prod-EnterpriseSgStack-OJQLUEZCL822"
+                },
+                {
+                    "Key": "aws:cloudformation:logical-id",
+                    "Value": "EnterpriseAccessSg"
+                },
+                {
+                    "Key": "ProjectName",
+                    "Value": "bluebutton"
+                },
+                {
+                    "Key": "Type",
+                    "Value": "private"
+                },
+                {
+                    "Key": "Environment",
+                    "Value": "prod"
+                }
+            ],
+            "VpcId": "vpc-9b3fc9fd",
+            "SecurityGroupArn": "arn:aws:ec2:us-east-1:501705132200:security-group/sg-972badea",
+            "OwnerId": "501705132200",
+            "GroupName": "bluebutton-prod-EnterpriseSgStack-OJQLUEZCL822-EnterpriseAccessSg-G9NNV4WMS4Q4",
+            "Description": "bluebutton-prod-enterprise-tools",
+            "IpPermissions": [
+                {
+                    "IpProtocol": "-1",
+                    "UserIdGroupPairs": [],
+                    "IpRanges": [
+                        {
+                            "CidrIp": "10.244.96.0/19"
+                        },
+                        {
+                            "CidrIp": "10.128.0.0/16"
+                        },
+                        {
+                            "CidrIp": "10.129.0.0/16"
+                        },
+                        {
+                            "CidrIp": "10.223.126.0/23"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": []
+                },
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": 22,
+                    "ToPort": 22,
+                    "UserIdGroupPairs": [],
+                    "IpRanges": [
+                        {
+                            "Description": "Nessus",
+                            "CidrIp": "10.244.100.93/32"
+                        },
+                        {
+                            "Description": "Nessus",
+                            "CidrIp": "10.244.100.159/32"
+                        },
+                        {
+                            "Description": "Nessus",
+                            "CidrIp": "10.244.100.38/32"
+                        },
+                        {
+                            "Description": "Nessus",
+                            "CidrIp": "10.244.100.163/32"
+                        },
+                        {
+                            "Description": "Nessus",
+                            "CidrIp": "10.244.101.108/32"
+                        },
+                        {
+                            "Description": "Nessus",
+                            "CidrIp": "10.244.101.164/32"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": []
+                }
+            ]
+        },
+        {
+            "GroupId": "sg-0845ff171cc8c285f",
+            "IpPermissionsEgress": [
+                {
+                    "IpProtocol": "-1",
+                    "UserIdGroupPairs": [],
+                    "IpRanges": [
+                        {
+                            "CidrIp": "0.0.0.0/0"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": []
+                }
+            ],
+            "Tags": [
+                {
+                    "Key": "Name",
+                    "Value": "bb-sg-prod-clb-cms-vpn"
+                }
+            ],
+            "VpcId": "vpc-9b3fc9fd",
+            "SecurityGroupArn": "arn:aws:ec2:us-east-1:501705132200:security-group/sg-0845ff171cc8c285f",
+            "OwnerId": "501705132200",
+            "GroupName": "bb-sg-prod-clb-cms-vpn",
+            "Description": "Security group for cms vpn traffic to prod classic load balancer",
+            "IpPermissions": [
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": 80,
+                    "ToPort": 80,
+                    "UserIdGroupPairs": [],
+                    "IpRanges": [
+                        {
+                            "CidrIp": "52.34.232.30/32"
+                        },
+                        {
+                            "CidrIp": "35.160.156.109/32"
+                        },
+                        {
+                            "CidrIp": "34.196.35.156/32"
+                        },
+                        {
+                            "CidrIp": "52.20.26.200/32"
+                        },
+                        {
+                            "CidrIp": "52.5.212.71/32"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": []
+                },
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": 443,
+                    "ToPort": 443,
+                    "UserIdGroupPairs": [],
+                    "IpRanges": [
+                        {
+                            "CidrIp": "35.160.156.109/32"
+                        },
+                        {
+                            "CidrIp": "34.196.35.156/32"
+                        },
+                        {
+                            "CidrIp": "52.34.232.30/32"
+                        },
+                        {
+                            "CidrIp": "52.5.212.71/32"
+                        },
+                        {
+                            "CidrIp": "52.20.26.200/32"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": []
+                }
+            ]
+        },
+        {
+            "GroupId": "sg-d08e4eae",
+            "IpPermissionsEgress": [
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": 80,
+                    "ToPort": 80,
+                    "UserIdGroupPairs": [],
+                    "IpRanges": [
+                        {
+                            "CidrIp": "0.0.0.0/0"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": []
+                },
+                {
+                    "IpProtocol": "-1",
+                    "UserIdGroupPairs": [],
+                    "IpRanges": [
+                        {
+                            "CidrIp": "10.128.11.0/24"
+                        },
+                        {
+                            "CidrIp": "10.128.111.0/24"
+                        },
+                        {
+                            "CidrIp": "10.244.96.0/19"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": []
+                },
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": 22,
+                    "ToPort": 22,
+                    "UserIdGroupPairs": [],
+                    "IpRanges": [
+                        {
+                            "CidrIp": "10.251.0.0/16"
+                        },
+                        {
+                            "CidrIp": "10.252.0.0/16"
+                        },
+                        {
+                            "CidrIp": "10.244.140.0/24"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": []
+                },
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": 8089,
+                    "ToPort": 8089,
+                    "UserIdGroupPairs": [],
+                    "IpRanges": [
+                        {
+                            "CidrIp": "10.244.112.51/32"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": []
+                },
+                {
+                    "IpProtocol": "udp",
+                    "FromPort": 53,
+                    "ToPort": 53,
+                    "UserIdGroupPairs": [],
+                    "IpRanges": [
+                        {
+                            "CidrIp": "10.0.0.0/8"
+                        },
+                        {
+                            "CidrIp": "172.0.0.0/8"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": []
+                },
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": 443,
+                    "ToPort": 443,
+                    "UserIdGroupPairs": [],
+                    "IpRanges": [
+                        {
+                            "CidrIp": "0.0.0.0/0"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": []
+                }
+            ],
+            "Tags": [
+                {
+                    "Key": "Name",
+                    "Value": "bb-sg-prod-mgmt-allzones"
+                }
+            ],
+            "VpcId": "vpc-9b3fc9fd",
+            "SecurityGroupArn": "arn:aws:ec2:us-east-1:501705132200:security-group/sg-d08e4eae",
+            "OwnerId": "501705132200",
+            "GroupName": "BB-SG-PROD-MGMT-ALLZONE",
+            "Description": "BB-SG-PROD-MGMT-ALLZONE",
+            "IpPermissions": [
+                {
+                    "IpProtocol": "-1",
+                    "UserIdGroupPairs": [],
+                    "IpRanges": [
+                        {
+                            "CidrIp": "10.128.11.0/24"
+                        },
+                        {
+                            "CidrIp": "10.128.111.0/24"
+                        },
+                        {
+                            "CidrIp": "10.244.96.0/19"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": []
+                },
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": 22,
+                    "ToPort": 22,
+                    "UserIdGroupPairs": [],
+                    "IpRanges": [
+                        {
+                            "CidrIp": "10.251.0.0/16"
+                        },
+                        {
+                            "CidrIp": "10.252.0.0/16"
+                        },
+                        {
+                            "Description": "SSH from CBJ-1",
+                            "CidrIp": "10.133.128.192/26"
+                        },
+                        {
+                            "Description": "SSH from CBJ-2",
+                            "CidrIp": "10.133.129.0/26"
+                        },
+                        {
+                            "Description": "SSH from CBJ-3",
+                            "CidrIp": "10.133.129.64/26"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": []
+                },
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": 8089,
+                    "ToPort": 8089,
+                    "UserIdGroupPairs": [],
+                    "IpRanges": [
+                        {
+                            "CidrIp": "10.244.112.51/32"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": []
+                }
+            ]
+        }
+    ]
+}
