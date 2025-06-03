@@ -31,10 +31,6 @@
       include_role:
         name: "{{ root_lookup.files[0].path | dirname }}/roles/nessus_update_key"
 
-    - name: Configure Splunk
-      include_role:
-        name: "{{ root_lookup.files[0].path | dirname }}/roles/splunk"
-
     - name: Configure New Relic
       include_role:
         name: "{{ root_lookup.files[0].path | dirname }}/roles/new_relic"
