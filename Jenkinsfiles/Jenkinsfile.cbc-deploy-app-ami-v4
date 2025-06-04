@@ -92,7 +92,8 @@ pipeline {
         sh """
         terraform -v
         cd terraform/${APP_ENV}
-       rm -rf .terraform .terraform.lock.hcl
+       rm .terraform.lock.hcl
+        terraform init -upgrade
        terragrunt init --terragrunt-log-level error -input=false -no-color
         terraform plan -no-color -input=false -out=tfplan -var-file='${TF_VARS}' -var='ami_id=${APP_AMI_ID}'
         """
