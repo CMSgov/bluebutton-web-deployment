@@ -92,8 +92,7 @@ pipeline {
         sh """
         terraform -v
         cd terraform/${APP_ENV}
-        rm -f .terraform.lock.hcl
-        terragrunt init --terragrunt-log-level error --terragrunt-disable-bucket-update -no-color -input=false
+       terraform init -input=false -no-color
         terraform plan -no-color -input=false -out=tfplan -var-file='${TF_VARS}' -var='ami_id=${APP_AMI_ID}'
         """
       }

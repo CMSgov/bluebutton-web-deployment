@@ -225,8 +225,7 @@ resource "aws_cloudwatch_metric_alarm" "low-cpu" {
 # Autoscaling notifications
 ##
 resource "aws_autoscaling_notification" "asg_notifications" {
-  count = can(var.sns_topic_arn) && var.sns_topic_arn != "" ? 1 : 0
-
+  count = var.sns_topic_arn != "" ? 1 : 0
 
   group_names = [
     aws_autoscaling_group.main.name,
