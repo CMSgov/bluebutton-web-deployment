@@ -195,15 +195,11 @@ pipeline {
   }
 
   post {
-    success {
-     L: script {
-        //helpers.slackNotify("SUCCESS", "good")
-      }
-    }
-    failure {
-     L: script {
-       // helpers.slackNotify("FAILURE", "bad")
-      }
-    }
+  success {
+    // helpers.slackNotify("SUCCESS", "good")
   }
+  failure {
+    // helpers.slackNotify("FAILURE", "bad")
+  }
+}
 }
