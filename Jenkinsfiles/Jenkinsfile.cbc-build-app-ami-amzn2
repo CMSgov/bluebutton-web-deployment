@@ -196,9 +196,11 @@ pipeline {
 
   post {
   success {
+  echo 'Skipping Slack notification'
     // helpers.slackNotify("SUCCESS", "good")
   }
   failure {
+    echo 'Skipping Slack notification'
     // helpers.slackNotify("FAILURE", "bad")
   }
 }
