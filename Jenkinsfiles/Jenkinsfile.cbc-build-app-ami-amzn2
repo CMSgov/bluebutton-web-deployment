@@ -50,8 +50,8 @@ pipeline {
     stage("Notify Slack") {
       steps {
         script {
-          echo "helpers = load "Jenkinsfiles/helpers.groovy""
-          echo "helpers.slackNotify "STARTING""
+        helpers = load "Jenkinsfiles/helpers.groovy"
+         //helpers.slackNotify "STARTING"
         }
       }
     }
@@ -197,12 +197,12 @@ pipeline {
   post {
     success {
       script {
-        helpers.slackNotify("SUCCESS", "good")
+        //helpers.slackNotify("SUCCESS", "good")
       }
     }
     failure {
       script {
-        helpers.slackNotify("FAILURE", "bad")
+       // helpers.slackNotify("FAILURE", "bad")
       }
     }
   }
