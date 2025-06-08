@@ -10,12 +10,14 @@ pipeline {
     AWS_DEFAULT_REGION = "us-east-1"
     EC2_KEY = credentials("ec2-user-priv-key")
     EC2_PUB_KEY = credentials("ec2-user-pub-key")
+    TARGET_ACCOUNT_ID = credentials("aws-target-account-id")
+    ENCRYPT_KMS_ARN = credentials("aws-kms-arn")
   }
 
   parameters {
     string(name: "APP_REPO_BRANCH", defaultValue: "master", description: "The branch of the application repo to build in AMI.")
     string(name: "DEPLOY_REPO_BRANCH", defaultValue: "master", description: "The branch of the deployment repo to build in AMI.")
-    string(name: "PLATINUM_AMI_ID", defaultValue: "", description: "The AMI ID of the platinum image. If unset, the latest will be pulled from AWS.")
+    string(name: "PLATINUM_AMI_ID", defaultValue: "", description: "Optional: override the platinum AMI ID.")
     credentials(name: "ec2-user", defaultValue: "ec2-user", description: "SSH user key for provisioning", required: true)
   }
 
@@ -57,21 +59,17 @@ pipeline {
     stage("Determine Source AMI") {
       steps {
         script {
-          if (params.PLATINUM_AMI_ID != "") {
+          if (params.PLATINUM_AMI_ID?.trim()) {
             echo("Using provided PLATINUM_AMI_ID")
-            SOURCE_AMI = params.PLATINUM_AMI_ID
+            env.PLATINUM_AMI_ID = params.PLATINUM_AMI_ID
           } else {
             echo("Fetching latest bb2-amzn2023-platinum AMI from AWS")
-            SOURCE_AMI = sh(returnStdout: true, script: """#!/bin/bash
+            env.PLATINUM_AMI_ID = sh(returnStdout: true, script: """#!/bin/bash
               aws ec2 describe-images \
                 --filters 'Name=name,Values=bb2-amzn2023-platinum-*' \
                 --query 'sort_by(Images, &CreationDate)[-1].ImageId' \
                 --output text
             """).trim()
-          }
-
-          if (!SOURCE_AMI || SOURCE_AMI == "None") {
-            error("No suitable SOURCE_AMI found.")
           }
         }
       }
@@ -80,7 +78,6 @@ pipeline {
     stage("Fetch Private Subnet ID") {
       steps {
         script {
-          echo "Fetching private subnet ID..."
           def subnetId = sh(script: '''
             aws ec2 describe-subnets \
               --filters "Name=tag:Name,Values=*private*" "Name=availabilityZone,Values=us-east-1*" \
@@ -91,7 +88,6 @@ pipeline {
           if (subnetId == "None" || !subnetId) {
             error "No private subnet found!"
           } else {
-            echo "Using private subnet: ${subnetId}"
             env.PRIVATE_SUBNET_ID = subnetId
           }
         }
@@ -100,27 +96,82 @@ pipeline {
 
     stage("Build App AMI") {
       steps {
-        sh """#!/bin/bash
-          set -e
+        script {
+          def packerOutput = sh(script: """#!/bin/bash
+            set -e
+            packer build -color=false \
+              -var 'source_ami=${env.PLATINUM_AMI_ID}' \
+              -var 'release_version=${params.APP_REPO_BRANCH}' \
+              -var 'git_branch=${params.APP_REPO_BRANCH}' \
+              -var 'deployment_branch=${params.DEPLOY_REPO_BRANCH}' \
+              -var 'ec2-user=${env.EC2_KEY}' \
+              -var 'ec2-user-pub-key=${env.EC2_PUB_KEY}' \
+              -var 'subnet_id=${env.PRIVATE_SUBNET_ID}' \
+              packer/build_app_ami_amzn2.json | tee packer-output.log
+          """, returnStdout: true).trim()
 
-          # Install session-manager-plugin if not present
-          if ! command -v session-manager-plugin &> /dev/null; then
-            echo "Installing session-manager-plugin..."
-            curl "https://s3.amazonaws.com/session-manager-downloads/plugin/latest/ubuntu_64bit/session-manager-plugin.deb" -o "session-manager-plugin.deb"
-            dpkg -i session-manager-plugin.deb
-            rm -f session-manager-plugin.deb
-          fi
+          env.BUILT_AMI_ID = sh(script: "grep 'AMI:' packer-output.log | awk '{print \$2}'", returnStdout: true).trim()
+          echo "✅ AMI for Test Environment: ${env.BUILT_AMI_ID}"
+        }
+      }
+    }
 
-          packer build -color=false \
-            -var 'source_ami=${SOURCE_AMI}' \
-            -var 'release_version=${APP_REPO_BRANCH}' \
-            -var 'git_branch=${APP_REPO_BRANCH}' \
-            -var 'deployment_branch=${DEPLOY_REPO_BRANCH}' \
-            -var 'ec2-user=${EC2_KEY}' \
-            -var 'ec2-user-pub-key=${EC2_PUB_KEY}' \
-            -var 'subnet_id=${PRIVATE_SUBNET_ID}' \
-            packer/build_app_ami_amzn2.json
-        """
+    stage("Copy & Share Encrypted AMI") {
+      steps {
+        script {
+          def amiName = sh(script: """
+            aws ec2 describe-images \
+              --image-ids ${env.BUILT_AMI_ID} \
+              --region ${env.AWS_DEFAULT_REGION} \
+              --query "Images[0].Name" \
+              --output text
+          """, returnStdout: true).trim()
+
+          def copyOutput = sh(script: """
+            aws ec2 copy-image \
+              --source-image-id ${env.BUILT_AMI_ID} \
+              --source-region ${env.AWS_DEFAULT_REGION} \
+              --region ${env.AWS_DEFAULT_REGION} \
+              --name "${amiName}" \
+              --description "Copied AMI with encryption" \
+              --encrypted \
+              --kms-key-id ${env.ENCRYPT_KMS_ARN} \
+              --output json
+          """, returnStdout: true).trim()
+
+          def copiedAmiId = readJSON text: copyOutput
+          copiedAmiId = copiedAmiId.ImageId
+
+          sh "aws ec2 wait image-available --image-ids ${copiedAmiId} --region ${env.AWS_DEFAULT_REGION}"
+
+          sh """
+            aws ec2 modify-image-attribute \
+              --image-id ${copiedAmiId} \
+              --launch-permission 'Add=[{UserId=${env.TARGET_ACCOUNT_ID}}]' \
+              --region ${env.AWS_DEFAULT_REGION}
+          """
+
+          def snapshotIds = sh(script: """
+            aws ec2 describe-images \
+              --image-ids ${copiedAmiId} \
+              --region ${env.AWS_DEFAULT_REGION} \
+              --query "Images[0].BlockDeviceMappings[].Ebs.SnapshotId" \
+              --output text
+          """, returnStdout: true).trim().split()
+
+          snapshotIds.each { snapshotId ->
+            sh """
+              aws ec2 modify-snapshot-attribute \
+                --snapshot-id ${snapshotId} \
+                --attribute createVolumePermission \
+                --operation-type add \
+                --user-ids ${env.TARGET_ACCOUNT_ID} \
+                --region ${env.AWS_DEFAULT_REGION}
+            """
+          }
+
+          echo "✅ AMI ${copiedAmiId} and snapshots shared with ${env.TARGET_ACCOUNT_ID}"
+        }
       }
     }
   }
