@@ -50,8 +50,8 @@ pipeline {
     stage("Notify Slack") {
       steps {
         script {
-        helpers = load "Jenkinsfiles/helpers.groovy"
-         //helpers.slackNotify "STARTING"
+          helpers = load "Jenkinsfiles/helpers.groovy"
+          helpers.slackNotify "STARTING"
         }
       }
     }
@@ -78,12 +78,12 @@ pipeline {
     stage("Fetch Private Subnet ID") {
       steps {
         script {
-          def subnetId = sh(script: '''#!/bin/bash
+          def subnetId = sh(script: """#!/bin/bash
             aws ec2 describe-subnets \
               --filters "Name=tag:Name,Values=*private*" "Name=availabilityZone,Values=us-east-1*" \
               --query "Subnets[0].SubnetId" \
               --output text
-          ''', returnStdout: true).trim()
+          """, returnStdout: true).trim()
 
           if (subnetId == "None" || !subnetId) {
             error "No private subnet found!"
@@ -97,38 +97,33 @@ pipeline {
     stage("Build App AMI") {
       steps {
         script {
-          sh(script: '''#!/bin/bash
-            set -eux
+          // Install session-manager-plugin if not present
+          sh """#!/bin/bash
+          if ! command -v session-manager-plugin &> /dev/null; then
+            echo "Installing session-manager-plugin..."
+            curl "https://s3.amazonaws.com/session-manager-downloads/plugin/latest/ubuntu_64bit/session-manager-plugin.deb" -o "session-manager-plugin.deb"
+            dpkg -i session-manager-plugin.deb
+            rm -f session-manager-plugin.deb
+          fi
+          """
 
-            # Install session-manager-plugin if not present
-            if ! command -v session-manager-plugin &> /dev/null; then
-              echo "Installing session-manager-plugin..."
-              curl -L "https://s3.amazonaws.com/session-manager-downloads/plugin/latest/ubuntu_64bit/session-manager-plugin.deb" -o "session-manager-plugin.deb"
-              dpkg -i session-manager-plugin.deb
-              rm -f session-manager-plugin.deb
-              echo "✅ session-manager-plugin installed"
-            else
-              echo "session-manager-plugin already installed"
-            fi
+          def packerOutput = sh(script: """#!/bin/bash
+          set -euxo pipefail
+          packer build -color=false \
+            -var 'source_ami=${env.PLATINUM_AMI_ID}' \
+            -var 'release_version=${params.APP_REPO_BRANCH}' \
+            -var 'git_branch=${params.APP_REPO_BRANCH}' \
+            -var 'deployment_branch=${params.DEPLOY_REPO_BRANCH}' \
+            -var 'ec2-user=${env.EC2_KEY}' \
+            -var 'ec2-user-pub-key=${env.EC2_PUB_KEY}' \
+            -var 'subnet_id=${env.PRIVATE_SUBNET_ID}' \
+            packer/build_app_ami_amzn2.json | tee packer-output.log
+          """, returnStdout: true).trim()
 
-            # Run packer build and tee output
-            packer build -color=false \
-              -var 'source_ami=${PLATINUM_AMI_ID}' \
-              -var 'release_version=${APP_REPO_BRANCH}' \
-              -var 'git_branch=${APP_REPO_BRANCH}' \
-              -var 'deployment_branch=${DEPLOY_REPO_BRANCH}' \
-              -var 'ec2-user=${EC2_KEY}' \
-              -var 'ec2-user-pub-key=${EC2_PUB_KEY}' \
-              -var 'subnet_id=${PRIVATE_SUBNET_ID}' \
-              packer/build_app_ami_amzn2.json | tee packer-output.log
-          ''')
+          env.BUILT_AMI_ID = sh(script: """#!/bin/bash
+            grep 'AMI:' packer-output.log | awk '{print \$2}'
+          """, returnStdout: true).trim()
 
-          def builtAmiId = sh(
-            script: "grep -oE 'ami-[a-z0-9]+' packer-output.log | tail -1",
-            returnStdout: true
-          ).trim()
-
-          env.BUILT_AMI_ID = builtAmiId
           echo "✅ AMI for Test Environment: ${env.BUILT_AMI_ID}"
         }
       }
@@ -137,7 +132,7 @@ pipeline {
     stage("Copy & Share Encrypted AMI") {
       steps {
         script {
-          def amiName = sh(script: """
+          def amiName = sh(script: """#!/bin/bash
             aws ec2 describe-images \
               --image-ids ${env.BUILT_AMI_ID} \
               --region ${env.AWS_DEFAULT_REGION} \
@@ -145,7 +140,7 @@ pipeline {
               --output text
           """, returnStdout: true).trim()
 
-          def copyOutput = sh(script: """
+          def copyOutput = sh(script: """#!/bin/bash
             aws ec2 copy-image \
               --source-image-id ${env.BUILT_AMI_ID} \
               --source-region ${env.AWS_DEFAULT_REGION} \
@@ -160,16 +155,18 @@ pipeline {
           def copiedAmiId = readJSON text: copyOutput
           copiedAmiId = copiedAmiId.ImageId
 
-          sh "aws ec2 wait image-available --image-ids ${copiedAmiId} --region ${env.AWS_DEFAULT_REGION}"
+          sh """#!/bin/bash
+            aws ec2 wait image-available --image-ids ${copiedAmiId} --region ${env.AWS_DEFAULT_REGION}
+          """
 
-          sh """
+          sh """#!/bin/bash
             aws ec2 modify-image-attribute \
               --image-id ${copiedAmiId} \
               --launch-permission 'Add=[{UserId=${env.TARGET_ACCOUNT_ID}}]' \
               --region ${env.AWS_DEFAULT_REGION}
           """
 
-          def snapshotIds = sh(script: """
+          def snapshotIds = sh(script: """#!/bin/bash
             aws ec2 describe-images \
               --image-ids ${copiedAmiId} \
               --region ${env.AWS_DEFAULT_REGION} \
@@ -178,7 +175,7 @@ pipeline {
           """, returnStdout: true).trim().split()
 
           snapshotIds.each { snapshotId ->
-            sh """
+            sh """#!/bin/bash
               aws ec2 modify-snapshot-attribute \
                 --snapshot-id ${snapshotId} \
                 --attribute createVolumePermission \
@@ -195,13 +192,17 @@ pipeline {
   }
 
   post {
-  success {
-  echo 'Skipping Slack notification'
-    // helpers.slackNotify("SUCCESS", "good")
+    /* Uncomment to enable Slack notifications
+    success {
+      script {
+        helpers.slackNotify("SUCCESS", "good")
+      }
+    }
+    failure {
+      script {
+        helpers.slackNotify("FAILURE", "bad")
+      }
+    }
+    */
   }
-  failure {
-    echo 'Skipping Slack notification'
-    // helpers.slackNotify("FAILURE", "bad")
-  }
-}
 }
