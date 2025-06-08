@@ -29,6 +29,7 @@ pipeline {
             def sessionName = "jenkins-${env.BUILD_ID}"
             def credsJson = sh(
               script: """#!/bin/bash
+              set -euxo pipefail
               aws sts assume-role \
                 --role-arn "$ROLE_ARN" \
                 --role-session-name "$sessionName" \
@@ -36,6 +37,7 @@ pipeline {
               """,
               returnStdout: true
             ).trim()
+            echo "Assume Role Output: ${credsJson}"
 
             def creds = readJSON text: credsJson
 
@@ -60,16 +62,18 @@ pipeline {
       steps {
         script {
           if (params.PLATINUM_AMI_ID?.trim()) {
-            echo("Using provided PLATINUM_AMI_ID")
+            echo("Using provided PLATINUM_AMI_ID: ${params.PLATINUM_AMI_ID}")
             env.PLATINUM_AMI_ID = params.PLATINUM_AMI_ID
           } else {
             echo("Fetching latest bb2-amzn2023-platinum AMI from AWS")
-            env.PLATINUM_AMI_ID = sh(returnStdout: true, script: """#!/bin/bash
+            env.PLATINUM_AMI_ID = sh(script: """#!/bin/bash
+              set -euxo pipefail
               aws ec2 describe-images \
                 --filters 'Name=name,Values=bb2-amzn2023-platinum-*' \
                 --query 'sort_by(Images, &CreationDate)[-1].ImageId' \
                 --output text
-            """).trim()
+            """, returnStdout: true).trim()
+            echo "Fetched AMI ID: ${env.PLATINUM_AMI_ID}"
           }
         }
       }
@@ -78,12 +82,20 @@ pipeline {
     stage("Fetch Private Subnet ID") {
       steps {
         script {
-          def subnetId = sh(script: '''
+          sh '''#!/bin/bash
+            set -euxo pipefail
+            aws ec2 describe-subnets \
+              --filters "Name=tag:Name,Values=*private*" "Name=availabilityZone,Values=us-east-1*" \
+              --query "Subnets[0].SubnetId" \
+              --output text
+          '''
+          def subnetId = sh(script: '''#!/bin/bash
             aws ec2 describe-subnets \
               --filters "Name=tag:Name,Values=*private*" "Name=availabilityZone,Values=us-east-1*" \
               --query "Subnets[0].SubnetId" \
               --output text
           ''', returnStdout: true).trim()
+          echo "Private Subnet ID: ${subnetId}"
 
           if (subnetId == "None" || !subnetId) {
             error "No private subnet found!"
@@ -97,8 +109,8 @@ pipeline {
     stage("Build App AMI") {
       steps {
         script {
-          def packerOutput = sh(script: """#!/bin/bash
-            set -e
+          sh(script: """#!/bin/bash
+            set -euxo pipefail
             packer build -color=false \
               -var 'source_ami=${env.PLATINUM_AMI_ID}' \
               -var 'release_version=${params.APP_REPO_BRANCH}' \
@@ -108,9 +120,10 @@ pipeline {
               -var 'ec2-user-pub-key=${env.EC2_PUB_KEY}' \
               -var 'subnet_id=${env.PRIVATE_SUBNET_ID}' \
               packer/build_app_ami_amzn2.json | tee packer-output.log
-          """, returnStdout: true).trim()
+          """)
 
-          env.BUILT_AMI_ID = sh(script: "grep 'AMI:' packer-output.log | awk '{print \$2}'", returnStdout: true).trim()
+          def builtAmiId = sh(script: "grep 'AMI:' packer-output.log | awk '{print \$2}'", returnStdout: true).trim()
+          env.BUILT_AMI_ID = builtAmiId
           echo "✅ AMI for Test Environment: ${env.BUILT_AMI_ID}"
         }
       }
@@ -120,14 +133,17 @@ pipeline {
       steps {
         script {
           def amiName = sh(script: """
+            set -euxo pipefail
             aws ec2 describe-images \
               --image-ids ${env.BUILT_AMI_ID} \
               --region ${env.AWS_DEFAULT_REGION} \
               --query "Images[0].Name" \
               --output text
           """, returnStdout: true).trim()
+          echo "Original AMI name: ${amiName}"
 
           def copyOutput = sh(script: """
+            set -euxo pipefail
             aws ec2 copy-image \
               --source-image-id ${env.BUILT_AMI_ID} \
               --source-region ${env.AWS_DEFAULT_REGION} \
@@ -136,31 +152,38 @@ pipeline {
               --description "Copied AMI with encryption" \
               --encrypted \
               --kms-key-id ${env.ENCRYPT_KMS_ARN} \
-              --output json
+              --output json | tee ami-copy.json
           """, returnStdout: true).trim()
 
-          def copiedAmiId = readJSON text: copyOutput
-          copiedAmiId = copiedAmiId.ImageId
-
-          sh "aws ec2 wait image-available --image-ids ${copiedAmiId} --region ${env.AWS_DEFAULT_REGION}"
+          def copiedAmi = readJSON text: copyOutput
+          def copiedAmiId = copiedAmi.ImageId
+          echo "Copied AMI ID: ${copiedAmiId}"
 
           sh """
+            aws ec2 wait image-available --image-ids ${copiedAmiId} --region ${env.AWS_DEFAULT_REGION}
+          """
+
+          sh """
+            set -euxo pipefail
             aws ec2 modify-image-attribute \
               --image-id ${copiedAmiId} \
               --launch-permission 'Add=[{UserId=${env.TARGET_ACCOUNT_ID}}]' \
               --region ${env.AWS_DEFAULT_REGION}
           """
 
-          def snapshotIds = sh(script: """
+          def snapshotIdsRaw = sh(script: """
             aws ec2 describe-images \
               --image-ids ${copiedAmiId} \
               --region ${env.AWS_DEFAULT_REGION} \
               --query "Images[0].BlockDeviceMappings[].Ebs.SnapshotId" \
               --output text
-          """, returnStdout: true).trim().split()
+          """, returnStdout: true).trim()
+          def snapshotIds = snapshotIdsRaw.split()
+          echo "Snapshot IDs: ${snapshotIds.join(', ')}"
 
           snapshotIds.each { snapshotId ->
             sh """
+              set -euxo pipefail
               aws ec2 modify-snapshot-attribute \
                 --snapshot-id ${snapshotId} \
                 --attribute createVolumePermission \
