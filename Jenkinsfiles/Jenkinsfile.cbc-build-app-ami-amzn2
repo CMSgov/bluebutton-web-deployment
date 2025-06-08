@@ -192,17 +192,11 @@ pipeline {
   }
 
   post {
-    /* Uncomment to enable Slack notifications
     success {
-      script {
-        helpers.slackNotify("SUCCESS", "good")
-      }
+      echo 'Build succeeded!'
     }
     failure {
-      script {
-        helpers.slackNotify("FAILURE", "bad")
-      }
+      echo 'Build failed!'
     }
-    */
   }
 }
