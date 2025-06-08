@@ -111,6 +111,17 @@ pipeline {
         script {
           sh(script: """#!/bin/bash
             set -euxo pipefail
+            # Install session-manager-plugin if not present
+            if ! command -v session-manager-plugin &> /dev/null; then
+              echo "Installing session-manager-plugin..."
+              curl -L "https://s3.amazonaws.com/session-manager-downloads/plugin/latest/ubuntu_64bit/session-manager-plugin.deb" -o "session-manager-plugin.deb"
+              dpkg -i session-manager-plugin.deb
+              rm -f session-manager-plugin.deb
+              echo "✅ session-manager-plugin installed"
+            else
+              echo "session-manager-plugin already installed"
+            fi
+            # Run packer build and log output
             packer build -color=false \
               -var 'source_ami=${env.PLATINUM_AMI_ID}' \
               -var 'release_version=${params.APP_REPO_BRANCH}' \
