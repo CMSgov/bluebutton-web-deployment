@@ -196,13 +196,13 @@ pipeline {
 
   post {
     success {
-      script {
-
+     L: script {
+        //helpers.slackNotify("SUCCESS", "good")
       }
     }
     failure {
-      script {
-     
+     L: script {
+       // helpers.slackNotify("FAILURE", "bad")
       }
     }
   }
