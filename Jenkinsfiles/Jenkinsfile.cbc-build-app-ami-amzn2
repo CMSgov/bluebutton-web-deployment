@@ -199,7 +199,7 @@ pipeline {
             """
           }
 
-          echo "✅ AMI ${copiedAmiId} and snapshots shared with ${env.TARGET_ACCOUNT_ID}"
+          echo "✅ AMI For SBX/PROD ${copiedAmiId} and snapshots shared with ${env.TARGET_ACCOUNT_ID}"
         }
       }
     }
