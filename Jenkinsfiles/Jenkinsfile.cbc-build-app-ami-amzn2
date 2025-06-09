@@ -178,6 +178,28 @@ pipeline {
               --launch-permission 'Add=[{UserId=${env.TARGET_ACCOUNT_ID}}]' \
               --region ${env.AWS_DEFAULT_REGION}
           """
+         // Copy tags from source AMI to new AMI
+          def tagsJson = sh(script: """#!/bin/bash
+            aws ec2 describe-tags \
+              --filters "Name=resource-id,Values=${env.BUILT_AMI_ID}" \
+              --region ${env.AWS_DEFAULT_REGION} \
+              --query "Tags[*].{Key:Key,Value:Value}" \
+              --output json
+          """, returnStdout: true).trim()
+
+          def tagsList = readJSON text: tagsJson
+          if (tagsList && tagsList.size() > 0) {
+            def tagSpec = tagsList.collect { "Key=${it.Key},Value=${it.Value}" }.join(" ")
+            sh """#!/bin/bash
+              aws ec2 create-tags \
+                --resources ${copiedAmiId} \
+                --tags ${tagSpec} \
+                --region ${env.AWS_DEFAULT_REGION}
+            """
+            echo "✅ Tags copied to ${copiedAmiId}"
+          } else {
+            echo "⚠️ No tags found on source AMI to copy."
+          }
 
           // Get and share associated snapshots
           def snapshotIds = sh(script: """#!/bin/bash
