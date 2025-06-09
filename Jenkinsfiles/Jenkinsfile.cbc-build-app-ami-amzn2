@@ -142,20 +142,23 @@ pipeline {
               --output text
           """)
 
-          def copyOutput = sh(script: """#!/bin/bash
-            aws ec2 copy-image \
-              --source-image-id ${env.BUILT_AMI_ID} \
-              --source-region ${env.AWS_DEFAULT_REGION} \
-              --region ${env.AWS_DEFAULT_REGION} \
-              --name "${amiName}" \
-              --description "Copied AMI with encryption" \
-              --encrypted \
-              --kms-key-id ${env.ENCRYPT_KMS_ARN} \
-              --output json
-          """)
+          sh(script: """#!/bin/bash
+              set -e
+              aws ec2 copy-image \
+                --source-image-id ${env.BUILT_AMI_ID} \
+                --source-region ${env.AWS_DEFAULT_REGION} \
+                --region ${env.AWS_DEFAULT_REGION} \
+                --name "${amiName}" \
+                --description "Copied AMI with encryption" \
+                --encrypted \
+                --kms-key-id '${env.ENCRYPT_KMS_ARN}' \
+                --output json | tee copy-output.json
+            """)
 
-          def copiedAmiId = readJSON text: copyOutput
-          copiedAmiId = copiedAmiId.ImageId
+            def copyOutput = readJSON(file: 'copy-output.json')
+            def copiedAmiId = copyOutput.ImageId
+            echo "✅ Copied AMI: ${copiedAmiId}"
+
 
           sh """#!/bin/bash
             aws ec2 wait image-available --image-ids ${copiedAmiId} --region ${env.AWS_DEFAULT_REGION}
