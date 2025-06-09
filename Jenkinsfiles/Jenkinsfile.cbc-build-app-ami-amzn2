@@ -118,13 +118,15 @@ pipeline {
             -var 'ec2-user-pub-key=${env.EC2_PUB_KEY}' \
             -var 'subnet_id=${env.PRIVATE_SUBNET_ID}' \
             packer/build_app_ami_amzn2.json | tee packer-output.log
-          """, returnStdout: true).trim()
+          """)
 
-          env.BUILT_AMI_ID = sh(script: """#!/bin/bash
-            grep 'AMI:' packer-output.log | awk '{print \$2}'
-          """, returnStdout: true).trim()
+         // Extract the AMI ID safely
+      env.BUILT_AMI_ID = sh(
+        script: "grep -o 'ami-[a-zA-Z0-9]\\{8,\\}' packer-output.log | tail -n1",
+        returnStdout: true
+      ).trim()
 
-          echo "✅ AMI for Test Environment: ${env.BUILT_AMI_ID}"
+      echo "✅ AMI for Test Environment: ${env.BUILT_AMI_ID}"
         }
       }
     }
@@ -138,7 +140,7 @@ pipeline {
               --region ${env.AWS_DEFAULT_REGION} \
               --query "Images[0].Name" \
               --output text
-          """, returnStdout: true).trim()
+          """)
 
           def copyOutput = sh(script: """#!/bin/bash
             aws ec2 copy-image \
@@ -150,7 +152,7 @@ pipeline {
               --encrypted \
               --kms-key-id ${env.ENCRYPT_KMS_ARN} \
               --output json
-          """, returnStdout: true).trim()
+          """)
 
           def copiedAmiId = readJSON text: copyOutput
           copiedAmiId = copiedAmiId.ImageId
