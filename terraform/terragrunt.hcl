@@ -17,7 +17,7 @@ locals {
 
   # Determine the backend bucket name based on the current_environment.
   # If 'current_environment' is "test", use 'bb2-terraform-state'.
-  # Otherwise, use 'bb-terraform-state-default'.
+  # Otherwise, use 'bb-prd-app-config'.
   backend_bucket = local.current_environment == "test" ? "bb2-terraform-state" : "bb-prd-app-config"
 }
 

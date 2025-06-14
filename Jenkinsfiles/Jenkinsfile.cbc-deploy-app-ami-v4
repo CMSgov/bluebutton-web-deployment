@@ -53,6 +53,19 @@ pipeline {
             env.AWS_ACCESS_KEY_ID     = creds.Credentials.AccessKeyId
             env.AWS_SECRET_ACCESS_KEY = creds.Credentials.SecretAccessKey
             env.AWS_SESSION_TOKEN     = creds.Credentials.SessionToken
+            // ✅ Validate assumed role
+
+              // ✅ Validate assumed role
+              def callerIdentity = sh(
+                script: """#!/bin/bash
+                aws sts get-caller-identity --output text
+                """,
+                returnStatus: true
+              )
+
+              if (callerIdentity != 0) {
+                error("Failed to verify assumed AWS role. Check credentials or permissions.")
+              }
           }
         }
       }
@@ -92,7 +105,7 @@ pipeline {
         sh """
         terraform -v
         cd terraform/${APP_ENV}
-        rm .terraform.lock.hcl
+    
         terragrunt init --terragrunt-log-level error --terragrunt-disable-bucket-update -no-color -input=false
         terraform plan -no-color -input=false -out=tfplan -var-file='${TF_VARS}' -var='ami_id=${APP_AMI_ID}'
         """
