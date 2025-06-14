@@ -1,6 +1,6 @@
 /*   Private Subnets */
 
-
+data "aws_caller_identity" "current" {}
 data "aws_subnets" "default" {
   filter {
     name   = "vpc-id"
@@ -22,15 +22,17 @@ resource "aws_elb" "default" {
   name = "bb-${var.stack}-clb-akamai"
 
   access_logs {
-    bucket   = "cms-cloud-926529379239-us-east-1"
+    bucket   = "cms-cloud-${data.aws_caller_identity.current.account_id}-us-east-1"
     interval = 60
   }
 
-  security_groups = [
+  security_groups = concat(
+    [
     var.akamai_prod_cidrs,
-    var.cms_vpn_cidrs
-  ]
-
+    var.cms_vpn_cidrs,
+  ],
+    var.vpn_sg_id
+ )
   subnets = data.aws_subnets.default.ids
 
   listener {
@@ -62,11 +64,15 @@ resource "aws_elb" "default" {
   connection_draining_timeout = 300
 
   tags = {
-    Name        = "bb-${var.stack}-clb-akamai"
-    Function    = "ClassicLoadBalancer"
-    Environment = upper(var.env)
-    Application = "bluebutton"
-    Business    = "OEDA"
+    Name         = "bb-${var.stack}-clb-akamai"
+    Function     = "ClassicLoadBalancer"
+    Environment  = upper(var.env)
+    Application  = "bb-${var.stack}-app"
+    Business     = "OEDA"
+    description  = "Resources for BB2 api"
+    iac-repo-url = "https://github.com/CMSgov/bluebutton-web-deployment/tree/master/terraform"
+    owner        = "Noorulla.shaik@icf.com jimmyfagan@navapbc.com"
+    sensitivity  = "confidential"
   }
 }
 

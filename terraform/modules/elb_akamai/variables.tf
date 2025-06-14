@@ -5,7 +5,10 @@ variable "acm_domain_search_string" {
   type        = string
 }
 variable "vpc_id" {}
-
+variable "vpn_sg_id" {
+  description = "List of VPN security group IDs"
+  type        = list(string)
+}
 variable "cms_vpn_cidrs" {
   description = "Security group ID for CMS VPN"
   type        = string

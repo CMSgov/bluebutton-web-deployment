@@ -82,12 +82,10 @@ resource "aws_iam_instance_profile" "app" {
 }
 
 resource "aws_launch_template" "app" {
-  vpc_security_group_ids  = [
-    var.app_sg_id,
-    var.vpn_sg_id,
-    var.ent_tools_sg_id,
-    aws_security_group.ci.id,
-  ]
+  vpc_security_group_ids = concat(
+  [var.app_sg_id, var.ent_tools_sg_id, aws_security_group.ci.id],
+  var.vpn_sg_id
+)
 
   key_name                    = var.key_name
   image_id                    = var.ami_id

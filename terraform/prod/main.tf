@@ -8,8 +8,8 @@ module "alb" {
   env                   = var.env
   cms_vpn_cidrs         = var.cms_vpn_cidrs
   akamai_prod_cidrs     = var.akamai_prod_cidrs
+  vpn_sg_id             = var.vpn_sg_id
   stack                 = var.stack
-
 }
 resource "aws_sns_topic" "cloudwatch_alarms_topic" {
   name              = "bluebutton-${var.stack}-cloudwatch-alarms"
@@ -45,6 +45,7 @@ module "cloudwatch_alarms_elb_http" {
 
   app                         = var.app
   env                         = var.env
+  stack                       = var.stack
   vpc_name                    = var.vpc_id
   cloudwatch_notification_arn = aws_sns_topic.cloudwatch_alarms_topic.arn
   load_balancer_name          = var.elb_names[0]
@@ -57,10 +58,11 @@ module "cloudwatch_alarms_elb_http" {
 
 module "iam_param_store" {
   source = "../modules/iam_param_store"
-
+  stack  = var.stack
   env = lower(var.env)
 }
 module "kms" {
   source = "../modules/kms"
   stack  = var.stack
+  env    = var.env
 }

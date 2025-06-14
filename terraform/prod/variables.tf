@@ -15,7 +15,9 @@ variable "instance_type" {}
 variable "elb_names" {
   type = list(string)
 }
-
+variable "cms_vpn_cidrs" {}
+variable "akamai_prod_cidrs" {}
+variable "acm_domain_search_string" {}
 variable "app_sg_id" {}
 
 variable "vpn_sg_id" {}

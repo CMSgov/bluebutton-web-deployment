@@ -14,6 +14,8 @@ variable "cloudwatch_notification_arn" {
 }
 
 variable "app" {}
+variable "stack" {}
+
 variable "env" {}
 
 variable "alarm_elb_no_backend_enable" { 

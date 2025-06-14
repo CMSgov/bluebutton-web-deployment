@@ -4,3 +4,4 @@ variable "kms_key_names" {
   default     = ["db", "app", "sns"]
 }
 variable "stack" {}
+variable "env" {}

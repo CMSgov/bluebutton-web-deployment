@@ -26,4 +26,13 @@ resource "aws_cloudwatch_metric_alarm" "healthy_hosts" {
   alarm_actions      = [var.cloudwatch_notification_arn]
   ok_actions         = [var.cloudwatch_notification_arn]
   datapoints_to_alarm = "1"
+  tags = {
+    Business        = "OEDA"
+    Application     = "bb-${var.stack}-app"
+    description     = "Resources for BB2 api"
+    Environment     = "${var.env}"
+    iac-repo-url    = "https://github.com/CMSgov/bluebutton-web-deployment/tree/master/terraform"
+    owner           = "Noorulla.shaik@icf.com jimmyfagan@navapbc.com"
+    sensitivity     = "confidential"
+  }
 }

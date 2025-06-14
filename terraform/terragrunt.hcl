@@ -1,27 +1,37 @@
+locals {
+  # Determine the current environment based on the path.
+  # This assumes your project structure has environment folders directly under the root,
+  # like:
+  # project-root/
+  # ├── terragrunt.hcl
+  # ├── test/
+  # │   └── terragrunt.hcl
+  # ├── stage/
+  # │   └── terragrunt.hcl
+  # └── prod/
+  #     └── terragrunt.hcl
+  #
+  # If you run terragrunt from 'test/', path_relative_to_include() will be "test".
+  # If you run terragrunt from 'stage/', it will be "stage", and so on.
+  current_environment = split("/", path_relative_to_include())[0]
+
+  # Determine the backend bucket name based on the current_environment.
+  # If 'current_environment' is "test", use 'bb2-terraform-state'.
+  # Otherwise, use 'bb-terraform-state-default'.
+  backend_bucket = local.current_environment == "test" ? "bb2-terraform-state" : "bb-prd-app-config"
+}
+
 remote_state {
   backend = "s3"
   generate = {
-    path      = "backend.tf"
-    if_exists = "overwrite_terragrunt"
+    path        = "backend.tf"
+    if_exists   = "overwrite_terragrunt"
   }
   config = {
-    #bucket = "bb2-terraform-state"
-
+    bucket         = local.backend_bucket
     key            = "${path_relative_to_include()}/terraform.tfstate"
     region         = "us-east-1"
     encrypt        = true
-   # dynamodb_table = "bb-terraform-state"
+    #dynamodb_table = "bb-terraform-state" # This remains constant for all environments
   }
 }
-
-# Will need to re-evaluate this to figure out a way that the var file paths can be relative to all dir depths
-# terraform {
-#   extra_arguments "common_vars" {
-#     # commands = get_terraform_commands_that_need_vars() - helper for getting all commands that use vars
-#     commands = ["plan", "apply"]
-
-#     arguments = [
-#       "-var-file=../region.tfvars"
-#     ]
-#   }
-# }

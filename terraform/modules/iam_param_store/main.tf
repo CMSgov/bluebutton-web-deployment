@@ -31,7 +31,17 @@ resource "aws_iam_policy" "app_secrets_mgr" {
     ]
 }
 EOF
+  tags = {
+    Business        = "OEDA"
+    Application     = "bb-${var.stack}-app"
+    description     = "Resources for BB2 api"
+    Environment     = var.env
+    iac-repo-url    = "https://github.com/CMSgov/bluebutton-web-deployment/tree/master/terraform"
+    owner           = "Noorulla.shaik@icf.com jimmyfagan@navapbc.com"
+    sensitivity     = "confidential"
+  }
 }
+
 
 
 resource "aws_iam_role_policy_attachment" "app_param_store" {

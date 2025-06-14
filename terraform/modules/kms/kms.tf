@@ -3,8 +3,15 @@ resource "aws_kms_key" "key" {
   description             = "bb-${var.stack}-${each.key}-key"
   deletion_window_in_days = 10
   enable_key_rotation     = true
-  tags                    = {
-    "Name" = "bb-${var.stack}-${each.key}-key"
+  tags = {
+    "Name"         = "bb-${var.stack}-${each.key}-key"
+    "Business"     = "OEDA"
+    "Application"  = "bb-${var.stack}-app"
+    "description"  = "Resources for BB2 api"
+    "Environment"  = "${var.env}"
+    "iac-repo-url" = "https://github.com/CMSgov/bluebutton-web-deployment/tree/master/terraform"
+    "owner"        = "Noorulla.shaik@icf.com jimmyfagan@navapbc.com"
+    "sensitivity"  = "confidential"
   }
 }
 
