@@ -30,7 +30,7 @@ pipeline {
     )
   }
 
-  stages {
+  stages {  // <-- only ONE stages block here!
     stage("Notify Slack") {
       steps {
         script {
@@ -39,7 +39,7 @@ pipeline {
         }
       }
     }
-  stages {
+
     stage("Assume AWS Role") {
       steps {
         withCredentials([string(credentialsId: params.APP_ENV == 'test' ? 'aws-assume-role-arn' : 'aws-assume-role-arn-prod', variable: 'ROLE_ARN')]) {
@@ -60,19 +60,17 @@ pipeline {
             env.AWS_ACCESS_KEY_ID     = creds.Credentials.AccessKeyId
             env.AWS_SECRET_ACCESS_KEY = creds.Credentials.SecretAccessKey
             env.AWS_SESSION_TOKEN     = creds.Credentials.SessionToken
-            // ✅ Validate assumed role
 
-              // ✅ Validate assumed role
-              def callerIdentity = sh(
-                script: """#!/bin/bash
-                aws sts get-caller-identity --output text
-                """,
-                returnStatus: true
-              )
+            def callerIdentity = sh(
+              script: """#!/bin/bash
+              aws sts get-caller-identity --output text
+              """,
+              returnStatus: true
+            )
 
-              if (callerIdentity != 0) {
-                error("Failed to verify assumed AWS role. Check credentials or permissions.")
-              }
+            if (callerIdentity != 0) {
+              error("Failed to verify assumed AWS role. Check credentials or permissions.")
+            }
           }
         }
       }
