@@ -96,7 +96,7 @@ pipeline {
       steps {
         sh """
         # Install required Ansible collection
-        ansible-galaxy collection install community.aws
+        ansible-galaxy collection install amazon.aws --upgrade
 
         # Run Django command using AWS SSM connection
         EC2_INI_PATH=inventory/config/${APP_ENV}.ini \
