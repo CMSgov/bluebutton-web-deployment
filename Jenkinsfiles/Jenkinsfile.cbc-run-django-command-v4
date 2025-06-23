@@ -94,7 +94,7 @@ pipeline {
           } else {
             echo("Setting ansible config for tagged deployment instance")
             ANSIBLE_INVENTORY = "inventory/aws_ec2.yaml"
-            ANSIBLE_SUBSET = "tag_Function_app_AppServer"
+            ANSIBLE_SUBSET = "tag_Function_app-AppServer"
           }
         }
       }
@@ -109,6 +109,7 @@ pipeline {
         ]) {
           sh """
           ansible-playbook -vvv playbook/run_django_command/main.yml \
+            --connection amazon.aws.aws_ssm
             -i '${ANSIBLE_INVENTORY}' \
             -l '${ANSIBLE_SUBSET}' \
             -e 'env=${APP_ENV}' \
