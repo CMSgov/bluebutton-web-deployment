@@ -103,7 +103,7 @@ pipeline {
     stage("Run Django Command") {
       steps {
         script { // <--- IMPORTANT: Enclose this stage's logic in a 'script' block
-            def awsAccessKeyId = env.AWS_ACCESS_KEY_ID
+             def awsAccessKeyId = env.AWS_ACCESS_KEY_ID
             def awsSecretAccessKey = env.AWS_SECRET_ACCESS_KEY
             def awsSessionToken = env.AWS_SESSION_TOKEN
             def awsDefaultRegion = env.AWS_DEFAULT_REGION
@@ -170,12 +170,12 @@ EOF
                 # --- CRITICAL SECTION WITH NEW EXPORT STRATEGY ---
                 echo "===> Testing EC2 inventory script with assumed role credentials..."
                 echo "DEBUG: Exporting EC2_INI_PATH='${ec2IniPath}'"
-                export EC2_INI_PATH="${ec2IniPath}" # Groovy interpolates ${ec2IniPath} here
+                # FIX: Removed the problematic '${ec2IniPath}' from the comment line below
+                export EC2_INI_PATH="${ec2IniPath}" # Groovy interpolates this variable here
 
                 echo "DEBUG: About to run: python inventory/ec2.py --list"
 
                 # Capture stdout and stderr separately for detailed debugging
-                # Now, the $(...) only contains the `python` command, no complex assignment
                 EC2_PY_STDOUT_CONTENTS=\$(python inventory/ec2.py --list)
                 EC2_PY_STDOUT_STATUS=\$?
 
