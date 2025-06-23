@@ -103,7 +103,7 @@ pipeline {
     stage("Run Django Command") {
       steps {
         script { // <--- IMPORTANT: Enclose this stage's logic in a 'script' block
-           def awsAccessKeyId = env.AWS_ACCESS_KEY_ID
+            def awsAccessKeyId = env.AWS_ACCESS_KEY_ID
             def awsSecretAccessKey = env.AWS_SECRET_ACCESS_KEY
             def awsSessionToken = env.AWS_SESSION_TOKEN
             def awsDefaultRegion = env.AWS_DEFAULT_REGION
@@ -127,15 +127,12 @@ pipeline {
                 echo "DEBUG: Permissions of parent directory 'inventory/':"
                 ls -ld inventory/
                 echo "DEBUG: Permissions of workspace root directory:"
-                # --- FIX APPLIED HERE: Double backslashes for path spaces ---
                 ls -ld /home/jenkins/agent/workspace/Blue\\ Button/Bluebutton-GFM/RUN\\ -\\ Django\\ Command/
 
-                # --- ADDED CHMOD COMMANDS HERE (with added error checks) ---
                 echo "INFO: Applying chmod to inventory/config/ and files..."
                 chmod a+r inventory/config/*.ini || { echo "ERROR: Failed to set read permissions on INI files. Exit code: \$?"; exit 1; }
                 chmod a+x inventory/config/ || { echo "ERROR: Failed to set execute permissions on config directory. Exit code: \$?"; exit 1; }
                 chmod a+x inventory/ec2.py || { echo "ERROR: Failed to set execute permissions on ec2.py. Exit code: \$?"; exit 1; }
-                # --- END CHMOD COMMANDS ---
 
                 echo "DEBUG: Permissions AFTER chmod:"
                 ls -ld inventory/config/
@@ -170,15 +167,38 @@ EOF
 
                 echo "===> Direct boto3 test complete."
 
+                # --- THIS IS THE CRITICAL SECTION TO ADD/VERIFY ---
                 echo "===> Testing EC2 inventory script with assumed role credentials..."
-                EC2_INI_PATH=${ec2IniPath} python inventory/ec2.py --list 2>&1
+                echo "DEBUG: About to run: EC2_INI_PATH=${ec2IniPath} python inventory/ec2.py --list"
+
+                # Capture stdout and stderr separately for detailed debugging
+                # Run 1: Capture stdout, discard stderr
+                EC2_PY_STDOUT_CONTENTS=$(EC2_INI_PATH=${ec2IniPath} python inventory/ec2.py --list)
+                EC2_PY_STDOUT_STATUS=\$? # Get exit status of the STDOUT capture
+
+                # Run 2: Capture stderr, discard stdout
+                EC2_PY_STDERR_CONTENTS=$(EC2_INI_PATH=${ec2IniPath} python inventory/ec2.py --list 1>&2 >/dev/null)
+                EC2_PY_STDERR_STATUS=\$? # Get exit status of the STDERR capture
+
+                echo "DEBUG: EC2_PY_STDOUT (JSON output expected):"
+                echo "\${EC2_PY_STDOUT_CONTENTS}"
+                echo "DEBUG: EC2_PY_STDERR (errors expected):"
+                echo "\${EC2_PY_STDERR_CONTENTS}"
+                echo "DEBUG: EC2_PY_STDOUT_STATUS: \${EC2_PY_STDOUT_STATUS}"
+                echo "DEBUG: EC2_PY_STDERR_STATUS: \${EC2_PY_STDERR_STATUS}" # Usually same as STDOUT_STATUS unless script explicitly handles signals differently
+                # --- END OF CRITICAL SECTION ---
             """
 
-            def ec2ScriptOutput = sh(script: ec2ScriptTestCommand, returnStdout: true).trim()
+            // This Groovy variable will capture all the echo'd debug output from the shell script
+            def rawEc2PyOutputWithDebug = sh(
+                script: ec2ScriptTestCommand,
+                returnStdout: true
+            ).trim()
 
-            echo "--- EC2 Script Raw Output ---"
-            echo "${ec2ScriptOutput}"
-            echo "--- End EC2 Script Raw Output ---"
+            echo "--- EC2 Script Raw Output (from the diagnostic block) ---"
+            echo "${rawEc2PyOutputWithDebug}"
+            echo "--- End EC2 Script Raw Output (from the diagnostic block) ---"
+
             echo "===> EC2 inventory script test complete."
 
             echo "===> Running ansible-playbook with assumed role credentials..."
