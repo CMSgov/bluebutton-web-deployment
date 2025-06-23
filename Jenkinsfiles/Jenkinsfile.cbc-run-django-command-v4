@@ -117,6 +117,12 @@ pipeline {
 
             // --- Construct the EC2 script test command as a Groovy String ---
             def ec2ScriptTestCommand = """#!/bin/bash
+               # --- ADDED CHMOD COMMANDS HERE ---
+                # Ensure the config file is readable
+                chmod a+r inventory/config/*.ini
+                # Ensure the directory containing the config file is executable (needed for path traversal)
+                chmod a+x inventory/config/
+                # --- END CHMOD COMMANDS ---
                 echo "===> Environment variables for EC2 inventory script:"
                 printenv | grep "AWS_ACCESS_KEY_ID"
                 printenv | grep "AWS_SECRET_ACCESS_KEY"
