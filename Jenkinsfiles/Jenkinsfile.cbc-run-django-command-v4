@@ -103,7 +103,7 @@ pipeline {
     stage("Run Django Command") {
       steps {
         sh """
-        echo "===> Environment variables for EC2 inventory script:"
+            echo "===> Environment variables for EC2 inventory script:"
     printenv | grep "AWS_ACCESS_KEY_ID"
     printenv | grep "AWS_SECRET_ACCESS_KEY"
     printenv | grep "AWS_SESSION_TOKEN"
@@ -114,11 +114,14 @@ pipeline {
     export AWS_SECRET_ACCESS_KEY='${env.AWS_SECRET_ACCESS_KEY}'
     export AWS_SESSION_TOKEN='${env.AWS_SESSION_TOKEN}'
     export AWS_DEFAULT_REGION='${env.AWS_DEFAULT_REGION}'
-    python -c "
+
+    # --- START OF HEREDOC CHANGE ---
+    python - <<EOF
 import os
 import boto3
 try:
-    print(f\"Using region: {os.environ.get('AWS_DEFAULT_REGION')}\") # <-- Corrected line
+    # No need to escape quotes here with heredoc!
+    print(f"Using region: {os.environ.get('AWS_DEFAULT_REGION')}")
     client = boto3.client('ec2', region_name=os.environ.get('AWS_DEFAULT_REGION'))
     response = client.describe_instances()
     print('boto3 describe_instances SUCCESS!')
@@ -126,7 +129,9 @@ except Exception as e:
     print(f'boto3 describe_instances FAILED: {e}')
     import traceback
     traceback.print_exc()
-"
+EOF
+    # --- END OF HEREDOC CHANGE ---
+
     echo "===> Direct boto3 test complete."
 
     echo "===> Testing EC2 inventory script with assumed role credentials..."
