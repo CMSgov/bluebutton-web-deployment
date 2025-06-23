@@ -135,23 +135,29 @@ EOF
     echo "===> Direct boto3 test complete."
 
     echo "===> Testing EC2 inventory script with assumed role credentials..."
-    # IMPORTANT: Escaping the dollar sign for shell command substitution
-    EC2_SCRIPT_OUTPUT=\$(EC2_INI_PATH=inventory/config/${APP_ENV}.ini python inventory/ec2.py --list 2>&1)
+    # --- START OF NEW FIX FOR LINE 139 ---
+    # Construct the command string in Groovy, allowing Groovy to interpolate ${APP_ENV}
+    # Then execute it using the 'sh' step's 'script' parameter, capturing output directly.
+    # This avoids shell command substitution '$(...)' syntax issues within the triple-quoted string.
+    EC2_INI_PATH_VAR="inventory/config/${APP_ENV}.ini" # Groovy var for INI path
+    def ec2_script_command = "${EC2_INI_PATH_VAR} python inventory/ec2.py --list 2>&1"
+    def ec2_output = sh(script: ec2_script_command, returnStdout: true).trim()
+
     echo "--- EC2 Script Raw Output ---"
-    # IMPORTANT: Escaping the dollar sign for the shell variable being echoed within Groovy GString
-    echo "\${EC2_SCRIPT_OUTPUT}"
+    echo "${ec2_output}" # 'ec2_output' is a Groovy variable, so direct interpolation is correct
     echo "--- End EC2 Script Raw Output ---"
+    # --- END OF NEW FIX FOR LINE 139 ---
+
     echo "===> EC2 inventory script test complete."
 
     echo "===> Running ansible-playbook with assumed role credentials..."
-    # IMPORTANT: Escape shell variables for proper interpolation by Groovy if they contain $
     EC2_INI_PATH=inventory/config/${APP_ENV}.ini \
     ansible-playbook playbook/run_django_command/main.yml \
-      --private-key '\${SSH_KEY}' \
-      -i '\${ANSIBLE_INVENTORY}' \
-      -l '\${ANSIBLE_SUBSET}' \
-      -e 'env=\${APP_ENV}' \
-      -e 'django_command="\${DJANGO_COMMAND}"'
+      --private-key '${SSH_KEY}' \
+      -i '${ANSIBLE_INVENTORY}' \
+      -l '${ANSIBLE_SUBSET}' \
+      -e 'env=${APP_ENV}' \
+      -e 'django_command="${DJANGO_COMMAND}"'
         """
       }
     }
