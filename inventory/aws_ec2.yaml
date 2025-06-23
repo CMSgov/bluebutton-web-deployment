@@ -12,5 +12,5 @@ keyed_groups:
     prefix: tag_Function
     separator: _
 vars:
-  ansible_connection: aws_ssm
+  ansible_connection: amazon.aws.aws_ssm
   ansible_aws_ssm_profile: default
