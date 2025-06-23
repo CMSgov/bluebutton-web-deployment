@@ -96,17 +96,17 @@ pipeline {
       steps {
         sh """
         # Install required Ansible collection
-        ansible-galaxy collection install amazon.aws --force-with-deps
+   
 
-        # Run Django command using AWS SSM connection
-        EC2_INI_PATH=inventory/config/${APP_ENV}.ini \
-        ansible-playbook playbook/run_django_command/main.yml \
-          -i '${ANSIBLE_INVENTORY}' \
-          -l '${ANSIBLE_SUBSET}' \
-          -e env="${APP_ENV}" \
-          -e django_command="${DJANGO_COMMAND}" \
-          -e ansible_connection=community.aws.aws_ssm \
-          -e ansible_region=${AWS_DEFAULT_REGION}
+         # Run Django command using amazon.aws SSM connection
+    EC2_INI_PATH=inventory/config/${APP_ENV}.ini \
+    ansible-playbook playbook/run_django_command/main.yml \
+      -i '${ANSIBLE_INVENTORY}' \
+      -l '${ANSIBLE_SUBSET}' \
+      -e env="${APP_ENV}" \
+      -e django_command="${DJANGO_COMMAND}" \
+      -e ansible_connection=aws_ssm \
+      -e ansible_region=${AWS_DEFAULT_REGION}
         """
       }
     }
