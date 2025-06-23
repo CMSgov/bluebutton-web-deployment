@@ -106,7 +106,7 @@ pipeline {
       export AWS_ACCESS_KEY_ID='${env.AWS_ACCESS_KEY_ID}'
       export AWS_SECRET_ACCESS_KEY='${env.AWS_SECRET_ACCESS_KEY}'
       export AWS_SESSION_TOKEN='${env.AWS_SESSION_TOKEN}'
-      
+
       echo "===> Validating AWS caller identity"
       aws sts get-caller-identity || {
         echo '❌ ERROR: AWS credentials not valid for assume-role session'
@@ -114,12 +114,6 @@ pipeline {
       }
 
       echo "===> Running ansible-playbook with ec2.py"
-      ansible-playbook playbook/run_django_command/main.yml \\
-        --private-key '${SSH_KEY}' \\
-        -i inventory/ec2.py \\
-        -l tag_Function_app_AppServer \\
-        -e env=${APP_ENV} \\
-        -e django_command="${DJANGO_COMMAND}"
         EC2_INI_PATH=inventory/config/${APP_ENV}.ini \
         ansible-playbook playbook/run_django_command/main.yml \
           --private-key '${SSH_KEY}' \
