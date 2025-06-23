@@ -102,14 +102,19 @@ pipeline {
 
     stage("Run Django Command") {
       steps {
-        sh """
-        ansible-playbook playbook/run_django_command/main.yml \
-          --private-key '${SSH_KEY}' \
-          -i '${ANSIBLE_INVENTORY}' \
-          -l '${ANSIBLE_SUBSET}' \
-          -e 'env=${APP_ENV}' \
-          -e 'django_command="${DJANGO_COMMAND}"'
-        """
+        withEnv([
+          'ANSIBLE_CONNECTION_PLUGIN=amazon.aws.aws_ssm',
+          'ANSIBLE_PIPELINING=true',
+          'ANSIBLE_TIMEOUT=30'
+        ]) {
+          sh """
+          ansible-playbook playbook/run_django_command/main.yml \
+            -i '${ANSIBLE_INVENTORY}' \
+            -l '${ANSIBLE_SUBSET}' \
+            -e 'env=${APP_ENV}' \
+            -e 'django_command="${DJANGO_COMMAND}"'
+          """
+        }
       }
     }
   }
