@@ -61,7 +61,12 @@ pipeline {
             env.AWS_ACCESS_KEY_ID     = creds.Credentials.AccessKeyId
             env.AWS_SECRET_ACCESS_KEY = creds.Credentials.SecretAccessKey
             env.AWS_SESSION_TOKEN     = creds.Credentials.SessionToken
-
+            // --- ADD THESE DEBUG LINES ---
+        echo "Assumed Role ARN: ${ROLE_ARN}"
+        echo "Assumed Access Key ID (partial): ${env.AWS_ACCESS_KEY_ID.substring(0, 8)}..." // Print first 8 chars
+        echo "Assumed Session Token (partial): ${env.AWS_SESSION_TOKEN.substring(0, 8)}..." // Print first 8 chars
+        echo "Assumed Role Expiration: ${creds.Credentials.Expiration}" // Print expiration time
+        // DO NOT print env.AWS_SECRET_ACCESS_KEY directly as it's highly sensitive
             def callerIdentity = sh(
               script: """#!/bin/bash
               aws sts get-caller-identity --output text
@@ -71,7 +76,9 @@ pipeline {
 
             if (callerIdentity != 0) {
               error("Failed to verify assumed AWS role. Check credentials or permissions.")
-            }
+            }else {
+          echo "Successfully verified assumed AWS role: ${sh(script: 'aws sts get-caller-identity', returnStdout: true).trim()}"
+             }
           }
         }
       }
@@ -96,6 +103,10 @@ pipeline {
     stage("Run Django Command") {
       steps {
         sh """
+        echo "Python version:"
+        python --version
+        echo "Pip list:"
+        pip list | grep boto3 || echo "boto3 not found"
         echo "===> Testing EC2 inventory script with assumed role credentials..."
     export AWS_ACCESS_KEY_ID='${env.AWS_ACCESS_KEY_ID}'
     export AWS_SECRET_ACCESS_KEY='${env.AWS_SECRET_ACCESS_KEY}'
