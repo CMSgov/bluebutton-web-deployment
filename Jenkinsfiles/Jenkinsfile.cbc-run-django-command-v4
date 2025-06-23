@@ -109,7 +109,7 @@ pipeline {
         ]) {
           sh """
           ansible-playbook -vvv playbook/run_django_command/main.yml \
-            --connection amazon.aws.aws_ssm
+            --connection amazon.aws.aws_ssm \
             -i '${ANSIBLE_INVENTORY}' \
             -l '${ANSIBLE_SUBSET}' \
             -e 'env=${APP_ENV}' \
