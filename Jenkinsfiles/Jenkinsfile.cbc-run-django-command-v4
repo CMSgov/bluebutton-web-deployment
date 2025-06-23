@@ -96,7 +96,17 @@ pipeline {
     stage("Run Django Command") {
       steps {
         sh """
-        aws sts get-caller-identity
+        unset AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN AWS_PROFILE
+
+    # Export the assumed role credentials into the shell environment
+    export AWS_ACCESS_KEY_ID='${env.AWS_ACCESS_KEY_ID}'
+    export AWS_SECRET_ACCESS_KEY='${env.AWS_SECRET_ACCESS_KEY}'
+    export AWS_SESSION_TOKEN='${env.AWS_SESSION_TOKEN}'
+    echo "AWS Caller Identity:"
+    aws sts get-caller-identity || echo "Failed to get caller identity"
+
+    echo "AWS environment variables:"
+    env | grep AWS
         EC2_INI_PATH=inventory/config/${APP_ENV}.ini \
         ansible-playbook playbook/run_django_command/main.yml \
           --private-key '${SSH_KEY}' \
