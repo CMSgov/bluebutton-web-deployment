@@ -167,17 +167,19 @@ EOF
 
                 echo "===> Direct boto3 test complete."
 
-                # --- THIS IS THE CRITICAL SECTION TO ADD/VERIFY ---
+                # --- THIS IS THE CRITICAL SECTION THAT NEEDS THE FIX ---
                 echo "===> Testing EC2 inventory script with assumed role credentials..."
                 echo "DEBUG: About to run: EC2_INI_PATH=${ec2IniPath} python inventory/ec2.py --list"
 
                 # Capture stdout and stderr separately for detailed debugging
                 # Run 1: Capture stdout, discard stderr
-                EC2_PY_STDOUT_CONTENTS=$(EC2_INI_PATH=${ec2IniPath} python inventory/ec2.py --list)
+                # FIX: Escape the $( for Groovy here
+                EC2_PY_STDOUT_CONTENTS=\$(EC2_INI_PATH=${ec2IniPath} python inventory/ec2.py --list)
                 EC2_PY_STDOUT_STATUS=\$? # Get exit status of the STDOUT capture
 
                 # Run 2: Capture stderr, discard stdout
-                EC2_PY_STDERR_CONTENTS=$(EC2_INI_PATH=${ec2IniPath} python inventory/ec2.py --list 1>&2 >/dev/null)
+                # FIX: Escape the $( for Groovy here as well
+                EC2_PY_STDERR_CONTENTS=\$(EC2_INI_PATH=${ec2IniPath} python inventory/ec2.py --list 1>&2 >/dev/null)
                 EC2_PY_STDERR_STATUS=\$? # Get exit status of the STDERR capture
 
                 echo "DEBUG: EC2_PY_STDOUT (JSON output expected):"
@@ -185,7 +187,7 @@ EOF
                 echo "DEBUG: EC2_PY_STDERR (errors expected):"
                 echo "\${EC2_PY_STDERR_CONTENTS}"
                 echo "DEBUG: EC2_PY_STDOUT_STATUS: \${EC2_PY_STDOUT_STATUS}"
-                echo "DEBUG: EC2_PY_STDERR_STATUS: \${EC2_PY_STDERR_STATUS}" # Usually same as STDOUT_STATUS unless script explicitly handles signals differently
+                echo "DEBUG: EC2_PY_STDERR_STATUS: \${EC2_PY_STDERR_STATUS}"
                 # --- END OF CRITICAL SECTION ---
             """
 
