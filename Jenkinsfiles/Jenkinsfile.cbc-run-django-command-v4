@@ -108,7 +108,7 @@ pipeline {
           'ANSIBLE_TIMEOUT=30'
         ]) {
           sh """
-          ansible-playbook playbook/run_django_command/main.yml \
+          ansible-playbook -vvv playbook/run_django_command/main.yml \
             -i '${ANSIBLE_INVENTORY}' \
             -l '${ANSIBLE_SUBSET}' \
             -e 'env=${APP_ENV}' \

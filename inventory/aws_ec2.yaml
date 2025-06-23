@@ -7,10 +7,11 @@ hostnames:
   - private-ip-address
 compose:
   ansible_host: private_ip_address
+  instance_id: instance_id
+  ansible_instance_id: instance_id
+vars:
+  ansible_connection: amazon.aws.aws_ssm
 keyed_groups:
   - key: tags.Function
     prefix: tag_Function
     separator: _
-vars:
-  ansible_connection: amazon.aws.aws_ssm
-  ansible_aws_ssm_profile: default
