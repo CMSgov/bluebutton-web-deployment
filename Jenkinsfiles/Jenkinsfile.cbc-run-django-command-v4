@@ -102,26 +102,38 @@ pipeline {
 
     stage("Run Django Command") {
       steps {
-        sh """#!/bin/bash
-            echo "===> Environment variables for EC2 inventory script:"
-    printenv | grep "AWS_ACCESS_KEY_ID"
-    printenv | grep "AWS_SECRET_ACCESS_KEY"
-    printenv | grep "AWS_SESSION_TOKEN"
-    printenv | grep "AWS_DEFAULT_REGION"
+        script { // <--- IMPORTANT: Enclose this stage's logic in a 'script' block
+            // Define Groovy variables here. These are accessible throughout this 'script' block.
+            def awsAccessKeyId = env.AWS_ACCESS_KEY_ID
+            def awsSecretAccessKey = env.AWS_SECRET_ACCESS_KEY
+            def awsSessionToken = env.AWS_SESSION_TOKEN
+            def awsDefaultRegion = env.AWS_DEFAULT_REGION
+            def currentAppEnv = params.APP_ENV // Use params directly for clarity
+            def currentDjangoCommand = params.DJANGO_COMMAND
+            def sshKey = SSH_KEY // SSH_KEY is already an env var from credentials
 
-    echo "===> Testing direct boto3 describe_instances call..."
-    export AWS_ACCESS_KEY_ID='${env.AWS_ACCESS_KEY_ID}'
-    export AWS_SECRET_ACCESS_KEY='${env.AWS_SECRET_ACCESS_KEY}'
-    export AWS_SESSION_TOKEN='${env.AWS_SESSION_TOKEN}'
-    export AWS_DEFAULT_REGION='${env.AWS_DEFAULT_REGION}'
+            // Define Groovy variable for INI path (THIS IS THE CRITICAL FIX FOR EC2_INI_PATH_VAR)
+            def ec2IniPath = "inventory/config/${currentAppEnv}.ini"
 
-    # --- START OF HEREDOC CHANGE ---
-    python - <<EOF
+            // --- Construct the EC2 script test command as a Groovy String ---
+            def ec2ScriptTestCommand = """#!/bin/bash
+                echo "===> Environment variables for EC2 inventory script:"
+                printenv | grep "AWS_ACCESS_KEY_ID"
+                printenv | grep "AWS_SECRET_ACCESS_KEY"
+                printenv | grep "AWS_SESSION_TOKEN"
+                printenv | grep "AWS_DEFAULT_REGION"
+
+                echo "===> Testing direct boto3 describe_instances call..."
+                export AWS_ACCESS_KEY_ID='${awsAccessKeyId}'
+                export AWS_SECRET_ACCESS_KEY='${awsSecretAccessKey}'
+                export AWS_SESSION_TOKEN='${awsSessionToken}'
+                export AWS_DEFAULT_REGION='${awsDefaultRegion}'
+
+                python - <<EOF
 import os
 import boto3
 try:
-    # No need to escape quotes here with heredoc!
-    print(f"Using region: {os.environ.get('AWS_DEFAULT_REGION')}")
+    print(f"Using region: ${awsDefaultRegion}")
     client = boto3.client('ec2', region_name=os.environ.get('AWS_DEFAULT_REGION'))
     response = client.describe_instances()
     print('boto3 describe_instances SUCCESS!')
@@ -130,33 +142,36 @@ except Exception as e:
     import traceback
     traceback.print_exc()
 EOF
-    # --- END OF HEREDOC CHANGE ---
 
-    echo "===> Direct boto3 test complete."
+                echo "===> Direct boto3 test complete."
 
-    echo "===> Testing EC2 inventory script with assumed role credentials..."
-    # --- FIX APPLIED HERE: Escape the dollar sign in the comment ---
-    # Construct the command string in Groovy, allowing Groovy to interpolate \${APP_ENV}
-    EC2_INI_PATH_VAR="inventory/config/${APP_ENV}.ini" # Groovy var for INI path
-    def ec2_script_command = "${EC2_INI_PATH_VAR} python inventory/ec2.py --list 2>&1"
-    def ec2_output = sh(script: ec2_script_command, returnStdout: true).trim()
+                echo "===> Testing EC2 inventory script with assumed role credentials..."
+                # The shell command itself, using Groovy interpolated variables
+                ${ec2IniPath} python inventory/ec2.py --list 2>&1
+            """
 
-    echo "--- EC2 Script Raw Output ---"
-    echo "${ec2_output}" # 'ec2_output' is a Groovy variable, so direct interpolation is correct
-    echo "--- End EC2 Script Raw Output ---"
-    # --- END OF FIX ---
+            // Execute the EC2 script test command and capture its output using 'sh'
+            def ec2ScriptOutput = sh(script: ec2ScriptTestCommand, returnStdout: true).trim()
 
-    echo "===> EC2 inventory script test complete."
+            echo "--- EC2 Script Raw Output ---"
+            echo "${ec2ScriptOutput}" // 'ec2ScriptOutput' is a Groovy variable
+            echo "--- End EC2 Script Raw Output ---"
+            echo "===> EC2 inventory script test complete."
 
-    echo "===> Running ansible-playbook with assumed role credentials..."
-    EC2_INI_PATH=inventory/config/${APP_ENV}.ini \
-    ansible-playbook playbook/run_django_command/main.yml \
-      --private-key '\${SSH_KEY}' \
-      -i '\${ANSIBLE_INVENTORY}' \
-      -l '\${ANSIBLE_SUBSET}' \
-      -e 'env=\${APP_ENV}' \
-      -e 'django_command="\${DJANGO_COMMAND}"'
-        """
+            echo "===> Running ansible-playbook with assumed role credentials..."
+            // --- Construct the Ansible playbook command as a Groovy String ---
+            def ansiblePlaybookCommand = """#!/bin/bash
+                EC2_INI_PATH=${ec2IniPath} \\
+                ansible-playbook playbook/run_django_command/main.yml \\
+                  --private-key '${sshKey}' \\
+                  -i '${ANSIBLE_INVENTORY}' \\
+                  -l '${ANSIBLE_SUBSET}' \\
+                  -e 'env=${currentAppEnv}' \\
+                  -e 'django_command="${currentDjangoCommand}"'
+            """
+            // Execute the Ansible playbook command using 'sh'
+            sh ansiblePlaybookCommand
+        } // <--- End of 'script' block
       }
     }
   }
