@@ -96,6 +96,10 @@ pipeline {
     stage("Run Django Command") {
       steps {
         sh """
+        echo "===> Testing EC2 inventory script with assumed role credentials..."
+    EC2_INI_PATH=inventory/config/${APP_ENV}.ini \
+    python inventory/ec2.py --list
+    echo "===> EC2 inventory script test complete."
        echo "===> Running ansible-playbook with assumed role credentials..."
         EC2_INI_PATH=inventory/config/${APP_ENV}.ini \
         ansible-playbook playbook/run_django_command/main.yml \
