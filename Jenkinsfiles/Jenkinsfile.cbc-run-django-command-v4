@@ -135,10 +135,12 @@ EOF
     echo "===> Direct boto3 test complete."
 
     echo "===> Testing EC2 inventory script with assumed role credentials..."
-    EC2_INI_PATH=inventory/config/${APP_ENV}.ini \
-    python inventory/ec2.py --list
+    # Capture both stdout and stderr and print them explicitly
+    EC2_SCRIPT_OUTPUT=$(EC2_INI_PATH=inventory/config/${APP_ENV}.ini python inventory/ec2.py --list 2>&1)
+    echo "--- EC2 Script Raw Output ---"
+    echo "${EC2_SCRIPT_OUTPUT}"
+    echo "--- End EC2 Script Raw Output ---"
     echo "===> EC2 inventory script test complete."
-
     echo "===> Running ansible-playbook with assumed role credentials..."
     EC2_INI_PATH=inventory/config/${APP_ENV}.ini \
     ansible-playbook playbook/run_django_command/main.yml \
