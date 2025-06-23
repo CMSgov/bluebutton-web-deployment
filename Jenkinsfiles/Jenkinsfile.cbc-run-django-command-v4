@@ -8,6 +8,7 @@ pipeline {
 
   environment {
     AWS_DEFAULT_REGION = "us-east-1"
+    SSH_KEY = credentials("bb2-ssh-key-${params.APP_ENV}")
   }
 
   parameters {
@@ -95,18 +96,13 @@ pipeline {
     stage("Run Django Command") {
       steps {
         sh """
-        # Install required Ansible collection
-   
-
-         # Run Django command using amazon.aws SSM connection
-    EC2_INI_PATH=inventory/config/${APP_ENV}.ini \
-    ansible-playbook playbook/run_django_command/main.yml \
-      -i '${ANSIBLE_INVENTORY}' \
-      -l '${ANSIBLE_SUBSET}' \
-      -e env="${APP_ENV}" \
-      -e django_command="${DJANGO_COMMAND}" \
-      -e ansible_connection=aws_ssm \
-      -e ansible_region=${AWS_DEFAULT_REGION}
+        EC2_INI_PATH=inventory/config/${APP_ENV}.ini \
+        ansible-playbook playbook/run_django_command/main.yml \
+          --private-key '${SSH_KEY}' \
+          -i '${ANSIBLE_INVENTORY}' \
+          -l '${ANSIBLE_SUBSET}' \
+          -e 'env=${APP_ENV}' \
+          -e 'django_command="${DJANGO_COMMAND}"'
         """
       }
     }
