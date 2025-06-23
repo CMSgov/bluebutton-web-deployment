@@ -127,15 +127,13 @@ pipeline {
                 echo "DEBUG: Permissions of parent directory 'inventory/':"
                 ls -ld inventory/
                 echo "DEBUG: Permissions of workspace root directory:"
-                ls -ld /home/jenkins/agent/workspace/Blue\ Button/Bluebutton-GFM/RUN\ -\ Django\ Command/
+                # --- FIX APPLIED HERE: Double backslashes for path spaces ---
+                ls -ld /home/jenkins/agent/workspace/Blue\\ Button/Bluebutton-GFM/RUN\\ -\\ Django\\ Command/
 
                 # --- ADDED CHMOD COMMANDS HERE (with added error checks) ---
                 echo "INFO: Applying chmod to inventory/config/ and files..."
-                # Grant read permissions to all .ini files in the config directory
                 chmod a+r inventory/config/*.ini || { echo "ERROR: Failed to set read permissions on INI files. Exit code: \$?"; exit 1; }
-                # Grant execute (traverse) permissions to the config directory
                 chmod a+x inventory/config/ || { echo "ERROR: Failed to set execute permissions on config directory. Exit code: \$?"; exit 1; }
-                # Grant execute permissions to the ec2.py script itself (often needed)
                 chmod a+x inventory/ec2.py || { echo "ERROR: Failed to set execute permissions on ec2.py. Exit code: \$?"; exit 1; }
                 # --- END CHMOD COMMANDS ---
 
@@ -173,8 +171,6 @@ EOF
                 echo "===> Direct boto3 test complete."
 
                 echo "===> Testing EC2 inventory script with assumed role credentials..."
-                # Now, attempt to run the EC2 inventory script
-                # The permission denied error happens on this line
                 EC2_INI_PATH=${ec2IniPath} python inventory/ec2.py --list 2>&1
             """
 
