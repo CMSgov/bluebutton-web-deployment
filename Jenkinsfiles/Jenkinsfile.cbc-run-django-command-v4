@@ -118,7 +118,7 @@ pipeline {
 import os
 import boto3
 try:
-    print(f'Using region: {os.environ.get('AWS_DEFAULT_REGION')}')
+    print(f\"Using region: {os.environ.get('AWS_DEFAULT_REGION')}\") # <-- Corrected line
     client = boto3.client('ec2', region_name=os.environ.get('AWS_DEFAULT_REGION'))
     response = client.describe_instances()
     print('boto3 describe_instances SUCCESS!')
