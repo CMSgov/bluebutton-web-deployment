@@ -31,7 +31,7 @@ pipeline {
     )
   }
 
-  stages {  // <-- only ONE stages block here!
+  stages {
     stage("Notify Slack") {
       steps {
         script {
@@ -48,9 +48,9 @@ pipeline {
             def sessionName = "jenkins-${env.BUILD_ID}"
             def credsJson = sh(
               script: """#!/bin/bash
-              aws sts assume-role \
-                --role-arn "$ROLE_ARN" \
-                --role-session-name "$sessionName" \
+              aws sts assume-role \\
+                --role-arn "$ROLE_ARN" \\
+                --role-session-name "$sessionName" \\
                 --output json
               """,
               returnStdout: true
@@ -62,11 +62,11 @@ pipeline {
             env.AWS_SECRET_ACCESS_KEY = creds.Credentials.SecretAccessKey
             env.AWS_SESSION_TOKEN     = creds.Credentials.SessionToken
             // --- ADD THESE DEBUG LINES ---
-        echo "Assumed Role ARN: ${ROLE_ARN}"
-        echo "Assumed Access Key ID (partial): ${env.AWS_ACCESS_KEY_ID.substring(0, 8)}..." // Print first 8 chars
-        echo "Assumed Session Token (partial): ${env.AWS_SESSION_TOKEN.substring(0, 8)}..." // Print first 8 chars
-        echo "Assumed Role Expiration: ${creds.Credentials.Expiration}" // Print expiration time
-        // DO NOT print env.AWS_SECRET_ACCESS_KEY directly as it's highly sensitive
+            echo "Assumed Role ARN: ${ROLE_ARN}"
+            echo "Assumed Access Key ID (partial): ${env.AWS_ACCESS_KEY_ID.substring(0, 8)}..." // Print first 8 chars
+            echo "Assumed Session Token (partial): ${env.AWS_SESSION_TOKEN.substring(0, 8)}..." // Print first 8 chars
+            echo "Assumed Role Expiration: ${creds.Credentials.Expiration}" // Print expiration time
+            // DO NOT print env.AWS_SECRET_ACCESS_KEY directly as it's highly sensitive
             def callerIdentity = sh(
               script: """#!/bin/bash
               aws sts get-caller-identity --output text
@@ -76,9 +76,9 @@ pipeline {
 
             if (callerIdentity != 0) {
               error("Failed to verify assumed AWS role. Check credentials or permissions.")
-            }else {
-          echo "Successfully verified assumed AWS role: ${sh(script: 'aws sts get-caller-identity', returnStdout: true).trim()}"
-             }
+            } else {
+              echo "Successfully verified assumed AWS role: ${sh(script: 'aws sts get-caller-identity', returnStdout: true).trim()}"
+            }
           }
         }
       }
@@ -102,7 +102,7 @@ pipeline {
 
     stage("Run Django Command") {
       steps {
-        sh """
+        sh """#!/bin/bash
             echo "===> Environment variables for EC2 inventory script:"
     printenv | grep "AWS_ACCESS_KEY_ID"
     printenv | grep "AWS_SECRET_ACCESS_KEY"
@@ -134,22 +134,24 @@ EOF
 
     echo "===> Direct boto3 test complete."
 
-echo "===> Testing EC2 inventory script with assumed role credentials..."
-    # Capture both stdout and stderr and print them explicitly
-    EC2_SCRIPT_OUTPUT=$(EC2_INI_PATH=inventory/config/${APP_ENV}.ini python inventory/ec2.py --list 2>&1)
+    echo "===> Testing EC2 inventory script with assumed role credentials..."
+    # IMPORTANT: Escaping the dollar sign for shell command substitution
+    EC2_SCRIPT_OUTPUT=\$(EC2_INI_PATH=inventory/config/${APP_ENV}.ini python inventory/ec2.py --list 2>&1)
     echo "--- EC2 Script Raw Output ---"
-    echo "${EC2_SCRIPT_OUTPUT}"
+    # IMPORTANT: Escaping the dollar sign for the shell variable being echoed within Groovy GString
+    echo "\${EC2_SCRIPT_OUTPUT}"
     echo "--- End EC2 Script Raw Output ---"
     echo "===> EC2 inventory script test complete."
 
     echo "===> Running ansible-playbook with assumed role credentials..."
+    # IMPORTANT: Escape shell variables for proper interpolation by Groovy if they contain $
     EC2_INI_PATH=inventory/config/${APP_ENV}.ini \
     ansible-playbook playbook/run_django_command/main.yml \
-      --private-key '${SSH_KEY}' \
-      -i '${ANSIBLE_INVENTORY}' \
-      -l '${ANSIBLE_SUBSET}' \
-      -e 'env=${APP_ENV}' \
-      -e 'django_command="${DJANGO_COMMAND}"'
+      --private-key '\${SSH_KEY}' \
+      -i '\${ANSIBLE_INVENTORY}' \
+      -l '\${ANSIBLE_SUBSET}' \
+      -e 'env=\${APP_ENV}' \
+      -e 'django_command="\${DJANGO_COMMAND}"'
         """
       }
     }
