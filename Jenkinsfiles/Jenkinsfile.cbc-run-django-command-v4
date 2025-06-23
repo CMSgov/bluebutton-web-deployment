@@ -93,7 +93,7 @@ pipeline {
             ANSIBLE_SUBSET = ""
           } else {
             echo("Setting ansible config for tagged deployment instance")
-            ANSIBLE_INVENTORY = "inventory/ec2.py"
+            ANSIBLE_INVENTORY = "inventory/aws_ec2.yaml"
             ANSIBLE_SUBSET = "tag_Function_app_AppServer"
           }
         }
@@ -103,7 +103,6 @@ pipeline {
     stage("Run Django Command") {
       steps {
         sh """
-        EC2_INI_PATH=inventory/config/${APP_ENV}.ini \
         ansible-playbook playbook/run_django_command/main.yml \
           --private-key '${SSH_KEY}' \
           -i '${ANSIBLE_INVENTORY}' \
