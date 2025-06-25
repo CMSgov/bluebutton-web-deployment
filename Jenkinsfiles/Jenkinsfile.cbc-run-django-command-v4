@@ -107,61 +107,35 @@ pipeline {
     stage("Run Django Command") {
       steps {
         withEnv([
-          'ANSIBLE_PIPELINING=true',
-          'ANSIBLE_TIMEOUT=30'
-        ]) {
-          sh """
-          set -ex # Exit on error, print commands
+      'ANSIBLE_TIMEOUT=30',
+      // Force Ansible to ONLY look in the user's collection path first
+      'ANSIBLE_COLLECTIONS_PATHS=/root/.ansible/collections'
+    ]) {
+      sh """
+      set -ex
 
-      echo "--- ENVIRONMENT ---"
-      env | sort
+      echo "--- FORCED ANSIBLE_COLLECTIONS_PATHS: ${ANSIBLE_COLLECTIONS_PATHS} ---"
 
-      echo "--- WHO AM I ---"
-      whoami
-      echo "--- HOME DIRECTORY ---"
-      echo \$HOME
-
-      echo "--- ANSIBLE VERSION & PATHS ---"
-      ansible --version
-
-      echo "--- CHECKING GLOBAL ANSIBLE.CFG ---"
-      if [ -f /etc/ansible/ansible.cfg ]; then
-        echo "Found /etc/ansible/ansible.cfg"
-        cat /etc/ansible/ansible.cfg
-      else
-        echo "No /etc/ansible/ansible.cfg found"
-      fi
-
-      echo "--- CHECKING USER ANSIBLE.CFG ---"
-      if [ -f "\$HOME/.ansible.cfg" ]; then
-        echo "Found \$HOME/.ansible.cfg"
-        cat "\$HOME/.ansible.cfg"
-      else
-        echo "No \$HOME/.ansible.cfg found"
-      fi
-
-      echo "--- WORKSPACE ANSIBLE.CFG ---"
-      # This is the one you provided the content for
-      cat ansible.cfg
+      echo "--- ANSIBLE VERSION & PATHS (with forced path) ---"
+      ansible --version # See if 'ansible collection location' changes
 
       echo "--- LISTING INSTALLED COLLECTIONS (ansible-galaxy) ---"
-      ansible-galaxy collection list
+      ansible-galaxy collection list amazon.aws || echo "INFO: amazon.aws not found by 'ansible-galaxy collection list amazon.aws'"
 
-      echo "--- SPECIFICALLY CHECKING amazon.aws (ansible-galaxy) ---"
-      ansible-galaxy collection list amazon.aws || echo "amazon.aws not found by ansible-galaxy"
+      echo "--- TRYING TO GET PLUGIN DOC (ansible-doc for connection plugin) ---"
+      ansible-doc -t connection amazon.aws.aws_ssm || echo "ERROR: aws_ssm connection plugin NOT found by ansible-doc"
 
-      # This is a more direct way to check if Ansible itself can resolve the plugin
-      echo "--- TRYING TO GET PLUGIN DOC (ansible-doc) ---"
-      ansible-doc -t connection amazon.aws.aws_ssm || echo "aws_ssm connection plugin NOT found by ansible-doc"
+      echo "--- TRYING TO GET PLUGIN DOC (ansible-doc for inventory plugin - as a control test) ---"
+      ansible-doc -t inventory amazon.aws.aws_ec2 || echo "ERROR: aws_ec2 inventory plugin NOT found by ansible-doc"
 
       echo "--- RUNNING PLAYBOOK ---"
       ansible-playbook -vvv playbook/run_django_command/main.yml \\
+        --connection amazon.aws.aws_ssm \\
         -i '${ANSIBLE_INVENTORY}' \\
         -l '${ANSIBLE_SUBSET}' \\
         -e 'env=${APP_ENV}' \\
-        -e 'django_command="${DJANGO_COMMAND}"' \\
-        --connection amazon.aws.aws_ssm
-          """
+        -e 'django_command="${DJANGO_COMMAND}"'
+      """
         }
       }
     }
