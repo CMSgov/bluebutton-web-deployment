@@ -119,14 +119,16 @@ pipeline {
                   dpkg -i session-manager-plugin.deb
                   rm -f session-manager-plugin.deb
             fi
-            
+
             echo "--- RUNNING PLAYBOOK ---"
             ansible-playbook -vvv playbook/run_django_command/main.yml \\
               --connection community.aws.aws_ssm \\
               -i '${ANSIBLE_INVENTORY}' \\
               -l '${ANSIBLE_SUBSET}' \\
               -e 'env=${APP_ENV}' \\
-              -e 'django_command="${DJANGO_COMMAND}"'
+              -e 'django_command="${DJANGO_COMMAND}"' \\
+              -e 'ansible_aws_ssm_s3_bucket_name=bb-test-content-cms-gov' \\
+              -e 'ansible_aws_ssm_use_s3=false'
           """
         }
       }
