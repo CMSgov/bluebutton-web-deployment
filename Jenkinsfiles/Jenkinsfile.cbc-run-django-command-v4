@@ -124,7 +124,14 @@ pipeline {
                   dpkg -i session-manager-plugin.deb
                   rm -f session-manager-plugin.deb
             fi
+            # --- THE CRITICAL DIAGNOSTIC STEP ---
+            # Ask Ansible to list all the connection plugins it can find in our isolated environment.
+            echo "--- DIAGNOSTICS: Listing all available connection plugins ---"
+            ansible-doc -t connection -l
+            echo "------------------------------------------------------------"
+            # --- END DIAGNOSTIC STEP ---
 
+            echo "--- RUNNING PLAYBOOK ---"
             echo "--- RUNNING PLAYBOOK: EXPLICITLY USING 'amazon.aws.aws_ssm' ---"
 
              #    skip the broken S3 initialization code. This has the highest precedence.
