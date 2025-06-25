@@ -110,7 +110,6 @@ pipeline {
           'ANSIBLE_TIMEOUT=30',
         ]) {
           sh """
-
             ansible-galaxy collection install community.aws --force --upgrade
 
             if ! command -v session-manager-plugin &> /dev/null; then
@@ -120,15 +119,15 @@ pipeline {
                   rm -f session-manager-plugin.deb
             fi
 
-            echo "--- RUNNING PLAYBOOK ---"
+            echo "--- RUNNING PLAYBOOK: EXPLICITLY USING 'amazon.aws.aws_ssm' ---"
+
+            # THE FIX: We are now calling the correct plugin directly, removing the redirect ambiguity.
             ansible-playbook -vvv playbook/run_django_command/main.yml \\
-              --connection community.aws.aws_ssm \\
+              --connection amazon.aws.aws_ssm \\
               -i '${ANSIBLE_INVENTORY}' \\
               -l '${ANSIBLE_SUBSET}' \\
               -e 'env=${APP_ENV}' \\
-              -e 'django_command="${DJANGO_COMMAND}"' \\
-              -e 'ansible_aws_ssm_s3_bucket_name=bb-test-content-cms-gov' \\
-              -e 'ansible_aws_ssm_use_s3=false'
+              -e 'django_command="${DJANGO_COMMAND}"'
           """
         }
       }
