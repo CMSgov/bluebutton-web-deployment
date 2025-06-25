@@ -70,6 +70,7 @@ pipeline {
             def callerIdentity = sh(
               script: """#!/bin/bash
               aws sts get-caller-identity --output text
+              ansible-inventory -i inventory/aws_ec2.yaml --graph
               """,
               returnStatus: true
             )
@@ -96,6 +97,9 @@ pipeline {
             ANSIBLE_INVENTORY = "inventory/aws_ec2.yaml"
             ANSIBLE_SUBSET = "tag_Function_app-AppServer"
           }
+          // For debugging, print what's being set:
+            echo "ANSIBLE_INVENTORY: ${ANSIBLE_INVENTORY}"
+            echo "ANSIBLE_SUBSET: ${ANSIBLE_SUBSET}"
         }
       }
     }
