@@ -123,7 +123,7 @@ pipeline {
       echo "Removal attempts finished."
 
       # --- INSTALL A SUPPORTED VERSION OF amazon.aws ---
-      AWS_COLLECTION_TO_INSTALL="amazon.aws:7.3.0"
+      AWS_COLLECTION_TO_INSTALL="amazon.aws:9.0.0"
       echo "Installing \$AWS_COLLECTION_TO_INSTALL ..."
 
       # Step 1: Download the collection tarball manually to inspect it
@@ -133,8 +133,8 @@ pipeline {
 
       # Use ansible-galaxy to find the URL (from previous logs) or construct it
       # For amazon.aws:7.3.0, URL is https://galaxy.ansible.com/api/v3/plugin/ansible/content/published/collections/artifacts/amazon-aws-7.3.0.tar.gz
-      COLLECTION_TARBALL_URL="https://galaxy.ansible.com/api/v3/plugin/ansible/content/published/collections/artifacts/amazon-aws-7.3.0.tar.gz"
-      DOWNLOADED_TARBALL="\$TMP_DOWNLOAD_DIR/amazon-aws-7.3.0.tar.gz"
+      COLLECTION_TARBALL_URL="https://galaxy.ansible.com/api/v3/plugin/ansible/content/published/collections/artifacts/amazon-aws-9.0.0.tar.gz"
+      DOWNLOADED_TARBALL="\$TMP_DOWNLOAD_DIR/amazon-aws-9.0.0.tar.gz"
 
       echo "Downloading \$COLLECTION_TARBALL_URL to \$DOWNLOADED_TARBALL ..."
       # Use curl or wget if available; ensure they are in your image
