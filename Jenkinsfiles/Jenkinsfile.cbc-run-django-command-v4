@@ -108,6 +108,10 @@ pipeline {
       steps {
        withEnv([
       'ANSIBLE_TIMEOUT=30',
+      'ANSIBLE_AWS_SSM_S3_BUCKET_NAME=bb-test-content-cms-gov',
+
+          // SOLUTION: Ensure this is set to false so the bucket is not actually used.
+          'ANSIBLE_AWS_SSM_USE_S3=false'
     ]) {
       sh """
        ansible-galaxy collection install community.aws --force
