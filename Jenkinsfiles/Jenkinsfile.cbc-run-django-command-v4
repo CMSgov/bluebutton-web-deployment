@@ -111,83 +111,12 @@ pipeline {
     ]) {
       sh """
        set -ex
-
-      # --- (Keep removal steps as before) ---
-      echo "Attempting to remove existing amazon.aws collections..."
-      (ansible-galaxy collection remove amazon.aws --paths /root/.ansible/collections || echo "Failed/Skipped: Remove from /root/.ansible/collections")
-      (ansible-galaxy collection remove amazon.aws --paths /usr/local/lib/python3.11/site-packages/ansible_collections || echo "Failed/Skipped: Remove from site-packages collection dir")
-      (ansible-galaxy collection remove amazon.aws --paths /usr/share/ansible/collections || echo "Failed/Skipped: Remove from /usr/share/ansible/collections")
-      (rm -rf /root/.ansible/collections/ansible_collections/amazon/aws || echo "No /root/.ansible/collections/ansible_collections/amazon/aws to remove.")
-      (rm -rf /usr/local/lib/python3.11/site-packages/ansible_collections/amazon/aws || echo "No /usr/local/lib/python3.11/site-packages/ansible_collections/amazon/aws to remove.")
-      (rm -rf /usr/share/ansible/collections/ansible_collections/amazon/aws || echo "No /usr/share/ansible/collections/ansible_collections/amazon/aws to remove.")
-      echo "Removal attempts finished."
-
-      # --- INSTALL A SUPPORTED VERSION OF amazon.aws ---
-      AWS_COLLECTION_TO_INSTALL="amazon.aws:9.0.0"
-      echo "Installing \$AWS_COLLECTION_TO_INSTALL ..."
-
-      # Step 1: Download the collection tarball manually to inspect it
-      # Create a temporary directory for the download
-      TMP_DOWNLOAD_DIR=\$(mktemp -d -p "/root/.ansible/tmp" || mktemp -d) # try /root/.ansible/tmp first, fallback to system tmp
-      echo "Temporary download directory: \$TMP_DOWNLOAD_DIR"
-
-      # Use ansible-galaxy to find the URL (from previous logs) or construct it
-      # For amazon.aws:7.3.0, URL is https://galaxy.ansible.com/api/v3/plugin/ansible/content/published/collections/artifacts/amazon-aws-7.3.0.tar.gz
-      COLLECTION_TARBALL_URL="https://galaxy.ansible.com/api/v3/plugin/ansible/content/published/collections/artifacts/amazon-aws-9.0.0.tar.gz"
-      DOWNLOADED_TARBALL="\$TMP_DOWNLOAD_DIR/amazon-aws-9.0.0.tar.gz"
-
-      echo "Downloading \$COLLECTION_TARBALL_URL to \$DOWNLOADED_TARBALL ..."
-      # Use curl or wget if available; ensure they are in your image
-      # Add error checking for download
-      if command -v curl > /dev/null; then
-          curl -L -o "\$DOWNLOADED_TARBALL" "\$COLLECTION_TARBALL_URL"
-      elif command -v wget > /dev/null; then
-          wget -O "\$DOWNLOADED_TARBALL" "\$COLLECTION_TARBALL_URL"
-      else
-          echo "ERROR: Neither curl nor wget is available to download the collection."
-          exit 1
-      fi
-
-      if [ ! -f "\$DOWNLOADED_TARBALL" ]; then
-          echo "ERROR: Failed to download \$DOWNLOADED_TARBALL"
-          exit 1
-      fi
-      echo "Downloaded successfully. Size: \$(ls -lh \$DOWNLOADED_TARBALL)"
-
-      # Step 2: List contents of the tarball, specifically looking for the ssm plugin
-      echo "Listing contents of \$DOWNLOADED_TARBALL (looking for ssm plugin)..."
-      tar -tzvf "\$DOWNLOADED_TARBALL" | grep 'plugins/connection/aws_ssm.py' || echo "INFO: aws_ssm.py NOT found in tarball listing."
-      tar -tzvf "\$DOWNLOADED_TARBALL" | grep 'plugins/inventory/aws_ec2.py' || echo "INFO: aws_ec2.py NOT found in tarball listing."
-
-      # Step 3: Now install using ansible-galaxy from the local tarball or let it re-download
-      echo "Installing \$AWS_COLLECTION_TO_INSTALL using ansible-galaxy..."
-      # You can try installing from the local tarball:
-      # ansible-galaxy collection install "\$DOWNLOADED_TARBALL" --force -vvv
-      # Or let ansible-galaxy handle download and install again:
-      ansible-galaxy collection install \$AWS_COLLECTION_TO_INSTALL --force -vvv
-
-      echo "Cleaning up downloaded tarball: \$DOWNLOADED_TARBALL"
-      rm -f "\$DOWNLOADED_TARBALL"
-      rmdir "\$TMP_DOWNLOAD_DIR" || echo "Note: Could not remove \$TMP_DOWNLOAD_DIR, possibly not empty or mktemp used system default."
-
-
-      # --- (Keep Post-Install Verification steps as before) ---
-      echo "--- POST-INSTALL: ANSIBLE VERSION & PATHS ---"
-      ansible --version
-      echo "--- POST-INSTALL: LISTING amazon.aws (ansible-galaxy) ---"
-      ansible-galaxy collection list amazon.aws || echo "ERROR: \$AWS_COLLECTION_TO_INSTALL still not found post-install!"
-      COLLECTION_INSTALL_PATH="\$(ansible --version | grep 'ansible collection location' | head -n1 | awk -F'= ' '{print \$2}' | cut -d: -f1)"
-      if [ -z "\$COLLECTION_INSTALL_PATH" ]; then
-          COLLECTION_INSTALL_PATH="/root/.ansible/collections"
-      fi
-      echo "Expected collection install path: \$COLLECTION_INSTALL_PATH"
-      ls -l "\$COLLECTION_INSTALL_PATH/ansible_collections/amazon/aws/plugins/connection/aws_ssm.py" || echo "ERROR: aws_ssm.py file not found post-install!"
-      ansible-doc -t connection amazon.aws.aws_ssm || echo "ERROR: aws_ssm connection plugin NOT found by ansible-doc post-install!"
-      ansible-doc -t inventory amazon.aws.aws_ec2 || echo "ERROR: aws_ec2 inventory plugin NOT found by ansible-doc post-install!"
+       ansible-galaxy collection install community.aws --force
+       ansible-doc -t connection community.aws.aws_ssm
 
       echo "--- RUNNING PLAYBOOK ---"
       ansible-playbook -vvv playbook/run_django_command/main.yml \\
-        --connection amazon.aws.aws_ssm \\
+        --connection community.aws.aws_ssm \\
         -i '${ANSIBLE_INVENTORY}' \\
         -l '${ANSIBLE_SUBSET}' \\
         -e 'env=${APP_ENV}' \\
