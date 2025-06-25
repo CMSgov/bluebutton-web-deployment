@@ -106,15 +106,15 @@ pipeline {
 
     stage("Run Django Command") {
       steps {
-        withEnv([
+       withEnv([
       'ANSIBLE_TIMEOUT=30',
-      // Force Ansible to ONLY look in the user's collection path first
-      'ANSIBLE_COLLECTIONS_PATHS=/root/.ansible/collections'
+      // Point to the site-packages location where amazon.aws v9.0.0 exists
+      // The actual collections are in an 'ansible_collections' subdirectory here.
+      'ANSIBLE_COLLECTIONS_PATH=/usr/local/lib/python3.11/site-packages'
     ]) {
       sh """
       set -ex
 
-      # CORRECTED: Shell comment style
       echo "--- FORCED ANSIBLE_COLLECTIONS_PATH: \$ANSIBLE_COLLECTIONS_PATH ---"
 
       echo "--- ANSIBLE VERSION & PATHS (with forced path) ---"
@@ -123,8 +123,8 @@ pipeline {
       echo "--- LISTING INSTALLED COLLECTIONS (ansible-galaxy) ---"
       ansible-galaxy collection list amazon.aws || echo "INFO: amazon.aws not found by 'ansible-galaxy collection list amazon.aws'"
 
-      echo "--- CHECKING PHYSICAL FILE FOR aws_ssm connection plugin ---"
-      ls -l /root/.ansible/collections/ansible_collections/amazon/aws/plugins/connection/aws_ssm.py || echo "INFO: aws_ssm.py file not found or not accessible in /root/.ansible/collections..."
+      echo "--- CHECKING PHYSICAL FILE FOR aws_ssm connection plugin IN SITE-PACKAGES ---"
+      ls -l /usr/local/lib/python3.11/site-packages/ansible_collections/amazon/aws/plugins/connection/aws_ssm.py || echo "INFO: aws_ssm.py file not found or not accessible in site-packages..."
 
       echo "--- TRYING TO GET PLUGIN DOC (ansible-doc for connection plugin) ---"
       ansible-doc -t connection amazon.aws.aws_ssm || echo "ERROR: aws_ssm connection plugin NOT found by ansible-doc"
