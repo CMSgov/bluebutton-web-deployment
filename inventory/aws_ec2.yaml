@@ -3,18 +3,14 @@ regions:
   - us-east-1
 filters:
   tag:Function: app-AppServer
-
 hostnames:
-  - instance_id
-
+  - private-ip-address
 compose:
-  ansible_host: instance_id  # 🔥 required for SSM to work
-
+  ansible_host: private_ip_address
+  instance_id: instance_id
+  ansible_instance_id: instance_id
 vars:
   ansible_connection: amazon.aws.aws_ssm
-  ansible_python_interpreter: /usr/bin/python3.9
-  ansible_ssm_bucket_name: ''
-
 keyed_groups:
   - key: tags.Function
     prefix: tag_Function
