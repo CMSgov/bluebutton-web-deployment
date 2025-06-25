@@ -114,13 +114,20 @@ pipeline {
       sh """
       set -ex
 
-      echo "--- FORCED ANSIBLE_COLLECTIONS_PATH: ${ANSIBLE_COLLECTIONS_PATH} ---"
+      // CORRECTED: Access the environment variable as a shell variable
+      echo "--- FORCED ANSIBLE_COLLECTIONS_PATH: \$ANSIBLE_COLLECTIONS_PATH ---"
+      // OR, to be absolutely sure it's from the env block and not some other Groovy var:
+      // echo "--- FORCED ANSIBLE_COLLECTIONS_PATH: ${env.ANSIBLE_COLLECTIONS_PATH} ---" // This would work too if it were a global env var,
+                                                                                      // but for withEnv, direct shell access is fine.
 
       echo "--- ANSIBLE VERSION & PATHS (with forced path) ---"
       ansible --version
 
       echo "--- LISTING INSTALLED COLLECTIONS (ansible-galaxy) ---"
       ansible-galaxy collection list amazon.aws || echo "INFO: amazon.aws not found by 'ansible-galaxy collection list amazon.aws'"
+
+      echo "--- CHECKING PHYSICAL FILE FOR aws_ssm connection plugin ---"
+      ls -l /root/.ansible/collections/ansible_collections/amazon/aws/plugins/connection/aws_ssm.py || echo "INFO: aws_ssm.py file not found or not accessible in /root/.ansible/collections..."
 
       echo "--- TRYING TO GET PLUGIN DOC (ansible-doc for connection plugin) ---"
       ansible-doc -t connection amazon.aws.aws_ssm || echo "ERROR: aws_ssm connection plugin NOT found by ansible-doc"
