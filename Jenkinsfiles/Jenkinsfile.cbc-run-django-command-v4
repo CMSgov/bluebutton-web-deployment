@@ -110,7 +110,7 @@ pipeline {
           'ANSIBLE_TIMEOUT=30',
         ]) {
           sh """
-            ansible-galaxy collection install amazon.aws:6.5.0 --force
+            ansible-galaxy collection install amazon.aws --force --upgrade
 
             if ! command -v session-manager-plugin &> /dev/null; then
                   echo "Installing session-manager-plugin..."
@@ -121,9 +121,10 @@ pipeline {
 
             echo "--- RUNNING PLAYBOOK: EXPLICITLY USING 'amazon.aws.aws_ssm' ---"
 
-            # THE FIX: We are now calling the correct plugin directly, removing the redirect ambiguity.
+             #    skip the broken S3 initialization code. This has the highest precedence.
             ansible-playbook -vvv playbook/run_django_command/main.yml \\
-              --connection aws_ssm \\
+              --connection amazon.aws.aws_ssm \\
+              -e ansible_aws_ssm_use_s3_fallback=false \\
               -i '${ANSIBLE_INVENTORY}' \\
               -l '${ANSIBLE_SUBSET}' \\
               -e 'env=${APP_ENV}' \\
