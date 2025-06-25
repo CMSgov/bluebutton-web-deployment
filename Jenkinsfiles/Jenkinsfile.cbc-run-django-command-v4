@@ -118,10 +118,15 @@ pipeline {
                   dpkg -i session-manager-plugin.deb
                   rm -f session-manager-plugin.deb
             fi
+<<<<<<< HEAD
 
             echo "--- RUNNING PLAYBOOK: EXPLICITLY USING 'amazon.aws.aws_ssm' ---"
 
             # THE FIX: We are now calling the correct plugin directly, removing the redirect ambiguity.
+=======
+            
+            echo "--- RUNNING PLAYBOOK ---"
+>>>>>>> parent of cb16e401 (Update Jenkinsfile.cbc-run-django-command-v4)
             ansible-playbook -vvv playbook/run_django_command/main.yml \\
               --connection amazon.aws.aws_ssm \\
               -i '${ANSIBLE_INVENTORY}' \\
