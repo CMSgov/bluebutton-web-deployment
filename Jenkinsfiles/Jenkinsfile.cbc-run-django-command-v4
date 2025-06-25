@@ -114,11 +114,8 @@ pipeline {
       sh """
       set -ex
 
-      // CORRECTED: Access the environment variable as a shell variable
+      # CORRECTED: Shell comment style
       echo "--- FORCED ANSIBLE_COLLECTIONS_PATH: \$ANSIBLE_COLLECTIONS_PATH ---"
-      // OR, to be absolutely sure it's from the env block and not some other Groovy var:
-      // echo "--- FORCED ANSIBLE_COLLECTIONS_PATH: ${env.ANSIBLE_COLLECTIONS_PATH} ---" // This would work too if it were a global env var,
-                                                                                      // but for withEnv, direct shell access is fine.
 
       echo "--- ANSIBLE VERSION & PATHS (with forced path) ---"
       ansible --version
