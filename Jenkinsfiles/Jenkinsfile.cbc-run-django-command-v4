@@ -95,7 +95,7 @@ pipeline {
           } else {
             echo("Setting ansible config for tagged deployment instance")
             ANSIBLE_INVENTORY = "inventory/aws_ec2.yaml"
-            ANSIBLE_SUBSET = "tag_Function_app-AppServer"
+            ANSIBLE_SUBSET = "tag_Function_app_AppServer"
           }
           // For debugging, print what's being set:
             echo "ANSIBLE_INVENTORY: ${ANSIBLE_INVENTORY}"
