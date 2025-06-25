@@ -110,6 +110,12 @@ pipeline {
           'ANSIBLE_TIMEOUT=30',
         ]) {
           sh """
+            echo "--- Removing any pre-installed aws collections to ensure a clean state ---"
+            rm -rf /usr/local/lib/python3.11/site-packages/ansible_collections/amazon
+            rm -rf /usr/local/lib/python3.11/site-packages/ansible_collections/community/aws
+
+            # Now, install our desired stable version into a clean environment.
+            echo "--- Installing a pinned, stable version of the amazon.aws collection ---"
             ansible-galaxy collection install amazon.aws:6.5.0 --force
 
             if ! command -v session-manager-plugin &> /dev/null; then
