@@ -110,62 +110,79 @@ pipeline {
       'ANSIBLE_TIMEOUT=30',
     ]) {
       sh """
-      set -ex
+       set -ex
 
-      echo "--- PRE-CLEANUP: ANSIBLE VERSION & PATHS ---"
-      ansible --version
-
-      echo "--- PRE-CLEANUP: LISTING amazon.aws (ansible-galaxy) ---"
-      ansible-galaxy collection list amazon.aws || echo "INFO: amazon.aws not found by ansible-galaxy pre-cleanup."
-
-      # --- AGGRESSIVE REMOVAL OF EXISTING amazon.aws COLLECTIONS ---
+      # --- (Keep removal steps as before) ---
       echo "Attempting to remove existing amazon.aws collections..."
-      # Try removing from various common paths. || true allows the script to continue if a command fails (e.g., path doesn't exist)
       (ansible-galaxy collection remove amazon.aws --paths /root/.ansible/collections || echo "Failed/Skipped: Remove from /root/.ansible/collections")
       (ansible-galaxy collection remove amazon.aws --paths /usr/local/lib/python3.11/site-packages/ansible_collections || echo "Failed/Skipped: Remove from site-packages collection dir")
       (ansible-galaxy collection remove amazon.aws --paths /usr/share/ansible/collections || echo "Failed/Skipped: Remove from /usr/share/ansible/collections")
-
-      # Direct rm -rf for good measure (use with caution, ensure paths are correct)
       (rm -rf /root/.ansible/collections/ansible_collections/amazon/aws || echo "No /root/.ansible/collections/ansible_collections/amazon/aws to remove.")
       (rm -rf /usr/local/lib/python3.11/site-packages/ansible_collections/amazon/aws || echo "No /usr/local/lib/python3.11/site-packages/ansible_collections/amazon/aws to remove.")
       (rm -rf /usr/share/ansible/collections/ansible_collections/amazon/aws || echo "No /usr/share/ansible/collections/ansible_collections/amazon/aws to remove.")
       echo "Removal attempts finished."
 
-      echo "--- POST-CLEANUP: LISTING amazon.aws (ansible-galaxy) ---"
-      # This should ideally show no amazon.aws installed now, or an error if the command itself fails.
-      ansible-galaxy collection list amazon.aws || echo "INFO: amazon.aws not found by ansible-galaxy post-cleanup (expected)."
-
       # --- INSTALL A SUPPORTED VERSION OF amazon.aws ---
-      # Let's try a known stable older version first, e.g., 7.3.0
-      # Or you can try 9.0.0 or 9.1.0 again if you suspect the previous install attempt (in Docker) was just flawed.
-      AWS_COLLECTION_TO_INSTALL="amazon.aws:7.3.0" # Or try "amazon.aws:9.0.0" or "amazon.aws:9.1.0"
+      AWS_COLLECTION_TO_INSTALL="amazon.aws:7.3.0"
       echo "Installing \$AWS_COLLECTION_TO_INSTALL ..."
-      # --force will overwrite if anything unexpected remains.
-      # This will typically install to /root/.ansible/collections as we are running as root.
-      ansible-galaxy collection install \$AWS_COLLECTION_TO_INSTALL --force -vvv # Added -vvv for galaxy install verbosity
 
+      # Step 1: Download the collection tarball manually to inspect it
+      # Create a temporary directory for the download
+      TMP_DOWNLOAD_DIR=\$(mktemp -d -p "/root/.ansible/tmp" || mktemp -d) # try /root/.ansible/tmp first, fallback to system tmp
+      echo "Temporary download directory: \$TMP_DOWNLOAD_DIR"
+
+      # Use ansible-galaxy to find the URL (from previous logs) or construct it
+      # For amazon.aws:7.3.0, URL is https://galaxy.ansible.com/api/v3/plugin/ansible/content/published/collections/artifacts/amazon-aws-7.3.0.tar.gz
+      COLLECTION_TARBALL_URL="https://galaxy.ansible.com/api/v3/plugin/ansible/content/published/collections/artifacts/amazon-aws-7.3.0.tar.gz"
+      DOWNLOADED_TARBALL="\$TMP_DOWNLOAD_DIR/amazon-aws-7.3.0.tar.gz"
+
+      echo "Downloading \$COLLECTION_TARBALL_URL to \$DOWNLOADED_TARBALL ..."
+      # Use curl or wget if available; ensure they are in your image
+      # Add error checking for download
+      if command -v curl > /dev/null; then
+          curl -L -o "\$DOWNLOADED_TARBALL" "\$COLLECTION_TARBALL_URL"
+      elif command -v wget > /dev/null; then
+          wget -O "\$DOWNLOADED_TARBALL" "\$COLLECTION_TARBALL_URL"
+      else
+          echo "ERROR: Neither curl nor wget is available to download the collection."
+          exit 1
+      fi
+
+      if [ ! -f "\$DOWNLOADED_TARBALL" ]; then
+          echo "ERROR: Failed to download \$DOWNLOADED_TARBALL"
+          exit 1
+      fi
+      echo "Downloaded successfully. Size: \$(ls -lh \$DOWNLOADED_TARBALL)"
+
+      # Step 2: List contents of the tarball, specifically looking for the ssm plugin
+      echo "Listing contents of \$DOWNLOADED_TARBALL (looking for ssm plugin)..."
+      tar -tzvf "\$DOWNLOADED_TARBALL" | grep 'plugins/connection/aws_ssm.py' || echo "INFO: aws_ssm.py NOT found in tarball listing."
+      tar -tzvf "\$DOWNLOADED_TARBALL" | grep 'plugins/inventory/aws_ec2.py' || echo "INFO: aws_ec2.py NOT found in tarball listing."
+
+      # Step 3: Now install using ansible-galaxy from the local tarball or let it re-download
+      echo "Installing \$AWS_COLLECTION_TO_INSTALL using ansible-galaxy..."
+      # You can try installing from the local tarball:
+      # ansible-galaxy collection install "\$DOWNLOADED_TARBALL" --force -vvv
+      # Or let ansible-galaxy handle download and install again:
+      ansible-galaxy collection install \$AWS_COLLECTION_TO_INSTALL --force -vvv
+
+      echo "Cleaning up downloaded tarball: \$DOWNLOADED_TARBALL"
+      rm -f "\$DOWNLOADED_TARBALL"
+      rmdir "\$TMP_DOWNLOAD_DIR" || echo "Note: Could not remove \$TMP_DOWNLOAD_DIR, possibly not empty or mktemp used system default."
+
+
+      # --- (Keep Post-Install Verification steps as before) ---
       echo "--- POST-INSTALL: ANSIBLE VERSION & PATHS ---"
-      # If galaxy installed to /root/.ansible/collections, this should reflect that as a primary path.
       ansible --version
-
       echo "--- POST-INSTALL: LISTING amazon.aws (ansible-galaxy) ---"
       ansible-galaxy collection list amazon.aws || echo "ERROR: \$AWS_COLLECTION_TO_INSTALL still not found post-install!"
-
-      echo "--- POST-INSTALL: CHECKING PHYSICAL FILE FOR aws_ssm connection plugin ---"
-      # Check the typical user install path for root. Adjust if galaxy installs elsewhere by default in your image.
-      # This assumes ansible-galaxy installs to /root/.ansible/collections for the root user.
       COLLECTION_INSTALL_PATH="\$(ansible --version | grep 'ansible collection location' | head -n1 | awk -F'= ' '{print \$2}' | cut -d: -f1)"
-      # If COLLECTION_INSTALL_PATH is empty or wrong, default to a common path
       if [ -z "\$COLLECTION_INSTALL_PATH" ]; then
           COLLECTION_INSTALL_PATH="/root/.ansible/collections"
       fi
       echo "Expected collection install path: \$COLLECTION_INSTALL_PATH"
       ls -l "\$COLLECTION_INSTALL_PATH/ansible_collections/amazon/aws/plugins/connection/aws_ssm.py" || echo "ERROR: aws_ssm.py file not found post-install!"
-
-      echo "--- POST-INSTALL: TRYING TO GET PLUGIN DOC (ansible-doc for connection plugin) ---"
       ansible-doc -t connection amazon.aws.aws_ssm || echo "ERROR: aws_ssm connection plugin NOT found by ansible-doc post-install!"
-
-      echo "--- POST-INSTALL: TRYING TO GET PLUGIN DOC (ansible-doc for inventory plugin - as a control test) ---"
       ansible-doc -t inventory amazon.aws.aws_ec2 || echo "ERROR: aws_ec2 inventory plugin NOT found by ansible-doc post-install!"
 
       echo "--- RUNNING PLAYBOOK ---"
