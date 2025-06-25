@@ -110,7 +110,7 @@ pipeline {
           'ANSIBLE_TIMEOUT=30',
         ]) {
           sh """
-            ansible-galaxy collection install community.aws --force --upgrade
+             ansible-galaxy collection install amazon.aws:6.5.0 --force
 
             if ! command -v session-manager-plugin &> /dev/null; then
                   echo "Installing session-manager-plugin..."
