@@ -107,14 +107,10 @@ pipeline {
     stage("Run Django Command") {
       steps {
        withEnv([
-      'ANSIBLE_TIMEOUT=30',
-      'ANSIBLE_AWS_SSM_S3_BUCKET_NAME=bb-test-content-cms-gov',
-
-          // SOLUTION: Ensure this is set to false so the bucket is not actually used.
-          'ANSIBLE_AWS_SSM_USE_S3=false'
+      'ANSIBLE_TIMEOUT=30'
     ]) {
       sh """
-       ansible-galaxy collection install community.aws --force
+       ansible-galaxy collection install community.aws --force --upgrade
        ansible-doc -t connection community.aws.aws_ssm
         if ! command -v session-manager-plugin &> /dev/null; then
               echo "Installing session-manager-plugin..."
@@ -123,7 +119,6 @@ pipeline {
               rm -f session-manager-plugin.deb
         fi
       echo "--- RUNNING PLAYBOOK ---"
-        export ANSIBLE_AWS_SSM_USE_S3=False
       ansible-playbook -vvv playbook/run_django_command/main.yml \\
         --connection community.aws.aws_ssm \\
         -i '${ANSIBLE_INVENTORY}' \\
