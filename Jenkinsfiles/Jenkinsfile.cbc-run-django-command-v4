@@ -119,6 +119,7 @@ pipeline {
               rm -f session-manager-plugin.deb
         fi
       echo "--- RUNNING PLAYBOOK ---"
+        export ANSIBLE_AWS_SSM_USE_S3=False
       ansible-playbook -vvv playbook/run_django_command/main.yml \\
         --connection community.aws.aws_ssm \\
         -i '${ANSIBLE_INVENTORY}' \\
