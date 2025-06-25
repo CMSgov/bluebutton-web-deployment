@@ -114,10 +114,10 @@ pipeline {
       sh """
       set -ex
 
-      echo "--- FORCED ANSIBLE_COLLECTIONS_PATHS: ${ANSIBLE_COLLECTIONS_PATHS} ---"
+      echo "--- FORCED ANSIBLE_COLLECTIONS_PATH: ${ANSIBLE_COLLECTIONS_PATH} ---"
 
       echo "--- ANSIBLE VERSION & PATHS (with forced path) ---"
-      ansible --version # See if 'ansible collection location' changes
+      ansible --version
 
       echo "--- LISTING INSTALLED COLLECTIONS (ansible-galaxy) ---"
       ansible-galaxy collection list amazon.aws || echo "INFO: amazon.aws not found by 'ansible-galaxy collection list amazon.aws'"
