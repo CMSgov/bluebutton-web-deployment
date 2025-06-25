@@ -110,10 +110,14 @@ pipeline {
       'ANSIBLE_TIMEOUT=30',
     ]) {
       sh """
-       set -ex
        ansible-galaxy collection install community.aws --force
        ansible-doc -t connection community.aws.aws_ssm
-
+        if ! command -v session-manager-plugin &> /dev/null; then
+              echo "Installing session-manager-plugin..."
+              curl "https://s3.amazonaws.com/session-manager-downloads/plugin/latest/ubuntu_64bit/session-manager-plugin.deb" -o "session-manager-plugin.deb"
+              dpkg -i session-manager-plugin.deb
+              rm -f session-manager-plugin.deb
+        fi
       echo "--- RUNNING PLAYBOOK ---"
       ansible-playbook -vvv playbook/run_django_command/main.yml \\
         --connection community.aws.aws_ssm \\
