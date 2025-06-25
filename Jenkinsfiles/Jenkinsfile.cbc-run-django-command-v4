@@ -108,15 +108,8 @@ pipeline {
       steps {
        withEnv([
           'ANSIBLE_TIMEOUT=30',
-          'ANSIBLE_CONFIG=ansible.cfg' // <-- THIS IS THE CRITICAL FIX
         ]) {
           sh """
-            # STEP 1: Let's see where we are and if the file exists
-            echo "--- DIAGNOSTICS: Verifying Environment ---"
-            echo "Current Directory: \$(pwd)"
-            echo "Listing files in current directory:"
-            ls -la
-            echo "-------------------------------------------"
 
             ansible-galaxy collection install community.aws --force --upgrade
 
@@ -126,15 +119,7 @@ pipeline {
                   dpkg -i session-manager-plugin.deb
                   rm -f session-manager-plugin.deb
             fi
-
-            # STEP 2: Let's see what config Ansible is ACTUALLY loading.
-            echo "--- DIAGNOSTICS: Dumping Ansible Config for s3_bucket_name ---"
-            # This command will tell us the source of the configuration.
-            # EXPECTED GOOD OUTPUT: S3_BUCKET_NAME(ansible.cfg) = bb-test-content-cms-gov
-            # EXPECTED BAD OUTPUT (what you're probably getting): S3_BUCKET_NAME(default) = None
-            ansible-config dump | grep s3_bucket_name || echo "s3_bucket_name not found in config dump"
-            echo "------------------------------------------------------------"
-
+            
             echo "--- RUNNING PLAYBOOK ---"
             ansible-playbook -vvv playbook/run_django_command/main.yml \\
               --connection community.aws.aws_ssm \\
