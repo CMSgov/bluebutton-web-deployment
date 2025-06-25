@@ -108,29 +108,65 @@ pipeline {
       steps {
        withEnv([
       'ANSIBLE_TIMEOUT=30',
-      // Point to the site-packages location where amazon.aws v9.0.0 exists
-      // The actual collections are in an 'ansible_collections' subdirectory here.
-      'ANSIBLE_COLLECTIONS_PATH=/usr/local/lib/python3.11/site-packages'
     ]) {
       sh """
       set -ex
 
-      echo "--- FORCED ANSIBLE_COLLECTIONS_PATH: \$ANSIBLE_COLLECTIONS_PATH ---"
-
-      echo "--- ANSIBLE VERSION & PATHS (with forced path) ---"
+      echo "--- PRE-CLEANUP: ANSIBLE VERSION & PATHS ---"
       ansible --version
 
-      echo "--- LISTING INSTALLED COLLECTIONS (ansible-galaxy) ---"
-      ansible-galaxy collection list amazon.aws || echo "INFO: amazon.aws not found by 'ansible-galaxy collection list amazon.aws'"
+      echo "--- PRE-CLEANUP: LISTING amazon.aws (ansible-galaxy) ---"
+      ansible-galaxy collection list amazon.aws || echo "INFO: amazon.aws not found by ansible-galaxy pre-cleanup."
 
-      echo "--- CHECKING PHYSICAL FILE FOR aws_ssm connection plugin IN SITE-PACKAGES ---"
-      ls -l /usr/local/lib/python3.11/site-packages/ansible_collections/amazon/aws/plugins/connection/aws_ssm.py || echo "INFO: aws_ssm.py file not found or not accessible in site-packages..."
+      # --- AGGRESSIVE REMOVAL OF EXISTING amazon.aws COLLECTIONS ---
+      echo "Attempting to remove existing amazon.aws collections..."
+      # Try removing from various common paths. || true allows the script to continue if a command fails (e.g., path doesn't exist)
+      (ansible-galaxy collection remove amazon.aws --paths /root/.ansible/collections || echo "Failed/Skipped: Remove from /root/.ansible/collections")
+      (ansible-galaxy collection remove amazon.aws --paths /usr/local/lib/python3.11/site-packages/ansible_collections || echo "Failed/Skipped: Remove from site-packages collection dir")
+      (ansible-galaxy collection remove amazon.aws --paths /usr/share/ansible/collections || echo "Failed/Skipped: Remove from /usr/share/ansible/collections")
 
-      echo "--- TRYING TO GET PLUGIN DOC (ansible-doc for connection plugin) ---"
-      ansible-doc -t connection amazon.aws.aws_ssm || echo "ERROR: aws_ssm connection plugin NOT found by ansible-doc"
+      # Direct rm -rf for good measure (use with caution, ensure paths are correct)
+      (rm -rf /root/.ansible/collections/ansible_collections/amazon/aws || echo "No /root/.ansible/collections/ansible_collections/amazon/aws to remove.")
+      (rm -rf /usr/local/lib/python3.11/site-packages/ansible_collections/amazon/aws || echo "No /usr/local/lib/python3.11/site-packages/ansible_collections/amazon/aws to remove.")
+      (rm -rf /usr/share/ansible/collections/ansible_collections/amazon/aws || echo "No /usr/share/ansible/collections/ansible_collections/amazon/aws to remove.")
+      echo "Removal attempts finished."
 
-      echo "--- TRYING TO GET PLUGIN DOC (ansible-doc for inventory plugin - as a control test) ---"
-      ansible-doc -t inventory amazon.aws.aws_ec2 || echo "ERROR: aws_ec2 inventory plugin NOT found by ansible-doc"
+      echo "--- POST-CLEANUP: LISTING amazon.aws (ansible-galaxy) ---"
+      # This should ideally show no amazon.aws installed now, or an error if the command itself fails.
+      ansible-galaxy collection list amazon.aws || echo "INFO: amazon.aws not found by ansible-galaxy post-cleanup (expected)."
+
+      # --- INSTALL A SUPPORTED VERSION OF amazon.aws ---
+      # Let's try a known stable older version first, e.g., 7.3.0
+      # Or you can try 9.0.0 or 9.1.0 again if you suspect the previous install attempt (in Docker) was just flawed.
+      AWS_COLLECTION_TO_INSTALL="amazon.aws:7.3.0" # Or try "amazon.aws:9.0.0" or "amazon.aws:9.1.0"
+      echo "Installing \$AWS_COLLECTION_TO_INSTALL ..."
+      # --force will overwrite if anything unexpected remains.
+      # This will typically install to /root/.ansible/collections as we are running as root.
+      ansible-galaxy collection install \$AWS_COLLECTION_TO_INSTALL --force -vvv # Added -vvv for galaxy install verbosity
+
+      echo "--- POST-INSTALL: ANSIBLE VERSION & PATHS ---"
+      # If galaxy installed to /root/.ansible/collections, this should reflect that as a primary path.
+      ansible --version
+
+      echo "--- POST-INSTALL: LISTING amazon.aws (ansible-galaxy) ---"
+      ansible-galaxy collection list amazon.aws || echo "ERROR: \$AWS_COLLECTION_TO_INSTALL still not found post-install!"
+
+      echo "--- POST-INSTALL: CHECKING PHYSICAL FILE FOR aws_ssm connection plugin ---"
+      # Check the typical user install path for root. Adjust if galaxy installs elsewhere by default in your image.
+      # This assumes ansible-galaxy installs to /root/.ansible/collections for the root user.
+      COLLECTION_INSTALL_PATH="\$(ansible --version | grep 'ansible collection location' | head -n1 | awk -F'= ' '{print \$2}' | cut -d: -f1)"
+      # If COLLECTION_INSTALL_PATH is empty or wrong, default to a common path
+      if [ -z "\$COLLECTION_INSTALL_PATH" ]; then
+          COLLECTION_INSTALL_PATH="/root/.ansible/collections"
+      fi
+      echo "Expected collection install path: \$COLLECTION_INSTALL_PATH"
+      ls -l "\$COLLECTION_INSTALL_PATH/ansible_collections/amazon/aws/plugins/connection/aws_ssm.py" || echo "ERROR: aws_ssm.py file not found post-install!"
+
+      echo "--- POST-INSTALL: TRYING TO GET PLUGIN DOC (ansible-doc for connection plugin) ---"
+      ansible-doc -t connection amazon.aws.aws_ssm || echo "ERROR: aws_ssm connection plugin NOT found by ansible-doc post-install!"
+
+      echo "--- POST-INSTALL: TRYING TO GET PLUGIN DOC (ansible-doc for inventory plugin - as a control test) ---"
+      ansible-doc -t inventory amazon.aws.aws_ec2 || echo "ERROR: aws_ec2 inventory plugin NOT found by ansible-doc post-install!"
 
       echo "--- RUNNING PLAYBOOK ---"
       ansible-playbook -vvv playbook/run_django_command/main.yml \\
