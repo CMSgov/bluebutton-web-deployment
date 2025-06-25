@@ -108,14 +108,10 @@ pipeline {
       steps {
        withEnv([
           'ANSIBLE_TIMEOUT=30',
-          'ANSIBLE_COLLECTIONS_PATH=./collections'
         ]) {
           sh """
-             mkdir -p ./collections
 
-            # Now, install our desired stable version into a clean environment.
-            echo "--- Installing a pinned, stable version of the amazon.aws collection ---"
-            ansible-galaxy collection install amazon.aws:6.5.0 -p ./collections --force
+            ansible-galaxy collection install amazon.aws:6.5.0  --force
 
             if ! command -v session-manager-plugin &> /dev/null; then
                   echo "Installing session-manager-plugin..."
