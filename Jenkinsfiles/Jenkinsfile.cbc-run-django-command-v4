@@ -113,6 +113,7 @@ pipeline {
             rm -rf /usr/local/lib/python3.11/site-packages/ansible_collections/amazon
             rm -rf /usr/local/lib/python3.11/site-packages/ansible_collections/community
             ansible-galaxy collection install amazon.aws:6.5.0  --force
+            ansible-galaxy collection install community.general --force
 
             if ! command -v session-manager-plugin &> /dev/null; then
                   echo "Installing session-manager-plugin..."
