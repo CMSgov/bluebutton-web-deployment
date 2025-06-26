@@ -108,6 +108,9 @@ pipeline {
     stage("Run Django Command") {
           steps {
             sh """
+            nc -vz 10.162.51.119 22
+            # or
+            telnet 10.162.51.119 22
             export EC2_INI_PATH=inventory/config/${APP_ENV}.ini
 
             ansible-playbook playbook/run_django_command/main.yml \
