@@ -63,7 +63,7 @@ pipeline {
             def callerIdentityStatus = sh(
               script: """#!/bin/bash
               aws sts get-caller-identity --output text
-              ansible-inventory -i inventory/aws_ec2.yaml --graph
+
               """,
               returnStatus: true
             )
@@ -102,24 +102,24 @@ pipeline {
         }
       }
     }
+  stage("Run Django Command") {
+  steps {
+    sh """
+    export AWS_ACCESS_KEY_ID='${env.AWS_ACCESS_KEY_ID}'
+    export AWS_SECRET_ACCESS_KEY='${env.AWS_SECRET_ACCESS_KEY}'
+    export AWS_SESSION_TOKEN='${env.AWS_SESSION_TOKEN}'
+    export EC2_INI_PATH=inventory/config/${APP_ENV}.ini
 
-    stage("Run Django Command") {
-      steps {
-        sh """
-        EC2_INI_PATH=inventory/config/${APP_ENV}.ini \
-        AWS_ACCESS_KEY_ID=${env.AWS_ACCESS_KEY_ID} \
-        AWS_SECRET_ACCESS_KEY=${env.AWS_SECRET_ACCESS_KEY} \
-        AWS_SESSION_TOKEN=${env.AWS_SESSION_TOKEN} \
-        ansible-playbook playbook/run_django_command/main.yml \
-          --private-key '${SSH_KEY}' \
-          -i '${ANSIBLE_INVENTORY}' \
-          -l '${ANSIBLE_SUBSET}' \
-          -e 'env=${APP_ENV}' \
-          -e 'django_command="${DJANGO_COMMAND}"'
-        """
-      }
-    }
+    ansible-playbook playbook/run_django_command/main.yml \
+      --private-key '${SSH_KEY}' \
+      -i '${ANSIBLE_INVENTORY}' \
+      -l '${ANSIBLE_SUBSET}' \
+      -e 'env=${APP_ENV}' \
+      -e 'django_command="${DJANGO_COMMAND}"'
+    """
   }
+}
+
 
   post {
     success {
