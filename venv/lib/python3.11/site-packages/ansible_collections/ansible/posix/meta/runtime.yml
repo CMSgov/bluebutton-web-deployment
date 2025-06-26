@@ -1,0 +1,8 @@
+---
+requires_ansible: ">=2.15.0"
+plugin_routing:
+  callback:
+    skippy:
+      deprecation:
+        removal_date: "2024-12-05"
+        warning_text: See the plugin documentation for more details

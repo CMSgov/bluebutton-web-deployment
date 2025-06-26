@@ -1,0 +1,121 @@
+---
+# tasks file for zabbix_agent
+- name: "Include OS-specific variables"
+  ansible.builtin.include_vars: "{{ ansible_os_family }}.yml"
+  tags:
+    - always
+
+- name: Determine Latest Supported Zabbix Version
+  ansible.builtin.set_fact:
+    zabbix_agent_version: "{{ zabbix_valid_agent_versions[ansible_distribution_major_version][0] | default(6.4) }}"
+  when: zabbix_agent_version is not defined or zabbix_agent_version is none
+  tags:
+    - always
+
+- name: Check that version is supported
+  when: enable_version_check | default(true) | bool
+  ansible.builtin.assert:
+    that:
+      - zabbix_agent_version | float in zabbix_valid_agent_versions[ansible_distribution_major_version]
+    fail_msg: Zabbix version {{ zabbix_agent_version }} is not supported on {{ ansible_distribution }} {{ ansible_distribution_major_version }}
+  tags:
+    - always
+
+- name: Load Appropriate Defaults
+  ansible.builtin.include_vars: "agent{{ '2' if zabbix_agent2 is defined and zabbix_agent2|bool }}_vars.yml"
+
+- block:
+    - name: AutoPSK | Default tlsconnect to enforce PSK
+      ansible.builtin.set_fact:
+        zabbix_agent_tlsconnect: psk
+
+    - name: AutoPSK | Default tlsaccept to enforce PSK when zabbix_agent_tlsaccept is not defined
+      ansible.builtin.set_fact:
+        zabbix_agent_tlsaccept: psk
+      when: not zabbix_agent_tlsaccept is defined
+
+    - name: AutoPSK | Default tlsaccept to enforce PSK when zabbix_agent_tlsaccept is defined
+      ansible.builtin.set_fact:
+        zabbix_agent_tlsaccept: "{{ 'psk,' + zabbix_agent_tlsaccept }}"
+      when:
+        - zabbix_agent_tlsaccept is defined
+        - not 'psk' in zabbix_agent_tlsaccept
+
+  when: zabbix_agent_tlspsk_auto | bool
+  tags:
+    - config
+
+- name: Set Variables
+  ansible.builtin.set_fact:
+    zabbix_agent_include_dir: "{{ zabbix_agent_include_dir is defined | ternary(zabbix_agent_include_dir, _include) }}"
+    zabbix_agent_logfile: "{{ zabbix_agent_logfile is defined | ternary(zabbix_agent_logfile, _logfile) }}"
+    zabbix_agent_package: "{{ zabbix_agent_package is defined | ternary(zabbix_agent_package, _agent_package) }}"
+    zabbix_agent_pidfile: "{{ zabbix_agent_pidfile is defined | ternary(zabbix_agent_pidfile, _pidfile) }}"
+    zabbix_agent_service: "{{ zabbix_agent_service is defined | ternary(zabbix_agent_service, _agent_service) }}"
+    zabbix_agent_tls_subject: "{{ zabbix_agent_tls_subject is defined | ternary(zabbix_agent_tls_subject, _tls_subject) }}"
+    zabbix_agent_tlsaccept: "{{ zabbix_agent_tlsaccept is defined | ternary(zabbix_agent_tlsaccept, 'unencrypted')}}"
+    zabbix_agent_tlsconnect: "{{ zabbix_agent_tlsconnect is defined | ternary(zabbix_agent_tlsconnect, 'unencrypted')}}"
+
+- name: Install Repository
+  ansible.builtin.include_role:
+    name: community.zabbix.zabbix_repo
+  vars:
+    zabbix_repo_version: "{{ zabbix_agent_version }}"
+    zabbix_repo_package: "{{ zabbix_agent_package }}"
+    zabbix_repo_apt_priority: "{{ zabbix_agent_apt_priority | default (omit) }}"
+  when:
+    - zabbix_manage_repo | default(true)
+    - not (zabbix_agent_docker | bool)
+    - ansible_os_family != "Windows"
+
+- name: "Install the correct repository"
+  ansible.builtin.include_tasks: "{{ ansible_os_family }}.yml"
+  when:
+    - not (zabbix_agent_docker | bool)
+
+- name: Configure PSK
+  when: "( 'psk' in zabbix_agent_tlsaccept ) or (zabbix_agent_tlsconnect  == 'psk')"
+  block:
+    - name: Gather PSK Secret Info
+      ansible.builtin.include_tasks: psk_secret.yml
+
+    - name: Gather PSK Identity Info
+      ansible.builtin.include_tasks: psk_identity.yml
+  tags:
+    - config
+
+- name: "Configure Agent"
+  ansible.builtin.include_tasks: Windows_conf.yml
+  when:
+    - ansible_os_family == "Windows"
+
+- name: "Configure Agent"
+  ansible.builtin.include_tasks: Linux.yml
+  when:
+    - (ansible_os_family != "Windows" and ansible_os_family != "Darwin") or (zabbix_agent_docker | bool)
+
+- name: "Run the API calls to Zabbix Server"
+  vars:
+    gather_facts: false
+    ansible_network_os: community.zabbix.zabbix
+    ansible_connection: httpapi
+    ansible_httpapi_use_ssl: "{{ zabbix_api_use_ssl }}"
+    # --- Basic Auth (Begin) ---
+    http_login_user: "{{ zabbix_api_http_user | default(-42) }}"
+    http_login_password: "{{ zabbix_api_http_password | default(-42) }}"
+    # --- Basic Auth (End) ---
+    ansible_user: "{{ zabbix_api_login_user }}"
+    ansible_httpapi_pass: "{{ zabbix_api_login_pass }}"
+    ansible_httpapi_port: "{{ zabbix_api_server_port }}"
+    ansible_httpapi_validate_certs: "{{ zabbix_api_validate_certs }}"
+  ansible.builtin.include_tasks: api.yml
+  when:
+    - (zabbix_api_create_hostgroup | bool) or (zabbix_api_create_hosts | bool)
+  tags:
+    - api
+
+- name: "Including userparameters"
+  ansible.builtin.include_tasks: "userparameter.yml"
+  when: zabbix_agent_userparameters | default ([]) | length > 0
+  tags:
+    - config

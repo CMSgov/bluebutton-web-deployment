@@ -1,0 +1,1412 @@
+{
+ "files": [
+  {
+   "name": ".",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "meta",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "meta/runtime.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "cec2a5e51d50837a928483bad0c0c5491f5210d331a0f097a42ac1807aabe724",
+   "format": 1
+  },
+  {
+   "name": "VERSION",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "da1965c74614ca80d8af8aa777db90bb1294b44db717e2edf644d41e716c9491",
+   "format": 1
+  },
+  {
+   "name": "plugins",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "plugins/lookup",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "plugins/lookup/conjur_variable.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "3ad987aec18bc392143d4e3ea1a35a70253c4fb4db322f507e73dd5475277403",
+   "format": 1
+  },
+  {
+   "name": ".config",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": ".config/ansible-lint.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "79765eeca37050cfaa1d3fb1f62231dd50c2b64a23c94ad737d2117884e6a1e4",
+   "format": 1
+  },
+  {
+   "name": "LICENSE",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "e092618211b1d864e3caf325abbd567f997e6ffb98d9fb97188d4fa280334bbe",
+   "format": 1
+  },
+  {
+   "name": "README.md",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "2e8547507f17d4e02cca819384980292e105e8eca6506fd75d61131617d84f92",
+   "format": 1
+  },
+  {
+   "name": "CHANGELOG.md",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "9affd8f0471dc49873fca6b5d64bc5eca2af19c60f0fb1697eb0d15d8b85c3f8",
+   "format": 1
+  },
+  {
+   "name": "roles",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "roles/conjur_host_identity",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "roles/conjur_host_identity/meta",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "roles/conjur_host_identity/meta/main.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "63956eb7ef9b31a325e68539883b214464096877677141c36964ad2e2344faeb",
+   "format": 1
+  },
+  {
+   "name": "roles/conjur_host_identity/README.md",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "a712c1e5c56fb9a3917ebfd4a55109801da9e57dff304d1941aaf2cf2ab471ca",
+   "format": 1
+  },
+  {
+   "name": "roles/conjur_host_identity/tasks",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "roles/conjur_host_identity/tasks/summon-conjur.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "5391f548996666a6fc41bb9af4370c98a223d8cfbc54c2dfe704e9a02c560849",
+   "format": 1
+  },
+  {
+   "name": "roles/conjur_host_identity/tasks/summon.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "5ddd0cb8fa0ed545043f50170a5908623bb983fd76073c09d4a4737ca51296f6",
+   "format": 1
+  },
+  {
+   "name": "roles/conjur_host_identity/tasks/main.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "75c923141034b8b341b204f7bab5d53092f91b9fc366091e774323ccab5043ec",
+   "format": 1
+  },
+  {
+   "name": "roles/conjur_host_identity/tasks/identity.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "88141fb004dfff9c00ec3935c704eeb5fcfbd779d11765afdec1c27b135b0c75",
+   "format": 1
+  },
+  {
+   "name": "roles/conjur_host_identity/tasks/uninstall.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "dd4aeab6500f0505c7486787a6b7c540b09ff6857685387a833f69a0e0346f70",
+   "format": 1
+  },
+  {
+   "name": "roles/conjur_host_identity/tasks/identity_check.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "9132f791b67eb5375cc241d18807bea24a26afb574233c211c1b32da141a3d38",
+   "format": 1
+  },
+  {
+   "name": "roles/conjur_host_identity/tasks/install.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "76178e1feedba67c8dd25c44a84eb095469164c497c11d480fa3164ea9cc0b2d",
+   "format": 1
+  },
+  {
+   "name": "roles/conjur_host_identity/templates",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "roles/conjur_host_identity/templates/conjur.conf.j2",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "a658eba375110e14ba752f82ccbcca9012351ca1c51a18419d870917bd807202",
+   "format": 1
+  },
+  {
+   "name": "roles/conjur_host_identity/templates/conjur.identity.j2",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "e3b53dbe8b97fc87d0c0c168799a14d91862a010bc0472f982587a47326a2312",
+   "format": 1
+  },
+  {
+   "name": "roles/conjur_host_identity/defaults",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "roles/conjur_host_identity/defaults/main.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "db738d47ce0786d853ff38afe8b499decbebf4dd054486545d0ce09eaadf0d49",
+   "format": 1
+  },
+  {
+   "name": "roles/conjur_host_identity/tests",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "roles/conjur_host_identity/tests/test_cases",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "roles/conjur_host_identity/tests/test_cases/not-conjurized",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "roles/conjur_host_identity/tests/test_cases/not-conjurized/playbook.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "741c4dcf1a42dfb96f2485d3b2a2230fbec440fcad165c063b555bac3ccdabc6",
+   "format": 1
+  },
+  {
+   "name": "roles/conjur_host_identity/tests/test_cases/bad-ssl-config",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "roles/conjur_host_identity/tests/test_cases/bad-ssl-config/playbook.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "63ef031c2940fba555a7bdfa5304ddee32917d6ad77cab0cf00666d89a3ec9bb",
+   "format": 1
+  },
+  {
+   "name": "roles/conjur_host_identity/tests/test_cases/misconfig-conjur-identity",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "roles/conjur_host_identity/tests/test_cases/misconfig-conjur-identity/playbook.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "7306ddc1cd4ddc66d889b668a5985407e66a2a71aa85e959c16246c27c14f83b",
+   "format": 1
+  },
+  {
+   "name": "roles/conjur_host_identity/tests/test_cases/configure-conjur-identity",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "roles/conjur_host_identity/tests/test_cases/configure-conjur-identity/playbook.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "885a58b434a59e6321bab832ff84e6d6320545d3799fa32b7af39a414af3cdf5",
+   "format": 1
+  },
+  {
+   "name": "roles/conjur_host_identity/tests/test_cases/configure-conjur-identity/tests",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "roles/conjur_host_identity/tests/test_cases/configure-conjur-identity/tests/test_default.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "ec237f61932afec9577e3e14999fcb07aea34312d0788dca8d9a28b03d2fc147",
+   "format": 1
+  },
+  {
+   "name": "roles/conjur_host_identity/tests/test_cases/cleanup-conjur-identity",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "roles/conjur_host_identity/tests/test_cases/cleanup-conjur-identity/playbook.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "57b7637ac64e48f434942aaa9843573b0b83eedec3a990135f682eb0c9b4fc08",
+   "format": 1
+  },
+  {
+   "name": "roles/conjur_host_identity/tests/test_cases/cleanup-conjur-identity/tests",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "roles/conjur_host_identity/tests/test_cases/cleanup-conjur-identity/tests/test_default.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "2390200888250358407b3ae321abb9fb0d4dbef50cf330438b00f3e207f938b4",
+   "format": 1
+  },
+  {
+   "name": "roles/conjur_host_identity/tests/test.sh",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "4470918bf5bbb2cc8a29d33a667ec086741f9da48db477dbb219fc67d6d669ea",
+   "format": 1
+  },
+  {
+   "name": "roles/conjur_host_identity/tests/junit",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "roles/conjur_host_identity/tests/junit/configure-conjur-identity",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "89108668f74042059b1ede31eabf9d3efa44e857ec721a2fceeded59ab95da57",
+   "format": 1
+  },
+  {
+   "name": "roles/conjur_host_identity/tests/junit/cleanup-conjur-identity",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "7511e938e8e334a494a9dedc7825cb0858f7f28196607431669730bf49f24a68",
+   "format": 1
+  },
+  {
+   "name": "roles/conjur_host_identity/tests/.pytest_cache",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "roles/conjur_host_identity/tests/.pytest_cache/v",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "roles/conjur_host_identity/tests/.pytest_cache/v/cache",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "roles/conjur_host_identity/tests/.pytest_cache/v/cache/nodeids",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "a4a437fff99a0a7ac174c447d6f6cec9e288b4239e7cfe39087f6113680f8cef",
+   "format": 1
+  },
+  {
+   "name": "roles/conjur_host_identity/tests/.pytest_cache/v/cache/stepwise",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "format": 1
+  },
+  {
+   "name": "roles/conjur_host_identity/tests/.pytest_cache/README.md",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "73fd6fccdd802c419a6b2d983d6c3173b7da97558ac4b589edec2dfe443db9ad",
+   "format": 1
+  },
+  {
+   "name": "roles/conjur_host_identity/tests/.pytest_cache/CACHEDIR.TAG",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "37dc88ef9a0abeddbe81053a6dd8fdfb13afb613045ea1eb4a5c815a74a3bde4",
+   "format": 1
+  },
+  {
+   "name": "roles/conjur_host_identity/tests/.pytest_cache/.gitignore",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "3ed731b65d06150c138e2dadb0be0697550888a6b47eb8c45ecc9adba8b8e9bd",
+   "format": 1
+  },
+  {
+   "name": "SECURITY.md",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "1e913fcef04d2f2652839b896dd875dd3268b67d4669105e0e4b1a0249ef843a",
+   "format": 1
+  },
+  {
+   "name": "pylintrc",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "b76087e5d8bc4aa28ed8bce0553063afc6a03f600fcb3f242d925116c9d41217",
+   "format": 1
+  },
+  {
+   "name": "CONTRIBUTING.md",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "fbb106317526ffc7993cdea0a385432ec8ae1db6ea090cd8262fc821af9fe7a1",
+   "format": 1
+  },
+  {
+   "name": "tests",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/unit",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/unit/plugins",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/unit/plugins/lookup",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/unit/plugins/lookup/test_conjur_variable.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "38a1aff7601aaff30c5ff0704e233416ba1d824317fe9864b2bfa64e2c1d5a71",
+   "format": 1
+  },
+  {
+   "name": "tests/unit/Dockerfile",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "904d4916d9355dc73d50921bd52b665de8394eb7d3a5d9b3ba408205a2efa388",
+   "format": 1
+  },
+  {
+   "name": "tests/unit/requirements.txt",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "dbad9c9664b7cfd6e72d973073bf011905a82e433923c94241fabbb026cc3d41",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/pytest.ini",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "4b8dce177a1820e68b4a821d858669035b849f9c5fbc4cfd6d4718325a7e69c8",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-bad-certs",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-bad-certs/env",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "e1d90dec2be9f840d4f27dcfd2bf1c67be44c5d801ee57ea45c94ff6895ddf62",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-bad-certs/bad-cert.pem",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "7529afc89345f5dde282fb51014d158769d3fb22ddf20744d093eb8fa820b8d3",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-bad-certs/playbook.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "5250ae4a47ce4a3685e3deef6a15b623c612f7d10d02b02c3a99c0d4c4d75b35",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-bad-certs/tests",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-bad-certs/tests/test_default.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "5f2cb44532e32a0e4c55aa765c53cf52728d8c1c512e0eb606a5460cfc06532b",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-with-CRLF-normalization",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-with-CRLF-normalization/env",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "06f2517a8761079809e2c843b7b92dea793697f71ebff5281dc7390d593c686f",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-with-CRLF-normalization/playbook.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "ab54c6dc30f8404cb09b6587fe238215d74eecdb0f3c731fdb30b946a1f6acd9",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-with-CRLF-normalization/tests",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-with-CRLF-normalization/tests/test_default.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "dee229d35c099b379b2e11d1c502ca0158eb506c9065358b969213ccdb489693",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-disable-verify-certs",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-disable-verify-certs/playbook.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "503bd21acd737054663a3f02f0e19461072cf6ec6b277f5ebbcff7969a80013d",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-disable-verify-certs/tests",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-disable-verify-certs/tests/test_default.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "e6b50f356ee08724cd4535c1831566274c2b913fe9b24d85deb2c695a3c422a9",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-with-authn-token",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-with-authn-token/env",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "0f79221a2dba5e7c47cf03aed09ac314d3a0185b73d98735c499d3bfabc01c26",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-with-authn-token/playbook.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "b37957e662b75eea963321835a3ac104e41a6104f553e71d5eb909be349c33e6",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-with-authn-token/tests",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-with-authn-token/tests/test_default.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "e6b50f356ee08724cd4535c1831566274c2b913fe9b24d85deb2c695a3c422a9",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-with-CR-normalization",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-with-CR-normalization/env",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "0a51e59f0e0f25849f43da48c0db5997a408dbcc9d9f1cf31db11ad7c61af740",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-with-CR-normalization/playbook.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "ab54c6dc30f8404cb09b6587fe238215d74eecdb0f3c731fdb30b946a1f6acd9",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-with-CR-normalization/tests",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-with-CR-normalization/tests/test_default.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "dee229d35c099b379b2e11d1c502ca0158eb506c9065358b969213ccdb489693",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-bad-cert-content",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-bad-cert-content/env",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "04a3037e688fdb971cd4fe88a9d16a48c21233e9fb6e902ae8d2b971533fb539",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-bad-cert-content/playbook.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "124075aaf661df7133ac8183b01d5698f926ed21b5453616ac43ebf9ebd45192",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-bad-cert-content/tests",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-bad-cert-content/tests/test_default.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "5f2cb44532e32a0e4c55aa765c53cf52728d8c1c512e0eb606a5460cfc06532b",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-with-whitespace-normalization",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-with-whitespace-normalization/env",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "30247181617402ff6d65f42f1007afe47d2ef6079ca6d72539840a0201fb971d",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-with-whitespace-normalization/playbook.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "ab54c6dc30f8404cb09b6587fe238215d74eecdb0f3c731fdb30b946a1f6acd9",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-with-whitespace-normalization/tests",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-with-whitespace-normalization/tests/test_default.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "dee229d35c099b379b2e11d1c502ca0158eb506c9065358b969213ccdb489693",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-no-cert-provided",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-no-cert-provided/env",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "d25e8d63cf31028d03159d56be20b726a35174b24f9ec0873a7a390e69bd19e2",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-no-cert-provided/playbook.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "5250ae4a47ce4a3685e3deef6a15b623c612f7d10d02b02c3a99c0d4c4d75b35",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-no-cert-provided/tests",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-no-cert-provided/tests/test_default.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "5f2cb44532e32a0e4c55aa765c53cf52728d8c1c512e0eb606a5460cfc06532b",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-with-authn-token-bad-cert-content",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-with-authn-token-bad-cert-content/env",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "b1109a56b82611908d9b72763acd077e659444f944cf5c46697c9727214347ab",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-with-authn-token-bad-cert-content/playbook.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "dcda0235d59981781bc48f91c7abdd7e4ebb933807881059800c89fb827abf2e",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-with-authn-token-bad-cert-content/tests",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-with-authn-token-bad-cert-content/tests/test_default.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "3ae37e4eb416be9992b6f796a1ca797b2fc8c7f3f76b9d19cf1db00c7c0edffc",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-with-authn-token-bad-cert",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-with-authn-token-bad-cert/env",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "6ae181c834a9e4cf77bba5edb73027d2f8c6dda9d671ae02201112db73e4c48a",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-with-authn-token-bad-cert/bad-cert.pem",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "7529afc89345f5dde282fb51014d158769d3fb22ddf20744d093eb8fa820b8d3",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-with-authn-token-bad-cert/playbook.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "216bdfc547d90d369332d06d8e7f6838a4506c647d1a0295c099cc1a53da1c5c",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-with-authn-token-bad-cert/tests",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-with-authn-token-bad-cert/tests/test_default.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "3ae37e4eb416be9992b6f796a1ca797b2fc8c7f3f76b9d19cf1db00c7c0edffc",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-with-valid-cert-content-invalid-cert-file",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-with-valid-cert-content-invalid-cert-file/env",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "2ee02556111714b221558951a019d41ad91d56c6baa2b45b72e931a54ecfab28",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-with-valid-cert-content-invalid-cert-file/bad-cert.pem",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "7529afc89345f5dde282fb51014d158769d3fb22ddf20744d093eb8fa820b8d3",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-with-valid-cert-content-invalid-cert-file/playbook.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "ab54c6dc30f8404cb09b6587fe238215d74eecdb0f3c731fdb30b946a1f6acd9",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-with-valid-cert-content-invalid-cert-file/tests",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-with-valid-cert-content-invalid-cert-file/tests/test_default.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "dee229d35c099b379b2e11d1c502ca0158eb506c9065358b969213ccdb489693",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-with-cert-content",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-with-cert-content/env",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "45cdb23d6117fda8020ae957c2328cbf03d113d55e85d848231ac0f9a019cb34",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-with-cert-content/playbook.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "ab54c6dc30f8404cb09b6587fe238215d74eecdb0f3c731fdb30b946a1f6acd9",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-with-cert-content/tests",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-with-cert-content/tests/test_default.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "dee229d35c099b379b2e11d1c502ca0158eb506c9065358b969213ccdb489693",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-with-cert-content-and-cert-path",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-with-cert-content-and-cert-path/env",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "674e8e06b95cdc27bc4aa86d81cce0e42b2f3c69d286b6d30856a80d894eaaaf",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-with-cert-content-and-cert-path/playbook.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "ab54c6dc30f8404cb09b6587fe238215d74eecdb0f3c731fdb30b946a1f6acd9",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-with-cert-content-and-cert-path/tests",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-with-cert-content-and-cert-path/tests/test_default.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "dee229d35c099b379b2e11d1c502ca0158eb506c9065358b969213ccdb489693",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-with-spaces-secret",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-with-spaces-secret/env",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "bf54c0c9c02929e148e92803bfe2e2daa791960688f6c2f8f4330241bec77068",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-with-spaces-secret/playbook.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "5a0e1a75ae7f3106b2cbc418a9167ae6665bf587aa705b6730402125927d6e54",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-with-spaces-secret/tests",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-with-spaces-secret/tests/test_default.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "8ed19681bbd132fe9faf61bafa8f1039de0e315ae62c78ba48ede77027d1bfd2",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable/env",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "bf54c0c9c02929e148e92803bfe2e2daa791960688f6c2f8f4330241bec77068",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable/playbook.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "ab54c6dc30f8404cb09b6587fe238215d74eecdb0f3c731fdb30b946a1f6acd9",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable/tests",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable/tests/test_default.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "dee229d35c099b379b2e11d1c502ca0158eb506c9065358b969213ccdb489693",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-bad-cert-path",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-bad-cert-path/env",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "9f5febf65f45e537c0666df07ea12f0568f1ee5afa7bc9eef5a36370e6b5dfa4",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-bad-cert-path/playbook.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "5250ae4a47ce4a3685e3deef6a15b623c612f7d10d02b02c3a99c0d4c4d75b35",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-bad-cert-path/tests",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-bad-cert-path/tests/test_default.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "5f2cb44532e32a0e4c55aa765c53cf52728d8c1c512e0eb606a5460cfc06532b",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-with-valid-cert-file-invalid-cert-content",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-with-valid-cert-file-invalid-cert-content/env",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "2a7cde5a9ea68301f0fd2a6d2611f84de0ed1c704b5ec9424d7a08abcf332033",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-with-valid-cert-file-invalid-cert-content/playbook.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "ab54c6dc30f8404cb09b6587fe238215d74eecdb0f3c731fdb30b946a1f6acd9",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-with-valid-cert-file-invalid-cert-content/tests",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-with-valid-cert-file-invalid-cert-content/tests/test_default.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "dee229d35c099b379b2e11d1c502ca0158eb506c9065358b969213ccdb489693",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-into-file",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-into-file/env",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "bf54c0c9c02929e148e92803bfe2e2daa791960688f6c2f8f4330241bec77068",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-into-file/playbook.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "f95b0390ee330737c6e122c5640c4ab286e0626421be092dd7e458dea0e78459",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-into-file/tests",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test_cases/retrieve-variable-into-file/tests/test_default.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "6b2af7512b20c1bb2d6596049fba491205518fd40fb3ac4400cb3648e568b62a",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/test.sh",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "7d461af6848ab63aefea2ef7c5465ff2c6bc72578920c7a2e12c1465325b2381",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/junit",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/junit/retrieve-variable-bad-certs",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "b9e110be61a5b8683d7407ec90260963d18d5e0fd7f4a43b01d1ce6f3d8c50e1",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/junit/retrieve-variable-with-CRLF-normalization",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "e130c3dc4bf28a487142a1e6249bc1814b73acad0946e79b27db8d86d8e8d3fe",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/junit/retrieve-variable-disable-verify-certs",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "2d8492aa2f67b2edcaae43bf5a4ea3b76a63ae9a955ff6596f3f99ab980671a8",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/junit/retrieve-variable-with-authn-token",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "7f641538ba3ae7e87c660764f705b357044f5eaa86524b2c3d02b5d5ecc8dbda",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/junit/retrieve-variable-with-CR-normalization",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "851fe9d4db2cbf6f49cc04b69fb70a340c2e9052c80cf8df74aa30ad76cee1bc",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/junit/retrieve-variable-bad-cert-content",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "f7e275fb890a62762e0cf201115f3b7d808fe0621e883eb79a7e0a1fd97bcaec",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/junit/retrieve-variable-with-whitespace-normalization",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "a6fb4cdbdb0ed7fc99aa288296178a1e12dfbfffb328b928ca2e44ff0bb907b6",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/junit/retrieve-variable-no-cert-provided",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "e6541668a4cb7007e33d30e4e3e21bc371719521e5d0ec1bc2de6ad96e60380a",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/junit/retrieve-variable-with-authn-token-bad-cert-content",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "b5f60f42e4df7b15eebab5998a89f9d7ce0f9aeb713e71bb65ec38fe3008a8df",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/junit/retrieve-variable-with-authn-token-bad-cert",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "47e6a435d16184c3056b552359e679262d854467614ec7c211c6fd1eb4f3baf0",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/junit/retrieve-variable-with-valid-cert-content-invalid-cert-file",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "0e8817c1eff0d6bd3de4bfb34e33ae2972f674330a2a7997fca41125bc37ca1a",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/junit/retrieve-variable-with-cert-content",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "3dccb5075cddd3962805be66e74664b107a84734c081b35c011d6e2cbefa0024",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/junit/retrieve-variable-with-cert-content-and-cert-path",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "e9cfc5679f8124d0f1a67438fa9231c7725675e0bc886159349ac4047dfcf9f8",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/junit/retrieve-variable-with-spaces-secret",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "e258e6e96d0f422f244e708c142bff5a6756cdc8f372d26643767c7486cdb797",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/junit/retrieve-variable",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "dcdd660b0687359d538820e7385a40a8018b05a1c0e42aefb3ac31c43dba8b39",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/junit/retrieve-variable-bad-cert-path",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "a8f6b538fe6259c33f4f9ea5099b8d2f9ae71115c7c569e47e4debb93ef81d2f",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/junit/retrieve-variable-with-valid-cert-file-invalid-cert-content",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "a41fd42f20e25991c5d5fc6091e569e436e02b0fc7704561e30ae69f2da6adb5",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/junit/retrieve-variable-into-file",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "f9cc33ebdae48892e0e15f7af97a5bc58567d426dbfa3c4e8027e824876d581c",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/.pytest_cache",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/.pytest_cache/v",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/.pytest_cache/v/cache",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/.pytest_cache/v/cache/nodeids",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "1a3b381c6896ffd8710fa1a5ca13917c043659b147b265ad292566b5de93754a",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/.pytest_cache/v/cache/stepwise",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/.pytest_cache/README.md",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "73fd6fccdd802c419a6b2d983d6c3173b7da97558ac4b589edec2dfe443db9ad",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/.pytest_cache/CACHEDIR.TAG",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "37dc88ef9a0abeddbe81053a6dd8fdfb13afb613045ea1eb4a5c815a74a3bde4",
+   "format": 1
+  },
+  {
+   "name": "tests/conjur_variable/.pytest_cache/.gitignore",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "3ed731b65d06150c138e2dadb0be0697550888a6b47eb8c45ecc9adba8b8e9bd",
+   "format": 1
+  },
+  {
+   "name": "tests/sanity",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/sanity/ignore-2.17.txt",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "1008789176a441c0a2922bc61ddaaa83f99e3292a81c7f70352b2da72d574d45",
+   "format": 1
+  },
+  {
+   "name": "tests/sanity/Dockerfile",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "904d4916d9355dc73d50921bd52b665de8394eb7d3a5d9b3ba408205a2efa388",
+   "format": 1
+  },
+  {
+   "name": "tests/sanity/ignore-2.16.txt",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "1008789176a441c0a2922bc61ddaaa83f99e3292a81c7f70352b2da72d574d45",
+   "format": 1
+  },
+  {
+   "name": "tests/sanity/ignore-2.19.txt",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "49643dd07c70af1de4134f24da62e1b96d7005c482a3f5190b0291c4c244af0f",
+   "format": 1
+  },
+  {
+   "name": "tests/sanity/ignore-2.18.txt",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "49643dd07c70af1de4134f24da62e1b96d7005c482a3f5190b0291c4c244af0f",
+   "format": 1
+  },
+  {
+   "name": ".gitignore",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "0d43fea8e686577b52fb561a171a9707a1deb04157ad537b1837837475a732c5",
+   "format": 1
+  },
+  {
+   "name": "examples",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "examples/test.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "1f8cb414d95a32ed8c799dd55e64e7ba4fccbb35aad2c5f743f7fed53872d676",
+   "format": 1
+  },
+  {
+   "name": "requirements.txt",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "0a2f8c8f38472c11f47c93fe7ac69bb6e08b2d09dcc5a2b9fdd7054366822a21",
+   "format": 1
+  }
+ ],
+ "format": 1
+}

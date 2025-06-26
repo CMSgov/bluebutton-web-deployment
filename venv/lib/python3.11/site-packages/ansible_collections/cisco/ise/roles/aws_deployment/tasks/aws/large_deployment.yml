@@ -1,0 +1,74 @@
+- name: Provision ISE PAN Servers
+  amazon.aws.ec2:
+    key_name: "{{ aws_deployment_aws_keypair_name }}"
+    instance_type: "{{ aws_deployment_aws_instance_type }}"
+    image: "{{ aws_deployment_aws_ise_ami }}"
+    wait: true
+    group: "ISE Public Access"
+    count: 1
+    vpc_subnet_id: "{{ subnet.subnet.id }}"
+    assign_public_ip: true
+    region: "{{ aws_deployment_aws_region }}"
+    instance_tags:
+      Name: "{{ aws_deployment_ise_base_hostname }} PAN Server {{ item }}"
+      Roles:
+        - PAN
+    user_data: |
+      hostname={{ aws_deployment_ise_base_hostname | lower }}-pan-server-{{ item }}
+      primarynameserver={{ aws_deployment_ise_dns_server }}
+      dnsdomain={{ aws_deployment_ise_domain }}
+      ntpserver={{ aws_deployment_ise_ntp_server }}
+      timezone={{ aws_deployment_ise_timezone }}
+      username={{ aws_deployment_ise_username }}
+      password={{ aws_deployment_ise_password }}
+  with_sequence: count=2
+
+- name: Provision ISE MNT Servers
+  amazon.aws.ec2:
+    key_name: "{{ aws_deployment_aws_keypair_name }}"
+    instance_type: "{{ aws_deployment_aws_instance_type }}"
+    image: "{{ aws_deployment_aws_ise_ami }}"
+    wait: true
+    group: "ISE Public Access"
+    count: 1
+    vpc_subnet_id: "{{ subnet.subnet.id }}"
+    assign_public_ip: true
+    region: "{{ aws_deployment_aws_region }}"
+    instance_tags:
+      Name: "{{ aws_deployment_ise_base_hostname }} MNT Server {{ item }}"
+      Roles:
+        - MNT
+    user_data: |
+      hostname={{ aws_deployment_ise_base_hostname | lower }}-mnt-server-{{ item }}
+      primarynameserver={{ aws_deployment_ise_dns_server }}
+      dnsdomain={{ aws_deployment_ise_domain }}
+      ntpserver={{ aws_deployment_ise_ntp_server }}
+      timezone={{ aws_deployment_ise_timezone }}
+      username={{ aws_deployment_ise_username }}
+      password={{ aws_deployment_ise_password }}
+  with_sequence: count=2
+
+- name: Provision ISE PSN Servers - aws_deployment_ise_psn_instances instances
+  amazon.aws.ec2:
+    key_name: "{{ aws_deployment_aws_keypair_name }}"
+    instance_type: "{{ aws_deployment_aws_instance_type }}"
+    image: "{{ aws_deployment_aws_ise_ami }}"
+    wait: true
+    group: "ISE Public Access"
+    count: 1
+    vpc_subnet_id: "{{ subnet.subnet.id }}"
+    assign_public_ip: true
+    region: "{{ aws_deployment_aws_region }}"
+    instance_tags:
+      Name: "{{ aws_deployment_ise_base_hostname }} PSN Server {{ item }}"
+      Roles:
+        - PSN
+    user_data: |
+      hostname={{ aws_deployment_ise_base_hostname | lower }}-psn-server-{{ item }}
+      primarynameserver={{ aws_deployment_ise_dns_server }}
+      dnsdomain={{ aws_deployment_ise_domain }}
+      ntpserver={{ aws_deployment_ise_ntp_server }}
+      timezone={{ aws_deployment_ise_timezone }}
+      username={{ aws_deployment_ise_username }}
+      password={{ aws_deployment_ise_password }}
+  with_sequence: count="{{ aws_deployment_ise_psn_instances }}"

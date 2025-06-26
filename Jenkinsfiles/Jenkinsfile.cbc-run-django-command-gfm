@@ -1,0 +1,137 @@
+pipeline {
+  agent {
+    kubernetes {
+      defaultContainer "bb2-cbc-build"
+      yamlFile "Jenkinsfiles/cbc-build_django.yaml"
+    }
+  }
+
+  environment {
+    AWS_DEFAULT_REGION = "us-east-1"
+    SSH_KEY = credentials("bb2-ssh-key-${params.APP_ENV}")
+  }
+
+  parameters {
+    choice(
+      name: "APP_ENV",
+      choices: ["test", "impl", "prod"],
+      description: "The environment to run in."
+    )
+
+    string(
+      name: "DJANGO_COMMAND",
+      defaultValue: "",
+      description: "The django management command to run."
+    )
+
+    string(
+      name: "CANARY_IP",
+      defaultValue: "",
+      description: "When this is set, run against a canary IP rather than a tagged deployment instance"
+    )
+  }
+
+  stages {
+    stage("Assume AWS Role") {
+      steps {
+        withCredentials([
+          string(credentialsId: params.APP_ENV == 'test' ? 'aws-assume-role-arn' : 'aws-assume-role-arn-prod', variable: 'ROLE_ARN')
+        ]) {
+          script {
+            def sessionName = "jenkins-${env.BUILD_ID}"
+            def credsJson = sh(
+              script: """#!/bin/bash
+              aws sts assume-role \\
+                --role-arn "$ROLE_ARN" \\
+                --role-session-name "$sessionName" \\
+                --output json
+              """,
+              returnStdout: true
+            ).trim()
+
+            def creds = readJSON text: credsJson
+
+            env.AWS_ACCESS_KEY_ID     = creds.Credentials.AccessKeyId
+            env.AWS_SECRET_ACCESS_KEY = creds.Credentials.SecretAccessKey
+            env.AWS_SESSION_TOKEN     = creds.Credentials.SessionToken
+
+            echo "Assumed Role ARN: ${ROLE_ARN}"
+            echo "Assumed Access Key ID (partial): ${env.AWS_ACCESS_KEY_ID.substring(0, 8)}..."
+            echo "Assumed Session Token (partial): ${env.AWS_SESSION_TOKEN.substring(0, 8)}..."
+            echo "Assumed Role Expiration: ${creds.Credentials.Expiration}"
+
+            def callerIdentityStatus = sh(
+              script: """#!/bin/bash
+              aws sts get-caller-identity --output text
+              ansible-inventory -i inventory/aws_ec2.yaml --graph
+              """,
+              returnStatus: true
+            )
+
+            if (callerIdentityStatus != 0) {
+              error("Failed to verify assumed AWS role. Check credentials or permissions.")
+            } else {
+              echo "Successfully verified assumed AWS role: ${sh(script: 'aws sts get-caller-identity', returnStdout: true).trim()}"
+            }
+          }
+        }
+      }
+    }
+
+    stage("Notify Slack") {
+      steps {
+        script {
+          helpers = load "Jenkinsfiles/helpers.groovy"
+          helpers.slackNotify "STARTING - ENV:${params.APP_ENV}"
+        }
+      }
+    }
+
+    stage("Determine Ansible Config") {
+      steps {
+        script {
+          if (params.CANARY_IP != "") {
+            echo("Setting ansible config for canary IP")
+            ANSIBLE_INVENTORY = "${params.CANARY_IP},"
+            ANSIBLE_SUBSET = ""
+          } else {
+            echo("Setting ansible config for tagged deployment instance")
+            ANSIBLE_INVENTORY = "inventory/ec2.py"
+            ANSIBLE_SUBSET = "tag_Function_app_AppServer"
+          }
+        }
+      }
+    }
+
+    stage("Run Django Command") {
+      steps {
+        sh """
+        EC2_INI_PATH=inventory/config/${APP_ENV}.ini \
+        AWS_ACCESS_KEY_ID=${env.AWS_ACCESS_KEY_ID} \
+        AWS_SECRET_ACCESS_KEY=${env.AWS_SECRET_ACCESS_KEY} \
+        AWS_SESSION_TOKEN=${env.AWS_SESSION_TOKEN} \
+        ansible-playbook playbook/run_django_command/main.yml \
+          --private-key '${SSH_KEY}' \
+          -i '${ANSIBLE_INVENTORY}' \
+          -l '${ANSIBLE_SUBSET}' \
+          -e 'env=${APP_ENV}' \
+          -e 'django_command="${DJANGO_COMMAND}"'
+        """
+      }
+    }
+  }
+
+  post {
+    success {
+      script {
+        helpers.slackNotify("SUCCESS - ENV:${params.APP_ENV}", "good")
+      }
+    }
+
+    failure {
+      script {
+        helpers.slackNotify("FAILURE - ENV:${params.APP_ENV}", "bad")
+      }
+    }
+  }
+}

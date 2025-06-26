@@ -1,0 +1,299 @@
+{
+ "files": [
+  {
+   "name": ".",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "misc",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "misc/CL2020 EMEAR DEVWKS-1542 Intersight Ansible Lab Guide.pdf",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "5b15d28312a255524c6da61ce4ba75a4fa8b4f92d89d66edead1e163dbad143c",
+   "format": 1
+  },
+  {
+   "name": "misc/README.md",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "e61dd07deb821f7d7de15f2667c7b8c0a636efab8ad63484badfeb37ad6d7796",
+   "format": 1
+  },
+  {
+   "name": ".DS_Store",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "ef2aae8564da08e7f7831fd55b5bbac1bd93fd1a57da76f3ce99b31f2f5a06d0",
+   "format": 1
+  },
+  {
+   "name": "requirements.txt",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "7b7a726cd2922c7eb5a5a5a59b6c37c3cb4e02bb8f75039dffbae22b228b1be0",
+   "format": 1
+  },
+  {
+   "name": "CHANGELOG.md",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "400c17601a74296f8d3b415458f924c16daf7b008780733910f7221be2ca27d0",
+   "format": 1
+  },
+  {
+   "name": "plugins",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "plugins/doc_fragments",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "plugins/doc_fragments/intersight.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "50ef356793159f5351aa27a6f7fe8547d2c7dba9ef27534cc8656d7e06fd4b8e",
+   "format": 1
+  },
+  {
+   "name": "plugins/README.md",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "c82ee692702ec1dd604cdbc38ff252114e5204e1b0627045a66c9451e7a918ac",
+   "format": 1
+  },
+  {
+   "name": "plugins/module_utils",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "plugins/module_utils/intersight.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "59c46477fb0421ece2ddab619d892ae2f921a9a8971a825eace590fe4f836621",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/intersight_virtual_media_policy.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "39ab7a22f7e912e38efa84219f7b48b454d53418ce5ca44316ad8ca7ec58693f",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/intersight_bios_policy.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "a5d4f157708a007e1443bc801af6e5bbd24c2144e22f586918b83eb6a968a660",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/intersight_server_profile.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "6e43eed2260c58c6eee38ebfeb94d94a2d48be3ccc732795db0def244602f9d8",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/intersight_imc_access_policy.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "c93fd91009f0051bd4f46c23914523aa7f38b88ecb95e1f1c0627877e34fb7f7",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/intersight_rest_api.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "a7807cca3379c6f58c7cc1a3f86f9c0847a621f2bacf1696f7b470a35c4e844e",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/intersight_boot_order_policy.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "589c7674483de54cd460a5a2983a06c6fe3b4a41faa9931df5828bf767d9f735",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/intersight_target_claim.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "2d6ebf15127175f1065c97515148d0a848910f8327a90e03986e7d33eeeea7e7",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/intersight_local_user_policy.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "ef8515f3d22980a2266fa1596a92791eadbbd06dba39d98aa6edacbc7925ce0a",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/intersight_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "6ac0ee7c7ae56e22ddde5d467b183c6e3256a4da7778a5f43d3edd2a28b920d0",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/intersight_ntp_policy.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "4002a2a35e29106d1ce7862cc8f8989d6a9b0987ee6024c25f3830e290c876f7",
+   "format": 1
+  },
+  {
+   "name": "tests",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/config.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "4b09860144d96c87c5345bba1463d0a60593100b97473cdb7ead73e6304cafcf",
+   "format": 1
+  },
+  {
+   "name": "meta",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "meta/execution-environment.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "0cd0b966cbb8fefb00f7122190d7a9b42dc5da517a8c5ba9d86e34c51bc3e43a",
+   "format": 1
+  },
+  {
+   "name": "meta/runtime.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "cec2a5e51d50837a928483bad0c0c5491f5210d331a0f097a42ac1807aabe724",
+   "format": 1
+  },
+  {
+   "name": "roles",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "docs",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "README.md",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "820fd9c809c2747ec988c6d5378ae6d65e0e7d944157cd28c8609efe657ea6f9",
+   "format": 1
+  },
+  {
+   "name": ".ansible-lint",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "a15c4efa76ba7349564a0e802787a167707d9025f1748cec630cd066398abd0c",
+   "format": 1
+  },
+  {
+   "name": ".gitignore",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "daf9a841d96fd66c3358a7ba3a3524dd09c309097d71438f7280d987a6a5080c",
+   "format": 1
+  },
+  {
+   "name": ".github",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": ".github/workflows",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": ".github/workflows/info.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "7cd0890739d525b8cfdbe3bcdbf572a01e9ec9e36e661f6150af02bb5305659d",
+   "format": 1
+  },
+  {
+   "name": ".github/workflows/main.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "6faa3f448a2971ca5e43b1093adbe32308ebae92845cb02e049648b524236b20",
+   "format": 1
+  },
+  {
+   "name": "LICENSE.txt",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "30cd47435d09af02a38c1f286279009584f2a88ce02f05c34da23e617131f268",
+   "format": 1
+  },
+  {
+   "name": ".vscode",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": ".vscode/settings.json",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "be935285d998e568e5039a0960a20e001b938299ab81d44789211d6b13abc3d1",
+   "format": 1
+  },
+  {
+   "name": "Development.md",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "c928aeefe50d3eb2016604a8b6c78bcdf2bd8cd4065178dfbb9e9b09dbd42a3f",
+   "format": 1
+  }
+ ],
+ "format": 1
+}

@@ -1,0 +1,48 @@
+# GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
+# SPDX-License-Identifier: GPL-3.0-or-later
+# SPDX-FileCopyrightText: 2025 Felix Fontein <felix@fontein.de>
+
+[collection_sources]
+"community.internal_test_tools" = "git+https://github.com/ansible-collections/community.internal_test_tools.git,main"
+
+[sessions]
+
+[sessions.lint]
+run_isort = true
+isort_config = "tests/nox-config-isort.cfg"
+run_black = false
+run_flake8 = true
+flake8_config = "tests/nox-config-flake8.ini"
+run_pylint = false
+run_yamllint = true
+yamllint_config = ".yamllint"
+yamllint_config_plugins = ".yamllint-docs"
+yamllint_config_plugins_examples = ".yamllint-examples"
+run_mypy = false
+
+[sessions.docs_check]
+validate_collection_refs="all"
+
+[sessions.license_check]
+run_reuse = true
+
+[sessions.extra_checks]
+run_no_unwanted_files = true
+no_unwanted_files_module_extensions = [".py"]
+no_unwanted_files_yaml_extensions = [".yml"]
+run_action_groups = true
+
+[[sessions.extra_checks.action_groups_config]]
+name = "acme"
+pattern = "^acme_.*$"
+exclusions = [
+    "acme_ari_info",  # does not support ACME account
+    "acme_certificate_renewal_info",  # does not support ACME account
+    "acme_challenge_cert_helper",  # does not support (and need) any common parameters
+]
+doc_fragment = "community.crypto.attributes.actiongroup_acme"
+
+[sessions.build_import_check]
+run_galaxy_importer = true
+
+# [sessions.ansible_lint]

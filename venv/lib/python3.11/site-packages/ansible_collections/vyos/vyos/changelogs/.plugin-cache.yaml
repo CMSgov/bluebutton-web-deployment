@@ -1,0 +1,168 @@
+objects:
+  role: {}
+plugins:
+  become: {}
+  cache: {}
+  callback: {}
+  cliconf:
+    vyos:
+      description: Use vyos cliconf to run command on VyOS platform
+      name: vyos
+      version_added: 1.0.0
+  connection: {}
+  filter: {}
+  httpapi: {}
+  inventory: {}
+  lookup: {}
+  module:
+    vyos_banner:
+      description: Manage multiline banners on VyOS devices
+      name: vyos_banner
+      namespace: ''
+      version_added: 1.0.0
+    vyos_bgp_address_family:
+      description: BGP Address Family Resource Module.
+      name: vyos_bgp_address_family
+      namespace: ''
+      version_added: 2.1.0
+    vyos_bgp_global:
+      description: BGP Global Resource Module.
+      name: vyos_bgp_global
+      namespace: ''
+      version_added: 2.0.0
+    vyos_command:
+      description: Run one or more commands on VyOS devices
+      name: vyos_command
+      namespace: ''
+      version_added: 1.0.0
+    vyos_config:
+      description: Manage VyOS configuration on remote device
+      name: vyos_config
+      namespace: ''
+      version_added: 1.0.0
+    vyos_facts:
+      description: Get facts about vyos devices.
+      name: vyos_facts
+      namespace: ''
+      version_added: 1.0.0
+    vyos_firewall_global:
+      description: FIREWALL global resource module
+      name: vyos_firewall_global
+      namespace: ''
+      version_added: 1.0.0
+    vyos_firewall_interfaces:
+      description: FIREWALL interfaces resource module
+      name: vyos_firewall_interfaces
+      namespace: ''
+      version_added: 1.0.0
+    vyos_firewall_rules:
+      description: FIREWALL rules resource module
+      name: vyos_firewall_rules
+      namespace: ''
+      version_added: 1.0.0
+    vyos_hostname:
+      description: Manages hostname resource module
+      name: vyos_hostname
+      namespace: ''
+      version_added: 2.8.0
+    vyos_interfaces:
+      description: Interfaces resource module
+      name: vyos_interfaces
+      namespace: ''
+      version_added: 1.0.0
+    vyos_l3_interfaces:
+      description: L3 interfaces resource module
+      name: vyos_l3_interfaces
+      namespace: ''
+      version_added: 1.0.0
+    vyos_lag_interfaces:
+      description: LAG interfaces resource module
+      name: vyos_lag_interfaces
+      namespace: ''
+      version_added: 1.0.0
+    vyos_lldp_global:
+      description: LLDP global resource module
+      name: vyos_lldp_global
+      namespace: ''
+      version_added: 1.0.0
+    vyos_lldp_interfaces:
+      description: LLDP interfaces resource module
+      name: vyos_lldp_interfaces
+      namespace: ''
+      version_added: 1.0.0
+    vyos_logging:
+      description: Manage logging on network devices
+      name: vyos_logging
+      namespace: ''
+      version_added: 1.0.0
+    vyos_logging_global:
+      description: Logging resource module
+      name: vyos_logging_global
+      namespace: ''
+      version_added: 2.4.0
+    vyos_ntp_global:
+      description: Manages ntp modules of Vyos network devices
+      name: vyos_ntp_global
+      namespace: ''
+      version_added: 2.4.0
+    vyos_ospf_interfaces:
+      description: OSPF Interfaces Resource Module.
+      name: vyos_ospf_interfaces
+      namespace: ''
+      version_added: 1.2.0
+    vyos_ospfv2:
+      description: OSPFv2 resource module
+      name: vyos_ospfv2
+      namespace: ''
+      version_added: 1.0.0
+    vyos_ospfv3:
+      description: OSPFV3 resource module
+      name: vyos_ospfv3
+      namespace: ''
+      version_added: 1.0.0
+    vyos_ping:
+      description: Tests reachability using ping from VyOS network devices
+      name: vyos_ping
+      namespace: ''
+      version_added: 1.0.0
+    vyos_prefix_lists:
+      description: Prefix-Lists resource module for VyOS
+      name: vyos_prefix_lists
+      namespace: ''
+      version_added: 2.4.0
+    vyos_route_maps:
+      description: Route Map Resource Module.
+      name: vyos_route_maps
+      namespace: ''
+      version_added: 2.3.0
+    vyos_snmp_server:
+      description: Manages snmp_server resource module
+      name: vyos_snmp_server
+      namespace: ''
+      version_added: 2.7.0
+    vyos_static_routes:
+      description: Static routes resource module
+      name: vyos_static_routes
+      namespace: ''
+      version_added: 1.0.0
+    vyos_system:
+      description: Run `set system` commands on VyOS devices
+      name: vyos_system
+      namespace: ''
+      version_added: 1.0.0
+    vyos_user:
+      description: Manage the collection of local users on VyOS device
+      name: vyos_user
+      namespace: ''
+      version_added: 1.0.0
+    vyos_vlan:
+      description: Manage VLANs on VyOS network devices
+      name: vyos_vlan
+      namespace: ''
+      version_added: 1.0.0
+  netconf: {}
+  shell: {}
+  strategy: {}
+  test: {}
+  vars: {}
+version: 5.0.0

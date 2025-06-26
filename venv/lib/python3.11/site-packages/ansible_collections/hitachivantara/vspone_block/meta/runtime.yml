@@ -1,0 +1,32 @@
+---
+requires_ansible: ">=2.16.0"
+plugin_routing:
+  modules:
+    hv_gateway_subscriber_facts:
+      deprecation:
+        removal_version: "4.0.0"
+        warning_text: hv_gateway_subscriber_facts will be removed in a future release of this collection.
+    hv_gateway_subscriber:
+      deprecation:
+        removal_version: "4.0.0"
+        warning_text: hv_gateway_subscriber will be removed in a future release of this collection.
+    hv_uaig_token_facts:
+      deprecation:
+        removal_version: "4.0.0"
+        warning_text: hv_uaig_token_facts will be removed in a future release of this collection.
+    hv_storagesystem:
+      deprecation:
+        removal_version: "4.0.0"
+        warning_text: hv_storagesystem will be removed in a future release of this collection.
+    hv_gateway_unsubscribe_resource:
+      deprecation:
+        removal_version: "4.0.0"
+        warning_text: hv_gateway_unsubscribe_resource will be removed in a future release of this collection.
+    hv_gateway_subscription_facts:
+      deprecation:
+        removal_version: "4.0.0"
+        warning_text: hv_gateway_subscription_facts will be removed in a future release of this collection.
+    hv_gateway_admin_password:
+      deprecation:
+        removal_version: "4.0.0"
+        warning_text: hv_gateway_admin_password will be removed in a future release of this collection.

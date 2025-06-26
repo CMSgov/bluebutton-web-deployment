@@ -1,0 +1,20 @@
+ancestor: null
+releases:
+  1.0.0:
+    changes:
+      release_summary: First release of the microsoft.iis collection
+    fragments:
+    - release-summary.yml
+    release_date: '2025-02-05'
+  1.0.1:
+    changes:
+      release_summary: Minor release for Galaxy/AH documention update
+    fragments:
+    - release-summary.yml
+    release_date: '2025-03-27'
+  1.0.2:
+    changes:
+      release_summary: Another minor release for Galaxy/AH documention update
+    fragments:
+    - release-summary.yml
+    release_date: '2025-03-27'

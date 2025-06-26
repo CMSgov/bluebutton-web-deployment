@@ -1,0 +1,253 @@
+ancestor: null
+releases:
+  1.0.0:
+    changes:
+      major_changes:
+      - Added module appliance_info
+      - Added module guest_info
+      - Added module license_info
+      - Release 1.0.0
+      release_summary: Initial release 1.0.0
+    fragments:
+    - 001-release-100.yaml
+    - 002-release-summary.yaml
+    release_date: '2024-05-07'
+  1.1.0:
+    changes:
+      minor_changes:
+      - Added module vm_list_group_by_clusters
+    fragments:
+    - 16-vm_list_group_by_clusters.yml
+    release_date: '2024-05-16'
+  1.10.0:
+    changes:
+      minor_changes:
+      - cluster_ha - migrate the vmware_cluster_ha module from community to here
+      - deploy_content_library_ovf - migrate the vmware_content_deploy_ovf_template
+        module from community to here
+      - deploy_content_library_ovf - update parameters to be consistent with other
+        deploy modules
+      - deploy_content_library_template - migrate the vmware_content_deploy_template
+        module from community to here
+      - deploy_content_library_template - update parameters to be consistent with
+        other deploy modules
+      - deploy_folder_template - add module to deploy a vm from a template in a vsphere
+        folder
+      - esxi_connection - migrate the vmware_host module from community to here
+      - esxi_host - migrate the vmware_host module from community to here
+      - folder - migrate vmware_folder module from community to here
+      - local_content_library - migrate the vmware_content_library_manager module
+        from community to here
+      - subscribed_content_library - migrate the vmware_content_library_manager module
+        from community to here
+    fragments:
+    - 103-migrate-vmware_folder.yml
+    - 104-migrate-cluster-ha.yml
+    - 105-add-event-counting-file.yml
+    - 108-migrate-deploy_content_library.yml
+    - 109-migrate-vmware_content_manager.yml
+    - 111-migrate-vmware_host.yml
+    - 113-add-deploy-folder-template-module.yml
+    release_date: '2025-02-17'
+  1.10.1:
+    changes:
+      bugfixes:
+      - folder - replaced non-existent 'storage' type with 'datastore' type
+      - module_deploy_vm_base - fix attribute error when deploying to a resource pool
+    fragments:
+    - 121-fix-bugs-in-new-modules.yml
+    release_date: '2025-02-20'
+  1.11.0:
+    changes:
+      bugfixes:
+      - vms inventory - fix handling of VMs within VApps
+      minor_changes:
+      - _module_pyvmomi_base - Make sure to use the folder param when searching for
+        VMs based on other common params in get_vms_using_params
+      - added vm_resource_info module to collect cpu/memory facts about vms
+      - clients/_pyvmomi - adds explicit init params instead of using dict
+      - clients/_rest - adds explicit init params instead of using dict
+      - esxi_hosts - Add inventory host filtering based on jinja statements
+      - esxi_hosts inventory - include moid property in output always
+      - vm_powerstate - migrate vmware_guest_powerstate module from community to here
+      - pyvmomi - update object search by name method to use propertycollector, which
+        speeds up results significantly
+      - upload_content_library_ovf - Add module to upload an ovf/ova to a content
+        library
+      - vms - Add inventory host filtering based on jinja statements
+      - vms inventory - include moid property in output always
+    fragments:
+    - 114-migrate-vmware_guest_powerstate.yml
+    - 120-optimize-search.yml
+    - 123-fix-galaxy-import-warnings.yml
+    - 127-add-maintainer-docs.yml
+    - 128-add-resource-info-functionality.yml
+    - 130-add-host-filtering-to-invens.yml
+    - 131-update-query-file.yml
+    - 132-add-explicit-client-params.yml
+    - 135-add-moid-to-inven-out.yml
+    - 138-add-ovf-upload-module.yml
+    - 139-fix-inventory-plugin-vapps.yml
+    - 141-add-folder-param-to-get-vm.yml
+    - 142-add-longer-wait-to-esxi-tests.yml
+    release_date: '2025-03-26'
+  1.2.0:
+    changes:
+      bugfixes:
+      - guest_info - Fixed bugs that caused module failure when specifying the guest_name
+        attribute
+      deprecated_features:
+      - vm_list_group_by_clusters - deprecate the module since it was renamed to ``vm_list_group_by_clusters_info``
+      minor_changes:
+      - Clarify pyVmomi requirement (https://github.com/ansible-collections/vmware.vmware/pull/15).
+      - vcsa_settings - Add new module to configure VCSA settings
+    fragments:
+    - 10_vcsa_settings_new_module.yml
+    - 15-clarify-pyvmomi-requirement.yml
+    - 21-doc.yml
+    - 25-deprecated_module_vm_list_goup_by_clusters.yml
+    - 27-guest-info-vm-name-bug.yml
+    release_date: '2024-05-28'
+  1.3.0:
+    changes:
+      minor_changes:
+      - content_template - Add new module to manage templates in content library
+      - vm_list_group_by_clusters_info - Add the appropriate returned value for the
+        deprecated module ``vm_list_group_by_clusters``
+    fragments:
+    - 23-new-module-content-create-template.yml
+    - 34-docs.yml
+    - 35-add-requirements-filed-to-modules-doc.yml
+    - 37-vm_list_group_by_clusters_info_returned_obj.yml
+    release_date: '2024-06-24'
+  1.4.0:
+    changes:
+      bugfixes:
+      - _vmware_facts - fixed typo in hw_interfaces fact key and added missing annotation
+        fact key and value
+      - _vmware_folder_paths - fixed issue where resolved folder paths incorrectly
+        included a leading slash
+      - guest_info - added more optional attributes to the example
+      - module_utils/vmware_rest_client - rename get_vm_by_name method as there is
+        same signature already
+      minor_changes:
+      - cluster_drs - added cluster_drs module to manage DRS settings in vcenter
+      - folder_template_from_vm - add module and tests to create a template from an
+        existing VM in vcenter and store the template in a folder
+      - guest_info - migrated functionality from community vmware_guest_info and vmware_vm_info
+        into guest_info. Changes are backwards compatible but legacy outputs are deprecated
+      - module_utils/vmware_tasks - added shared utils to monitor long running tasks
+        in vcenter
+      - module_utils/vmware_type_utils - added shared utils for validating, transforming,
+        and comparing vcenter settings with python variables
+      - vm_portgroup_info - add module to get all the portgroups that associated with
+        VMs
+    fragments:
+    - 10-rename_get_vm_by_name.yaml
+    - 48-add_folder_template.yml
+    - 49-add_vm_portgroup_info.yml
+    - 50-add_cluster_drs_module.yaml
+    - 51-migrate_vm_info_modules.yml
+    - 54-bugfix_custom_fact_values.yml
+    - 55-add_docs_for_mandatory_vars.yml
+    modules:
+    - description: Returns information about the portgroups of virtual machines
+      name: vm_portgroup_info
+      namespace: ''
+    release_date: '2024-08-06'
+  1.5.0:
+    changes:
+      bugfixes:
+      - README - Fix typos in README (https://github.com/ansible-collections/vmware.vmware/pull/66).
+      minor_changes:
+      - Add action group (https://github.com/ansible-collections/vmware.vmware/pull/59).
+      - cluster - Added cluster module, which is meant to succeed the community.vmware.vmware_cluster
+        module (https://github.com/ansible-collections/vmware.vmware/pull/60).
+      - cluster_vcls - Added module to manage vCLS settings, based on community.vmware.vmware_cluster_vcls
+        (https://github.com/ansible-collections/vmware.vmware/pull/61).
+      - folder_template_from_vm - Use a more robust method when waiting for tasks
+        to complete to improve accuracy (https://github.com/ansible-collections/vmware.vmware/pull/64).
+    fragments:
+    - 59-add-action_groups.yaml
+    - 60-add-cluster-module.yaml
+    - 61-add-cluster_vcls.yaml
+    - 61-update-readme-format.yaml
+    - 63-add-cluster-module-to-action_groups.yaml
+    - 64-add-cluster-module.yaml
+    - 66-fix-typos-in-readme.yaml
+    release_date: '2024-09-06'
+  1.6.0:
+    changes:
+      bugfixes:
+      - Fix typos in all module documentation and README
+      - cluster_drs - fixed backwards vMotion rate (input 1 set rate to 5 in vCenter)
+        (https://github.com/ansible-collections/vmware.vmware/issues/68)
+      minor_changes:
+      - cluster_dpm - Migrated module from community.vmware to configure DPM in a
+        vCenter cluster
+      - cluster_drs_recommendations - Migrated module from community.vmware to apply
+        any DRS recommendations the vCenter cluster may have
+    fragments:
+    - 69-fix-various-typos-in-docs.yml
+    - 70-migrate-cluster-drs-recommendations.yml
+    - 71-migrate-cluster-dpm.yml
+    - 73-fix_drs_backwards_vmotion_rate.yml
+    release_date: '2024-10-21'
+  1.7.0:
+    changes:
+      minor_changes:
+      - cluster_info - Migrate cluster_info module from the community.vmware collection
+        to here
+      - content_library_item_info - Migrate content_library_item_info module from
+        the vmware.vmware_rest collection to here
+    fragments:
+    - 80-migrate-cluster-info-module.yml
+    - 81-migrate-content-library-item-info.yml
+    release_date: '2024-11-25'
+  1.7.1:
+    changes:
+      bugfixes:
+      - content_library_item_info - Library name and ID are ignored if item ID is
+        provided so updated docs and arg parse rules to reflect this
+    fragments:
+    - 83-fix-content-library-item-info-args.yml
+    release_date: '2024-11-25'
+  1.8.0:
+    changes:
+      minor_changes:
+      - _vmware - standardize getter method names and documentation
+      - argument specs - Remove redundant argument specs. Update pyvmomi modules to
+        use new consolidated spec
+      - content_template - Fix bad reference of library variable that was refactored
+        to library_id
+      - doc fragments - Remove redundant fragments. Update pyvmomi modules to use
+        new consolidated docs
+      - esxi_host - Added inventory plugin to gather info about ESXi hosts
+    fragments:
+    - 88-standardize-pyvmomi-methods.yml
+    - 89-consolidate-arg-specs-and-docs.yml
+    - 91-add-esxi_host-inventory.yml
+    - 92-fix-reference-in-content-template.yml
+    release_date: '2024-12-23'
+  1.9.0:
+    changes:
+      bugfixes:
+      - client utils - Fixed error message when required library could not be imported
+      minor_changes:
+      - esxi_maintenance_mode - migrate esxi maintenance module from community
+      - info - Made vm_name variable required only when state is set to present in
+        content_template module
+      - pyvmomi module base - refactor class to use the pyvmomi shared client util
+        class as a base
+      - rest module base - refactor class to use the rest shared client util class
+        as a base
+      - vms - added vms inventory plugin. consolidated shared docs/code with esxi
+        hosts inventory plugin
+    fragments:
+    - 101-fix-missing-lib-error.yml
+    - 93-bugfix-vm_name-required.yml
+    - 95-use-client-utils-in-modules.yml
+    - 96-add-vms-inventory-plugin.yml
+    - 98-fix-relative-links-in-readme.yml
+    - 99-migrate-esxi-maintenance-mode.yml
+    release_date: '2025-01-17'

@@ -1,0 +1,11 @@
+- name: Include small deployment tasks
+  ansible.builtin.include_tasks: small_deployment.yml
+  when: personas_deployment_ise_deployment_type == "small"
+
+- name: Include medium deployment tasks
+  ansible.builtin.include_tasks: medium_deployment.yml
+  when: personas_deployment_ise_deployment_type == "medium"
+
+- name: Include large deployment tasks
+  ansible.builtin.include_tasks: large_deployment.yml
+  when: personas_deployment_ise_deployment_type == "large"

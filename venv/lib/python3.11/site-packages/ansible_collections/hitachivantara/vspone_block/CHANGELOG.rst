@@ -1,0 +1,409 @@
+==========================================
+Hitachivantara.Vspone\_Block Release Notes
+==========================================
+
+.. contents:: Topics
+
+v3.5.0
+======
+
+Release Summary
+---------------
+
+This minor release of `hitachivantara.vspone_block` introduces several new modules, improves existing functionality and bug fixes.
+
+Minor Changes
+-------------
+
+- Added additional parameters primary_volume_device_group_name and secondary_volume_device_group_name to retrieve ShadowImage group details more quickly.
+- Added new module `hv_external_parity_group_facts` to retrieve information about External Parity Group.
+- Added new module `hv_external_path_group_facts` to retrieve information about External Path Group.
+- Added new module `hv_external_path_group` to manage External Path Groups.
+- Added new module `hv_mp_facts` to retrieve MP Blades information from VSP storage models.
+- Added support for begin_secondary_volume_id and end_secondary_volume_id to the remote replication modules - hv_gad, hv_hur, hv_truecopy.
+- Added support for cloning a Thin Image pair to the hv_snapshot module.
+- Added support for cloning pairs in a specified snapshot group to the hv_snapshot_group module.
+- Added support for deleting an iSCSI name of an external storage system that is registered to a port on the local storage system to the hv_storage_port module.
+- Added support for deleting garbage data for all Thin Image pairs in a snapshot tree to the hv_snapshot module.
+- Added support for disconnecting from a volume on the external storage system to the hv_external_volume module.
+- Added support for getting a list of LUs defined for a port on an external storage system to the hv_storage_port_facts module.
+- Added support for getting a list of ports on an external storage system to the hv_storage_port_facts module.
+- Added support for getting information about a specific LU path to the hv_hostgroup_facts module.
+- Added support for getting information about a specific LU path to the hv_iscsi_target_facts module.
+- Added support for getting information about an iSCSI target of a port on an external storage system to the hv_storage_port_facts module.
+- Added support for getting the iSCSI name of an external storage system that is registered to a port on the local storage system to the hv_storage_port_facts module.
+- Added support for lun_id for the secondary host group for TC and HUR. For GAD, lun_id and enable_preferred_path are supported.
+- Added support for performing a login test on an iSCSI target of an external storage system that is registered to a port on the local storage system to the hv_storage_port module.
+- Added support for reclaiming the zero pages of a DP volume to the hv_ldev module.
+- Added support for registering an iSCSI name of an external storage system to a port on the local storage system to the hv_storage_port module.
+- Added support for releasing the host reservation status by specifying a host group to the hv_hostgroup module.
+- Added support for releasing the host reservation status by specifying an iSCSI target to the hv_iscsi_target module.
+- Added support for releasing the host reservation status by specifying the LU path to the hv_hostgroup module.
+- Added support for releasing the host reservation status by specifying the LU path to the hv_iscsi_target module.
+- Added support for setting the nickname for a WWN to the hv_hostgroup module.
+- Added support for setting the nickname for an iSCSI name to the hv_iscsi_target module.
+- Added support for setting the nickname of an IQN initiator to the hv_iscsi_target module.
+- Added the ability to change the settings of the following parameters of an LDEV using the hv_ldev module - data_reduction_process_mode, is_compression_acceleration_enabled, is_relocation_enabled,is_full_allocation_enabled, is_alua_enabled
+- Added the ability to format a volume to the hv_ldev module.
+- Added the ability to set the nick_name of an iSCSI using the hv_iscsi_target module.
+- Added the following new parameters to the output of hv_ldev_facts is_compression_acceleration_enabled, data_reduction_process_mode, is_relocation_enabled, is_full_allocation_enabled
+- Added the following parameters to creating an LDEV using the hv_ldev module is_parallel_execution_enabled, start_ldev_id, end_ldev_id, external_parity_group, is_compression_acceleration_enabled
+- Enabled host group name together with port ID as identifiers for a host group.
+- Enabled the iSCSI target name together with the port ID as identifiers for the iSCSI target.if both ID and name are specified, the ID is used together with the port ID as the iSCSI target identifier.
+
+Bugfixes
+--------
+
+- Fixed output details of `host_group_number` and `host_group_id` in `hv_hg` and 'hv_hg_facts' modules to be consistent.
+
+New Modules
+-----------
+
+Vsp
+~~~
+
+- hitachivantara.vspone_block.vsp.hv_external_parity_group_facts - Retrieves information about External Parity Group from Hitachi VSP storage systems.
+- hitachivantara.vspone_block.vsp.hv_external_path_group - Manages External Path Groups in the Hitachi VSP storage systems.
+- hitachivantara.vspone_block.vsp.hv_external_path_group_facts - Retrieves information about External Path Group from Hitachi VSP storage systems.
+- hitachivantara.vspone_block.vsp.hv_mp_facts - Retrieves MP blades information from Hitachi VSP storage systems.
+
+v3.4.2
+======
+
+Release Summary
+---------------
+
+This minor release of `hitachivantara.vspone_block` bugfixes and improves existing functionality.
+
+Bugfixes
+--------
+
+- Fixed the mapping lun to multiple HostGroup/Iscsi Target issues for remote replication.
+- Resolved various documentation inconsistencies.
+
+v3.4.1
+======
+
+Release Summary
+---------------
+
+This minor release of `hitachivantara.vspone_block` introduces several new modules and improves existing functionality.
+
+Minor Changes
+-------------
+
+- Added back 'mu_number' parameter to the `hv_gad` module.
+- Resolved various documentation inconsistencies.
+
+v3.4.0
+======
+
+Release Summary
+---------------
+
+This minor release of `hitachivantara.vspone_block` introduces several new modules and improves existing functionality.
+
+Minor Changes
+-------------
+
+- Added iSCSI target support for GAD, TrueCopy, HUR, ShadowImage, and Snapshot/ThinImage modules.
+- Added new module `hv_ddp_pool_facts` to retrieve DDP-based pool details on VSP One Block storage models.
+- Added new module `hv_ddp_pool` to create, update, and delete DDP-based pools on VSP One Block storage models.
+- Added support to delete SVOL post-pair deletion for GAD, TrueCopy, HUR, ShadowImage, and Snapshot/ThinImage modules.
+- Enhanced `hv_ldev_facts` module to support query parameters.
+- Enhanced `hv_shadow_image` module: support for local copy group and copy pair name for shadow image pair management; group management of shadow image pairs.
+- Enhanced `hv_snapshot_group` module to support retention period.
+- Enhanced `hv_snapshot` module: added copy speed, clones automation, retention period, support for Floating Snapshot, and pair creation with specific or auto-selected SVOL and mirror unit.
+- Enhanced `hv_storage_port` module to support attributes like connection, speed, and type.
+- Removed gateway connection type from all the modules.
+
+New Modules
+-----------
+
+Vsp
+~~~
+
+- hitachivantara.vspone_block.vsp.hv_ddp_pool - Manages DDP Pools on Hitachi VSP storage systems.
+- hitachivantara.vspone_block.vsp.hv_ddp_pool_facts - Get facts of DDP Pools on Hitachi VSP storage systems.
+
+v3.3.0
+======
+
+Release Summary
+---------------
+
+This minor release of `hitachivantara.vspone_block` introduces several new modules and improves existing functionality.
+
+Minor Changes
+-------------
+
+- Added NVMe-TCP and NVMe-FC support for GAD, TrueCopy, HUR, ShadowImage, and Snapshot/ThinImage modules.
+- Added new facts module `hv_external_volume_facts` to retrieve external volume details.
+- Added new facts module `hv_iscsi_remote_connection_facts` to retrieve iSCSI remote connection details.
+- Added new facts module `hv_quorum_disk_facts` to retrieve quorum disk details.
+- Added new facts module `hv_remote_connection_facts` to retrieve remote connection details.
+- Added new facts module `hv_user_facts` to retrieve user details.
+- Added new facts module `hv_user_group_facts` to retrieve user group details.
+- Added new module `hv_external_volume` to create, and delete external volumes.
+- Added new module `hv_iscsi_remote_connection` to create, and delete iSCSI remote connections.
+- Added new module `hv_quorum_disk` to register, and deregister quorum disks.
+- Added new module `hv_remote_connection` to create, update, and delete remote connections.
+- Added new module `hv_user_group` to create, update, and delete user groups.
+- Added new module `hv_user` to create, update, and delete users.
+- The state 'resize' has been changed to 'expand' for `hv_gad`, `hv_hur` and `hv_truecopy` modules to expand the size of the copy pair.
+- Updated `hv_snapshot_group_facts` to retrieve all snapshot group details.
+
+Bugfixes
+--------
+
+- Added ansible_facts parameter to all the facts modules as per the ansible facts module standard.
+- Done some enhancements related to the module documentation like formatting, examples, and descriptions.
+- For remote replication pairs, if the free LDEV ID for SVOL was not part of the meta resource group, the pair creation failed. Now the module will automatically select a free LDEV ID from the metadata resource group.
+- Made storage_system_info optional field for direct connection type modules.
+
+New Modules
+-----------
+
+Vsp
+~~~
+
+- hitachivantara.vspone_block.vsp.hv_external_volume - Manages External Volumes in the Hitachi VSP storage systems.
+- hitachivantara.vspone_block.vsp.hv_external_volume_facts - Retrieves information about External Volume from Hitachi VSP storage systems.
+- hitachivantara.vspone_block.vsp.hv_iscsi_remote_connection - Manages Remote connections through iSCSI ports on Hitachi VSP storage systems.
+- hitachivantara.vspone_block.vsp.hv_iscsi_remote_connection_facts - Retrieves Remote connection details from Hitachi VSP storage systems.
+- hitachivantara.vspone_block.vsp.hv_quorum_disk - Manages Quorum Disks in the Hitachi VSP storage systems.
+- hitachivantara.vspone_block.vsp.hv_quorum_disk_facts - Retrieves information about Quorum Disks from Hitachi VSP storage systems.
+- hitachivantara.vspone_block.vsp.hv_remote_connection - Manages Remote connections on Hitachi VSP storage systems.
+- hitachivantara.vspone_block.vsp.hv_remote_connection_facts - Retrieves Remote connection details from Hitachi VSP storage systems.
+- hitachivantara.vspone_block.vsp.hv_user - Manages users on Hitachi VSP storage systems.
+- hitachivantara.vspone_block.vsp.hv_user_facts - Retrieves user information from Hitachi VSP storage systems.
+- hitachivantara.vspone_block.vsp.hv_user_group - Manages user groups on Hitachi VSP storage systems.
+- hitachivantara.vspone_block.vsp.hv_user_group_facts - Retrieves user group information from Hitachi VSP storage systems.
+
+v3.2.0
+======
+
+Release Summary
+---------------
+
+This minor release of `hitachivantara.vspone_block` adds multiple new modules and enhances existing ones.
+
+Minor Changes
+-------------
+
+- Added new facts module `hv_disk_drive_facts` to retrieve disk drive details.
+- Added new facts module `hv_journal_volume_facts` to retrieve journal volume details.
+- Added new facts module `hv_remote_copy_group_facts` to retrieve remote copy group details.
+- Added new facts module `hv_remote_storage_registration_facts` to retrieve remote storage registration details.
+- Added new facts module `hv_resource_group_facts` to retrieve resource group details.
+- Added new facts module `hv_snapshot_group_facts` to retrieve snapshot group details.
+- Added new module `hv_cmd_dev` to create, update, and delete command devices.
+- Added new module `hv_disk_drive` to change disk drive settings.
+- Added new module `hv_journal_volume` to create, update, and delete journal volumes.
+- Added new module `hv_nvm_subsystems` to create, update, and delete NVM subsystems.
+- Added new module `hv_paritygroup` to create, update, and delete parity groups.
+- Added new module `hv_remote_copy_group` to create, update, and delete remote copy groups.
+- Added new module `hv_remote_storage_registration` to manage remote storage registration and un-registration.
+- Added new module `hv_resource_group_lock` to lock and unlock resource groups.
+- Added new module `hv_resource_group` to create, update, and delete resource groups.
+- Added new module `hv_snapshot_group` to create, update, and delete snapshots in units of snapshot groups.
+- Added warnings for unsupported OOB features.
+- Enhanced log messages.
+- Introduced usage information collection to AWS with user consent.
+- Updated `hv_gad_facts` to add GAD Pair facts for direct connection type.
+- Updated `hv_gad` to support multiple operations for GAD pair for direct connection type, increased GAD pair volume size support, and enhanced SVOL naming.
+- Updated `hv_hg` to add auto-generated name for hostgroup creation.
+- Updated `hv_hur_fact` to add HUR Pair facts for direct connection type.
+- Updated `hv_hur` to support multiple operations for HUR pair for direct connection type and increased HUR pair volume size support.
+- Updated `hv_iscsi_target` to add auto-generated name for create iSCSI target task.
+- Updated `hv_ldev_facts` to include encryption status in LDEV facts.
+- Updated `hv_ldev` to add QoS settings, shredding option, and enhanced LDEV ID setting.
+- Updated `hv_snapshot` to enhance SVOL naming logic.
+- Updated `hv_storagepool_facts` to include encryption status.
+- Updated `hv_system_facts` to add refresh parameter.
+- Updated `hv_truecopy_fact` to add TrueCopy pair facts for direct connection type.
+- Updated `hv_truecopy` to support multiple operations for TrueCopy pair for direct connection type and enhanced SVOL ID setting.
+
+Bugfixes
+--------
+
+- Added missing details to enhance user understanding.
+- Improved formatting and structure for better readability.
+- Resolved inconsistencies in the documentation.
+
+New Modules
+-----------
+
+Vsp
+~~~
+
+- hitachivantara.vspone_block.vsp.hv_cmd_dev - Manages command devices on Hitachi VSP storage systems.
+- hitachivantara.vspone_block.vsp.hv_disk_drive - Changes disk drive settings from Hitachi VSP storage systems.
+- hitachivantara.vspone_block.vsp.hv_disk_drive_facts - Retrieves information about hard drives from Hitachi VSP storage systems.
+- hitachivantara.vspone_block.vsp.hv_journal_volume_facts - Retrieves information about Journal Volumes from Hitachi VSP storage systems.
+- hitachivantara.vspone_block.vsp.hv_nvm_subsystems - Manages NVM subsystems on Hitachi VSP storage systems.
+- hitachivantara.vspone_block.vsp.hv_paritygroup - Create, delete parity group from Hitachi VSP storage systems.
+- hitachivantara.vspone_block.vsp.hv_remote_copy_group - Manages Remote Copy Group on Hitachi VSP storage systems.
+- hitachivantara.vspone_block.vsp.hv_remote_copy_group_facts - Retrieves Remote Copy Groups information from Hitachi VSP storage systems.
+- hitachivantara.vspone_block.vsp.hv_remote_storage_registration - Manages remote storage registration and unregistration on Hitachi VSP storage systems.
+- hitachivantara.vspone_block.vsp.hv_remote_storage_registration_facts - Retrieves remote storage registration information from Hitachi VSP storage systems.
+- hitachivantara.vspone_block.vsp.hv_resource_group - Manages resource groups on Hitachi VSP storage systems.
+- hitachivantara.vspone_block.vsp.hv_resource_group_facts - Retrieves resource group information from Hitachi VSP storage systems.
+- hitachivantara.vspone_block.vsp.hv_resource_group_lock - Allows the locking and unlocking of resource groups on Hitachi VSP storage systems.
+- hitachivantara.vspone_block.vsp.hv_snapshot_group - Manages snapshots in units of snapshot groups on Hitachi VSP storage systems.
+- hitachivantara.vspone_block.vsp.hv_snapshot_group_facts - Retrieves snapshot information in units of snapshot groups from Hitachi VSP storage systems.
+
+v3.1.0
+======
+
+Release Summary
+---------------
+
+This minor release of `hitachivantara.vspone_block` introduces new modules and improvements to storage management.
+
+Minor Changes
+-------------
+
+- Added new facts module `hv_gad_fact` to retrieve GAD pair details.
+- Added new facts module `hv_gateway_subscription_facts` to retrieve subscriber details.
+- Added new facts module `hv_hur_fact` to retrieve HUR pair details.
+- Added new facts module `hv_nvm_subsystems_facts` to retrieve NVM subsystem details.
+- Added new facts module `hv_sds_block_vps_fact` to retrieve VPS details.
+- Added new facts module `hv_storage_port_facts` to retrieve storage port details.
+- Added new facts module `hv_truecopy_facts` to retrieve TrueCopy pair details.
+- Added new module `hv_gad` to create, update, and delete GAD pairs.
+- Added new module `hv_gateway_unsubscribe_resource` to unsubscribe resources.
+- Added new module `hv_hur` to create, update, and delete HUR pairs.
+- Added new module `hv_sds_block_vps` to create, update, and delete VPS.
+- Added new module `hv_storage_port` to update storage port settings.
+- Added new module `hv_storagepool` to create, update, and delete storage pools.
+- Added new module `hv_truecopy` to create, update, and delete TrueCopy pairs.
+- Renamed module `hv_lun` to `hv_ldev`.
+- Renamed parameter `lun` to `ldev`, `pvol` to `primary_volume_id`, `svol` to `secondary_volume_id`.
+- Updated `hv_ldev_facts` to retrieve detailed LDEV information.
+- Updated `hv_ldev` to enhance deletion and provisioning workflows.
+- Updated `hv_sds_block_compute_node_facts` to retrieve Compute Node with NVMe-TCP details.
+- Updated `hv_sds_block_compute_node` to manage Compute Node with NVMe-TCP connection.
+- Updated `hv_sds_block_volume_facts` to retrieve NVMe-TCP volume details, Compute Node, and QoS information.
+- Updated `hv_sds_block_volume` to support QoS settings during volume creation and update.
+- Updated `hv_snapshot` to enhance Thin Image creation and management.
+
+New Modules
+-----------
+
+Sds Block
+~~~~~~~~~
+
+- hitachivantara.vspone_block.sds_block.hv_sds_block_vps - Manages Hitachi SDS block storage system Virtual Private Storages (VPS) volume ADR setting.
+- hitachivantara.vspone_block.sds_block.hv_sds_block_vps_facts - Retrieves information about Virtual Private Storages (VPS) of Hitachi SDS block storage system.
+
+Vsp
+~~~
+
+- hitachivantara.vspone_block.vsp.hv_gad - Manages GAD pairs on Hitachi VSP storage systems.
+- hitachivantara.vspone_block.vsp.hv_gad_facts - Retrieves GAD pairs information from Hitachi VSP storage systems.
+- hitachivantara.vspone_block.vsp.hv_gateway_subscription_facts - Retrieves information about resources of a subscriber on Hitachi VSP storage systems.
+- hitachivantara.vspone_block.vsp.hv_gateway_unsubscribe_resource - Manages un-subscription of resources for a subscriber on Hitachi VSP storage systems.
+- hitachivantara.vspone_block.vsp.hv_hur - Manages HUR pairs on Hitachi VSP storage systems.
+- hitachivantara.vspone_block.vsp.hv_hur_facts - Retrieves HUR information from Hitachi VSP storage systems.
+- hitachivantara.vspone_block.vsp.hv_nvm_subsystems_facts - Retrieves information about NVM subsystems from Hitachi VSP storage systems.
+- hitachivantara.vspone_block.vsp.hv_storage_port - Change the storage port settings in the Hitachi VSP storage systems.
+- hitachivantara.vspone_block.vsp.hv_storagepool - Manage storage pool information on Hitachi VSP storage systems.
+- hitachivantara.vspone_block.vsp.hv_truecopy - Manages TrueCopy pairs on Hitachi VSP storage systems.
+- hitachivantara.vspone_block.vsp.hv_truecopy_facts - Retrieves TrueCopy pairs information from Hitachi VSP storage systems.
+
+v3.0.1
+======
+
+Release Summary
+---------------
+
+This bugfix release addresses authentication, compatibility, and data retrieval issues.
+
+Bugfixes
+--------
+
+- Fixed LDEV ID retrieval issue in `hv_lun_facts`.
+- Fixed compatibility issues with older Python versions.
+- Fixed incorrect compute node information retrieval in `hv_sds_block_compute_node_facts`.
+- Fixed multiple session authentication issue for direct connect type.
+
+v3.0.0
+======
+
+Release Summary
+---------------
+
+This minor release of `hitachivantara.vspone_block` introduces new modules for storage and volume management.
+
+Minor Changes
+-------------
+
+- Added new facts module `hv_gateway_subscriber_fact`.
+- Added new facts module `hv_iscsi_target_facts`.
+- Added new facts module `hv_lun_facts`.
+- Added new facts module `hv_paritygroup_facts`.
+- Added new facts module `hv_sds_block_chap_user_facts`.
+- Added new facts module `hv_sds_block_compute_node_facts`.
+- Added new facts module `hv_sds_block_storage_system_fact`.
+- Added new facts module `hv_sds_block_volume_facts`.
+- Added new facts module `hv_shadow_image_pair_facts`.
+- Added new facts module `hv_snapshot_facts`.
+- Added new facts module `hv_storagepool_facts`.
+- Added new facts module `hv_storagesystem_facts`.
+- Added new facts module `hv_system_facts`.
+- Added new facts module `hv_troubleshooting_facts`.
+- Added new facts module `hv_uaig_token_facts`.
+- Added new module `hv_gateway_admin_password`.
+- Added new module `hv_hg`.
+- Added new module `hv_iscsi_target`.
+- Added new module `hv_lun`.
+- Added new module `hv_sds_block_chap_user`.
+- Added new module `hv_sds_block_compute_node`.
+- Added new module `hv_sds_block_compute_port_authentication`.
+- Added new module `hv_sds_block_volume`.
+- Added new module `hv_shadow_image_pair`.
+- Added new module `hv_snapshot`.
+- Added new module `hv_storagesystem`.
+
+New Modules
+-----------
+
+Sds Block
+~~~~~~~~~
+
+- hitachivantara.vspone_block.sds_block.hv_sds_block_chap_user - Manages Hitachi SDS block storage system CHAP users.
+- hitachivantara.vspone_block.sds_block.hv_sds_block_chap_user_facts - Retrieves information about Hitachi SDS block storage system CHAP users.
+- hitachivantara.vspone_block.sds_block.hv_sds_block_compute_node - Manages Hitachi SDS block storage system compute nodes.
+- hitachivantara.vspone_block.sds_block.hv_sds_block_compute_node_facts - Retrieves information about Hitachi SDS block storage system compute nodes.
+- hitachivantara.vspone_block.sds_block.hv_sds_block_compute_port_authentication - Manages Hitachi SDS block storage system compute port authentication mode settings.
+- hitachivantara.vspone_block.sds_block.hv_sds_block_port_facts - Retrieves information about Hitachi SDS block storage system compute ports.
+- hitachivantara.vspone_block.sds_block.hv_sds_block_storage_system_facts - Retrieves information about a specific Hitachi SDS block storage system.
+- hitachivantara.vspone_block.sds_block.hv_sds_block_volume - Manages Hitachi SDS block storage system volumes.
+- hitachivantara.vspone_block.sds_block.hv_sds_block_volume_facts - Retrieves information about Hitachi SDS block storage system volumes.
+
+Vsp
+~~~
+
+- hitachivantara.vspone_block.vsp.hv_gateway_admin_password - Updates password of gateway admin on Hitachi VSP storage systems.
+- hitachivantara.vspone_block.vsp.hv_gateway_subscriber - Manages subscribers of a partner on Hitachi VSP storage systems.
+- hitachivantara.vspone_block.vsp.hv_gateway_subscriber_facts - Retrieves information about subscriber on Hitachi VSP storage systems.
+- hitachivantara.vspone_block.vsp.hv_hg - Manages host group on Hitachi VSP storage system.
+- hitachivantara.vspone_block.vsp.hv_hg_facts - Retrieves host group information from a specified Hitachi VSP storage system.
+- hitachivantara.vspone_block.vsp.hv_iscsi_target - Manages iscsi target on Hitachi VSP storage systems.
+- hitachivantara.vspone_block.vsp.hv_iscsi_target_facts - Retrieves information about iscsi targets from Hitachi VSP storage systems.
+- hitachivantara.vspone_block.vsp.hv_journal_volume - Create, update, expand, shrink, delete journal volume from Hitachi VSP storage systems.
+- hitachivantara.vspone_block.vsp.hv_ldev - Manages logical devices (LDEVs) on Hitachi VSP storage systems.
+- hitachivantara.vspone_block.vsp.hv_ldev_facts - Retrieves information about logical devices (LDEVs) from Hitachi VSP storage systems.
+- hitachivantara.vspone_block.vsp.hv_paritygroup_facts - retrieves information about parity groups from Hitachi VSP storage systems.
+- hitachivantara.vspone_block.vsp.hv_shadow_image_pair - Manages shadow image pairs on Hitachi VSP storage systems.
+- hitachivantara.vspone_block.vsp.hv_shadow_image_pair_facts - Retrieves information about shadow image pairs from Hitachi VSP storage systems.
+- hitachivantara.vspone_block.vsp.hv_snapshot - Manages snapshots on Hitachi VSP storage systems.
+- hitachivantara.vspone_block.vsp.hv_snapshot_facts - Retrieves snapshot information from Hitachi VSP storage systems.
+- hitachivantara.vspone_block.vsp.hv_storage_port_facts - Retrieves storage port information from Hitachi VSP storage systems.
+- hitachivantara.vspone_block.vsp.hv_storagepool_facts - Retrieves storage pool information from Hitachi VSP storage systems.
+- hitachivantara.vspone_block.vsp.hv_storagesystem - Manages Hitachi VSP storage systems.
+- hitachivantara.vspone_block.vsp.hv_storagesystem_facts - retrieves storage system information from Hitachi VSP storage systems.
+- hitachivantara.vspone_block.vsp.hv_system_facts - Retrieves system information from Hitachi VSP storage systems.
+- hitachivantara.vspone_block.vsp.hv_troubleshooting_facts - Collects the log bundles for Hitachi ansible modules host and Hitachi gateway service host.
+- hitachivantara.vspone_block.vsp.hv_uaig_token_facts - Retrieves an API token for the Hitachi gateway service host.

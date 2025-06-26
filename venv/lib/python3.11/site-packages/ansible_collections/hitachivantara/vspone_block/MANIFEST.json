@@ -1,0 +1,39 @@
+{
+ "collection_info": {
+  "namespace": "hitachivantara",
+  "name": "vspone_block",
+  "version": "3.5.0",
+  "authors": [
+   "Hitachi Vantara Ansible Team"
+  ],
+  "readme": "README.md",
+  "tags": [
+   "hitachi",
+   "hv",
+   "hitachi_vantara",
+   "sds_block",
+   "vsp",
+   "vsp_one",
+   "storage",
+   "pegasus"
+  ],
+  "description": "Ansible modules to manage Hitachi Storage systems using the Hitachi VSP One platform. These modules provide a simplified and automated way to configure and manage Hitachi storage systems, enabling seamless integration with Ansible playbooks and workflows.\n",
+  "license": [
+   "GPL-3.0-or-later"
+  ],
+  "license_file": null,
+  "dependencies": {},
+  "repository": "https://github.com/hitachi-vantara/vspone-block-ansible",
+  "documentation": "https://docs.ansible.com/ansible/devel/collections/hitachivantara/vspone_block/",
+  "homepage": null,
+  "issues": "https://github.com/hitachi-vantara/vspone-block-ansible/issues"
+ },
+ "file_manifest_file": {
+  "name": "FILES.json",
+  "ftype": "file",
+  "chksum_type": "sha256",
+  "chksum_sha256": "f535be8af326a164cbeacd674f28c7017f3b7d998098c1cbbdbc8f836c5e1f8d",
+  "format": 1
+ },
+ "format": 1
+}

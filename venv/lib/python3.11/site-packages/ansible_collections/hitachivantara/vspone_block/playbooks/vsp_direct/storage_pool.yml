@@ -1,0 +1,147 @@
+---
+######################################################################################
+# Example :  Storage Pool Playbook
+######################################################################################
+- name: Storage Pool Module
+  hosts: localhost
+  gather_facts: false
+
+  vars_files:
+    - ../ansible_vault_vars/ansible_vault_storage_var.yml
+
+  vars:
+    # Common connection info for all tasks
+    connection_info:
+      address: "{{ storage_address }}"
+      username: "{{ vault_storage_username }}"
+      password: "{{ vault_storage_secret }}"
+  tasks:
+    ######################################################################################
+    # Task Name : Create a storage pool using required details
+    ######################################################################################
+    - name: Create a storage pool using required details
+      hitachivantara.vspone_block.vsp.hv_storagepool:
+        connection_info: "{{ connection_info }}"
+        state: "present"
+        spec:
+          name: "storagepool-1"
+          type: "HDP"
+          pool_volumes:
+            - parity_group_id: "1-1"
+              capacity: "10GB"
+
+      register: result
+
+    - name: Debug the result variable
+      ansible.builtin.debug:
+        var: result
+
+    ######################################################################################
+    # Task Name : Create a storage pool using more details
+    ######################################################################################
+    - name: Create a storage pool using other details
+      hitachivantara.vspone_block.vsp.hv_storagepool:
+        connection_info: "{{ connection_info }}"
+        state: "present"
+        spec:
+          name: "storagepool-2"
+          type: "HDP"
+          pool_volumes:
+            - parity_group_id: "1-2"
+              capacity: "10GB"
+          warning_threshold_rate: 80
+          depletion_threshold_rate: 20
+          resource_group_id: 2
+          should_enable_deduplication: false
+      register: result
+
+    - name: Debug the result variable
+      ansible.builtin.debug:
+        var: result
+
+    ######################################################################################
+    # Task Name : Create a Thin Image pool
+    ######################################################################################
+    - name: Create a storage pool using other details
+      hitachivantara.vspone_block.vsp.hv_storagepool:
+        connection_info: "{{ connection_info }}"
+        state: "present"
+        spec:
+          name: "storagepool-2"
+          type: "HTI"
+          pool_volumes:
+            - parity_group_id: "1-2"
+              capacity: "10GB"
+          warning_threshold_rate: 80
+          depletion_threshold_rate: 20
+      register: result
+
+    - name: Debug the result variable
+      ansible.builtin.debug:
+        var: result
+
+    ######################################################################################
+    # Task Name : Expand pool by pool Name
+    ######################################################################################
+    - name: Expand pool by pool Name
+      hitachivantara.vspone_block.vsp.hv_storagepool:
+        connection_info: "{{ connection_info }}"
+        state: "present"
+        spec:
+          name: "storagepool-2"
+          pool_volumes:
+            - parity_group_id: "1-2"
+              capacity: "10GB"
+      register: result
+
+    - name: Debug the result variable
+      ansible.builtin.debug:
+        var: result
+
+    ######################################################################################
+    # Task Name : Expand pool by pool ID
+    ######################################################################################
+    - name: Expand pool by pool ID
+      hitachivantara.vspone_block.vsp.hv_storagepool:
+        connection_info: "{{ connection_info }}"
+        state: "present"
+        spec:
+          id: 121
+          pool_volumes:
+            - parity_group_id: "1-2"
+              capacity: "10GB"
+      register: result
+
+    - name: Debug the result variable
+      ansible.builtin.debug:
+        var: result
+
+    ######################################################################################
+    # Task Name : Delete pool by pool ID
+    ######################################################################################
+    - name: Delete pool by pool ID
+      hitachivantara.vspone_block.vsp.hv_storagepool:
+        connection_info: "{{ connection_info }}"
+        state: "absent"
+        spec:
+          id: 121
+      register: result
+
+    - name: Debug the result variable
+      ansible.builtin.debug:
+        var: result
+
+    ######################################################################################
+    # Task Name : Delete pool by pool Name
+    ######################################################################################
+    - name: Delete pool by pool Name
+      hitachivantara.vspone_block.vsp.hv_storagepool:
+        connection_info: "{{ connection_info }}"
+        state: "absent"
+        spec:
+          name: "storagepool-2"
+      register: result
+
+    - name: Debug the result variable
+      ansible.builtin.debug:
+        var: result
