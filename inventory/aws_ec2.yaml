@@ -1,19 +1,19 @@
-plugin: amazon.aws.aws_ec2
+plugin: aws_ec2
 regions:
   - us-east-1
 filters:
   tag:Function: "app-AppServer"
+  instance-state-name: running
+
 hostnames:
-  - instance-id
-compose:
-  ansible_connection: amazon.aws.aws_ssm
+  - private-ip-address
  # ansible_host: instance_id
-vars:
-  ansible_connection: amazon.aws.aws_ssm
-  #ansible_aws_ssm_bucket_name: bb-test-content-cms-gov
-  #ansible_ssm_enable_logging: false
-  ansible_aws_ssm_region: us-east-1
+compose:
+  ansible_connection: "'ssh'"
 keyed_groups:
   - key: tags.Function
     prefix: tag_Function
+
+  - key: tags.Name
+    prefix: tag_Name
     separator: _
