@@ -109,7 +109,7 @@ pipeline {
           steps {
             sh """
              apt-get update
-             apt-get install -y netcat
+             apt-get install -y netcat-traditional
             nc -vz 10.162.51.119 22
             # or
             telnet 10.162.51.119 22
