@@ -108,11 +108,8 @@ pipeline {
     stage("Run Django Command") {
           steps {
             sh """
-             apt-get update
-             apt-get install -y netcat-traditional
-            nc -vz 10.162.51.119 22
-            # or
-            telnet 10.162.51.119 22
+             ssh -i ${SSH_KEY} ec2-user@10.162.51.119
+
             export EC2_INI_PATH=inventory/config/${APP_ENV}.ini
 
             ansible-playbook playbook/run_django_command/main.yml \
