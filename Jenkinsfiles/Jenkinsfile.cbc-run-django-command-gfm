@@ -8,7 +8,7 @@ pipeline {
 
   environment {
     AWS_DEFAULT_REGION = "us-east-1"
-    SSH_KEY = credentials("bb2-ssh-key-${params.APP_ENV}")
+    SSH_KEY = credentials("bb2-ssh-key-${params.APP_ENV}-V4")
   }
 
   parameters {
