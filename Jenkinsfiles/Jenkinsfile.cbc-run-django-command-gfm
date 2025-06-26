@@ -108,6 +108,8 @@ pipeline {
     stage("Run Django Command") {
           steps {
             sh """
+            sudo apt-get update && sudo apt-get install -y netcat
+
             nc -vz 10.162.51.119 22
             # or
             telnet 10.162.51.119 22
