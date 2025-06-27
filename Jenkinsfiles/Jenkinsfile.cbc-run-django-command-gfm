@@ -110,10 +110,9 @@ pipeline {
             sh """
              echo "$SSH_KEY" > /tmp/temp_key.pem
              chmod 600 /tmp/temp_key.pem
-             ssh -vvv -i /tmp/temp_key.pem ec2-user@10.162.51.119
+             ssh -vvv -i /tmp/temp_key.pem -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ec2-user@10.162.51.119
 
             export EC2_INI_PATH=inventory/config/${APP_ENV}.ini
-
             ansible-playbook playbook/run_django_command/main.yml \
               --private-key '${SSH_KEY}' \
               -i '${ANSIBLE_INVENTORY}' \
