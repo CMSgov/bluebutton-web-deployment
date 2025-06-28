@@ -102,11 +102,8 @@ pipeline {
     stage("Run Django Command") {
       steps {
         withCredentials([
-          sshUserPrivateKey(
-            credentialsId: "bb2-ssh-key-${params.APP_ENV}-V4",
-            keyFileVariable: 'SSH_KEY_FILE'
-          )
-        ]) {
+  file(credentialsId: "bb2-ssh-key-${params.APP_ENV}-V4", variable: 'SSH_KEY_FILE')
+      ]) {
           sh """
             chmod 600 "$SSH_KEY_FILE"
             echo "=== SSH Key First 20 lines ==="
