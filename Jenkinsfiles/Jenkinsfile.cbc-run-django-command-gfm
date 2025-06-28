@@ -109,7 +109,7 @@ pipeline {
             echo "=== SSH Key First 20 lines ==="
             head -n 20 "$SSH_KEY_FILE"
             echo "=== Testing SSH connection ==="
-            ssh -vvv -i "$SSH_KEY_FILE" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ec2-user@10.162.51.119 || echo "SSH test failed"
+            ssh -v -i "$SSH_KEY_FILE" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ec2-user@10.162.51.119 || echo "SSH test failed"
 
             export EC2_INI_PATH=inventory/config/${params.APP_ENV}.ini
             ansible-playbook playbook/run_django_command/main.yml \\
@@ -118,7 +118,7 @@ pipeline {
               -l "${env.ANSIBLE_SUBSET}" \\
               -e "env=${params.APP_ENV}" \\
               -e "django_command=${params.DJANGO_COMMAND}" \\
-              -vvvv
+              -v
           """
         }
       }
