@@ -2,13 +2,13 @@ pipeline {
   agent {
     kubernetes {
       defaultContainer "bb2-cbc-build"
-      yamlFile "Jenkinsfiles/cbc-build.yaml"
+      yamlFile "Jenkinsfiles/cbc-build_django.yaml"
     }
   }
 
   environment {
     AWS_DEFAULT_REGION = "us-east-1"
-    SSH_KEY = credentials("bb2-ssh-key-${params.APP_ENV}-V4")
+    // Remove SSH_KEY from here due to dynamic param usage
   }
 
   parameters {
@@ -17,13 +17,11 @@ pipeline {
       choices: ["test", "impl", "prod"],
       description: "The environment to run in."
     )
-
     string(
       name: "DJANGO_COMMAND",
       defaultValue: "",
       description: "The django management command to run."
     )
-
     string(
       name: "CANARY_IP",
       defaultValue: "",
@@ -32,26 +30,19 @@ pipeline {
   }
 
   stages {
-    stage("Notify Slack") {
-      steps {
-        script {
-          helpers = load "Jenkinsfiles/helpers.groovy"
-          helpers.slackNotify "STARTING - ENV:${params.APP_ENV}"
-        }
-      }
-    }
-
     stage("Assume AWS Role") {
       steps {
-        withCredentials([string(credentialsId: params.APP_ENV == 'test' ? 'aws-assume-role-arn' : 'aws-assume-role-arn-prod', variable: 'ROLE_ARN')]) {
+        withCredentials([
+          string(credentialsId: "${params.APP_ENV == 'test' ? 'aws-assume-role-arn' : 'aws-assume-role-arn-prod'}", variable: 'ROLE_ARN')
+        ]) {
           script {
             def sessionName = "jenkins-${env.BUILD_ID}"
             def credsJson = sh(
-              script: """#!/bin/bash
-              aws sts assume-role \\
-                --role-arn "$ROLE_ARN" \\
-                --role-session-name "$sessionName" \\
-                --output json
+              script: """
+                aws sts assume-role \\
+                  --role-arn "$ROLE_ARN" \\
+                  --role-session-name "$sessionName" \\
+                  --output json
               """,
               returnStdout: true
             ).trim()
@@ -61,26 +52,31 @@ pipeline {
             env.AWS_ACCESS_KEY_ID     = creds.Credentials.AccessKeyId
             env.AWS_SECRET_ACCESS_KEY = creds.Credentials.SecretAccessKey
             env.AWS_SESSION_TOKEN     = creds.Credentials.SessionToken
-            // --- ADD THESE DEBUG LINES ---
+
             echo "Assumed Role ARN: ${ROLE_ARN}"
-            echo "Assumed Access Key ID (partial): ${env.AWS_ACCESS_KEY_ID.substring(0, 8)}..." // Print first 8 chars
-            echo "Assumed Session Token (partial): ${env.AWS_SESSION_TOKEN.substring(0, 8)}..." // Print first 8 chars
-            echo "Assumed Role Expiration: ${creds.Credentials.Expiration}" // Print expiration time
-            // DO NOT print env.AWS_SECRET_ACCESS_KEY directly as it's highly sensitive
-            def callerIdentity = sh(
-              script: """#!/bin/bash
-              aws sts get-caller-identity --output text
-              ansible-inventory -i inventory/aws_ec2.yaml --graph
-              """,
+            echo "Access Key ID (partial): ${env.AWS_ACCESS_KEY_ID.take(8)}..."
+            echo "Session Token (partial): ${env.AWS_SESSION_TOKEN.take(8)}..."
+            echo "Expiration: ${creds.Credentials.Expiration}"
+
+            def callerIdentityStatus = sh(
+              script: "aws sts get-caller-identity --output text",
               returnStatus: true
             )
-
-            if (callerIdentity != 0) {
-              error("Failed to verify assumed AWS role. Check credentials or permissions.")
+            if (callerIdentityStatus != 0) {
+              error("Failed to verify assumed AWS role.")
             } else {
-              echo "Successfully verified assumed AWS role: ${sh(script: 'aws sts get-caller-identity', returnStdout: true).trim()}"
+              echo "Verified AWS role:\n${sh(script: 'aws sts get-caller-identity', returnStdout: true)}"
             }
           }
+        }
+      }
+    }
+
+    stage("Notify Slack") {
+      steps {
+        script {
+          helpers = load "Jenkinsfiles/helpers.groovy"
+          helpers.slackNotify "STARTING - ENV:${params.APP_ENV}"
         }
       }
     }
@@ -88,53 +84,35 @@ pipeline {
     stage("Determine Ansible Config") {
       steps {
         script {
-          if (params.CANARY_IP != "") {
-            echo("Setting ansible config for canary IP")
-            ANSIBLE_INVENTORY = "${params.CANARY_IP},"
-            ANSIBLE_SUBSET = ""
+          if (params.CANARY_IP?.trim()) {
+            echo("Using CANARY IP")
+            env.ANSIBLE_INVENTORY = "${params.CANARY_IP},"
+            env.ANSIBLE_SUBSET = ""
           } else {
-            echo("Setting ansible config for tagged deployment instance")
-            ANSIBLE_INVENTORY = "inventory/aws_ec2.yaml"
-            ANSIBLE_SUBSET = "tag_Function_app_AppServer"
+            echo("Using EC2 tags")
+            env.ANSIBLE_INVENTORY = "inventory/aws_ec2.yaml"
+            env.ANSIBLE_SUBSET = "tag_Name_bb_${params.APP_ENV}_app"
           }
-          // For debugging, print what's being set:
-            echo "ANSIBLE_INVENTORY: ${ANSIBLE_INVENTORY}"
-            echo "ANSIBLE_SUBSET: ${ANSIBLE_SUBSET}"
+          echo "Inventory: ${env.ANSIBLE_INVENTORY}"
+          echo "Subset: ${env.ANSIBLE_SUBSET}"
         }
       }
     }
 
     stage("Run Django Command") {
       steps {
-       withEnv([
-          'ANSIBLE_TIMEOUT=30',
-          'ANSIBLE_COLLECTIONS_PATH=./collections'
-        ]) {
+        withCredentials([
+  file(credentialsId: "bb2-ssh-key-${params.APP_ENV}-V4", variable: 'SSH_KEY_FILE')
+      ]) {
           sh """
-            mkdir -p ./collections
-
-            # Install the required collections into our isolated directory
-            echo "--- Installing required collections locally ---"
-            ansible-galaxy collection install amazon.aws:6.5.0 -p ./collections --force
-            ansible-galaxy collection install community.general -p ./collections --force
-
-            if ! command -v session-manager-plugin &> /dev/null; then
-                  echo "Installing session-manager-plugin..."
-                  curl "https://s3.amazonaws.com/session-manager-downloads/plugin/latest/ubuntu_64bit/session-manager-plugin.deb" -o "session-manager-plugin.deb"
-                  dpkg -i session-manager-plugin.deb
-                  rm -f session-manager-plugin.deb
-            fi
-
-            echo "--- RUNNING PLAYBOOK: EXPLICITLY USING 'amazon.aws.aws_ssm' ---"
-
-             #    skip the broken S3 initialization code. This has the highest precedence.
-            ansible-playbook -vvv playbook/run_django_command/main.yml \\
-              --connection community.aws.aws_ssm \\
-              -e 'ansible_remote_tmp=/tmp/ansible-tmp' \\
-              -i '${ANSIBLE_INVENTORY}' \\
-              -l '${ANSIBLE_SUBSET}' \\
-              -e 'env=${APP_ENV}' \\
-              -e 'django_command="${DJANGO_COMMAND}"'
+            export EC2_INI_PATH=inventory/config/${params.APP_ENV}.ini
+            ansible-playbook playbook/run_django_command/main.yml \\
+              --private-key "$SSH_KEY_FILE" \\
+              -i "${env.ANSIBLE_INVENTORY}" \\
+              -l "${env.ANSIBLE_SUBSET}" \\
+              -e "env=${params.APP_ENV}" \\
+              -e "django_command=${params.DJANGO_COMMAND}" \\
+              -v
           """
         }
       }
@@ -144,12 +122,13 @@ pipeline {
   post {
     success {
       script {
+        def helpers = load "Jenkinsfiles/helpers.groovy"
         helpers.slackNotify("SUCCESS - ENV:${params.APP_ENV}", "good")
       }
     }
-
     failure {
       script {
+        def helpers = load "Jenkinsfiles/helpers.groovy"
         helpers.slackNotify("FAILURE - ENV:${params.APP_ENV}", "bad")
       }
     }
