@@ -52,10 +52,6 @@ pipeline {
             env.AWS_ACCESS_KEY_ID     = creds.Credentials.AccessKeyId
             env.AWS_SECRET_ACCESS_KEY = creds.Credentials.SecretAccessKey
             env.AWS_SESSION_TOKEN     = creds.Credentials.SessionToken
-
-            echo "Assumed Role ARN: ${ROLE_ARN}"
-            echo "Access Key ID (partial): ${env.AWS_ACCESS_KEY_ID.take(8)}..."
-            echo "Session Token (partial): ${env.AWS_SESSION_TOKEN.take(8)}..."
             echo "Expiration: ${creds.Credentials.Expiration}"
 
             def callerIdentityStatus = sh(
