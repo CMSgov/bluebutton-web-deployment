@@ -120,8 +120,6 @@ pipeline {
               -var 'release_version=${params.APP_REPO_BRANCH}' \
               -var 'git_branch=${params.APP_REPO_BRANCH}' \
               -var 'deployment_branch=${params.DEPLOY_REPO_BRANCH}' \
-              -var 'ec2-user=${env.EC2_KEY}' \
-              -var 'ec2-user-pub-key=${env.EC2_PUB_KEY}' \
               -var 'subnet_id=${env.PRIVATE_SUBNET_ID}' \
               packer/build_app_ami_amzn2.json | tee packer-output.log
           """)
@@ -229,10 +227,10 @@ pipeline {
 
   post {
     success {
-      echo '✅ Build succeeded!'
+      helpers.slackNotify("SUCCESS", "✅ Build succeeded!")
     }
     failure {
-      echo '❌ Build failed!'
+       helpers.slackNotify("FAILURE", "❌ Build failed!")
     }
   }
 }
