@@ -226,11 +226,16 @@ pipeline {
   }
 
   post {
+
     success {
+      script{
       helpers.slackNotify("SUCCESS", "✅ Build succeeded!")
+      }
     }
     failure {
+       script{
        helpers.slackNotify("FAILURE", "❌ Build failed!")
+       }
     }
   }
 }
