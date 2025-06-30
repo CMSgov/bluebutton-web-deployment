@@ -8,8 +8,8 @@ pipeline {
 
   environment {
     AWS_DEFAULT_REGION = "us-east-1"
-    EC2_KEY = credentials("ec2_user_al2023")
-    EC2_PUB_KEY = credentials("ec2-user-pub-key_al2023")
+    //EC2_KEY = credentials("ec2_user_al2023")
+    //EC2_PUB_KEY = credentials("ec2-user-pub-key_al2023")
   }
 
   parameters {
