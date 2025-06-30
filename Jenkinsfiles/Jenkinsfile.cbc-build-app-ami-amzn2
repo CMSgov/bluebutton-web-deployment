@@ -8,8 +8,8 @@ pipeline {
 
   environment {
     AWS_DEFAULT_REGION = "us-east-1"
-    EC2_KEY = credentials("ec2-user-priv-key")
-    EC2_PUB_KEY = credentials("ec2-user-pub-key")
+   // EC2_KEY = credentials("ec2-user-priv-key")
+    //EC2_PUB_KEY = credentials("ec2-user-pub-key")
     TARGET_ACCOUNT_ID = credentials("aws-target-account-id")
     ENCRYPT_KMS_ARN = credentials("aws-kms-arn")
   }
