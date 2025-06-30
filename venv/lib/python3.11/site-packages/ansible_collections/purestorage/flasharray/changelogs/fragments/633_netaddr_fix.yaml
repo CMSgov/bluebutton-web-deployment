@@ -1,2 +1,0 @@
-bugfixes:
- - purefa_network - Fix compatability issue with ``netaddr>=1.2.0``

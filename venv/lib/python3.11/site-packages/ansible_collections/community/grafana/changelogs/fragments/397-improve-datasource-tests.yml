@@ -1,2 +1,0 @@
-trivial:
-  - Simplify task files of `grafana_datsource` by moving args from task to play level

@@ -1,3 +1,0 @@
----
-bugfixes:
-  - Add missing function argument in `grafana_contact_point` for org handling

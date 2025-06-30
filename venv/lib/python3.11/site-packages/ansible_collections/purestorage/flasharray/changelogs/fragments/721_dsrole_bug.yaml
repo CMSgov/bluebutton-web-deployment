@@ -1,2 +1,0 @@
-bugfixes:
- - purefa_dsrole - Fixed bug with DS role having no group or group base cannot be updated

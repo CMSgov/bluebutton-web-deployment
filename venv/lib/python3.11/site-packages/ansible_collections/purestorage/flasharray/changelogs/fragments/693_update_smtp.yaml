@@ -1,2 +1,0 @@
-minor_changes:
- - purefa_smtp - Added support for additional parameters, including encryption mode and email prefixs and email sender name.

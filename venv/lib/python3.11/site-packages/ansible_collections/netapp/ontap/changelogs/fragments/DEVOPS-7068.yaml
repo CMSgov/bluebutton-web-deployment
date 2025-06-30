@@ -1,3 +1,0 @@
----
-minor_changes:
-  - all modules supporting only REST - change in documentation for `use_rest`.

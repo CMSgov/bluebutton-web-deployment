@@ -1,3 +1,0 @@
----
-minor_changes:
-  - Add argument `tls_servername` for `grafana_datasource`

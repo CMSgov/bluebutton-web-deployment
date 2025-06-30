@@ -1,3 +1,0 @@
----
-minor_changes:
-  - na_ontap_snmp - Added REST support to the SNMP module

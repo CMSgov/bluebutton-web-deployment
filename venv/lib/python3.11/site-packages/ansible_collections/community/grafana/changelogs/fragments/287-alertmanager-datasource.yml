@@ -1,2 +1,0 @@
-minor_changes:
-  - Support `alertmanager` as type for `grafana_datasource`

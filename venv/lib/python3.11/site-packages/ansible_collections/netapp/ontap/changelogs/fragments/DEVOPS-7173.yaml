@@ -1,3 +1,0 @@
----
-minor_changes:
-  - all modules supporting only REST - updated `extends_documentation_fragment` & argument spec.

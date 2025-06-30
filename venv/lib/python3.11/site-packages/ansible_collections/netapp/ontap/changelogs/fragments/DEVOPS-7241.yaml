@@ -1,2 +1,0 @@
-minor_changes:
-  - na_ontap_svm - updated documentation for `allowed_protocols` & `services`.

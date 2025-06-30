@@ -1,3 +1,0 @@
----
-bugfixes:
-  - na_ontap_flexcache - fix typo error in the query 'origins.cluster.name' in REST.

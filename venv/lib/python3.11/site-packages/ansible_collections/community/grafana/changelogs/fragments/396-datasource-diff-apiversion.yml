@@ -1,3 +1,0 @@
----
-bugfixes:
-  - Remove field `apiVersion` from return of current `grafana_datasource` for working diff

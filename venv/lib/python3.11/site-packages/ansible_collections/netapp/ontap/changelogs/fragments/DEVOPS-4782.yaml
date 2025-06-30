@@ -1,3 +1,0 @@
----
-bugfixes:
-  - na_ontap_flexcache - add warning for flexcache relationship deletion in ZAPI.

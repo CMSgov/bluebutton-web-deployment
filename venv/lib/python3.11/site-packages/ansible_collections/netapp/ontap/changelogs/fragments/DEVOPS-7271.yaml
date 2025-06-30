@@ -1,2 +1,0 @@
-bugfixes:
-  - na_ontap_aggregate - fix issue with 'raid_type' change in REST.

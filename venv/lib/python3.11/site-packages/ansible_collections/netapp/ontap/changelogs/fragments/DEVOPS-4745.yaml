@@ -1,3 +1,0 @@
----
-minor_changes:
-  - na_ontap_debug - report ansible version and ONTAP collection version.

@@ -1,2 +1,0 @@
-bugfixes:
- - purefa_vlan - Allow LACP bonds to be subnet interfaces

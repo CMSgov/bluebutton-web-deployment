@@ -1,3 +1,0 @@
----
-minor_changes:
-  - add org switch by `org_id` and `org_name` in `grafana_silence`

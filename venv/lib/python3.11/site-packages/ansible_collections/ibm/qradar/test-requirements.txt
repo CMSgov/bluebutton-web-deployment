@@ -1,4 +1,0 @@
-# Unit test runner
-pytest-ansible
-pytest-xdist
-pytest-cov

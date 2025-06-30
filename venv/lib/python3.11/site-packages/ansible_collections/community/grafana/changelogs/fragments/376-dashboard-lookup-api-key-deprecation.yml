@@ -1,3 +1,0 @@
----
-removed_features:
-  - removed check and handling of mangled api key in `grafana_dashboard` lookup

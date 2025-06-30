@@ -1,3 +1,0 @@
----
-minor_changes:
-  - na_ontap_svm - added `allowed` option for `s3` service, requires ONTAP 9.7 or later.

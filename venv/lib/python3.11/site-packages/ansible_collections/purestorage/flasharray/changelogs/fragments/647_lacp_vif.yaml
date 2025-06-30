@@ -1,2 +1,0 @@
-bugfixes:
- - purefa_network - Allow LACP bonds to be children of a VIF

@@ -1,2 +1,0 @@
-bugfixes:
- - purefa_pod - Allow pd to be deleted with contents if ``delete_contents`` specified
