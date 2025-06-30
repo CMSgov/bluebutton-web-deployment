@@ -8,7 +8,7 @@ pipeline {
 
   environment {
     AWS_DEFAULT_REGION = "us-east-1"
-    TF_VARS = credentials("bb2-terraform-vars-${params.APP_ENV}")
+    TF_VARS = credentials("bb2-terraform-vars-${params.APP_ENV}-canary")
     TF_IN_AUTOMATION = true
   }
 
