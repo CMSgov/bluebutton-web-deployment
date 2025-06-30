@@ -26,18 +26,19 @@ pipeline {
     )
   }
 
-  stages {
-    stage("Assume AWS Role") {
+  stage("Assume AWS Role") {
       steps {
-        withCredentials([string(credentialsId: 'aws-assume-role-arn', variable: 'ROLE_ARN')]) {
+        withCredentials([
+          string(credentialsId: "${params.APP_ENV == 'test' ? 'aws-assume-role-arn' : 'aws-assume-role-arn-prod'}", variable: 'ROLE_ARN')
+        ]) {
           script {
             def sessionName = "jenkins-${env.BUILD_ID}"
             def credsJson = sh(
-              script: """#!/bin/bash
-              aws sts assume-role \
-                --role-arn "$ROLE_ARN" \
-                --role-session-name "$sessionName" \
-                --output json
+              script: """
+                aws sts assume-role \\
+                  --role-arn "$ROLE_ARN" \\
+                  --role-session-name "$sessionName" \\
+                  --output json
               """,
               returnStdout: true
             ).trim()
@@ -47,6 +48,17 @@ pipeline {
             env.AWS_ACCESS_KEY_ID     = creds.Credentials.AccessKeyId
             env.AWS_SECRET_ACCESS_KEY = creds.Credentials.SecretAccessKey
             env.AWS_SESSION_TOKEN     = creds.Credentials.SessionToken
+            echo "Expiration: ${creds.Credentials.Expiration}"
+
+            def callerIdentityStatus = sh(
+              script: "aws sts get-caller-identity --output text",
+              returnStatus: true
+            )
+            if (callerIdentityStatus != 0) {
+              error("Failed to verify assumed AWS role.")
+            } else {
+              echo "Verified AWS role:\n${sh(script: 'aws sts get-caller-identity', returnStdout: true)}"
+            }
           }
         }
       }
