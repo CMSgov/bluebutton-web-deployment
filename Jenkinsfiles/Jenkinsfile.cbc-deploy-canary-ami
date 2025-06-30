@@ -7,8 +7,10 @@ pipeline {
   }
 
   environment {
+    //AWS_ACCESS_KEY_ID = credentials("bb2-aws-key-id")
+    //AWS_SECRET_ACCESS_KEY = credentials("bb2-aws-key-secret")
     AWS_DEFAULT_REGION = "us-east-1"
-    TF_VARS = credentials("bb2-terraform-vars-${params.APP_ENV}-canary")
+    TF_VARS = credentials("bb2-terraform-vars-${params.APP_ENV}-canary-2023")
     TF_IN_AUTOMATION = true
   }
 
@@ -26,19 +28,26 @@ pipeline {
     )
   }
 
-  stage("Assume AWS Role") {
+  stages {
+    stage("Notify Slack") {
       steps {
-        withCredentials([
-          string(credentialsId: "${params.APP_ENV == 'test' ? 'aws-assume-role-arn' : 'aws-assume-role-arn-prod'}", variable: 'ROLE_ARN')
-        ]) {
+        script {
+          helpers = load "Jenkinsfiles/helpers.groovy"
+          helpers.slackNotify "STARTING - ENV:${params.APP_ENV}"
+        }
+      }
+    }
+    stage("Assume AWS Role") {
+      steps {
+        withCredentials([string(credentialsId: params.APP_ENV == 'test' ? 'aws-assume-role-arn' : 'aws-assume-role-arn-prod', variable: 'ROLE_ARN')]) {
           script {
             def sessionName = "jenkins-${env.BUILD_ID}"
             def credsJson = sh(
-              script: """
-                aws sts assume-role \\
-                  --role-arn "$ROLE_ARN" \\
-                  --role-session-name "$sessionName" \\
-                  --output json
+              script: """#!/bin/bash
+              aws sts assume-role \
+                --role-arn "$ROLE_ARN" \
+                --role-session-name "$sessionName" \
+                --output json
               """,
               returnStdout: true
             ).trim()
@@ -48,26 +57,20 @@ pipeline {
             env.AWS_ACCESS_KEY_ID     = creds.Credentials.AccessKeyId
             env.AWS_SECRET_ACCESS_KEY = creds.Credentials.SecretAccessKey
             env.AWS_SESSION_TOKEN     = creds.Credentials.SessionToken
-            echo "Expiration: ${creds.Credentials.Expiration}"
+            // ✅ Validate assumed role
 
-            def callerIdentityStatus = sh(
-              script: "aws sts get-caller-identity --output text",
-              returnStatus: true
-            )
-            if (callerIdentityStatus != 0) {
-              error("Failed to verify assumed AWS role.")
-            } else {
-              echo "Verified AWS role:\n${sh(script: 'aws sts get-caller-identity', returnStdout: true)}"
-            }
+              // ✅ Validate assumed role
+              def callerIdentity = sh(
+                script: """#!/bin/bash
+                aws sts get-caller-identity --output text
+                """,
+                returnStatus: true
+              )
+
+              if (callerIdentity != 0) {
+                error("Failed to verify assumed AWS role. Check credentials or permissions.")
+              }
           }
-        }
-      }
-    }
-    stage("Notify Slack") {
-      steps {
-        script {
-          helpers = load "Jenkinsfiles/helpers.groovy"
-          helpers.slackNotify "STARTING - ENV:${params.APP_ENV}"
         }
       }
     }
