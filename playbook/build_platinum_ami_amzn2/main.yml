@@ -9,7 +9,7 @@
     sub_zone: "app"
     sg_zone: "appserver"
     splunk_target_layer: "app"
-  # Disable SSH users
+     # Disable SSH users
   vars_files:
     - "./../../vars/common.yml"
     - "./../../vars/env/shared/env.yml"
