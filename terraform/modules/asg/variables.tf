@@ -18,7 +18,10 @@ variable "elb_names" {
 
 variable "app_sg_id" {}
 
-variable "vpn_sg_id" {}
+variable "vpn_sg_id" {
+  description = "List of VPN security group IDs"
+  type        = list(string)
+}
 
 variable "ent_tools_sg_id" {}
 

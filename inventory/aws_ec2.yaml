@@ -1,0 +1,19 @@
+plugin: aws_ec2
+regions:
+  - us-east-1
+filters:
+  tag:Function: "app-AppServer"
+  instance-state-name: running
+
+hostnames:
+  - private-ip-address
+ # ansible_host: instance_id
+compose:
+  ansible_connection: "'ssh'"
+keyed_groups:
+  - key: tags.Function
+    prefix: tag_Function
+
+  - key: tags.Name
+    prefix: tag_Name
+    separator: _

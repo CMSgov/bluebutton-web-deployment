@@ -1,9 +1,19 @@
 provider "aws" {
   region = "us-east-1"
 }
+module "alb" {
+  source = "../modules/elb_akamai"
+  acm_domain_search_string = var.acm_domain_search_string
+  vpc_id                = var.vpc_id
+  env                   = var.env
+  cms_vpn_cidrs         = var.cms_vpn_cidrs
+  vpn_sg_id             = var.vpn_sg_id
+  akamai_prod_cidrs     = var.akamai_prod_cidrs
+  stack                 = var.stack
 
+}
 resource "aws_sns_topic" "cloudwatch_alarms_topic" {
-  name              = "bluebutton-${var.stack}-cloudwatch-alarms"
+  name              = "bb-${var.stack}-cloudwatch-alarms"
   kms_master_key_id = "alias/aws/sns"
 }
 
@@ -36,6 +46,7 @@ module "cloudwatch_alarms_elb_http" {
 
   app                         = var.app
   env                         = var.env
+  stack                       = var.stack
   vpc_name                    = var.vpc_id
   cloudwatch_notification_arn = aws_sns_topic.cloudwatch_alarms_topic.arn
   load_balancer_name          = var.elb_names[0]
@@ -48,6 +59,11 @@ module "cloudwatch_alarms_elb_http" {
 
 module "iam_param_store" {
   source = "../modules/iam_param_store"
-
+  stack  = var.stack
   env = lower(var.env)
+}
+module "kms" {
+  source = "../modules/kms"
+  stack  = var.stack
+  env    = var.env
 }

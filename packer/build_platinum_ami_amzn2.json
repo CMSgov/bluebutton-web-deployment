@@ -1,12 +1,14 @@
 {
   "variables": {
     "source_ami": "",
-    "subnet_id": "subnet-a0d9c28a"
+    "subnet_id": ""
 
   },
   "builders": [{
     "type": "amazon-ebs",
-    "ssh_username": "ec2-user",
+     "iam_instance_profile": "packer-ssm-profile",
+    "ssh_interface" : "session_manager",
+     "ssh_username"  : "ec2-user",
     "instance_type": "m7i.large",
     "region": "us-east-1",
     "subnet_id": "{{user `subnet_id`}}",
@@ -32,7 +34,7 @@
       {
           "type": "ansible",
           "playbook_file": "playbook/build_platinum_ami_amzn2/main.yml",
-          "extra_arguments": [ "-v", "-e", "ansible_ssh_private_key_file={{user `ec2-user`}}" ],
+          "extra_arguments": [ "-v" ],
           "use_proxy": false,
           "user": "ec2-user"
         }

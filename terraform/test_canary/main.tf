@@ -38,7 +38,9 @@ resource "aws_instance" "test_canary_app" {
     var.vpc_sg_id,
     aws_security_group.allow_ci_ssh.id
   ]
-
+metadata_options {
+    http_tokens = "optional"  # Allow both IMDSv1 and IMDSv2
+  }
   associate_public_ip_address = false
 
   tags = {

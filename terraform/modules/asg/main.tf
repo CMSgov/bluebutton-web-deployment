@@ -5,22 +5,26 @@ data "aws_vpc" "selected" {
   id = var.vpc_id
 }
 
-data "aws_subnets" "app" {
+data "aws_subnets" "private_subs" {
+  filter {
+    name   = "tag:Name"
+    values = ["*private*"]
+  }
+
   filter {
     name   = "vpc-id"
     values = [var.vpc_id]
   }
+}
 
-  tags = {
-    Layer       = "app"
-    stack       = var.stack
-    application = var.app
-  }
+data "aws_subnet" "private_sub" {
+  for_each = { for id in data.aws_subnets.private_subs.ids : id => id }
+  id       = each.value
 }
 
 data "aws_ami" "image" {
   most_recent = true
-  owners      = ["self"]
+  #owners      = ["self"]
 
   filter {
     name   = "image-id"
@@ -72,14 +76,16 @@ data "template_file" "user_data" {
     static_content_bucket   = var.static_content_bucket
   }
 }
+resource "aws_iam_instance_profile" "app" {
+  name = "bb-${lower(var.env)}-app-profile-v4"
+  role = "bb-${lower(var.env)}-app-role"  # existing role name
+}
 
 resource "aws_launch_template" "app" {
-  vpc_security_group_ids  = [
-    var.app_sg_id,
-    var.vpn_sg_id,
-    var.ent_tools_sg_id,
-    aws_security_group.ci.id,
-  ]
+  vpc_security_group_ids = concat(
+  [var.app_sg_id, var.ent_tools_sg_id, aws_security_group.ci.id],
+  var.vpn_sg_id
+)
 
   key_name                    = var.key_name
   image_id                    = var.ami_id
@@ -88,7 +94,7 @@ resource "aws_launch_template" "app" {
   name_prefix                 = "bb-${var.stack}-app-"
   user_data                   = base64encode(data.template_file.user_data.rendered)
   iam_instance_profile {
-    name                      = "bb-${lower(var.env)}-app-profile"
+    name                      = "bb-${lower(var.env)}-app-profile-v4"
   }
 
   lifecycle {
@@ -109,7 +115,7 @@ resource "aws_autoscaling_group" "main" {
   health_check_grace_period = 400
   health_check_type         = "ELB"
   wait_for_capacity_timeout = "30m"
-  vpc_zone_identifier       = data.aws_subnets.app.ids
+  vpc_zone_identifier       = data.aws_subnets.private_subs.ids
 
   launch_template {
     id      = aws_launch_template.app.id

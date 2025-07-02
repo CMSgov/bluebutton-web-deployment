@@ -11,3 +11,5 @@ Dockerfiles/ec2-user.pub
 backend.tf
 .idea
 bluebutton-web-deployment.iml
+terraform/test/secrets.sh
+terraform/test/secrets.sh

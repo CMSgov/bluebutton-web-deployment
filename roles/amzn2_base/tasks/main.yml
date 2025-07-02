@@ -1,15 +1,15 @@
 ---
 - name: Apply security patches
-  become_user: "{{ remote_admin_account }}"
   become: yes
-  command: "dnf update --security -y"  # Use dnf for AL2023, yum for AL2
+  become_user: "{{ remote_admin_account }}"
+  command: "dnf update --security -y"
 
 - name: Install Python 3.11 and pip3.11
   become: yes
   become_user: "{{ remote_admin_account }}"
-  command: "dnf install -y python3.11 python3.11-pip"  # Adjusted for AL2023
+  command: "dnf install -y python3.11 python3.11-pip"
 
-- name: Install dependencies
+- name: Install system dependencies
   become: yes
   become_user: "{{ remote_admin_account }}"
   dnf:
@@ -23,7 +23,7 @@
       - bzip2-devel
       - libffi-devel
       - git
-      - python3.11-devel  # Adjusted for AL2023
+      - python3.11-devel
       - postgresql-devel
       - postgresql16
       - sqlite-devel
@@ -33,12 +33,25 @@
       - amazon-cloudwatch-agent
     state: present
 
-- name: Install uwsgi ansible boto3 and botocore psycopg2-binary==2.9.10 via pip3.11
+- name: Install wheel to support building packages
+  become: yes
+  become_user: "{{ remote_admin_account }}"
+  pip:
+    name: wheel
+    executable: pip3.11
+
+- name: Install uwsgi from GitHub to avoid setup.py issues
+  become: yes
+  become_user: "{{ remote_admin_account }}"
+  pip:
+    name: git+https://github.com/unbit/uwsgi.git
+    executable: pip3.11
+
+- name: Install ansible, boto3, botocore, and psycopg2-binary==2.9.10 via pip3.11
   become: yes
   become_user: "{{ remote_admin_account }}"
   pip:
     name:
-      - uwsgi
       - ansible
       - boto3
       - botocore

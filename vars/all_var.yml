@@ -121,10 +121,6 @@
 
   # splunk configuration
   # Group name = BBAPI
-  splunk_group_name: "{{ env_splunk_group_name }}"
-  splunk_target_layer: "{{ env_splunk_target_layer }}"
-  splunk_target_server: "{{ env_splunk_target_server }}"
-  splunk_target_port: "{{ env_splunk_target_port }}"
 
   #
   # SLSx / Medicare.gov Authentication Integration
