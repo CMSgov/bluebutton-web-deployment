@@ -59,6 +59,7 @@
   django_password_hash_iterations: "{{ env_django_password_hash_iterations }}"
   
   fhir_url: "{{ env_fhir_url }}"
+  fhir_url_v3: "{{ env_fhir_url_v3 }}"
   
   # Default Sample FHIR ID
   django_default_sample_fhir_id: "{{ env_django_default_sample_fhir_id }}"
