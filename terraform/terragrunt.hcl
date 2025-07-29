@@ -6,8 +6,6 @@ locals {
   # ├── terragrunt.hcl
   # ├── test/
   # │   └── terragrunt.hcl
-    ├── test_canary/
-  # │   └── terragrunt.hcl
   # ├── stage/
   # │   └── terragrunt.hcl
   # └── prod/
