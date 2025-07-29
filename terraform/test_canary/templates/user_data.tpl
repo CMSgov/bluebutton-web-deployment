@@ -1,7 +1,7 @@
 #!/bin/bash
 sudo su -
 
-set -ex
+set -e
 
 exec 2> >(tee -a /var/log/boot.log >&2)
 
