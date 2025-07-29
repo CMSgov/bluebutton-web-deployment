@@ -20,7 +20,9 @@ locals {
   # Determine the backend bucket name based on the current_environment.
   # If 'current_environment' is "test", use 'bb2-terraform-state'.
   # Otherwise, use 'bb-prd-app-config'.
-  backend_bucket = can(regex("^test(_canary)?$", local.current_environment)) ? "bb2-terraform-state" : "bb-prd-app-config"
+  backend_bucket = can(regex("^(test|test_canary)$", local.current_environment))
+    ? "bb2-terraform-state"
+    : "bb-prd-app-config"
 }
 
 remote_state {
