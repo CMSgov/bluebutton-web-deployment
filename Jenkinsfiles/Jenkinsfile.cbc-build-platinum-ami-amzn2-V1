@@ -111,6 +111,8 @@ pipeline {
       fi
       # Install amazon-ebs plugin for packer
       packer plugins install github.com/hashicorp/amazon
+      packer plugins install github.com/hashicorp/ansible
+
 
           packer build -color=false \
             -on-error=${params.ON_ERROR} \
@@ -125,12 +127,12 @@ pipeline {
   post {
     success {
       script {
-        helpers.slackNotify("SUCCESS", "good")
+         echo "SUCCESS"
       }
     }
     failure {
       script {
-        helpers.slackNotify("FAILURE", "bad")
+        echo "Failure"
       }
     }
   }
