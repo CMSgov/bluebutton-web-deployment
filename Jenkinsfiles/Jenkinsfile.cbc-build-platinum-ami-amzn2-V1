@@ -109,6 +109,8 @@ pipeline {
         dpkg -i session-manager-plugin.deb
         rm -f session-manager-plugin.deb
       fi
+      # Install amazon-ebs plugin for packer
+      packer plugins install github.com/hashicorp/amazon
 
           packer build -color=false \
             -on-error=${params.ON_ERROR} \
