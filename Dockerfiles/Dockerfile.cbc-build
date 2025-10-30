@@ -1,25 +1,102 @@
+# ==============================
+# Base Image
+# ==============================
 ARG PYTHON_VERSION
+FROM --platform=linux/amd64 python:${PYTHON_VERSION}
 
-FROM --platform="linux/amd64" python:${PYTHON_VERSION}
-
+# ==============================
+# Build Arguments
+# ==============================
 ARG ANSIBLE_VERSION
 ARG PACKER_VERSION
 ARG TERRAFORM_VERSION
 ARG AWS_COLLECTION_VERSION
 ARG TERRAGRUNT_VERSION
+ARG TOFU_VERSION
+# ==============================
+# Environment Setup
+# ==============================
+ENV PATH="/usr/local/bin:$PATH"
+WORKDIR /tmp
 
+# ==============================
+# Install core dependencies
+# ==============================
+RUN set -eux; \
+    apt-get update -y && \
+    apt-get install -y --no-install-recommends \
+        curl unzip ca-certificates && \
+    rm -rf /var/lib/apt/lists/*
+
+# ==============================
+# Remove any preinstalled Ansible
+# ==============================
 RUN python3 -m pip uninstall ansible ansible-core -y
 
-RUN pip3 install ansible==${ANSIBLE_VERSION} awscli boto boto3 botocore && \
-    curl -L -o packer.zip https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip && \
-    unzip packer.zip -d /usr/local/bin && \
-    rm packer.zip && \
-    curl -L -o terraform.zip https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
-    unzip terraform.zip -d /usr/local/bin && \
-    rm terraform.zip
+# ==============================
+# Install the latest package versions
+# ==============================
+RUN pip3 install --no-cache-dir --upgrade \
+      ansible \
+      awscli \
+      boto \
+      boto3 \
+      botocore
 
-RUN curl -L -o terragrunt https://github.com/gruntwork-io/terragrunt/releases/download/v${TERRAGRUNT_VERSION}/terragrunt_linux_amd64 && \
-    chmod u+x terragrunt && \
+# ==============================
+# Install Packer
+# ==============================
+RUN set -eux; \
+    curl -L -o packer.zip \
+      https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip && \
+    unzip packer.zip -d /usr/local/bin && \
+    rm packer.zip
+
+# ==============================
+# Install Terraform
+# ==============================
+RUN set -eux; \
+    curl -L -o terraform.zip \
+      https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
+    unzip terraform.zip -d /tmp && \
+    mv /tmp/terraform /usr/local/bin/terraform && \
+    rm -rf terraform.zip /tmp/*
+
+# ==============================
+# Install OpenTofu
+# ==============================
+RUN set -eux; \
+    echo "TOFU_VERSION is ${TOFU_VERSION}"; \
+    curl -fL -o tofu.zip https://github.com/opentofu/opentofu/releases/download/v${TOFU_VERSION}/tofu_${TOFU_VERSION}_linux_amd64.zip && \
+    ls -lh tofu.zip && \
+    unzip -t tofu.zip && \
+    unzip -o tofu.zip -d /tmp && \
+    chmod +x /tmp/tofu && \
+    mv /tmp/tofu /usr/local/bin/tofu && \
+    rm -rf tofu.zip /tmp/*
+
+
+# ==============================
+# Install Terragrunt
+# ==============================
+RUN set -eux; \
+    curl -L -o terragrunt \
+      https://github.com/gruntwork-io/terragrunt/releases/download/v${TERRAGRUNT_VERSION}/terragrunt_linux_amd64 && \
+    chmod +x terragrunt && \
     mv terragrunt /usr/local/bin/
 
-RUN ansible-galaxy collection install amazon.aws:${AWS_COLLECTION_VERSION}
+# ==============================
+# Install AWS Ansible Collection
+# ==============================
+RUN set -eux; \
+    ansible-galaxy collection install amazon.aws:${AWS_COLLECTION_VERSION}
+
+# ==============================
+# Verification
+# ==============================
+RUN set -eux; \
+    python3 --version; \
+    ansible --version; \
+    terraform version; \
+    packer version; \
+    terragrunt --version
