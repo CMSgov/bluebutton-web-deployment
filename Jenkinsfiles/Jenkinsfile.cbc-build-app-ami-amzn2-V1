@@ -1,0 +1,244 @@
+pipeline {
+  agent {
+    kubernetes {
+      defaultContainer "bb2-cbc-build"
+      yamlFile "Jenkinsfiles/cbc-build_V1.yaml"
+    }
+  }
+
+  environment {
+    AWS_DEFAULT_REGION = "us-east-1"
+   // EC2_KEY = credentials("ec2-user-priv-key")
+    //EC2_PUB_KEY = credentials("ec2-user-pub-key")
+    TARGET_ACCOUNT_ID = credentials("aws-target-account-id")
+    ENCRYPT_KMS_ARN = credentials("aws-kms-arn")
+  }
+
+  parameters {
+    string(name: "APP_REPO_BRANCH", defaultValue: "master", description: "The branch of the application repo to build in AMI.")
+    string(name: "DEPLOY_REPO_BRANCH", defaultValue: "master", description: "The branch of the deployment repo to build in AMI.")
+    string(name: "PLATINUM_AMI_ID", defaultValue: "", description: "Optional: override the platinum AMI ID.")
+    credentials(name: "ec2-user", defaultValue: "ec2-user", description: "SSH user key for provisioning", required: true)
+  }
+
+  stages {
+    stage("Assume AWS Role") {
+      steps {
+        withCredentials([string(credentialsId: 'aws-assume-role-arn', variable: 'ROLE_ARN')]) {
+          script {
+            def sessionName = "jenkins-${env.BUILD_ID}"
+            def credsJson = sh(
+              script: """#!/bin/bash
+              aws sts assume-role \
+                --role-arn "$ROLE_ARN" \
+                --role-session-name "$sessionName" \
+                --output json
+              """,
+              returnStdout: true
+            ).trim()
+
+            def creds = readJSON text: credsJson
+
+            env.AWS_ACCESS_KEY_ID     = creds.Credentials.AccessKeyId
+            env.AWS_SECRET_ACCESS_KEY = creds.Credentials.SecretAccessKey
+            env.AWS_SESSION_TOKEN     = creds.Credentials.SessionToken
+          }
+        }
+      }
+    }
+
+    stage("Notify Slack") {
+      steps {
+        script {
+          helpers = load "Jenkinsfiles/helpers.groovy"
+          helpers.slackNotify "STARTING"
+        }
+      }
+    }
+
+    stage("Determine Source AMI") {
+      steps {
+        script {
+          if (params.PLATINUM_AMI_ID?.trim()) {
+            echo("Using provided PLATINUM_AMI_ID")
+            env.PLATINUM_AMI_ID = params.PLATINUM_AMI_ID
+          } else {
+            echo("Fetching latest bb2-amzn2023-platinum AMI from AWS")
+            env.PLATINUM_AMI_ID = sh(
+              script: """#!/bin/bash
+                aws ec2 describe-images \
+                  --filters 'Name=name,Values=bb2-amzn2023-platinum-*' \
+                  --query 'sort_by(Images, &CreationDate)[-1].ImageId' \
+                  --output text
+              """,
+              returnStdout: true
+            ).trim()
+          }
+        }
+      }
+    }
+
+    stage("Fetch Private Subnet ID") {
+      steps {
+        script {
+          def subnetId = sh(
+            script: """#!/bin/bash
+              aws ec2 describe-subnets \
+                --filters "Name=tag:Name,Values=*private*" "Name=availabilityZone,Values=us-east-1*" \
+                --query "Subnets[0].SubnetId" \
+                --output text
+            """,
+            returnStdout: true
+          ).trim()
+
+          if (subnetId == "None" || !subnetId) {
+            error "No private subnet found!"
+          } else {
+            env.PRIVATE_SUBNET_ID = subnetId
+          }
+        }
+      }
+    }
+
+    stage("Build App AMI") {
+      steps {
+        script {
+          // Install session-manager-plugin if needed
+          sh """#!/bin/bash
+            if ! command -v session-manager-plugin &> /dev/null; then
+              echo "Installing session-manager-plugin..."
+              curl "https://s3.amazonaws.com/session-manager-downloads/plugin/latest/ubuntu_64bit/session-manager-plugin.deb" -o "session-manager-plugin.deb"
+              dpkg -i session-manager-plugin.deb
+              rm -f session-manager-plugin.deb
+              # Install amazon-ebs plugin for packer
+                packer plugins install github.com/hashicorp/amazon
+                packer plugins install github.com/hashicorp/ansible
+            fi
+          """
+
+          sh(script: """#!/bin/bash
+            set -euxo pipefail
+            packer build -color=false \
+              -var 'source_ami=${env.PLATINUM_AMI_ID}' \
+              -var 'release_version=${params.APP_REPO_BRANCH}' \
+              -var 'git_branch=${params.APP_REPO_BRANCH}' \
+              -var 'deployment_branch=${params.DEPLOY_REPO_BRANCH}' \
+              -var 'subnet_id=${env.PRIVATE_SUBNET_ID}' \
+              packer/build_app_ami_amzn2.json | tee packer-output.log
+          """)
+
+          env.BUILT_AMI_ID = sh(
+            script: "grep -o 'ami-[a-zA-Z0-9]\\{8,\\}' packer-output.log | tail -n1",
+            returnStdout: true
+          ).trim()
+
+          echo "✅ AMI for Test Environment: ${env.BUILT_AMI_ID}"
+        }
+      }
+    }
+
+    stage("Copy & Share Encrypted AMI") {
+      steps {
+        script {
+          def amiName = sh(script: """#!/bin/bash
+            aws ec2 describe-images \
+              --image-ids ${env.BUILT_AMI_ID} \
+              --region ${env.AWS_DEFAULT_REGION} \
+              --query "Images[0].Name" \
+              --output text
+          """, returnStdout: true).trim()
+
+          // Copy the AMI with encryption and same name
+          sh(script: """#!/bin/bash
+            set -e
+            aws ec2 copy-image \
+              --source-image-id ${env.BUILT_AMI_ID} \
+              --source-region ${env.AWS_DEFAULT_REGION} \
+              --region ${env.AWS_DEFAULT_REGION} \
+              --name "${amiName}" \
+              --description "Copied AMI with encryption" \
+              --encrypted \
+              --kms-key-id '${env.ENCRYPT_KMS_ARN}' \
+              --output json | tee copy-output.json
+          """)
+
+          def copiedAmiId = readJSON(file: 'copy-output.json').ImageId
+          echo "✅ Copied AMI: ${copiedAmiId}"
+
+          // Wait for AMI availability
+          sh """#!/bin/bash
+            aws ec2 wait image-available \
+              --image-ids ${copiedAmiId} \
+              --region ${env.AWS_DEFAULT_REGION}
+          """
+
+          // Share AMI with target account
+          sh """#!/bin/bash
+            aws ec2 modify-image-attribute \
+              --image-id ${copiedAmiId} \
+              --launch-permission 'Add=[{UserId=${env.TARGET_ACCOUNT_ID}}]' \
+              --region ${env.AWS_DEFAULT_REGION}
+          """
+         // Copy tags from source AMI to new AMI
+          def tagsJson = sh(script: """#!/bin/bash
+            aws ec2 describe-tags \
+              --filters "Name=resource-id,Values=${env.BUILT_AMI_ID}" \
+              --region ${env.AWS_DEFAULT_REGION} \
+              --query "Tags[*].{Key:Key,Value:Value}" \
+              --output json
+          """, returnStdout: true).trim()
+
+          def tagsList = readJSON text: tagsJson
+          if (tagsList && tagsList.size() > 0) {
+            def tagSpec = tagsList.collect { "Key=${it.Key},Value=${it.Value}" }.join(" ")
+            sh """#!/bin/bash
+              aws ec2 create-tags \
+                --resources ${copiedAmiId} \
+                --tags ${tagSpec} \
+                --region ${env.AWS_DEFAULT_REGION}
+            """
+            echo "✅ Tags copied to ${copiedAmiId}"
+          } else {
+            echo "⚠️ No tags found on source AMI to copy."
+          }
+
+          // Get and share associated snapshots
+          def snapshotIds = sh(script: """#!/bin/bash
+            aws ec2 describe-images \
+              --image-ids ${copiedAmiId} \
+              --region ${env.AWS_DEFAULT_REGION} \
+              --query "Images[0].BlockDeviceMappings[].Ebs.SnapshotId" \
+              --output text
+          """, returnStdout: true).trim().split()
+
+          snapshotIds.each { snapshotId ->
+            sh """#!/bin/bash
+              aws ec2 modify-snapshot-attribute \
+                --snapshot-id ${snapshotId} \
+                --attribute createVolumePermission \
+                --operation-type add \
+                --user-ids ${env.TARGET_ACCOUNT_ID} \
+                --region ${env.AWS_DEFAULT_REGION}
+            """
+          }
+
+          echo "✅ AMI For SBX/PROD ${copiedAmiId} and snapshots shared with ${env.TARGET_ACCOUNT_ID}"
+        }
+      }
+    }
+  }
+
+  post {
+
+    success {
+      script{
+      helpers.slackNotify("SUCCESS", "✅ Build succeeded!")
+      }
+    }
+    failure {
+       script{
+       helpers.slackNotify("FAILURE", "❌ Build failed!")
+       }
+    }
+  }
+}
