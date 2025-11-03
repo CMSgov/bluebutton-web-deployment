@@ -13,6 +13,7 @@ ARG TERRAFORM_VERSION
 ARG AWS_COLLECTION_VERSION
 ARG TERRAGRUNT_VERSION
 ARG TOFU_VERSION
+
 # ==============================
 # Environment Setup
 # ==============================
@@ -37,11 +38,20 @@ RUN python3 -m pip uninstall ansible ansible-core -y
 # Install the latest package versions
 # ==============================
 RUN pip3 install --no-cache-dir --upgrade \
-      ansible \
+      ansible==${ANSIBLE_VERSION} \
       awscli \
       boto \
       boto3 \
       botocore
+
+# ==============================
+# Install AWS Session Manager Plugin
+# ==============================
+RUN set -eux; \
+    echo "Installing session-manager-plugin..."; \
+    curl "https://s3.amazonaws.com/session-manager-downloads/plugin/latest/ubuntu_64bit/session-manager-plugin.deb" -o "session-manager-plugin.deb"; \
+    dpkg -i session-manager-plugin.deb; \
+    rm -f session-manager-plugin.deb
 
 # ==============================
 # Install Packer
@@ -51,6 +61,14 @@ RUN set -eux; \
       https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip && \
     unzip packer.zip -d /usr/local/bin && \
     rm packer.zip
+
+# ==============================
+# Install Packer Plugins
+# ==============================
+RUN set -eux; \
+    packer version; \
+    packer plugins install github.com/hashicorp/amazon; \
+    packer plugins install github.com/hashicorp/ansible
 
 # ==============================
 # Install Terraform
@@ -75,7 +93,6 @@ RUN set -eux; \
     mv /tmp/tofu /usr/local/bin/tofu && \
     rm -rf tofu.zip /tmp/*
 
-
 # ==============================
 # Install Terragrunt
 # ==============================
@@ -99,4 +116,5 @@ RUN set -eux; \
     ansible --version; \
     terraform version; \
     packer version; \
-    terragrunt --version
+    terragrunt --version; \
+    session-manager-plugin --version
