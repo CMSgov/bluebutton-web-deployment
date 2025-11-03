@@ -104,18 +104,7 @@ pipeline {
       steps {
         script {
           // Install session-manager-plugin if needed
-          sh """#!/bin/bash
-            if ! command -v session-manager-plugin &> /dev/null; then
-              echo "Installing session-manager-plugin..."
-              curl "https://s3.amazonaws.com/session-manager-downloads/plugin/latest/ubuntu_64bit/session-manager-plugin.deb" -o "session-manager-plugin.deb"
-              dpkg -i session-manager-plugin.deb
-              rm -f session-manager-plugin.deb
-              # Install amazon-ebs plugin for packer
-                packer plugins install github.com/hashicorp/amazon
-                packer plugins install github.com/hashicorp/ansible
-            fi
-          """
-
+        
           sh(script: """#!/bin/bash
             set -euxo pipefail
             packer build -color=false \
