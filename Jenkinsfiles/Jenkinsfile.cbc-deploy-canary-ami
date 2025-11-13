@@ -89,7 +89,16 @@ pipeline {
         sh """
         cd terraform/${APP_ENV}_canary
         [ -f .terraform.lock.hcl ] && rm .terraform.lock.hcl
-        terragrunt init --terragrunt-log-level error --terragrunt-disable-bucket-update -no-color -input=false
+        # Tell Terragrunt to use OpenTofu as the underlying binary
+        export TERRAGRUNT_TFPATH=tofu
+
+        # Set log level (equivalent to --terragrunt-log-level error)
+        export TERRAGRUNT_LOG_LEVEL=error
+
+        # Prevent Terragrunt from attempting to create/update the remote state bucket
+        # (equivalent to --terragrunt-disable-bucket-update)
+        export TERRAGRUNT_DISABLE_BUCKET_UPDATE=true
+        terragrunt init -- -no-color -input=false
         terragrunt plan -no-color -input=false -out=tfplan -var-file='${TF_VARS}' -var='ami_id=${APP_AMI_ID}'
         """
       }
