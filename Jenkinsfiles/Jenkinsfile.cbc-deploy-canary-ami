@@ -127,7 +127,7 @@ pipeline {
     stage("Wait For Canary") {
       steps {
         script {
-          CANARY_IP = sh(returnStdout: true, script: "cd terraform/${APP_ENV}_canary; terraform output private_ip").trim()
+          CANARY_IP = sh(returnStdout: true, script: "cd terraform/${APP_ENV}_canary; tofu output private_ip").trim()
         }
 
         sh """
