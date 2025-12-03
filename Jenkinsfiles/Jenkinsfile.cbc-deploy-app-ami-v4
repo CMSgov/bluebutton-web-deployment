@@ -95,7 +95,7 @@ pipeline {
       steps {
         sh """
         terragrunt -v
-        terraform -v
+        tofu -v
         """
       }
     }
@@ -103,7 +103,7 @@ pipeline {
     stage("Run Terragrunt Plan") {
       steps {
         sh """
-        cd terraform/${APP_ENV}_canary
+        cd terraform/${APP_ENV}
         [ -f .terraform.lock.hcl ] && rm .terraform.lock.hcl
         # Tell Terragrunt to use OpenTofu as the underlying binary
         export TERRAGRUNT_TFPATH=tofu
