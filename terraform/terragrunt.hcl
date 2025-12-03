@@ -32,6 +32,7 @@ remote_state {
     key            = "${path_relative_to_include()}/terraform.tfstate"
     region         = "us-east-1"
     encrypt        = true
+    use_lockfile   = "true"
     #dynamodb_table = "bb-terraform-state" # This remains constant for all environments
   }
 }
