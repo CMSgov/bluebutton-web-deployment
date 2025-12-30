@@ -18,7 +18,7 @@ locals {
   # Determine the backend bucket name based on the current_environment.
   # If 'current_environment' is "test", use 'bb2-terraform-state'.
   # Otherwise, use 'bb-prd-app-config'.
-  backend_bucket = local.current_environment == "test" ? "bb2-terraform-state" : "bb-prd-app-config"
+  backend_bucket = can(regex("^(test|test_canary)$", local.current_environment)) ? "bb2-terraform-state" : "bb-prd-app-config"
 }
 
 remote_state {
@@ -32,6 +32,7 @@ remote_state {
     key            = "${path_relative_to_include()}/terraform.tfstate"
     region         = "us-east-1"
     encrypt        = true
+    use_lockfile   = "true"
     #dynamodb_table = "bb-terraform-state" # This remains constant for all environments
   }
 }
