@@ -4,10 +4,10 @@
   become_user: "{{ remote_admin_account }}"
   command: "dnf update --security -y"
 
-- name: Install Python 3.11 and pip3.11
+- name: Install Python 3.12 and pip3.12
   become: yes
   become_user: "{{ remote_admin_account }}"
-  command: "dnf install -y python3.11 python3.11-pip"
+  command: "dnf install -y python3.12 python3.12-pip"
 
 - name: Install system dependencies
   become: yes
@@ -23,7 +23,7 @@
       - bzip2-devel
       - libffi-devel
       - git
-      - python3.11-devel
+      - python3.12-devel
       - postgresql-devel
       - postgresql16
       - sqlite-devel
@@ -38,16 +38,16 @@
   become_user: "{{ remote_admin_account }}"
   pip:
     name: wheel
-    executable: pip3.11
+    executable: pip3.12
 
 - name: Install uwsgi from GitHub to avoid setup.py issues
   become: yes
   become_user: "{{ remote_admin_account }}"
   pip:
     name: git+https://github.com/unbit/uwsgi.git
-    executable: pip3.11
+    executable: pip3.12
 
-- name: Install ansible, boto3, botocore, and psycopg2-binary==2.9.10 via pip3.11
+- name: Install ansible, boto3, botocore, and psycopg2-binary==2.9.10 via pip3.12
   become: yes
   become_user: "{{ remote_admin_account }}"
   pip:
@@ -56,5 +56,5 @@
       - boto3
       - botocore
       - psycopg2-binary==2.9.10
-    executable: pip3.11
+    executable: pip3.12
     umask: "0022"
