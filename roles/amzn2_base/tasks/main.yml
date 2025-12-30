@@ -38,14 +38,14 @@
   become_user: "{{ remote_admin_account }}"
   pip:
     name: wheel
-    executable: pip3.12
+    executable: pip3
 
 - name: Install uwsgi from GitHub to avoid setup.py issues
   become: yes
   become_user: "{{ remote_admin_account }}"
   pip:
     name: git+https://github.com/unbit/uwsgi.git
-    executable: pip3.12
+    executable: pip3
 
 - name: Install ansible, boto3, botocore, and psycopg2-binary==2.9.10 via pip3.12
   become: yes
@@ -56,5 +56,5 @@
       - boto3
       - botocore
       - psycopg2-binary==2.9.10
-    executable: pip3.12
+    executable: pip3
     umask: "0022"
