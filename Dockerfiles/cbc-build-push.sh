@@ -3,7 +3,10 @@
 # TO-DO: pin versions on boto3 and botocore if requested.
 # Versions at time of BB2-1124 dev: boto3==1.21.28 botocore==1.24.28
 
-DOCKER_TAG=${1:-py311-ans29-awscol620-tf18-tgrunt-boto3-botocore}
+# Should we update the docker tag? It was 311; 312 is more accurate.
+# However, this should not break anything? Or, perhaps it will push/pull
+# against a tag we do not want to overwrite?
+DOCKER_TAG=${1:-py312-ans29-awscol620-tf18-tgrunt-boto3-botocore}
 
 docker build --file Dockerfile.cbc-build \
   --build-arg PYTHON_VERSION=${2:-3.12} \
