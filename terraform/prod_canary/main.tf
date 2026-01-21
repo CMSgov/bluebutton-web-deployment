@@ -32,7 +32,7 @@ resource "aws_instance" "prod_canary_app" {
   #user_data = "${file("${path.module}/templates/user_data")}"
 
 
-  user_data            = data.template_file.user_data.rendered
+  user_data            = sensitive(data.template_file.user_data.rendered)
   iam_instance_profile = var.iam_instance_profile
 
   vpc_security_group_ids = [

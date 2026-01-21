@@ -2,7 +2,7 @@ pipeline {
   agent {
     kubernetes {
       defaultContainer "bb2-cbc-build"
-      yamlFile "Jenkinsfiles/cbc-build.yaml"
+      yamlFile "Jenkinsfiles/cbc-build_V1.yaml"
     }
   }
 
@@ -88,7 +88,17 @@ pipeline {
       steps {
         sh """
         cd terraform/${APP_ENV}_canary
-        terragrunt init --terragrunt-log-level error --terragrunt-disable-bucket-update -no-color -input=false
+        [ -f .terraform.lock.hcl ] && rm .terraform.lock.hcl
+        # Tell Terragrunt to use OpenTofu as the underlying binary
+        export TERRAGRUNT_TFPATH=tofu
+
+        # Set log level (equivalent to --terragrunt-log-level error)
+        export TERRAGRUNT_LOG_LEVEL=error
+
+        # Prevent Terragrunt from attempting to create/update the remote state bucket
+        # (equivalent to --terragrunt-disable-bucket-update)
+        export TERRAGRUNT_DISABLE_BUCKET_UPDATE=true
+        terragrunt init -- -no-color -input=false
         terragrunt plan -no-color -input=false -out=tfplan -var-file='${TF_VARS}' -var='ami_id=${APP_AMI_ID}'
         """
       }
@@ -117,7 +127,7 @@ pipeline {
     stage("Wait For Canary") {
       steps {
         script {
-          CANARY_IP = sh(returnStdout: true, script: "cd terraform/${APP_ENV}_canary; terraform output private_ip").trim()
+          CANARY_IP = sh(returnStdout: true, script: "cd terraform/${APP_ENV}_canary; tofu output private_ip").trim()
         }
 
         sh """
