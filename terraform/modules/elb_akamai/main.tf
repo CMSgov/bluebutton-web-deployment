@@ -36,13 +36,6 @@ resource "aws_elb" "default" {
   subnets = data.aws_subnets.default.ids
 
   listener {
-    instance_port      = 80
-    instance_protocol  = "http"
-    lb_port            = 80
-    lb_protocol        = "http"
-  }
-
-  listener {
     instance_port      = 443
     instance_protocol  = "https"
     lb_port            = 443
