@@ -17,10 +17,9 @@
       environment:
         DJANGO_DOTENV_FILE: "{{ install_root }}/.env"
       django_manage:
-        command: "{{ django_command }}"
-        app_path: "{{ install_root }}/{{ project_name }}/"
-        virtualenv: "{{ venv_full }}"
-        python_path: "{{ python_bin_dir }}/python{{ python_ver }}"
+      shell: |
+        source {{ venv_full }}/bin/activate
+        {{ python_bin_dir }}python{{ python_ver }} ./manage.py {{ django_command }}
       register: django_command_debug
       async: 3600
       poll: 10
