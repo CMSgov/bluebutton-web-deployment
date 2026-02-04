@@ -25,4 +25,4 @@
     - name: "Display command output: {{ django_command }}"
       run_once: yes
       debug:
-        msg: "{{ django_command_debug.out.split('\n') }}"
+        msg: "{{ django_command_debug.stdout.split('\n') }}"
