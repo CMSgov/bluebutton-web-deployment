@@ -5,7 +5,9 @@
 
 DOCKER_TAG=${1:-py312-ans11-awscol620-ot10-tgrunt85-boto3-botocore-V4}
 
-docker build --file Dockerfile.cbc-build \
+docker build \
+  --platform "linux/amd64" \
+  --file Dockerfile.cbc-build \
   --build-arg PYTHON_VERSION=${2:-3.12.8} \
   --build-arg ANSIBLE_VERSION=${3:-11.0.0} \
   --build-arg PACKER_VERSION=${4:-1.11.2} \
