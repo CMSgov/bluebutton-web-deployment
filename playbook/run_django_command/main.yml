@@ -20,7 +20,7 @@
         source {{ venv_full }}/bin/activate
         {{ python_bin_dir }}python{{ python_ver }} ./manage.py {{ django_command }}
       args:
-        chdir: "{{ install_root }}"
+        chdir: "{{ install_root }}/{{ project_name }}"
       register: django_command_debug
       async: 3600
       poll: 10
