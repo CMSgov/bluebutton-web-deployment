@@ -16,10 +16,11 @@
       run_once: yes
       environment:
         DJANGO_DOTENV_FILE: "{{ install_root }}/.env"
-      django_manage:
       shell: |
         source {{ venv_full }}/bin/activate
         {{ python_bin_dir }}python{{ python_ver }} ./manage.py {{ django_command }}
+      args:
+        chdir: "{{ install_root }}"
       register: django_command_debug
       async: 3600
       poll: 10
