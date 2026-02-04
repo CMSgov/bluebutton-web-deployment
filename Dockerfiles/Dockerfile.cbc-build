@@ -1,8 +1,9 @@
 # ==============================
 # Base Image
 # ==============================
-ARG PYTHON_VERSION
-FROM --platform=linux/amd64 python:${PYTHON_VERSION}
+# ARG requires a default value when used in a FROM
+ARG PYTHON_VERSION=3.12.8
+FROM python:${PYTHON_VERSION}
 
 # ==============================
 # Build Arguments
