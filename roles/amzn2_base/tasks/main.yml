@@ -58,3 +58,10 @@
       - psycopg2-binary==2.9.10
     executable: pip3.12
     umask: "0022"
+
+- name: Remove Splunk Universal Forwarder
+  become: yes
+  become_user: "{{ remote_admin_account }}"
+  dnf:
+    name: splunkforwarder
+    state: absent
