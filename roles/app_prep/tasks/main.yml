@@ -19,9 +19,25 @@
     mode: 0755
     state: directory
 
-- name: Remove Splunk Universal Forwarder
-  become_user: "{{ remote_admin_account }}"
+- name: Stop and disable Splunk Universal Forwarder
+  become_user: "root"
+  become: yes
+  systemd:
+    name: splunk
+    state: stopped
+    enabled: no
+  ignore_errors: yes
+
+- name: Remove Splunk Universal Forwarder package
+  become_user: "root"
   become: yes
   dnf:
     name: splunkforwarder
+    state: absent
+
+- name: Clean up leftover Splunk directories
+  become_user: "root"
+  become: yes
+  file:
+    path: /opt/splunkforwarder
     state: absent
