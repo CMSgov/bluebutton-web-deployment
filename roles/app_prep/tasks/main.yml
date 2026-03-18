@@ -18,3 +18,10 @@
     group: "{{ app_pyapps_user }}"
     mode: 0755
     state: directory
+
+- name: Remove Splunk Universal Forwarder
+  become_user: "{{ remote_admin_account }}"
+  become: yes
+  dnf:
+    name: splunkforwarder
+    state: absent
