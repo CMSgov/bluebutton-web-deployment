@@ -8,7 +8,6 @@
     env: "dev"
     sub_zone: "app"
     sg_zone: "appserver"
-    splunk_target_layer: "app"
     var_files:
       - "vars/common.yml"
       - "vars/env/{{ env }}/env.yml"

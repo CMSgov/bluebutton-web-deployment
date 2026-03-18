@@ -8,7 +8,6 @@
     azone: "az1"
     sub_zone: "app"
     sg_zone: "appserver"
-    splunk_target_layer: "app"
      # Disable SSH users
   vars_files:
     - "./../../vars/common.yml"
