@@ -120,9 +120,6 @@
   mon_nessus_pwd: "{{ env_mon_nessus_pwd }}"
   mon_nessus_pub_key: "{{ env_mon_nessus_pub_key }}"
 
-  # splunk configuration
-  # Group name = BBAPI
-
   #
   # SLSx / Medicare.gov Authentication Integration
   #

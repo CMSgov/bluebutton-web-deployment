@@ -12,10 +12,6 @@ sudo firewall-cmd --permanent --add-service=https
 sudo firewall-cmd --permanent --add-service=http
 sudo firewall-cmd --reload
 
-sudo systemctl start splunk
-# Optional: check status
-systemctl status splunk
-
 # Restart Nginx to apply changes
 sudo systemctl restart nginx
 
